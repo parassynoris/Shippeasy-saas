@@ -1,0 +1,127 @@
+<ng-container>
+
+  <div class="table-header-area pt-3">
+    <div>
+      <table-filters [TDP]="[false, false, true, true]" (filterInput)="applyFilter($event)">
+      </table-filters>
+    </div>
+    <div class="header-right" *ngIf="!isShow && buttonDisabled">
+
+      <a (click)="addDispatch()" class="max-con new-action  btn btn-outline-primary btn-sm rounded-pill">New
+        Dispatch</a>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <div class="table-design example-container mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource" matSort summary="agreement">
+
+        <!-- ID Column -->
+        <ng-container matColumnDef="#">
+          <th mat-header-cell *matHeaderCellDef>#</th>
+          <td mat-cell *matCellDef="let element">{{ element?.id }}</td>
+        </ng-container>
+
+        <!-- Dispatch Date -->
+        <ng-container matColumnDef="dispatchDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Dispatch Date</th>
+          <td mat-cell *matCellDef="let element" class="text-start">
+            {{ element?.dispatchDate | date:'dd-MM-yyyy HH:mm:ss' }}
+          </td>
+        </ng-container>
+
+        <!-- Surveyor Name -->
+        <ng-container matColumnDef="SuerveyourName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Surveyor Name</th>
+          <td mat-cell *matCellDef="let element" class="text-start">
+            {{ element?.surveyorName }}
+          </td>
+        </ng-container>
+
+        <!-- Dispatch Package -->
+        <!-- <ng-container matColumnDef="dispatchPackage">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Dispatch Package</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element?.dispatchPackage }}
+          </td>
+        </ng-container> -->
+
+        <!-- Transporter Ledger -->
+        <ng-container matColumnDef="transporterLedger">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Transporter Ledger</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element?.transporterLedger }}
+          </td>
+        </ng-container>
+
+        <!-- Action Column -->
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let element">
+            <div class="wrap-inside icon-space">
+              <span nz-tooltip nzTooltipTitle="Edit DP" class="mtop" *ngIf="!isShow && buttonDisabled">
+                <a (click)="onOpenEdit(element.warehousedispatchId)">
+                  <em class="bi-icon-sz bi bi-pencil color-pencil-red"></em>
+                </a>
+
+              </span>
+              <span *ngIf="warehouseType === 'Non Bonded'" nz-tooltip nzTooltipTitle="Print" class="mtop">
+                <a (click)="printData(element)" style="cursor: pointer;">
+                  <i class="fa fa-print" aria-hidden="true"></i>
+                </a>
+              </span>
+              <span nz-tooltip nzTooltipTitle="Delete DP" class="mtop" *ngIf="!isShow && buttonDisabled">
+                <a (click)="onDeleteDispatch(element.warehousedispatchId)">
+                  <em class="bi-icon-sz bi bi-trash color-pencil-red"></em>
+                </a>
+              </span>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Table Rows -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <!-- No Data Row -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+            <span *ngIf="loaderService?.isLoadingcircle">{{ _gc?.LOADER_TEXT }}</span>
+            <span *ngIf="!loaderService?.isLoadingcircle && !dataSource?.data?.length">
+              No data available
+            </span>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div [ngClass]="{ 'display-none': dataSource.filteredData.length < 10 }">
+      <mat-paginator [pageSizeOptions]="pagenation" showFirstLastButtons aria-label="Select page">
+      </mat-paginator>
+    </div>
+  </div>
+</ng-container>
+
+<!-- Conditional Component -->
+<ng-container *ngIf="['addconsolidate', 'cloneBl', 'add', 'edit', 'show'].includes(currentUrl)">
+  <app-new-stolt-bl [isType]="currentUrl" (CloseBillSection)="onBillAction($event)">
+  </app-new-stolt-bl>
+</ng-container>
+
+<!-- Modal Template -->
+<ng-template #content1 let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body mt-4">
+      <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2"></em>
+      <span class="text-dark fs-6">{{ "error.msg_delete" | translate }}</span>
+    </div>
+    <div class="modal-footer text-center">
+      <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">No</button>
+      <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">Yes</button>
+    </div>
+  </div>
+</ng-template>

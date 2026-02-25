@@ -1,0 +1,1070 @@
+<div class="tank-component wrap-table-area container-table">
+  <div class="row mb-5">
+    <div class="col-md-12">
+      <div
+        class="float-clear-mobile-view d-flex align-items-center flex-column flex-sm-row gap-3 float-start search-section">
+        <div class="input-group custom-input">
+          <input type="text" class="form-control" placeholder="Search" aria-label="Search">
+        </div>
+        <em class="custom-tooltip" [attr.title]="'Export to excel'" (click)="exportAsExcelFile()"
+          class="bi bi-download red-icon-color"></em>
+      </div>
+      <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2 ">
+        <div class="mt-2" *ngIf="!isShow">
+          <a class="btn btn-outline-primary" (click)="openGenerateDeliveryOrder(false)">{{
+            'stolt.batch.container.generate_delivery_order' | translate }}</a>
+        </div>
+        <div class="mt-2" *ngIf="urlParam?.access !== 'show'">
+
+          <a class="btn btn-outline-primary" (click)="openGenerateDeliveryOrder(true)">Delivery Order List</a>
+        </div>
+
+        <ng-container *ngIf="isImport&& isClose">
+          <div class="mt-2" *ngIf="!(isShow || isConsolidate) && !(this.batchDetail?.enquiryDetails?.basicDetails?.ShipmentTypeName ==='Air') 
+        && batchDetail?.enquiryDetails?.basicDetails?.loadType !=='LCL'">
+            <a class="btn btn-outline-primary" (click)="open()">Select Container {{isConsolidate}}</a>
+          </div>
+          <div class="mt-2" *ngIf="!(isShow || isConsolidate) && !(this.batchDetail?.enquiryDetails?.basicDetails?.ShipmentTypeName ==='Air')
+        && batchDetail?.enquiryDetails?.basicDetails?.loadType !=='LCL'">
+            <a class="btn btn-outline-primary" (click)="openADD()">Add New Container {{BatchContainer.length}}</a>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="!isImport && isClose">
+          <div class="mt-2"
+            *ngIf="!(isShow || isConsolidate) && !(this.batchDetail?.enquiryDetails?.basicDetails?.ShipmentTypeName ==='Air')">
+            <a class="btn btn-outline-primary" (click)="open()">Select Container {{isConsolidate}}</a>
+          </div>
+          <div class="mt-2"
+            *ngIf="!(isShow || isConsolidate) && !(this.batchDetail?.enquiryDetails?.basicDetails?.ShipmentTypeName ==='Air')">
+            <a class="btn btn-outline-primary" (click)="openADD()">Add New Container {{BatchContainer.length}}</a>
+          </div>
+        </ng-container>
+        <!-- <div class="mt-2 btn-style">
+          <button type="button" class="btn btn-outline-primary" (click)="exportAsExcelFile()">{{
+            'common.exportToExcel' | translate
+            }}</button>
+        </div>
+        <div class="mt-2">
+          <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="openPDF()">{{
+            'common.print' | translate }} {{
+            'common.list' | translate }}</a>
+        </div> -->
+      </div>
+    </div>
+    <div class="col-md-12 mb-5" [formGroup]="BatchContainer">
+      <div class="table-design without-space" formArrayName="BatchContainerArray">
+        <div class="wrap-table-area  wrap-table-design wrap-form-field costtable tableFixHead">
+          <table aria-describedby="mytable" class="gfg">
+            <thead>
+              <tr class="field-name">
+                <th scope="col"><input class="px-1" type="checkbox" [checked]="isSelectedAll"
+                    (change)="onCheckAll($event)" id="all"> </th>
+                <th scope="col">{{ 'stolt.batch.container.container_no' | translate }} </th>
+                <th scope="col">{{ 'stolt.batch.container.container_type' | translate }}</th>
+                <th scope="col" *ngIf="isImport">ISO Container Code</th>
+                <th scope="col" *ngIf="(isExport || isTransport)">IMCO Class</th>
+                <!-- <th scope="col">{{ 'stolt.batch.container.corgo_type' | translate }}</th> -->
+                <th *ngIf="false" scope="col">{{ 'stolt.batch.container.tare_weight'
+                  | translate }}</th>
+                <th scope="col">Seal No.</th>
+                <th scope="col">Gross weight</th>
+                <th scope="col">Unit (Gross Weight)</th>
+                <th scope="col">Net weight</th>
+                <th scope="col">Unit (Net Weight)</th>
+                <th scope="col">Package</th>
+                <th scope="col">Package Type</th>
+                <th scope="col">CBM</th>
+                <th scope="col">RFID Seal No</th>
+                <th *ngIf="false" scope="col">{{ 'stolt.batch.container.seal_no'
+                  | translate }}</th>
+                <th scope="col" *ngIf="(isExport || isTransport)">EGM No</th>
+                <th scope="col" *ngIf="(isExport || isTransport)">EGM Date</th>
+                <th scope="col">{{ 'stolt.batch.container.bl_no' | translate }}</th>
+                <th scope="col">{{ 'stolt.batch.container.bl_no_date' | translate }}</th>
+                <th scope="col" *ngIf="(isExport || isTransport)">SB No.</th>
+                <th scope="col" *ngIf="(isExport || isTransport)">SB Date</th>
+                <th *ngIf="isImport" scope="col">IGM No</th>
+                <ng-container *ngIf="isImport">
+                  <!-- <th scope="col">Discharge Full / Empty</th> -->
+                  <th scope="col">Terminal In</th>
+                  <th scope="col">Terminal Out</th>
+                  <th scope="col">Customs Check</th>
+                  <th scope="col">CFS In</th>
+                  <th scope="col">CFS Out</th>
+                  <th scope="col">Rail Out</th>
+                </ng-container>
+
+                <th scope="col" *ngIf="(isExport || isTransport)">{{ 'stolt.batch.container.factory_out' | translate }}
+                </th>
+
+                <th scope="col" *ngIf="(isExport || isTransport)">Depo Name</th>
+                <th scope="col" *ngIf="(isExport || isTransport)">Depo In</th>
+                <th scope="col" *ngIf="(isExport || isTransport)">{{ 'stolt.batch.container.depot_out' | translate }}
+                </th>
+                <th scope="col">ICD In</th>
+                <th scope="col">Delivery Date</th>
+                <th scope="col" *ngIf="(isExport || isTransport)">ICD Out</th>
+                <th scope="col" *ngIf="(isExport || isTransport)">{{ 'stolt.batch.container.terminal_in' | translate }}
+                </th>
+                <th scope="col" *ngIf="(isExport || isTransport)">Terminal Out</th>
+                <ng-container *ngIf="isImport">
+                  <th scope="col">MTY Validity Date</th>
+                  <th scope="col">MTY Return</th>
+                </ng-container>
+                <th scope="col">{{ 'stolt.batch.container.reject' | translate }}</th>
+
+                <ng-container *ngIf="(isExport || isTransport)">
+                  <th scope="col">SOB Date</th>
+                </ng-container>
+                <th scope="col">{{ 'stolt.batch.container.status' | translate }}</th>
+                <ng-container *ngIf="(isExport || isTransport)">
+                  <th scope="col">Destination Arrival Date</th>
+                  <th scope="col">Destination Delivery Date</th>
+                </ng-container>
+                <th *ngIf="isImport" scope="col">{{ 'stolt.batch.container.factory_in' | translate }}</th>
+                <th *ngIf="isImport" scope="col">{{ 'stolt.batch.container.bond_no' | translate }}</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr class="wrap-inner-table wrap-form-field "
+                *ngFor="let batch of BatchContainer.get('BatchContainerArray')?.controls; let CM= index"
+                [formGroupName]="CM">
+
+                <td class="action-field">
+                  <input class="mr-1" [checked]="isSelected" (click)="onCheck($event, batch)" type="checkbox">
+                  <!-- <span nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}" class="mtop"><a><em
+                        class="bi bi-trash color-pencil-red"
+                        (click)="DeleteContainer(content1,batch?.get('containerId')?.value)"></em></a>
+                  </span> -->
+                </td>
+                <td>
+                  <span style="user-select: text;" appCopyClipboard [copyLabel]="'Container number'">
+                    {{ batch?.get('containerNumber')?.value }}
+                  </span>
+                  &nbsp;
+                  <i class="bi bi-broadcast-pin"></i>
+                </td>
+                <td> {{batch?.get('containerType')?.value}}</td>
+                <td *ngIf="(isExport || isTransport)">
+                  {{batch?.get('imoType')?.value}}
+
+                </td>
+                <td *ngIf="isImport"> <input type="text" formControlName="isoContainerCode"
+                    class="width100px form-control custom-input" placeholder="" value="" (change)="onAnyFieldChange()">
+                </td>
+                <!-- <td>
+                  <select *ngIf="isImport" formControlName="cargoTypeId" class="width100px custom-input"
+                    (change)="onAnyFieldChange()"
+                    [ngClass]="{'is-invalid': submitted && batch?.get('cargoTypeId')?.errors}">
+                    <option value="NON-HAZ">NON-HAZ</option>
+                    <option value="HAZ">HAZ</option>
+                  </select>
+                  <input *ngIf="(isExport || isTransport)" readonly type="text" formControlName="cargoTypeId"
+                    class="width100px form-control disable-field custom-input" placeholder=""
+                    [value]="batchDetail?.cargoType || ''" [disabled]="(isExport || isTransport)" />
+                  
+                </td> -->
+                <td *ngIf="false"> <input type="text" formControlName="tareWeight"
+                    class="width100px form-control custom-input text-end" placeholder="" value=""
+                    (change)="onAnyFieldChange()">
+                </td>
+
+                <td> <input type="text" formControlName="sealNo" class="width100px form-control custom-input text-end"
+                    placeholder="" value="" (change)="onAnyFieldChange()"></td>
+                <td> <input type="text" formControlName="grossWeight"
+                    class="width100px form-control custom-input text-end" placeholder="" value=""
+                    (change)="onAnyFieldChange()"></td>
+                <td class="table-select">
+
+                  <nz-select class=" form-control width100px" nzShowSearch nzAllowClear formControlName="unitGross">
+                    <nz-option *ngFor="let unit of unitList" [nzLabel]="unit?.uomShort"
+                      [nzValue]="unit?.uomShort"></nz-option>
+                  </nz-select>
+                </td>
+                <td> <input type="text" formControlName="netWeight"
+                    class="width100px form-control custom-input text-end" placeholder="" value=""
+                    (change)="onAnyFieldChange()"></td>
+                <td class="table-select">
+
+                  <nz-select class=" form-control width100px" nzShowSearch nzAllowClear formControlName="unit">
+                    <nz-option *ngFor="let unit of unitList" [nzLabel]="unit?.uomShort"
+                      [nzValue]="unit?.uomShort"></nz-option>
+                  </nz-select>
+                </td>
+                <td> <input type="text" formControlName="package" class="width100px form-control custom-input text-end"
+                    placeholder="" value="" (change)="onAnyFieldChange()"></td>
+                <td class="table-select">
+
+                  <nz-select class=" form-control width100px" nzShowSearch nzAllowClear formControlName="packageType">
+                    <nz-option *ngFor="let packageType of packageList" [nzLabel]="packageType?.typeName"
+                      [nzValue]="packageType?.systemtypeId"></nz-option>
+                  </nz-select>
+                </td>
+                <td> <input type="text" formControlName="cbm" class="width100px form-control custom-input text-end"
+                    placeholder="" value="" (change)="onAnyFieldChange()"></td>
+                <td *ngIf="(isExport || isTransport)"> <input type="text" formControlName="rfidNo"
+                    class="width100px form-control custom-input" placeholder="" value="" (change)="onAnyFieldChange()">
+                </td>
+                <td *ngIf="isImport"> <input type="text" formControlName="sealNo"
+                    class="width100px form-control custom-input" placeholder="" value="" (change)="onAnyFieldChange()">
+                </td>
+
+                <td *ngIf="(isExport || isTransport)"> <input type="text" formControlName="evgmNumber"
+                    class="width100px form-control custom-input" placeholder="" value="" (change)="onAnyFieldChange()">
+                </td>
+                <td *ngIf="(isExport || isTransport)" class="p-2">
+                  <mat-form-field appearance="outline" class="custom-date-picker">
+                    <div class="d-flex align-items-center  w-100 mt-0">
+                      <input matInput [matDatepicker]="pickerEta1" formControlName="evgmDate" class="h-0" />
+                      <mat-datepicker-toggle matSuffix [for]="pickerEta1"></mat-datepicker-toggle>
+                    </div>
+                    <mat-datepicker #pickerEta1></mat-datepicker>
+                  </mat-form-field>
+                </td>
+                <td> <input type="text" formControlName="blNumber"
+                    class="width100px form-control custom-input disable-field" disabled="true" placeholder="" value=""
+                    (change)="onAnyFieldChange()"></td>
+                <td class="p-2">
+                  <mat-form-field appearance="outline" class="custom-date-picker">
+                    <div class="d-flex align-items-center  w-100 mt-0">
+                      <input matInput [matDatepicker]="pickerEta2" formControlName="blDate" class="h-0"
+                        (ngModelChange)="onAnyFieldChange()" disabled />
+                      <mat-datepicker-toggle matSuffix [for]="pickerEta2"></mat-datepicker-toggle>
+                    </div>
+                    <mat-datepicker #pickerEta2></mat-datepicker>
+                  </mat-form-field>
+                </td>
+                <td *ngIf="(isExport || isTransport)">
+                  <input type="text" class="width100px form-control custom-input" formControlName="sbNo">
+                </td>
+                <td *ngIf="(isExport || isTransport)" class="p-2">
+                  <mat-form-field appearance="outline" class="custom-date-picker">
+                    <div class="d-flex align-items-center  w-100 mt-0">
+                      <input matInput [matDatepicker]="pickerEta3"
+                        (ngModelChange)="onAnyFieldChange();sendNotification(CM)"
+                        formControlName="shippingBillNumber" />
+                      <mat-datepicker-toggle matSuffix [for]="pickerEta3"></mat-datepicker-toggle>
+                    </div>
+                    <mat-datepicker #pickerEta3></mat-datepicker>
+                  </mat-form-field>
+
+                </td>
+
+                <td *ngIf="isImport"> <input type="text" formControlName="igmNumber"
+                    class="width100px form-control custom-input" placeholder="" value="" (change)="onAnyFieldChange()">
+                </td>
+                <ng-container *ngIf="isImport">
+                  <td class="p-2">
+                    <div class="custom-date-picker">
+                      <nz-date-picker #pickerEta4 class="w-100 mt-0 custom-date-style" nzShowTime
+                        nzFormat="dd-MM-yyyy HH:mm:ss" [nzDisabledDate]="" (ngModelChange)="onAnyFieldChange()"
+                        formControlName="terminalIn">
+                      </nz-date-picker>
+                    </div>
+                  </td>
+                  <td class="p-2">
+                    <div class="custom-date-picker">
+                      <nz-date-picker #pickerEta5 class="w-100 mt-0 custom-date-style" nzShowTime
+                        nzFormat="dd-MM-yyyy HH:mm:ss" [nzDisabledDate]="" (ngModelChange)="onAnyFieldChange()"
+                        formControlName="terminalOut">
+                      </nz-date-picker>
+                    </div>
+                  </td>
+
+                  <td class="p-2">
+                    <div class="custom-date-picker">
+                      <nz-date-picker #pickerEta6 class="w-100 mt-0 custom-date-style" nzShowTime
+                        nzFormat="dd-MM-yyyy HH:mm:ss" [nzDisabledDate]="" (ngModelChange)="onAnyFieldChange()"
+                        formControlName="customsCheck">
+                      </nz-date-picker>
+                    </div>
+                  </td>
+
+                  <td class="p-2">
+                    <div class="custom-date-picker">
+                      <nz-date-picker #pickerEta6 class="w-100 mt-0 custom-date-style" nzShowTime
+                        nzFormat="dd-MM-yyyy HH:mm:ss" [nzDisabledDate]="" (ngModelChange)="onAnyFieldChange()"
+                        formControlName="cfsIn">
+                      </nz-date-picker>
+                    </div>
+                  </td>
+
+                  <td class="p-2">
+                    <div class="custom-date-picker">
+                      <nz-date-picker #pickerEta7 class="w-100 mt-0 custom-date-style" nzShowTime
+                        nzFormat="dd-MM-yyyy HH:mm:ss" [nzDisabledDate]="" (ngModelChange)="onAnyFieldChange()"
+                        formControlName="cfsOut">
+                      </nz-date-picker>
+                    </div>
+                  </td>
+
+                  <td class="p-2">
+                    <div class="custom-date-picker">
+                      <nz-date-picker #pickerEta8 class="w-100 mt-0 custom-date-style" nzShowTime
+                        nzFormat="dd-MM-yyyy HH:mm:ss" [nzDisabledDate]="" (ngModelChange)="onAnyFieldChange()"
+                        formControlName="railOut">
+                      </nz-date-picker>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <td *ngIf="(isExport || isTransport)" class="p-2">
+                  <div class="d-flex align-items-center gap-2">
+                    <div>
+                      <nz-date-picker #pickerEta10 class="custom-date-style" nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss"
+                        [nzDisabledDate]="" (ngModelChange)="onAnyFieldChange(); sendNotification(CM)"
+                        formControlName="factoryOut">
+                      </nz-date-picker>
+                    </div>
+
+                    <span class="mtop ft-18"
+                      (click)="openContainer(updateContainer, batch, CM, 'factoryOut', 'factoryOutName', 'Factory Out')">
+                      <a class="pl-1">
+                        <em class="bi bi-plus-circle text-secondary"></em>
+                      </a>
+                    </span>
+                  </div>
+                </td>
+
+
+                <td *ngIf="(isExport || isTransport)">
+                  <input type="text" formControlName="depotOut" class="width100px form-control custom-input"
+                    (change)="onAnyFieldChange()"
+                    [ngClass]="{'is-invalid': submitted && batch?.get('depotOut')?.errors}" disabled="true"
+                    class="disable-field">
+
+                </td>
+
+                <td *ngIf="(isExport || isTransport)" class="p-2">
+                  <div class="d-flex align-items-center gap-2">
+                    <div>
+                      <nz-date-picker #pickerEta09 class="custom-date-style" nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss"
+                        [nzDisabledDate]="" (ngModelChange)="onAnyFieldChange()" formControlName="depoIn">
+                      </nz-date-picker>
+                    </div>
+                    <span class="mtop ft-18">
+                      <a class="pl-1" title="{{batch?.get('depoInName')?.value}}">
+                        <em class="bi bi-info-circle text-secondary"></em>
+                      </a>
+                    </span>
+                    <span class="mtop ft-18"
+                      (click)="openContainer(updateContainer, batch, CM, 'depoIn', 'depoInName', 'Depo In')">
+                      <a class="pl-1">
+                        <em class="bi bi-plus-circle text-secondary"></em>
+                      </a>
+                    </span>
+                  </div>
+
+                <td *ngIf="(isExport || isTransport)" class="p-2">
+                  <div class="d-flex align-items-center gap-2">
+                    <div>
+                      <mat-form-field appearance="outline" class="custom-date-picker">
+                        <div class="d-flex align-items-center  w-100 mt-0">
+                          <input matInput [matDatepicker]="pickerEta90" (ngModelChange)="onAnyFieldChange()"
+                            formControlName="depotDate" />
+                          <mat-datepicker-toggle matSuffix [for]="pickerEta90"></mat-datepicker-toggle>
+                        </div>
+                        <mat-datepicker #pickerEta90></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+
+                    <span class="mtop ft-18 "><a class="pl-1" title="{{batch?.get('depotDateName')?.value}}"><em
+                          class="bi bi-info-circle text-secondary"></em></a></span>
+                    <span class="mtop ft-18 "
+                      (click)="openContainer(updateContainer,batch,CM,'depotDate','depotDateName','Depot Out')"><a
+                        class="pl-1"><em class="bi bi-plus-circle text-secondary"></em></a></span>
+                  </div>
+                </td>
+                <td class="p-2">
+                  <div class="d-flex align-items-center gap-2">
+                    <div>
+                      <nz-date-picker #pickerEta11 class="custom-date-style" nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss"
+                        [nzDisabledDate]="" (ngModelChange)="onAnyFieldChange()" formControlName="icdIn">
+                      </nz-date-picker>
+                    </div>
+                    <span class="mtop ft-18">
+                      <a class="pl-1" title="{{batch?.get('icdInName')?.value}}">
+                        <em class="bi bi-info-circle text-secondary"></em>
+                      </a>
+                    </span>
+                    <span class="mtop ft-18"
+                      (click)="openContainer(updateContainer, batch, CM, 'icdIn', 'icdInName', 'ICD In')">
+                      <a class="pl-1">
+                        <em class="bi bi-plus-circle text-secondary"></em>
+                      </a>
+                    </span>
+                  </div>
+                </td>
+
+
+
+                <td *ngIf="(isExport || isTransport)" class="p-2">
+                  <div class="d-flex align-items-center gap-2">
+                    <div>
+                      <nz-date-picker #pickerEta12 class="custom-date-style" nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss"
+                        [nzDisabledDate]="" (ngModelChange)="onAnyFieldChange()" formControlName="icdOut">
+                      </nz-date-picker>
+                    </div>
+                    <span class="mtop ft-18">
+                      <a class="pl-1" title="{{batch?.get('icdOutName')?.value}}">
+                        <em class="bi bi-info-circle text-secondary"></em>
+                      </a>
+                    </span>
+                    <span class="mtop ft-18"
+                      (click)="openContainer(updateContainer, batch, CM, 'icdOut', 'icdOutName', 'ICD Out')">
+                      <a class="pl-1">
+                        <em class="bi bi-plus-circle text-secondary"></em>
+                      </a>
+                    </span>
+                  </div>
+                </td>
+
+                <td *ngIf="(isExport || isTransport)" class="p-2">
+                  <div class="d-flex align-items-center gap-2">
+                    <div>
+                      <nz-date-picker #pickerEta13 class="custom-date-style" nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss"
+                        [nzDisabledDate]="" (ngModelChange)="onAnyFieldChange()" formControlName="terminalIn">
+                      </nz-date-picker>
+                    </div>
+                    <span class="mtop ft-18"
+                      (click)="openContainer(updateContainer, batch, CM, 'terminalIn', 'terminalInName', 'Terminal In')">
+                      <a class="pl-1">
+                        <em class="bi bi-plus-circle text-secondary"></em>
+                      </a>
+                    </span>
+                  </div>
+                </td>
+
+                <td *ngIf="(isExport || isTransport)" class="p-2">
+                  <div class="d-flex align-items-center gap-2">
+                    <div>
+                      <nz-date-picker #pickerEta14 class="custom-date-style" nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss"
+                        [nzDisabledDate]="" (ngModelChange)="onAnyFieldChange()" formControlName="terminalOut">
+                      </nz-date-picker>
+                    </div>
+                    <span class="mtop ft-18"
+                      (click)="openContainer(updateContainer, batch, CM, 'terminalOut', 'terminalOutName', 'Terminal Out')">
+                      <a class="pl-1">
+                        <em class="bi bi-plus-circle text-secondary"></em>
+                      </a>
+                    </span>
+                  </div>
+                </td>
+
+
+
+                <ng-container *ngIf="isImport">
+                  <td class="p-2">
+                    <mat-form-field appearance="outline" class="custom-date-picker">
+                      <div class="d-flex align-items-center  w-100 mt-0">
+                        <input matInput [matDatepicker]="pickerEta21" (ngModelChange)="onAnyFieldChange()"
+                          formControlName="deliveryDate" placeholder="Select Date" />
+                        <mat-datepicker-toggle matSuffix [for]="pickerEta21"></mat-datepicker-toggle>
+                      </div>
+                      <mat-datepicker #pickerEta21></mat-datepicker>
+                    </mat-form-field>
+                  </td>
+                </ng-container>
+
+                <ng-container *ngIf="isImport">
+                  <td class="p-2">
+                    <mat-form-field appearance="outline" class="custom-date-picker">
+                      <div class="d-flex align-items-center  w-100 mt-0">
+                        <input matInput [matDatepicker]="pickerEta15" (ngModelChange)="onAnyFieldChange()"
+                          formControlName="mtyValidity" />
+                        <mat-datepicker-toggle matSuffix [for]="pickerEta15"></mat-datepicker-toggle>
+                      </div>
+                      <mat-datepicker #pickerEta15></mat-datepicker>
+                    </mat-form-field>
+                  </td>
+                  <td class="p-2">
+                    <mat-form-field appearance="outline" class="custom-date-picker">
+                      <div class="d-flex align-items-center  w-100 mt-0">
+                        <input matInput [matDatepicker]="pickerEta16" (ngModelChange)="onAnyFieldChange()"
+                          formControlName="mtyReturn" />
+                        <mat-datepicker-toggle matSuffix [for]="pickerEta16"></mat-datepicker-toggle>
+                      </div>
+                      <mat-datepicker #pickerEta16></mat-datepicker>
+                    </mat-form-field>
+                  </td>
+                </ng-container>
+                <td class="pl-2">
+                  <div class="d-flex align-items-center gap-2">
+                    <div>
+                      <mat-form-field appearance="outline" class="custom-date-picker">
+                        <div class="d-flex align-items-center  w-100 mt-0">
+                          <input matInput [matDatepicker]="pickerEta17" (ngModelChange)="onAnyFieldChange()"
+                            formControlName="reject" />
+                          <mat-datepicker-toggle matSuffix [for]="pickerEta17"></mat-datepicker-toggle>
+                        </div>
+                        <mat-datepicker #pickerEta17></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                    <span class="mtop ft-18 "><a class="pl-1" title="{{batch?.get('rejectName')?.value}}"><em
+                          class="bi bi-info-circle text-secondary"></em></a></span>
+                    <span class="mtop ft-18 "
+                      (click)="openContainer(updateContainer,batch,CM,'reject','rejectName','Reject')"><a
+                        class="pl-1"><em class="bi bi-plus-circle text-secondary"></em></a></span>
+                  </div>
+
+                </td>
+
+
+                <ng-container *ngIf="(isExport || isTransport)">
+                  <td class="p-2">
+                    <div class="d-flex align-items-center gap-2">
+                      <div>
+                        <mat-form-field appearance="outline" class="custom-date-picker">
+                          <div class="d-flex align-items-center  w-100 mt-0">
+                            <input matInput [matDatepicker]="pickerEta18"
+                              (ngModelChange)="batch?.get('isSobEmail')?.setValue(true)" formControlName="sobDate" />
+                            <mat-datepicker-toggle matSuffix [for]="pickerEta18"></mat-datepicker-toggle>
+                          </div>
+                          <mat-datepicker #pickerEta18></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+                      <span class="mtop ft-18 "
+                        (click)="openContainer(updateContainer,batch,CM,'sobDate','sobName','SOB')"><a class="pl-1"><em
+                            class="bi bi-plus-circle text-secondary"></em></a></span>
+                    </div>
+                  </td>
+                </ng-container>
+                <td> <select formControlName="statusId" class="width100px custom-input" (change)="onAnyFieldChange()"
+                    [ngClass]="{'is-invalid': submitted && batch?.get('statusId')?.errors}">
+                    <option *ngFor="let status of statusList" [value]="status.systemtypeId">
+                      {{status.typeName}}</option>
+                  </select>
+
+                </td>
+
+                <ng-container *ngIf="(isExport || isTransport)">
+                  <td class="p-2">
+                    <mat-form-field appearance="outline" class="custom-date-picker">
+                      <div class="d-flex align-items-center  w-100 mt-0">
+                        <input matInput [matDatepicker]="pickerEta20" (ngModelChange)="onAnyFieldChange()"
+                          formControlName="arrivalDate" />
+                        <mat-datepicker-toggle matSuffix [for]="pickerEta20"></mat-datepicker-toggle>
+                      </div>
+                      <mat-datepicker #pickerEta20></mat-datepicker>
+                    </mat-form-field>
+                  </td>
+
+                </ng-container>
+                <td class="p-2">
+                  <div class="d-flex align-items-center gap-2">
+                    <div>
+                      <nz-date-picker #pickerEta9 class="custom-date-style" nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss"
+                        [nzDisabledDate]="" (ngModelChange)="onAnyFieldChange(); sendNotification(CM)"
+                        formControlName="factoryIn">
+                      </nz-date-picker>
+                    </div>
+                    <span class="mtop ft-18"
+                      (click)="openContainer(updateContainer, batch, CM, 'factoryIn', 'factoryInName', 'Factory In')">
+                      <a class="pl-1">
+                        <em class="bi bi-plus-circle text-secondary"></em>
+                      </a>
+                    </span>
+                  </div>
+                </td>
+                <td class="border-0" *ngIf="(isExport || isTransport)">
+                  <mat-form-field appearance="outline" class="custom-date-picker">
+                    <div class="d-flex align-items-center  w-100 mt-0">
+                      <input matInput [matDatepicker]="pickerEta90" (ngModelChange)="onAnyFieldChange()"
+                        formControlName="depotDate" />
+                      <mat-datepicker-toggle matSuffix [for]="pickerEta90"></mat-datepicker-toggle>
+                    </div>
+                    <mat-datepicker #pickerEta90></mat-datepicker>
+                  </mat-form-field>
+                </td>
+                <td *ngIf="isImport"> <input type="text" formControlName="bondNumber"
+                    class="width100px form-control custom-input" placeholder="" value="" (change)="onAnyFieldChange()">
+                </td>
+
+                <td class="action-field">
+                  <!-- <input class="mr-1" [checked]="isSelected" (click)="onCheck($event, batch)" type="checkbox"> -->
+                  <span *ngIf="!isShow" nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}"
+                    class="mtop"><a><em class="bi bi-trash color-pencil-red"
+                        (click)="DeleteContainer(content1,batch?.get('containerId')?.value,CM)"></em></a>
+                  </span>
+                </td>
+
+              </tr>
+
+
+              <tr *ngIf="BatchContainer.get('BatchContainerArray')?.controls.length > 0">
+                <td class="border-0"></td>
+                <td class="border-0"></td>
+                <td class="border-0"></td>
+                <td class="border-0" *ngIf="(isExport || isTransport)"></td>
+                <!-- <td class="border-0" *ngIf="(isExport || isTransport)"></td> -->
+                <td class="border-0" *ngIf="isImport">
+                  <input [ngModelOptions]="{standalone: true}" [(ngModel)]="iso" type="text"
+                    class=" form-control apply-input width100">
+                </td>
+                <!-- <td class="border-0" *ngIf="isImport"> <select [ngModelOptions]="{standalone: true}" [(ngModel)]="haz"
+                    class="width100 apply-input">
+                    <option value="NON-HAZ">NON-HAZ</option>
+                    <option value="HAZ">HAZ</option>
+                  </select></td> -->
+                <td class="border-0"></td>
+                <td class="border-0"> <input [ngModelOptions]="{standalone: true}" [(ngModel)]="grossWeight" type="text"
+                    class=" form-control apply-input width100 text-end"></td>
+                <td class="bottom-select border-0">
+                  <nz-select class=" form-control width100" nzShowSearch nzAllowClear
+                    [ngModelOptions]="{standalone: true}" [(ngModel)]="unitGross">
+                    <nz-option *ngFor="let unit of unitList" [nzLabel]="unit?.uomShort"
+                      [nzValue]="unit?.uomShort"></nz-option>
+                  </nz-select>
+                </td>
+                <td class="border-0"> <input [ngModelOptions]="{standalone: true}" [(ngModel)]="netWeight" type="text"
+                    class=" form-control apply-input width100 text-end"></td>
+                <td class="bottom-select border-0">
+                  <nz-select class=" form-control width100" nzShowSearch nzAllowClear
+                    [ngModelOptions]="{standalone: true}" [(ngModel)]="unit">
+                    <nz-option *ngFor="let unit of unitList" [nzLabel]="unit?.uomShort"
+                      [nzValue]="unit?.uomShort"></nz-option>
+                  </nz-select>
+                </td>
+                <td class="border-0"> <input [ngModelOptions]="{standalone: true}" [(ngModel)]="package" type="text"
+                    class=" form-control apply-input width100 text-end"></td>
+                <td class="bottom-select border-0">
+                  <nz-select class=" form-control width100" nzShowSearch nzAllowClear
+                    [ngModelOptions]="{standalone: true}" [(ngModel)]="packageType">
+                    <nz-option *ngFor="let packageType of packageList" [nzLabel]="packageType?.typeName"
+                      [nzValue]="packageType?.systemtypeId"></nz-option>
+                  </nz-select>
+                </td>
+                <td class="border-0"> <input [ngModelOptions]="{standalone: true}" [(ngModel)]="cbm" type="text"
+                    class=" form-control apply-input width100 text-end"></td>
+                <!-- <td class="border-0"> <input [ngModelOptions]="{standalone: true}" [(ngModel)]="rfidNo" type="text"
+                    class=" form-control apply-input width100"></td> -->
+                <td class="border-0"> </td>
+                <td class="border-0" *ngIf="(isExport || isTransport)"> <input [ngModelOptions]="{standalone: true}"
+                    [(ngModel)]="egnNo" type="text" class=" form-control apply-input width100"></td>
+                <td class="border-0 p-2" *ngIf="(isExport || isTransport)">
+                  <mat-form-field appearance="outline" class="custom-date-picker">
+                    <div class="d-flex align-items-center  w-100 mt-0">
+                      <input matInput [matDatepicker]="pickerEta22" [ngModelOptions]="{standalone: true}"
+                        [(ngModel)]="egmDate" />
+                      <mat-datepicker-toggle matSuffix [for]="pickerEta22"></mat-datepicker-toggle>
+                    </div>
+                    <mat-datepicker #pickerEta22></mat-datepicker>
+                  </mat-form-field>
+                </td>
+                <td class="border-0"> </td>
+                <td class="border-0"></td>
+                <td class="border-0" *ngIf="isImport"> <input [ngModelOptions]="{standalone: true}" [(ngModel)]="igmNo"
+                    type="text" class=" form-control apply-input width100"></td>
+
+                <td class="border-0" *ngIf="(isExport || isTransport)"> <input [ngModelOptions]="{standalone: true}"
+                    [(ngModel)]="sbNo" type="text" class=" form-control apply-input width100"></td>
+                <td *ngIf="(isExport || isTransport)" class="p-2">
+                  <mat-form-field appearance="outline" class="custom-date-picker">
+                    <div class="d-flex align-items-center  w-100 mt-0">
+                      <input matInput [matDatepicker]="pickerEta23" [ngModelOptions]="{standalone: true}"
+                        [(ngModel)]="shippingBill" />
+                      <mat-datepicker-toggle matSuffix [for]="pickerEta23"></mat-datepicker-toggle>
+                    </div>
+                    <mat-datepicker #pickerEta23></mat-datepicker>
+                  </mat-form-field>
+                </td>
+
+                <td class="border-0 p-2" *ngIf="isImport">
+                  <div class="d-flex align-items-center">
+                    <nz-date-picker #pickerEta24 class="custom-date-style" nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss"
+                      [ngModelOptions]="{standalone: true}" [(ngModel)]="terminalIn" nzShowTime [nzDisabledDate]="">
+                    </nz-date-picker>
+                  </div>
+                </td>
+
+                <td class="border-0 p-2" *ngIf="isImport">
+                  <div class="w-100">
+                    <nz-date-picker #pickerEta25 class="custom-date-style" nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss"
+                      [nzDisabledDate]="" [ngModelOptions]="{standalone: true}" [(ngModel)]="terminalOut" nzShowTime>
+                    </nz-date-picker>
+                  </div>
+                </td>
+
+                <td class="border-0 p-2" *ngIf="isImport">
+                  <div class="w-100">
+                    <nz-date-picker #pickerEta25 class="custom-date-style" nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss"
+                      [nzDisabledDate]="" [ngModelOptions]="{standalone: true}" [(ngModel)]="customsCheck" nzShowTime>
+                    </nz-date-picker>
+                  </div>
+                </td>
+
+                <td *ngIf="isImport" class="p-2">
+                  <div class="d-flex align-items-center ">
+                    <nz-date-picker #pickerEta26 class="custom-date-style" appearance="outline" nzShowTime
+                      nzFormat="dd-MM-yyyy HH:mm:ss" [nzDisabledDate]="" [ngModelOptions]="{standalone: true}"
+                      [(ngModel)]="cfsIn" nzShowTime>
+                    </nz-date-picker>
+                  </div>
+                </td>
+
+                <td class="border-0 p-2" *ngIf="isImport">
+                  <div class="d-flex align-items-center ">
+                    <nz-date-picker #pickerEta27 class="custom-date-style" appearance="outline" nzShowTime
+                      nzFormat="dd-MM-yyyy HH:mm:ss" [nzDisabledDate]="" [ngModelOptions]="{standalone: true}"
+                      [(ngModel)]="cfsOut" nzShowTime>
+                    </nz-date-picker>
+                  </div>
+                </td>
+
+                <td class="border-0 p-2" *ngIf="isImport">
+                  <div class="d-flex align-items-center ">
+                    <nz-date-picker #pickerEta28 nzShowTime class="custom-date-style" nzFormat="dd-MM-yyyy HH:mm:ss"
+                      [nzDisabledDate]="" [ngModelOptions]="{standalone: true}" [(ngModel)]="railOut" nzShowTime>
+                    </nz-date-picker>
+                  </div>
+                </td>
+
+                <td class="border-0 p-2" *ngIf="(isExport || isTransport)">
+                  <div class="d-flex align-items-center">
+                    <nz-date-picker #pickerEta30 class="custom-date-style" appearance="outline" nzShowTime
+                      nzFormat="dd-MM-yyyy HH:mm:ss" [nzDisabledDate]="" [ngModelOptions]="{standalone: true}"
+                      [(ngModel)]="factoryOut" nzShowTime>
+                    </nz-date-picker>
+                  </div>
+                </td>
+
+                <td class="border-0" *ngIf="(isExport || isTransport)"> </td>
+
+                <td class="border-0 p-2" *ngIf="(isExport || isTransport)">
+                  <div class="d-flex align-items-center ">
+                    <nz-date-picker #pickerEta31 class="custom-date-style" appearance="outline" nzShowTime
+                      nzFormat="dd-MM-yyyy HH:mm:ss" [nzDisabledDate]="" [ngModelOptions]="{standalone: true}"
+                      [(ngModel)]="deptIn" nzShowTime>
+                    </nz-date-picker>
+                  </div>
+                </td>
+
+                <td class="border-0 p-2" *ngIf="(isExport || isTransport)">
+                  <div class="d-flex align-items-center ">
+                    <nz-date-picker #pickerEta31 class="custom-date-style" appearance="outline" nzShowTime
+                      nzFormat="dd-MM-yyyy HH:mm:ss" [nzDisabledDate]="" [ngModelOptions]="{standalone: true}"
+                      [(ngModel)]="deptOut" nzShowTime>
+                    </nz-date-picker>
+                  </div>
+                </td>
+
+                <td class="border-0 p-2">
+                  <div class="d-flex align-items-center ">
+                    <nz-date-picker #pickerEta32 class="custom-date-style" appearance="outline" nzShowTime
+                      nzFormat="dd-MM-yyyy HH:mm:ss" [nzDisabledDate]="" [ngModelOptions]="{standalone: true}"
+                      [(ngModel)]="icdIn" nzShowTime>
+                    </nz-date-picker>
+                  </div>
+                </td>
+
+                <td class="border-0 p-2" *ngIf="isImport">
+                  <mat-form-field appearance="outline" class="custom-date-picker">
+                    <div class="d-flex align-items-center  w-100 mt-0">
+                      <input matInput [matDatepicker]="pickerEta42" [ngModelOptions]="{standalone: true}"
+                        [(ngModel)]="deliveryDate" placeholder="Select Date" />
+                      <mat-datepicker-toggle matSuffix [for]="pickerEta42"></mat-datepicker-toggle>
+                    </div>
+                    <mat-datepicker #pickerEta42></mat-datepicker>
+                  </mat-form-field>
+                </td>
+
+                <td class="border-0 p-2" *ngIf="(isExport || isTransport)">
+                  <div class="d-flex align-items-center ">
+                    <nz-date-picker #pickerEta33 class="custom-date-style" appearance="outline" nzShowTime
+                      nzFormat="dd-MM-yyyy HH:mm:ss" [nzDisabledDate]="" [ngModelOptions]="{standalone: true}"
+                      [(ngModel)]="icdOut" nzShowTime>
+                    </nz-date-picker>
+                  </div>
+                </td>
+
+                <td class="border-0 p-2" *ngIf="isImport">
+                  <mat-form-field appearance="outline" class="custom-date-picker">
+                    <div class="d-flex align-items-center  w-100 mt-0">
+                      <input matInput [matDatepicker]="pickerEta34" [ngModelOptions]="{standalone: true}"
+                        [(ngModel)]="validityDate" />
+                      <mat-datepicker-toggle matSuffix [for]="pickerEta34"></mat-datepicker-toggle>
+                    </div>
+                    <mat-datepicker #pickerEta34></mat-datepicker>
+                  </mat-form-field>
+                </td>
+                <td class="border-0 p-2" *ngIf="isImport">
+                  <mat-form-field appearance="outline" class="custom-date-picker">
+                    <div class="d-flex align-items-center  w-100 mt-0">
+                      <input matInput [matDatepicker]="pickerEta35" [ngModelOptions]="{standalone: true}"
+                        [(ngModel)]="mtyReturn" />
+                      <mat-datepicker-toggle matSuffix [for]="pickerEta35"></mat-datepicker-toggle>
+                    </div>
+                    <mat-datepicker #pickerEta35></mat-datepicker>
+                  </mat-form-field>
+                </td>
+
+                <td class="border-0 p-2" *ngIf="(isExport || isTransport)">
+                  <div class="d-flex align-items-center">
+                    <nz-date-picker #pickerEta36 class="custom-date-style" nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss"
+                      [nzDisabledDate]="" [ngModelOptions]="{standalone: true}" [(ngModel)]="terminalIn" nzShowTime>
+                    </nz-date-picker>
+                  </div>
+                </td>
+
+                <td class="border-0 p-2" *ngIf="(isExport || isTransport)">
+                  <div class="d-flex align-items-center">
+                    <nz-date-picker #pickerEta37 class="custom-date-style" nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss"
+                      [nzDisabledDate]="" [ngModelOptions]="{standalone: true}" [(ngModel)]="terminalOut" nzShowTime>
+                    </nz-date-picker>
+                  </div>
+                </td>
+
+                <td class="border-0 p-2">
+                  <mat-form-field appearance="outline" class="custom-date-picker">
+                    <div class="d-flex align-items-center  w-100 mt-0">
+                      <input matInput [matDatepicker]="pickerEta38" [ngModelOptions]="{standalone: true}"
+                        [(ngModel)]="reject" />
+                      <mat-datepicker-toggle matSuffix [for]="pickerEta38"></mat-datepicker-toggle>
+                    </div>
+                    <mat-datepicker #pickerEta38></mat-datepicker>
+                  </mat-form-field>
+                </td>
+
+                <td class="border-0 p-2" *ngIf="(isExport || isTransport)">
+                  <mat-form-field appearance="outline" class="custom-date-picker">
+                    <div class="d-flex align-items-center  w-100 mt-0">
+                      <input matInput [matDatepicker]="pickerEta39" [ngModelOptions]="{standalone: true}"
+                        [(ngModel)]="sobDate" />
+                      <mat-datepicker-toggle matSuffix [for]="pickerEta39"></mat-datepicker-toggle>
+                    </div>
+                    <mat-datepicker #pickerEta39></mat-datepicker>
+                  </mat-form-field>
+                </td>
+                <td class="border-0"> <select [ngModelOptions]="{standalone: true}" [(ngModel)]="status"
+                    class="width100px apply-input">
+                    <option *ngFor="let status of statusList" [value]="status.systemtypeId">
+                      {{status.typeName}}</option>
+                  </select>
+                </td>
+                <td class="border-0 p-2" *ngIf="isImport">
+                  <div class="w-100">
+                    <div class="d-flex align-items-center">
+                      <nz-date-picker #pickerEta29 class="custom-date-style" nzFormat="dd-MM-yyyy HH:mm:ss"
+                        [nzDisabledDate]="" [ngModelOptions]="{standalone: true}" [(ngModel)]="factoryIn" nzShowTime>
+                      </nz-date-picker>
+                    </div>
+                  </div>
+                </td>
+                <td class="border-0" *ngIf="isImport"> <input [ngModelOptions]="{standalone: true}" [(ngModel)]="bondNo"
+                    type="text" class=" form-control apply-input width100"></td>
+                <td class="border-0 p-2" *ngIf="(isExport || isTransport)">
+                  <mat-form-field appearance="outline" class="custom-date-picker">
+                    <div class="d-flex align-items-center  w-100 mt-0">
+                      <input matInput [nzDisabledDate]="" [matDatepicker]="pickerEta40"
+                        [ngModelOptions]="{standalone: true}" [(ngModel)]="arrivalDate" />
+                      <mat-datepicker-toggle matSuffix [for]="pickerEta40"></mat-datepicker-toggle>
+                    </div>
+                    <mat-datepicker #pickerEta40></mat-datepicker>
+                  </mat-form-field>
+                </td>
+                <td class="border-0 p-2" *ngIf="(isExport || isTransport)">
+                  <mat-form-field appearance="outline" class="custom-date-picker">
+                    <div class="d-flex align-items-center  w-100 mt-0">
+                      <input matInput [matDatepicker]="pickerEta41" [ngModelOptions]="{standalone: true}"
+                        [(ngModel)]="destinationDate" />
+                      <mat-datepicker-toggle matSuffix [for]="pickerEta41"></mat-datepicker-toggle>
+                    </div>
+                    <mat-datepicker #pickerEta41></mat-datepicker>
+                  </mat-form-field>
+                </td>
+
+                <td class="border-0 p-2" *ngIf="isExport">
+                  <mat-form-field appearance="outline" class="custom-date-picker">
+                    <div class="d-flex align-items-center  w-100 mt-0">
+                      <input matInput [matDatepicker]="pickerEta43" [ngModelOptions]="{standalone: true}"
+                        [(ngModel)]="depotDate" />
+                      <mat-datepicker-toggle matSuffix [for]="pickerEta43"></mat-datepicker-toggle>
+                    </div>
+                    <mat-datepicker #pickerEta43></mat-datepicker>
+                  </mat-form-field>
+                </td>
+
+                <td style="position: sticky; right: 0;" class="border-0 width100px text-end">
+                  <button type="button" (click)="applyAll()" class="btn btn-outline-primary">Apply All</button>
+                </td>
+              </tr>
+              <!-- <tr  *ngIf="BatchContainer.get('BatchContainerArray')?.controls.length > 0">
+                <td class="border-0"></td>
+                <td class="border-0" *ngIf="(isExport || isTransport)" colspan="26"></td>
+                <td class="border-0" *ngIf="isImport" colspan="23"></td>
+                
+                <td  style="position: sticky; right: 0;" class="border-0 width100px text-end">
+                  <button type="button" (click)="applyAll()" class="btn btn-outline-primary">Apply All</button>
+                </td>
+              </tr> -->
+
+            </tbody>
+
+          </table>
+          <div class="no-data-availble" *ngIf="BatchContainer.get('BatchContainerArray')?.controls.length === 0">
+            {{'common.no_data' | translate}}
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+    <div class="form-group wrap-form-action btn-onscreen">
+      <button class="btn1  float-end" (click)="onClose()">
+        Cancel
+      </button>
+      <button *ngIf="!isShow" class="btn btn-outline-primary  float-end" (click)="onSave('')" type="submit">
+        Save
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="modal fade" id="containerModal" tabindex="-1" aria-labelledby="containerModalLabel" aria-hidden="true">
+  <app-container [batchDetail]="batchDetail"></app-container>
+</div>
+
+<div class="modal fade" id="deliveryOrderModal" tabindex="-1" aria-labelledby="deliveryOrderModalLabel"
+  aria-hidden="true">
+  <app-delivery-order [isForm]="true"></app-delivery-order>
+</div>
+<div class="modal fade" id="addContainerModal" tabindex="-1" aria-labelledby="addContainerModalLabel"
+  aria-hidden="true">
+  <app-add-container></app-add-container>
+</div> -->
+<div class="modal fade" id="documentModal" tabindex="-1" aria-labelledby="documentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg custom-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="documentModalLabel">Upload Documents</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- <app-document></app-document> -->
+      </div>
+      <div class="modal-footer">
+        <div class="wrap-form-field">
+          <div class="form-group wrap-form-action">
+            <button class="btn1 btn-lg float-end" data-bs-dismiss="modal" (click)="onClose()">
+              Cancel
+            </button>
+            <button class="btn btn-outline-primary btn-lg float-end" data-bs-dismiss="modal" type="submit">
+              Select
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #content1 let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+      </button>
+    </div>
+    <div class="modal-body mt-4 d-flex align-items-center">
+      <em class="bi bi-question-circle text-danger fs-2 text-center float-start me-2"> </em> <span
+        class=" text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary  btn-sm me-3" (click)="d('Cross click')">No</button>
+        <button type="button" class="btn btn-danger  btn-sm" (click)="c('yes')">Yes</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #updateContainer let-modal>
+  <div class="modal-content nz-allSelect">
+    <div class="modal-headers mt-2">
+      <h4 class="modal-title">Updates Container Status
+      </h4>
+    </div>
+    <div class="modal-body">
+      <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+        <form class="row g-3 align-items-center" [formGroup]="addContainerForm">
+
+
+          <div class="col-md-4  nz-select">
+            <label class="form-label">Container No <span class="text-danger">*</span></label>
+            <nz-select nzDisabled class="form-select" nzShowSearch nzAllowClear formControlName="containerNo"
+              [ngClass]="{'is-invalid': submitted1 && f.containerNo.errors}">
+              <nz-option *ngFor="let containerNo of listContainer" [nzLabel]="containerNo.containerNo"
+                [nzValue]="containerNo.containermasterId"></nz-option>
+            </nz-select>
+            <div *ngIf="submitted1 && f.containerNo.errors" class="invalid-feedback">
+              <div *ngIf="f.containerNo.errors.required">Container No is required</div>
+            </div>
+          </div>
+          <div class="col-md-4  nz-select">
+            <label class="form-label">Activity<span class="text-danger">*</span></label>
+            <nz-select nzDisabled class="form-select" nzShowSearch nzAllowClear formControlName="status"
+              (ngModelChange)="setValidation($event)" [ngClass]="{'is-invalid': submitted1 && f.status.errors}">
+              <nz-option *ngFor="let cust of containerStatusList" [nzLabel]="cust" [nzValue]="cust"></nz-option>
+            </nz-select>
+            <div *ngIf="submitted1 && f.status.errors" class="invalid-feedback">
+              <div *ngIf="f.status.errors.required">Activity is required</div>
+            </div>
+          </div>
+
+
+          <div class="col-md-4 nz-select">
+            <label class="p-0 mb-0 form-label">Date <span class="text-danger">*</span></label>
+            <mat-form-field appearance="outline" class="custom-date-picker">
+              <div class="d-flex align-items-center  w-100 mt-0">
+                <input matInput [matDatepicker]="pickerEta47" formControlName="date" />
+                <mat-datepicker-toggle matSuffix [for]="pickerEta47"></mat-datepicker-toggle>
+              </div>
+              <mat-datepicker #pickerEta47></mat-datepicker>
+            </mat-form-field>
+            <mat-error>
+              <div class="set-error-msg" *ngIf=" submitted1 && f?.date?.errors?.required">Date is required</div>
+            </mat-error>
+          </div>
+          <div class="col-md-4  nz-select">
+            <label class="form-label">Customer Name <span *ngIf="isRequird" class="text-danger">*</span></label>
+            <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="customerName"
+              [ngClass]="{'is-invalid': submitted1 && f.customerName.errors}">
+              <nz-option *ngFor="let cust of customerList" [nzLabel]="cust.customerName"
+                [nzValue]="cust.partymasterId"></nz-option>
+            </nz-select>
+            <div *ngIf="submitted1 && f.customerName.errors" class="invalid-feedback">
+              <div *ngIf="f.customerName.errors.required">Customer Name is required</div>
+            </div>
+          </div>
+          <div class="col-md-4 nz-select" *ngIf="disabledLocation">
+            <label class="form-label"> Location <span class="text-danger">*</span></label>
+            <nz-select class="form-select" nzShowSearch formControlName="yard"
+              [ngClass]="{ 'is-invalid': submitted1 && f.yard.errors }">
+              <nz-option *ngFor="let yard of  sort(yardList ,'locationName')" [nzLabel]="yard.locationName"
+                [nzValue]="yard.locationId"></nz-option>
+            </nz-select>
+            <div *ngIf="submitted1 && f.yard.errors" class="invalid-feedback">
+              <div *ngIf="f.yard.errors.required">Location is required</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label"> {{ "stolt.masters.ContainerMaster.Remarks" | translate }}</label>
+            <input type="text" class="form-control custom-input" maxlength="500" id=" " formControlName="remarks"
+              value="" />
+          </div>
+          <div class="form-group wrap-form-action mt-4">
+            <button class="btn1 btn-lg float-end" (click)="containerMasterCancel()" type="submit">
+              {{ "common.cancel" | translate }}
+            </button>
+
+            <button (click)="containerMaster()" class="btn btn-outline-primary btn-lg float-end" type="submit">
+              {{ "common.update" | translate }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>

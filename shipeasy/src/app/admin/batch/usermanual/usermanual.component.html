@@ -1,0 +1,54 @@
+<div class="table-with-gheading">
+    <div class="wrapper">
+        <div class="container-fluid">
+            <div class="wrap-content">
+                <div class="row">
+                    <div class="col-sm-12">
+                    </div>
+                </div>
+
+                <div class="tabs">
+                    <div class="tab" *ngFor="let tab of tabs" (click)="selectTab(tab)">
+                        <button [ngClass]="{'active': selectedTab === tab}" class="tab-label">{{ tab.label }}</button>
+                    </div>
+                </div>
+                <div class="tab-content">
+                    <ng-container *ngIf="selectedTab">
+                        <div class="video-cards">
+                            <div *ngFor="let video of selectedTab.videos" 
+                                 class="video-card" 
+                                 [style.backgroundImage]="'url(https://via.placeholder.com/300x200)'"
+                                 [style.backgroundSize]="'cover'" 
+                                 [style.backgroundPosition]="'center'">
+                                
+                                <div class="video-container" (click)="openModal(video.url)">
+                                    <!-- Video Thumbnail -->
+                                    <img src="assets/img/icons/image.png" class="video-thumbnail">
+                                    
+                                    <!-- Overlay Play Button -->
+                                    <div class="video-overlay">
+                                        <div class="play-button">&#9658;</div>
+                                    </div>
+                                </div>              
+                                <h4 class="video-header">{{ video.header }}</h4>
+                                <p class="video-description">{{ video.description }}</p>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>                                              
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Video Popup Modal -->
+<div class="video-modal" *ngIf="isModalOpen" (click)="closeModal()">
+    <div class="video-modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h4 style="color: #007BFF; font-weight: bold;">{{ videoTitle }}</h4>
+            <button class="close-button" (click)="closeModal()">×</button>
+        </div>
+        <iframe [src]="sanitizedVideoUrl" frameborder="0" allowfullscreen></iframe>
+        <!-- <a [href]="currentVideoUrl" target="_blank" class="watch-on-youtube">Watch on <b>YouTube</b></a> -->
+    </div>
+</div>

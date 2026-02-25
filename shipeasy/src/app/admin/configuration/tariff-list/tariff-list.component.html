@@ -1,0 +1,382 @@
+<!-- <div class="table-with-gheading">
+  <div class="wrapper">
+    <div class="container-fluid">
+      <div class="wrap-content">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="page-title-box">
+              <div class="btn-group mt-2">
+                <ol class="breadcrumb hide-phone p-0 m-0">
+                  <li class="breadcrumb-item">Master</li>
+                  <li class="breadcrumb-item active">Tariff</li>
+                </ol>
+              </div>
+            </div>
+            <div class="wrap-bar">
+              <div class="wrap-left">
+                <h1 class="color-red">Tariff Inputs List</h1>
+              </div>
+            </div>
+
+
+            <div class="wrap-table-area">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="float-clear-mobile-view d-flex flex-column flex-sm-row gap-3 float-start search-section">
+                    <div class="input-group custom-input">
+                      <input type="text" class="form-control" placeholder="Search" aria-label="Search">
+                    </div>
+                  </div>
+                  <div
+                    class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2 ">
+                    <div class="mt-2">
+                      <span>
+                        <a routerLink=""><em class="ti-export" style="margin-right: 15px;"></em></a>
+                        <span nz-tooltip nzTooltipTitle="{{ 'common.print' | translate }}" class="mtop"><a
+                            (click)="printData()"><em class="ti-printer"></em></a></span>
+                      </span>
+                    </div>
+                    <div class="mt-2">
+                      <span>
+                        <h5>{{ fromSize }}-{{ count }} of {{ toalLength }}</h5>
+                      </span>
+                    </div>
+                    <div class="mt-2">
+                      <span class="prv" [class.disable-arrow-sign]="fromSize === 1" (click)="prev()"><i class="fas fa-arrow-left"></i>
+                      </span>
+                      <span class="prv" [class.disable-arrow-sign]="count === toalLength" (click)="next()"><i class="fas fa-arrow-right"></i>
+                      </span>
+                    </div>
+                    <div class="mt-2"><select class="form-select form-select-sm" (change)="filter($event)">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                      </select></div>
+                    <div class="mt-2">
+                      <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="export()">{{
+                        'smartagent.portenquiry.listpage.exporttoExcel' | translate }}</a>
+                    </div>
+                    <div class="mt-2">
+                      <a class="new-action btn btn-outline-primary btn-sm rounded-pill" (click)="openTariff()">Add Tariff</a>
+                    </div>
+
+                  </div>
+                </div>
+
+                <div class="col-md-12">
+
+                  <div class="table-responsive globally-table-design-fix globally-table-top-alignment">
+                    <table aria-describedby="mytable" class="enquiry-data-list-table-design" id="tablerecords">
+                      <thead>
+                        <tr class="field-name">
+                          <th scope="col" (click)="sort('tariffRuleName')">Rule Name <em
+                              class="fa typcn typcn-arrow-unsorted arrow-iconssort"></em> </th>
+                          <th scope="col" (click)="sort('Country')">Country <em
+                              class="fa typcn typcn-arrow-unsorted arrow-iconssort"></em> </th>
+                          <th scope="col" (click)="sort('port')">Port <em
+                              class="fa typcn typcn-arrow-unsorted arrow-iconssort"></em> </th>
+                          <th scope="col" (click)="sort('terminal')">Terminal <em
+                              class="fa typcn typcn-arrow-unsorted arrow-iconssort"></em></th>
+                          <th scope="col" (click)="sort('berth')">Berth <em
+                              class="fa typcn typcn-arrow-unsorted arrow-iconssort"></em></th>
+                          <th scope="col" (click)="sort('vesselType')">Vessel Type<em
+                              class="fa typcn typcn-arrow-unsorted arrow-iconssort"></em></th>
+                          <th scope="col" (click)="sort('created_on')"> Created On <em
+                              class="fa typcn typcn-arrow-unsorted arrow-iconssort"></em></th>
+                              <th scope="col"></th>
+                        </tr>
+                        <tr>
+                          <th scope="col"><input type="text" class="form-control input-txt" id="" (keydown.enter)="search()"
+                              [(ngModel)]="tariffRuleName" name="tariffRuleName"></th>
+                          <th scope="col"><input type="text" class="form-control input-txt" id="" (keydown.enter)="search()"
+                              [(ngModel)]="country" name="country"></th>
+                          <th scope="col"><input type="text" class="form-control input-txt" id="" (keydown.enter)="search()"
+                              [(ngModel)]="port" name="port"></th>
+                          <th scope="col"><input type="text" class="form-control input-txt" id="" (keydown.enter)="search()"
+                              [(ngModel)]="terminal" name="terminal"></th>
+                          <th scope="col"><input type="text" class="form-control input-txt" id="" (keydown.enter)="search()"
+                              [(ngModel)]="berth" name="berth"></th>
+                          <th scope="col"><input type="text" class="form-control input-txt" id="" (keydown.enter)="search()"
+                              [(ngModel)]="vesselType" name="vesselType"></th>
+                          <th scope="col">
+                             <nz-date-picker class="form-control input-txt"  nzFormat="dd/MM/yyyy"
+                          nzPlaceHolder="dd/MM/yyyy"
+                          [(ngModel)]="createdon" name="createdon" ></nz-date-picker> -->
+<!-- <input type="date" [(ngModel)]="createdon" name="createdon" datePickerDirective>
+                          </th>
+                          <th scope="col" class="wrap-table-btn">
+                            <button type="button" class="bi bi-search btn btn-outline-primary" (click)="search()">
+                            </button>
+                            <a type="button" class="clearbtn bi bi-arrow-clockwise btn btn-outline-primary" (click)="clear()"></a>
+                          </th>
+
+                        </tr>
+                      </thead>
+                      <tbody>
+
+                        <tr *ngFor="let tariff of tariffList">
+                          <td>{{tariff.tariffRuleName}}</td>
+                          <td>{{tariff.countryName}}</td>
+                          <td>{{tariff.portName}}</td>
+                          <td>{{tariff.terminalName}}</td>
+                          <td>{{tariff.berthName}}</td>
+
+                          <td>
+                            <p class="two-line-short">
+                              {{tariff.vesselType}}
+                            </p>
+                          </td>
+                          <td class="text-end" >{{tariff.updatedOn | date:"dd/MM/YYYY hh:mm:ss"}}</td>
+
+                          <td class="action-field">
+                            <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop"><a><em
+                                  class="bi bi-pencil color-pencil-red" (click)="onEdit(tariff)"></em></a></span>
+                            <span nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}" class="mtop"> <a><em
+                                  class="typcn typcn-trash"
+                                  (click)="removeRow(content1,tariff.ratemasterId)"></em></a></span>
+                            <span><a nz-tooltip nzTooltipTitle="Clone" class="mtop"
+                                (click)="cloneItem(tariff.ratemasterId)"><em
+                                  class="fa typcn typcn-arrow-unsorted arrow-iconsclone"></em></a></span>
+
+                          </td>
+                        </tr>
+
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="no-data-availble" *ngIf="tariffList && tariffList.length === 0">
+                    {{'common.no_data' | translate}}
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<ng-template #content let-modal>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLongTitle">{{ 'smartagent.portenquiry.listpage.selectDa' | translate }}
+      </h5>
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      </button>
+
+    </div>
+    <div class="modal-body">
+      <div class="wrap-form-field padding-space  modal-bottom-alignment-for-mobile-view">
+        <form class="row g-3 mt-3">
+          <div class="button">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+              <label class="form-check-label" for="inlineRadio1">{{ 'smartagent.portenquiry.listpage.pda' | translate
+                }}</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+              <label class="form-check-label" for="inlineRadio2">{{ 'smartagent.portenquiry.listpage.ipda' | translate
+                }}</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">
+              <label class="form-check-label" for="inlineRadio3">{{ 'smartagent.portenquiry.listpage.fpda' | translate
+                }}</label>
+            </div>
+
+            <div class="form-check form-check-inline">
+              <span class="form-check form-switch mx1 mb-0 mt-1">
+                <label for="flexSwitchCheckChecked" class="form-check-label">{{
+                  'smartagent.portenquiry.listpage.portcallwithagreed' | translate }}
+                </label> <input type="checkbox" role="switch" id="flexSwitchCheckChecked" checked=""
+                  class="form-check-input">
+              </span>
+            </div>
+          </div>
+          <div class="col-md-12  wrap-form-action">
+            <button type="button" class="btn btn-outline-primary btn-lg float-end mt-3"
+              (click)="modal.close('Save click')" routerLink="add">{{ 'common.save' | translate }}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</ng-template>
+
+<ng-template #content1 let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+
+      </button>
+    </div>
+    <div class="modal-body mt-4">
+      <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2"> </em> <span
+        class=" text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary  btn-sm me-3" (click)="d('Cross click')">No</button>
+        <button type="button" class="btn btn-danger  btn-sm" (click)="c('yes')">Yes</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+
+<div class="table-header-area row mt-5">
+  <div class="mat-table-with-gheading col-md-15" style="margin-top: 110px;">
+    <div class="wrapper">
+      <div class="container-fluid">
+        <div class=" pt-2">
+          <div class="wrap-mat-table-area">
+            <div class="table-header-area pt-2">
+              <div>
+                <table-filters [TDP]="[false, false, true, true]" (filterInput)="applyFilter($event)"
+                  (onClickExport)="exportAsExcelFile()">
+                </table-filters>
+              </div>
+              <div class="header-right">
+                <a class="new-action btn btn-outline-primary btn-sm rounded-pill" (click)="openTariff()">Add Tariff</a>
+              </div>
+            </div>
+          </div>
+          <div class="table-card">
+            <div class="table-design example-container mat-elevation-z8">
+              <table mat-table [dataSource]="dataSource" matSort class="full-width-table" summary="agreement">
+                <ng-container matColumnDef="#">
+                  <th scope="col" mat-header-cell *matHeaderCellDef style="width: 3%;">
+                    # <em class="custom-tooltip" [attr.title]="'Toggle Filters'"
+                      (click)="toggleFilters = !toggleFilters" class="bi bi-search"></em>
+                  </th>
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    {{ element?.id}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                  <th scope="col" id="action" class="charterersPdfHead" mat-header-cell   *matHeaderCellDef
+                    style="width: 6%;">
+                    {{ 'Actions' }}
+                  </th>
+
+                    <td class="borderBottom" mat-cell *matCellDef="let element; let i = index">
+
+                      <div class="d-flex">
+
+                        <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop"><a><em
+                          class="bi bi-pencil color-pencil-red" (click)="onEdit(element)"></em></a></span>
+                    <span nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}" class="mtop"> <a><em
+                          class="typcn typcn-trash"
+                          (click)="removeRow(content1,element.ratemasterId)"></em></a></span>
+                    <span><a nz-tooltip nzTooltipTitle="Clone" class="mtop"
+                        (click)="cloneItem(element.ratemasterId)"><em
+                          class="fa typcn typcn-arrow-unsorted arrow-iconsclone"></em></a></span>
+
+                      </div>
+                    </td>
+                  
+
+                </ng-container>
+                <ng-container matColumnDef="tariffRuleName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Rule Name
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.tariffRuleName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="countryName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Country
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.countryName}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="portName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Port
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.portName}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="terminalName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Terminal
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.terminalName}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="berthName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Berth
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.berthName}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="vesselType">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Vessel Type
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.vesselType}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="updatedOn">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Created On
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.updatedOn | date:"dd/MM/YYYY hh:mm:ss"}}
+                  </td>
+                </ng-container>
+                <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index"
+                                        [matColumnDef]="headersFilter">
+                                        <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+                                            <div class="filters-container" [class.animate]="!toggleFilters">
+                                                <em *ngIf="i > 0 && i < displayedColumns1.length - 7" class="custom-tooltip"
+                                                [attr.title]="'Clear Filters'"
+                                                (click)="clearFilters();toggleFilters = !toggleFilters"
+                                                class="bi bi-x-circle"></em>
+                                                <div *ngIf="i > 1 && i < displayedColumns1.length - 0"
+                                                    appearance="outline">
+                                                    <input class="form-control input-txt"
+                                                        placeholder="Press 'Enter' to search"
+                                                        [(ngModel)]="filtersModel[i]" (keyup.enter)="searchColumns()">
+                                                </div>
+                                               
+                                            </div>
+                                        </th>
+                                    </ng-container>
+                <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumns">
+                </tr>
+                <tr mat-header-row class="no-default-height" *matHeaderRowDef="displayedColumns1"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns">
+                </tr>
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+                    <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+                    <span *ngIf="!loaderService?.isLoadingcircle && !dataSource?.data?.length">No data available</span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <mat-paginator class="mat-paginator" [pageSizeOptions]="[10, 20, 50 ,100]"
+              showFirstLastButtons></mat-paginator>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

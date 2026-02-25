@@ -1,0 +1,1180 @@
+<div class="table-with-gheading">
+  <div class="wrap-form-field">
+    <div class="container-fluid">
+      <div class="page-title-box">
+        <div class="btn-group mt-2">
+          <ol class="breadcrumb hide- p-0 m-0">
+            <li class="breadcrumb-item">
+              Master
+            </li>
+            <li class="breadcrumb-item active">Tariff Master</li>
+          </ol>
+        </div>
+      </div>
+      <div class="wrap-bar">
+        <div class="wrap-left">
+          <h1 class="my-2 color-red">Tariff Master<span *ngIf="isEdit" > /{{tariffDetails[0]?.tariffRuleName}}</span></h1>
+        </div>
+      </div>
+      <form [formGroup]="formTariff">
+        <div class="row mt-4">
+          <div class="col-md-12">
+            <div class="row g-3">
+
+              <div class="col-md-3 nz-select">
+                <label for="country" class="form-label sub-title">Country<span class="text-danger">*</span></label>
+
+                <nz-select class="form-select custom-placeholder" nzShowSearch nzAllowClear nzPlaceHolder="Country"   formControlName="country"
+                  (ngModelChange)="onCountryChange()" [ngClass]="{'is-invalid': submitted && f.country.errors}">
+                  <nz-option *ngFor="let country of countryList" [nzLabel]="country?.countryName"
+                    [nzValue]="country?.countryId"></nz-option>
+                </nz-select>
+
+                <div *ngIf="inputSubmitted && f.country.errors" class="invalid-feedback">
+                  <div *ngIf="f.country.errors?.required">Country is required</div>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <label for="port" class="form-label sub-title">Port<span class="text-danger">*</span></label>
+                <nz-select class="form-select custom-placeholder" nzShowSearch nzAllowClear nzPlaceHolder="Port"   formControlName="port"
+                  (ngModelChange)="onPortChange($event)">
+                  <nz-option *ngFor="let port of portList" [nzLabel]="port?.portDetails?.portName"
+                    [nzValue]="port?.portId"></nz-option>
+                  <nz-option [nzValue]="'Any'" [nzLabel]="'Any'">
+                  </nz-option>
+                </nz-select>
+
+
+                <div *ngIf="inputSubmitted && f.port.errors" class="invalid-feedback">
+                  <div *ngIf="f.port.errors?.required">Port is required</div>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <label for="terminal" class="form-label sub-title">Terminal <span class="text-danger">*</span></label>
+                <ng-multiselect-dropdown (onSelect)="onTerminalChange($event)" (onDeSelect)="onTerminalChange($event)"
+                  [settings]="dropdownSettings" [data]="terminalList" formControlName="terminal"
+                  [placeholder]="'Select Terminal'">
+                </ng-multiselect-dropdown>
+
+
+                <div *ngIf="inputSubmitted && f.terminal.errors" class="invalid-feedback">
+                  <div *ngIf="f.terminal.errors?.required">
+                    Terminal is required
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="country" class="form-label sub-title">Berth<span class="text-danger">*</span></label>
+
+                <ng-multiselect-dropdown [settings]="dropdownSettings" [data]="berthList" formControlName="berth"
+                  [placeholder]="'Select Berth'">
+                </ng-multiselect-dropdown>
+                <div *ngIf="inputSubmitted && f.berth.errors" class="invalid-feedback">
+                  <div *ngIf="f.berth.errors?.required">Berth is required</div>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <label for="vessel" class="form-label sub-title">Vessel Type <span class="text-danger">*</span></label>
+
+                <ng-multiselect-dropdown [settings]="dropdownSettings2" [data]="vesselTypeList"
+                  formControlName="vesselType" [placeholder]="'Select Vessel Type'">
+                </ng-multiselect-dropdown>
+                <div *ngIf="inputSubmitted && f.vesselType.errors" class="invalid-feedback">
+                  <div *ngIf="f.vesselType.errors?.required">Vessel Type is required</div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="charge" class="form-label sub-title">Doc Ref No</label>
+                <input type="text" class="form-control  custom-input" formControlName="docRefNo" placeholder="Doc Ref No" />
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-field-section">
+                  <label class="form-label">Upload Tariff File</label>
+                  <input class="form-control custom-input" type="file" id="formFileMultiple"
+                    (change)="onFileSelected($event,'tariffLevel')" formControlName="doc">
+                  <span class="file-view" *ngIf="!formTariff.value.doc"
+                    (click)="openfile(formTariff.value.doc)">{{docName}}</span>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <button class="btn btn-outline-primary btn-lg btn" type="submit"
+                  (click)="openInputModal('add','',addInputsModal,0)">
+                  Click here to Add Charges
+                </button>
+              </div>
+
+            </div>
+            <div class="btn-onscreen wrap-form-action mb-3">
+
+              <button class="btn1 btn-lg float-end" type="submit" (click)="onCancel()">
+                Cancel
+              </button>
+              <button class="btn btn-outline-primary btn-lg float-end" type="submit" (click)="onSave()">
+                {{ isEdit ? "Update" : "Save" }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="bottom-content-alignment">
+        <div class="table-responsive mt-2">
+          <div class="wrap-table-area wrap-form-field costtable">
+            <h1 class="main-h styl" style="color: var(--change-theme) !important;">Charges</h1>
+            <div class="wrap-table-height">
+              <table aria-describedby="mytable3">
+                <thead>
+                  <tr>
+                    <th scope="col">Rule Step</th>
+                    <th scope="col">Charge Name</th>
+                    <th scope="col">Charge Basis</th>
+                    <th scope="col">Vessel Unit</th>
+                    <th scope="col">Vessel Purpose</th>
+                    <th scope="col">Tariff <br>Based On</th>
+                    <th scope="col">Action</th>
+                  </tr>
+
+                </thead>
+                <tbody>
+                  <tr *ngFor="let input of inputsArray;let i=index">
+                    <ng-container *ngIf="input || urlParam?.key">
+                      <td>
+                        {{tariffDetails[0]?.tariffRuleName}}-{{input?.seqNo}}
+                      </td>
+                      <td>
+                        {{input?.costitem}}
+                      </td>
+                      <td>{{input.unitType}}</td>
+                      <td>
+                        <span>
+                          {{input?.parameter}}
+                        </span>
+                      </td>
+                      <td class="truncate">
+                        <span>
+                          <ng-container *ngFor="let purpose of input?.vesselPurpose">
+                            {{purpose.item_text}}
+                          </ng-container>
+                        </span>
+                      </td>
+                      <td class="truncate">
+                        <span>
+                          {{input?.tariffBasedOn}}
+                        </span>
+                      </td>
+                      <td class="action-field"><a (click)="openInputModal('view',input,addInputsModal,i)" nz-tooltip
+                          nzTooltipTitle="View" nzTooltipPlacement="bottom"><em
+                            class="bi bi-eye globally-change-icon-color"></em></a> &nbsp;&nbsp; <a nz-tooltip
+                          nzTooltipTitle="Edit" nzTooltipPlacement="bottom"
+                          (click)="openInputModal('edit',input,addInputsModal,i)"><em
+                            class="bi bi-pencil color-pencil-red"></em></a> &nbsp;&nbsp; <a nz-tooltip
+                          nzTooltipTitle="Clone" nzTooltipPlacement="bottom"
+                          (click)="cloneItem(input,i,addInputsModal)"><em class="fa fa-clone"></em></a> &nbsp;&nbsp; <a
+                          nz-tooltip nzTooltipTitle="Delete" nzTooltipPlacement="bottom" (click)="deleteInput(i)"><em
+                            class="bi bi-trash color-pencil-red"></em></a></td>
+                    </ng-container>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <form [formGroup]="inputForm">
+        <ng-template #AddClause let-modal>
+          <div class="modal-content modal-dialog modal-lg">
+            <div class="modal-headers">
+              <button type="button" class="btn-close shadow-none float-end" (click)="onSavesRule()"
+                aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+                <div class="wrap-table-area">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="wrap-table-area wrap-form-field costtable">
+                        <table aria-describedby="mytable3">
+                          <thead>
+                            <tr class="field-name">
+                              <th scope="col" class="text-white">Steps</th>
+                              <th scope="col" class="text-white">Parameter</th>
+                              <th scope="col" class="text-white">Condition</th>
+                              <th scope="col" class="text-white">Value</th>
+                              <th scope="col" class="text-white">Expression</th>
+                              <th scope="col"><a (click)="addStepItem()">
+                                  <em class="bi bi-plus-circle cursor-pointer"></em></a></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <ng-container formArrayName="ruleSteps">
+                              <ng-container *ngFor="let step of ruleSteps.controls; let k=index" [formGroupName]="k">
+                                <tr>
+
+                                  <td><input type="text" class="form-control rounded-0" formControlName="seqNo"
+                                      placeholder="{{k+1}}" [value]="k+1" disabled /></td>
+
+                                  <td>
+                                    <nz-select class="nz-form-select"
+                                      style="border-bottom: none !important; width: 200px;"
+                                      [attr.disabled]="isView ? 'disabled' : null" nzShowSearch nzAllowClear  
+                                      formControlName="parameter">
+                                      <nz-option *ngFor="let item of allParametrs" [nzLabel]="item?.name"
+                                        [nzValue]="item?.name"></nz-option>
+                                    </nz-select>
+                                  </td>
+                                  <td>
+                                    <select formControlName="condition" [attr.disabled]="isView ? 'disabled' : null"
+                                      (change)="onConditionSelect($event,k)">
+                                      <option *ngFor="let item of symbols" [value]="item">
+                                        {{ item }}
+                                      </option>
+                                    </select>
+                                  </td>
+                                  <td>
+                                    <ng-container *ngIf="!hideText">
+                                      <input type="text" class="form-control rounded-0" placeholder="Value"
+                                        formControlName="value" value="" />
+                                    </ng-container>
+                                    <ng-container *ngIf="viewCargo">
+                                      <nz-select class="nz-form-select"
+                                        style="border-bottom: none !important; width: 200px;"
+                                        [attr.disabled]="isView ? 'disabled' : null" nzShowSearch nzAllowClear  
+                                        formControlName="value">
+                                        <nz-option *ngFor="let item of cargoList" [nzLabel]="item?.item_text"
+                                          [nzValue]="item?.item_text"></nz-option>
+                                      </nz-select>
+                                    </ng-container>
+
+                                    <ng-container *ngIf="viewVessel">
+                                      <nz-select class="nz-form-select"
+                                        style="border-bottom: none !important; width: 200px;"
+                                        [attr.disabled]="isView ? 'disabled' : null" nzShowSearch nzAllowClear  
+                                        formControlName="value">
+                                        <nz-option *ngFor="let item of vesselTypeList" [nzLabel]="item?.item_text"
+                                          [nzValue]="item?.item_text"></nz-option>
+                                      </nz-select>
+                                    </ng-container>
+
+                                  </td>
+                                  <td><input type="text" class="form-control rounded-0" appExpressionInput
+                                      placeholder="Expression" formControlName="expression" value="" /> </td>
+                                  <td>
+                                    <a (click)="removeSeqItemRule(k)">
+                                      <em class="bi bi-x-circle cursor-pointer"></em></a>
+                                  </td>
+
+
+                                </tr>
+
+                              </ng-container>
+
+
+
+                            </ng-container>
+
+
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group wrap-form-field wrap-form-action d-flex justify-content-center mt-4">
+                  <button class="btn btn-outline-primary btn-lg btn" (click)="onSavesRule()" type="submit">
+                    Save
+                  </button>
+                  <button class="btn1 btn-lg" type="submit" (click)="onCancelRuleModal()">
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+
+        <ng-template #addInputsModal let-modal>
+          <ng-container>
+            <div>
+              <div class="modal-content p-0">
+                <div class="modal-header">
+                  <h5 class="modal-title">Charges</h5>
+
+                  <button class="btn btn-doc" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasScrolling" (click)="changeColumn()" aria-controls="offcanvasScrolling"><em
+                      [ngClass]="changeColumns ?'bi-chevron-double-right' :'bi-chevron-double-left'"></em><em>Tariff
+                      Documents </em> ({{allDocuments.length}})</button>
+                </div>
+                <div class="modal-body modal-body-height p-3">
+                  <div class="row">
+                    <div class="box-scroll-box" [ngClass]="changeColumns ? 'col-7':'col'">
+                      <div class="add-input-cus-grid select-border">
+
+
+                        <div class="add-input-cus-grid-items">
+                          <label for="charge" class="form-label">Charge Group</label>
+                          <nz-select class="form-select custom-placeholder" style="border-bottom: none;"
+                            (ngModelChange)="onChargeGrpChange($event)" nzShowSearch nzPlaceHolder="Please select"
+                            nzAllowClear nzPlaceHolder="Charge Group" formControlName="costItemGroup"
+                            [ngClass]="{ 'is-invalid': inputSubmitted && f2.costItemGroup.errors }">
+                            <nz-option class="form-select custom-placeholder" *ngFor="let item of costHeadList" [nzLabel]="item?.typeName"
+                              [nzValue]="item?.systemtypeId"></nz-option>
+                          </nz-select>
+                        </div>
+                        
+
+                        <div class="add-input-cus-grid-items">
+
+                          <label for="charge" class="form-label sub-title">Charge Name<span
+                              class="text-danger">*</span></label>
+                          <nz-select class="form-select custom-placeholder" style="border-bottom: none;" nzShowSearch
+                            nzPlaceHolder="Please select" nzAllowClear nzPlaceHolder="Charge Name"   formControlName="name"
+                            [ngClass]="{ 'is-invalid': inputSubmitted && f2.name.errors }">
+                            <nz-option *ngFor="let item of costitemData" [nzLabel]="item?.costitemName"
+                              [nzValue]="item.costitemId"></nz-option>
+                          </nz-select>
+                          <div *ngIf="inputSubmitted && f2.name.errors" class="invalid-feedback">
+                            <div *ngIf="f2.name.errors?.required">
+                              Please select charge
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="add-input-cus-grid-items">
+                          <label for="charge" class="form-label sub-title">Supplier</label>
+                          <nz-select class="form-select custom-placeholder" style="border-bottom: none;" nzShowSearch
+                            nzPlaceHolder="Please select" nzAllowClear nzPlaceHolder="Supplier"   formControlName="supplier">
+                            <nz-option *ngFor="let item of supplierList" [nzLabel]="item?.typeName"
+                              [nzValue]="item?.typeName"></nz-option>
+                          </nz-select>
+                        </div>
+
+
+                        <div class="add-input-cus-grid-items input-width">
+                          <label for="charge" class="form-label sub-title">Unit<span
+                              class="text-danger">*</span></label>
+                          <nz-select class="form-select custom-placeholder" style="border-bottom: none;" nzShowSearch nzAllowClear nzPlaceHolder="Unit"  
+                            formControlName="unitType">
+                            <nz-option *ngFor="let item of units" [nzLabel]="item.typeName"
+                              [nzValue]="item.typeName"></nz-option>
+                          </nz-select>
+                          <div *ngIf="inputSubmitted && f2.unitType.errors" class="invalid-feedback">
+                            <div *ngIf="f2.unitType.errors?.required">
+                              Please select Unit
+                            </div>
+                          </div>
+                        </div>
+
+
+                        <div class="add-input-cus-grid-items input-width">
+                          <label for="charge" class="form-label sub-title">Vessel Unit<span
+                              class="text-danger">*</span></label>
+                          <nz-select class="form-select custom-placeholder" style="border-bottom: none;" nzShowSearch nzAllowClear nzPlaceHolder="Vessel Unit"  
+                            formControlName="parameter">
+                            <nz-option *ngFor="let item of vesselUnits" [nzLabel]="returnVal(item.typeName)"
+                              [nzValue]="returnVal(item.typeName)"></nz-option>
+                          </nz-select>
+                          <div *ngIf="inputSubmitted && f2.parameter.errors" class="invalid-feedback">
+                            <div *ngIf="f2.parameter.errors?.required">
+                              Please select Vessel unit
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="add-input-cus-grid-items input-width">
+                          <label for="cargoinPop" class="form-label sub-title">Cargo<span
+                              class="text-danger">*</span></label>
+
+                          <ng-multiselect-dropdown [settings]="dropdownSettings" [data]="cargoList"
+                            formControlName="cargo" id="cargoinPop" [placeholder]="'Select Cargo'">
+                          </ng-multiselect-dropdown>
+                          <div *ngIf="inputSubmitted && f2.cargo.errors" class="invalid-feedback">
+                            <div *ngIf="f2.cargo.errors?.required">
+                              Please select Cargo
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="add-input-cus-grid-items input-width">
+                          <label for="call" class="form-label sub-title">Coastal/Foreign</label>
+
+                          <ng-multiselect-dropdown [settings]="dropdownSettings" [data]="coasterFreightList"
+                            formControlName="vesselCall" id="call" [placeholder]="'Select Status'">
+                          </ng-multiselect-dropdown>
+                          <div *ngIf="inputSubmitted && f2.vesselCall?.errors" class="invalid-feedback">
+                            <div *ngIf="f2.vesselCall.errors?.required">
+                              Please select Cargo
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="add-input-cus-grid-items input-width">
+                          <label for="ladeb" class="form-label sub-title">Laden/Ballast</label>
+
+                          <ng-multiselect-dropdown [settings]="dropdownSettings" [data]="shipStatusList"
+                            formControlName="shipStatus" id="ladeb" [placeholder]="'Select Status'">
+                          </ng-multiselect-dropdown>
+                          <div *ngIf="inputSubmitted && f2.shipStatus.errors" class="invalid-feedback">
+                            <div *ngIf="f2.shipStatus.errors?.required">
+                              Please select Cargo
+                            </div>
+                          </div>
+                        </div>
+
+
+
+
+                        <div class="add-input-cus-grid-items input-width">
+                          <label for="charge" class="form-label sub-title">Vessel Purpose<span
+                              class="text-danger">*</span></label>
+                          <ng-multiselect-dropdown [settings]="dropdownSettings" [data]="vesselPurposeList"
+                            formControlName="vesselPurpose">
+                          </ng-multiselect-dropdown>
+                        </div>
+                        <div class="add-input-cus-grid-items input-width">
+                          <label for="charge" class="form-label sub-title">Currency<span
+                              class="text-danger">*</span></label>
+                          <nz-select class="form-select custom-placeholder" nzShowSearch nzAllowClear nzPlaceHolder="Currency"   formControlName="currency">
+                            <nz-option *ngFor="let curr of currencyList" [nzLabel]="curr?.currencyShortName"
+                              [nzValue]="curr?.currencyId"></nz-option>
+                          </nz-select>
+                          <div *ngIf="inputSubmitted && f2.currency.errors" class="invalid-feedback">
+                            <div *ngIf="f2.currency.errors?.required">Currency is required</div>
+                          </div>
+                        </div>
+
+                        <div class="add-input-cus-grid-items input-width">
+                          <label for="country" class="form-label sub-title">Operation at</label>
+
+                          <ng-multiselect-dropdown [settings]="dropdownSettingsOperation" [data]="operations"
+                            formControlName="operationAt" [placeholder]="'Select Operation'">
+                          </ng-multiselect-dropdown>
+                        </div>
+                        <div class="add-input-cus-grid-items input-width">
+                          <div class="form-field-section">
+                            <label class="form-label">Area/Direction</label>
+                            <input class="form-control custom-input" type="text" formControlName="direction"
+                              id="formFileMultiple" placeholder="Area/Direction">
+                          </div>
+                        </div>
+
+                        <div class="new-checkobx-text-alignment">
+                          <div class="checkbox-grid">
+
+
+                            <div>
+                              <input class="form-check-input laden-ballast" formControlName="area" id="area"
+                                [attr.disabled]="isView ? 'disabled' : null" type="checkbox" style="border:1px solid"
+                                value="true" />
+                            </div>
+                            <div>
+                              <label for="area" class="form-label sub-title">Set as default Area</label>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="add-input-cus-grid-items input-width">
+                          <div class="form-field-section">
+                            <label class="mb-0 p-0 form-label">Valid From<span
+                              class="text-danger">*</span></label>
+                            <mat-form-field appearance="outline" class="custom-date-picker">
+                             <div class="d-flex align-items-center  w-100">
+                              <input matInput [matDatepicker]="pickerEta2" formControlName="validFrom" class="h-0" placeholder="Valid From"/>
+                            <mat-datepicker-toggle matSuffix [for]="pickerEta2"></mat-datepicker-toggle>
+                             </div>
+                              <mat-datepicker #pickerEta2></mat-datepicker>
+                            </mat-form-field>
+                          </div>
+                        </div>
+
+
+                        <div class="add-input-cus-grid-items input-width">
+                          <div class="form-field-section">
+                            <label class="mb-0 p-0 form-label">Valid To<span
+                              class="text-danger">*</span></label>
+                            <mat-form-field appearance="outline" class="custom-date-picker">
+                             <div class="d-flex align-items-center  w-100">
+                              <input matInput [matDatepicker]="pickerEta22" formControlName="validTo" class="h-0" placeholder="Valid To"/>
+                            <mat-datepicker-toggle matSuffix [for]="pickerEta22"></mat-datepicker-toggle>
+                             </div>
+                              <mat-datepicker #pickerEta22></mat-datepicker>
+                            </mat-form-field>
+                          </div>
+                        </div>
+
+
+                        <div class="add-input-cus-grid-items input-width">
+                          <div class="form-field-section">
+                            <label class="form-label">Tariff Basis on</label>
+                            <input class="form-control custom-input" type="text" formControlName="tariffBasedOn"
+                              id="formFileMultiple" placeholder="Tariff Basis">
+                          </div>
+                        </div>
+
+                        <div class="add-input-cus-grid-items input-width">
+                          <div class="form-field-section">
+                            <label class="form-label">Remarks</label>
+                            <input class="form-control custom-input" type="textarea" formControlName="remarks"
+                              id="formFileMultiple" placeholder="Remarks">
+                          </div>
+                        </div>
+
+                        <div class="add-input-cus-grid-items input-width">
+                          <div class="form-field-section">
+                            <div class="upload-text-icon-alignment">
+                              <label class="form-label">Upload Tariff Documents ({{inputForm.value?.itemDocument?.length
+                                ? inputForm.value?.itemDocument?.length : 0}})</label>
+                              <em class="bi bi-eye globally-change-icon-color" (click)="openDocPopup(viewDoc)"></em>
+                            </div>
+                            <input class="form-control custom-input" type="file" id="formFileMultiple"
+                              (change)="onFileSelected($event,'itemLevel')">
+                          </div>
+                        </div>
+                        <ng-template #viewDoc let-modal>
+                          <ng-container>
+                            <div class="table-responsive2">
+                              <table aria-describedby="mytable" class="gfg">
+                                <thead>
+                                  <tr class="field-name">
+                                    <th scope="col">{{ 'smartagent.portenquiry.document.documentName' | translate }}
+                                    </th>
+                                    <th scope="col">{{ 'smartagent.portenquiry.document.date' | translate }}</th>
+                                    <th scope="col">Action</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let doc of inputForm.value?.itemDocument; let i = index">
+                                    <td>{{doc.documentName}}</td>
+                                    <td>{{doc.sourceDate | date:"dd/MM/YYYY" }}</td>
+                                    <td class="action-field">
+                                      <span class="mtop" nz-tooltip
+                                        nzTooltipTitle="{{ 'common.download' | translate }}"><a
+                                          href="{{doc.documentURL}}" download>
+                                          <em class="bi bi-download" (click)="downloadFile(doc)"></em></a>
+                                      </span>
+                                      <span class="mtop" nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}">
+                                        <em class="bi bi-trash color-pencil-red" (click)="removeRow(content1,i)"></em>
+                                      </span>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                            <div class="modal-footer">
+                              <div class="wrap-form-field">
+                                <div class="form-group wrap-form-action">
+                                  <button class="btn1 btn-lg float-end"
+                                    (click)="onCancelDocModal()">
+                                    {{ 'common.cancel' | translate }}
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </ng-container>
+                        </ng-template>
+                        <ng-template #content1 let-c="close" let-d="dismiss">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="btn-close shadow-none" aria-label="Close"
+                                (click)="d('Cross click')"></button>
+                            </div>
+                            <div class="modal-body mt-4">
+                              <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2"> </em>
+                              <span class=" text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+                            </div>
+                            <div class="modal-footer">
+                              <div class="text-center">
+                                <button type="button" class="btn btn-secondary  btn-sm me-3"
+                                  (click)="d('Cross click')">No</button>
+                                <button type="button" class="btn btn-danger  btn-sm" (click)="c('yes')">Yes</button>
+                              </div>
+                            </div>
+                          </div>
+                        </ng-template>
+
+                      </div>
+
+                      <div class="add-input-cus-grid">
+                      </div>
+
+                      <div class="">
+                        <div class="new-checkobx-text-alignment2">
+
+                        </div>
+
+                      </div>
+
+                      <nz-collapse>
+                        <nz-collapse-panel [nzHeader]="'Rate'" [nzActive]="true">
+                          <div class="row">
+                            <div class="col-md-12">
+                              <div class="col-md-12">
+                                <div class="table-responsive">
+                                  <div class="wrap-table-area wrap-form-field costtable">
+                                    <div class="wrap-table-height">
+                                      <div class="mt-2">
+                                        <span style="display: none;"><input class="form-control custom-input"
+                                            type="file" id="formFileMultiplesheet" style="visibility:hidden"
+                                            (change)="onFileSelectedTable($event)"></span>
+                                      </div>
+                                      <table aria-describedby="mytable3">
+                                        <thead>
+                                          <th scope="col">Min Rate</th>
+                                          <th scope="col">Parameter (Min)</th>
+                                          <th scope="col">Parameter (Max)</th>
+                                          <th scope="col">Rate <a *ngIf="!isView">
+                                              <em class="bi bi-plus-circle cursor-pointer"
+                                                (click)="addRateColumn(contentRate)"></em></a></th>
+
+                                          <ng-container *ngIf="addiTionalRatesToStep.length > 0">
+                                            <th *ngFor="let name of addiTionalRatesToStep; let i = index">
+                                              {{removeName(name)}}
+                                              <a><em class="bi bi-trash color-pencil-red"
+                                                  (click)="removeAdditionalRates(i)"></em></a>
+                                              <a><em class="bi bi-pencil color-pencil-red"
+                                                  (click)="editAdditionalRates(contentRate, name, i)"></em></a>
+                                            </th>
+                                          </ng-container>
+                                          <th scope="col">Flat/Break</th>
+                                          <th scope="col">Dis.(%)</th>
+                                          <th scope="col">Surcharge</th>
+                                          <th scope="col">
+                                            <a *ngIf="!isView">
+                                              <em class="bi bi-plus-circle cursor-pointer"
+                                                (click)="addSeqItem(0,'')"></em></a>
+                                          </th>
+                                        </thead>
+                                        <tbody>
+                                          <ng-container formArrayName="steps">
+                                            <tr *ngFor="let step of steps.controls; let j=index" [formGroupName]="j">
+
+                                              <td>
+                                                <input type="text" class="form-control"
+                                                  [attr.disabled]="isView ? 'disabled' : null"
+                                                  [ngModelOptions]="{standalone: true}"
+                                                  oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/ +/g, ' ')"
+                                                  [ngModelOptions]="{standalone: true}" formControlName="minRate" />
+                                              </td>
+                                              <td>
+                                                <input type="text" class="form-control"
+                                                  [attr.disabled]="isView ? 'disabled' : null"
+                                                  [ngModelOptions]="{standalone: true}"
+                                                  oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/ +/g, ' ')"
+                                                  [ngModelOptions]="{standalone: true}"
+                                                  formControlName="parameterMin" />
+                                              </td>
+                                              <td>
+                                                <input type="text" class="form-control"
+                                                  [attr.disabled]="isView ? 'disabled' : null"
+                                                  [ngModelOptions]="{standalone: true}"
+                                                  oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/ +/g, ' ')"
+                                                  [ngModelOptions]="{standalone: true}"
+                                                  formControlName="parameterMax" />
+                                              </td>
+                                              <td>
+                                                <input type="text" class="form-control"
+                                                  [attr.disabled]="isView ? 'disabled' : null"
+                                                  [ngModelOptions]="{standalone: true}"
+                                                  oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/ +/g, ' ')"
+                                                  [ngModelOptions]="{standalone: true}" formControlName="rate" />
+                                              </td>
+
+                                              <ng-container *ngIf="addiTionalRatesToStep.length > 0">
+                                                <td *ngFor="let name of addiTionalRatesToStep">
+                                                  <input type="text" class="form-control"
+                                                    [attr.disabled]="isView ? 'disabled' : null"
+                                                    [ngModelOptions]="{standalone: true}"
+                                                    oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/ +/g, ' ')"
+                                                    [ngModelOptions]="{standalone: true}" [formControlName]="name" />
+                                                </td>
+                                              </ng-container>
+                                              <td>
+                                                <div
+                                                  *ngIf="j === 0 || (steps.value[j-1]?.vesselParameter !== steps.value[j]?.vesselParameter) || steps.value?.vesselParameter"
+                                                  class="new-checkobx-text-alignment">
+                                                  <div>
+                                                    <input class="form-check-input laden-ballast"
+                                                      [attr.disabled]="isView ? 'disabled' : null"
+                                                      [ngModelOptions]="{standalone: true}" formControlName="flat"
+                                                      id="flat" type="checkbox" style="border:1px solid" />
+                                                  </div>
+                                                  <div>
+                                                    <label for="flat" class="form-label sub-title">f</label>
+                                                  </div>
+                                                  <div>
+                                                    <input class="form-check-input laden-ballast"
+                                                      [attr.disabled]="isView ? 'disabled' : null"
+                                                      [ngModelOptions]="{standalone: true}" formControlName="break"
+                                                      id="break" type="checkbox" style="border:1px solid" />
+                                                  </div>
+                                                  <div>
+                                                    <label for="break" class="form-label sub-title">b</label>
+                                                  </div>
+                                                </div>
+                                              </td>
+                                              <td>
+                                                <input type="text" class="form-control"
+                                                  [attr.disabled]="isView ? 'disabled' : null"
+                                                  [ngModelOptions]="{standalone: true}"
+                                                  oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^0-9]/g,'').replace(/ +/g, ' ')"
+                                                  formControlName="discount" />
+                                              </td>
+                                              <td class="">
+                                                <a class="cursor-pointer">
+                                                  <em class="bi bi-plus-circle"
+                                                    (click)="openSurchargeModal('',addSurcharge,step.get('surcharges'))"></em></a>&nbsp;&nbsp;
+                                                <a class="cursor-pointer"
+                                                  *ngIf="step.get('surcharges').value.length > 0">
+                                                  <em class="bi bi-eye globally-change-icon-color"
+                                                    (click)="viewSurcharges(step,addSurcharge)"></em>
+                                                </a>&nbsp;&nbsp;
+                                                {{step.get('surcharges').value.length > 0 ?
+                                                step.get('surcharges').value.length:'' }}
+                                              </td>
+
+                                              <td><a>
+                                                  <em class="bi bi-x-circle cursor-pointer"
+                                                    (click)="removeSeqItem(j)"></em></a></td>
+                                              <ng-template #addVesselDim let-modal>
+                                                <ng-container>
+                                                  <div class="col-md-12">
+                                                    <div class="table-responsive">
+                                                      <div class="wrap-table-area wrap-form-field costtable">
+                                                        <h1 class="main-h pt-4">Vessel Dimensions</h1>
+                                                        <div class="wrap-table-height">
+                                                          <table aria-describedby="mytable3">
+                                                            <thead>
+                                                              <th scope="col" *ngFor="let unit of vesselUnits">
+                                                                {{unit.typeName}}</th>
+                                                            </thead>
+                                                            <tbody>
+                                                              <ng-container formArrayName="dimensions">
+                                                                <tr
+                                                                  *ngFor="let dim of step.get('dimensions').controls; let k=index"
+                                                                  [formGroupName]="k">
+                                                                  <td *ngFor="let control of getControls(dim.controls)">
+                                                                    <input type="text" class="form-control vesselDim"
+                                                                      [attr.disabled]="isView ? 'disabled' : null"
+                                                                      [formControlName]="control"
+                                                                      oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/ +/g, ' ')" />
+                                                                  </td>
+                                                                </tr>
+                                                              </ng-container>
+
+                                                            </tbody>
+                                                          </table>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      class="form-group wrap-form-field wrap-form-action d-flex justify-content-center mt-4 mb-4">
+                                                      <button class="btn btn-outline-primary btn-lg btn" type="submit"
+                                                        (click)="onSaveDim(j)">
+                                                        {{ isEditItem ? "Update" : "Save" }}
+                                                      </button>
+                                                      <button class="btn1 btn-lg" type="submit"
+                                                        (click)="onCancelDimModal()">
+                                                        Cancel
+                                                      </button>
+                                                    </div>
+                                                  </div>
+                                                </ng-container>
+                                              </ng-template>
+                                              <ng-template #addSurcharge let-modal>
+                                                <ng-container>
+                                                  <div class="col-md-12">
+                                                    <div class="table-responsive">
+                                                      <div class="wrap-table-area wrap-form-field costtable">
+                                                        <h1 class="main-h pt-4">Surcharge Conditions</h1>
+                                                        <div class="wrap-table-height">
+                                                          <table aria-describedby="mytable3">
+                                                            <thead>
+                                                              <th scope="col">Parameter</th>
+                                                              <th scope="col">Value</th>
+                                                              <th scope="col">Surcharge Type</th>
+                                                              <th scope="col">Surcharge</th>
+                                                              <th scope="col">Action <a *ngIf="!isView">
+                                                                  <em class="bi bi-plus-circle cursor-pointer"
+                                                                    (click)="addNewSurcharge(j,'new',step.get('surcharges'))"></em></a>
+                                                              </th>
+                                                            </thead>
+                                                            <tbody>
+                                                              <ng-container formArrayName="surcharges">
+                                                                <tr
+                                                                  *ngFor="let dim of step.get('surcharges').controls; let k=index"
+                                                                  [formGroupName]="k">
+                                                                  <td>
+                                                                    <nz-select
+                                                                      class="nz-form-select wrap-inline-select custom-input"
+                                                                      style="border-bottom: none; width: 150px;"
+                                                                      formControlName="parameter">
+                                                                      <nz-option [nzLabel]="'Time'"
+                                                                        [nzValue]="'Time'"></nz-option>
+                                                                      <nz-option [nzLabel]="'Days'"
+                                                                        [nzValue]="'Days'"></nz-option>
+                                                                      <nz-option [nzLabel]="'Month'"
+                                                                        [nzValue]="'Month'"></nz-option>
+                                                                      <nz-option [nzLabel]="'Holiday'"
+                                                                        [nzValue]="'Holiday'"></nz-option>
+                                                                    </nz-select>
+                                                                  </td>
+                                                                  <td>
+                                                                    <div *ngIf="dim.value.parameter === 'Time'">
+                                                                      <nz-time-picker
+                                                                        formControlName="timeFrom"></nz-time-picker>
+                                                                      <nz-time-picker
+                                                                        formControlName="timeTo"></nz-time-picker>
+                                                                    </div>
+
+                                                                    <div *ngIf="dim.value.parameter === 'Days'">
+                                                                      <select formControlName="dayFrom"
+                                                                        [ariaPlaceholder]="'Day from'"
+                                                                        (readonly)="isViewSurcharge">
+                                                                        <option value="Monday" selected>Monday</option>
+                                                                        <option value="Tuesday">Tuesday</option>
+                                                                        <option value="Wednesday">Wednesday</option>
+                                                                        <option value="Thursday">Thursday</option>
+                                                                        <option value="Friday">Friday</option>
+                                                                        <option value="Saturday">Saturday</option>
+                                                                        <option value="Sunday">Sunday</option>
+                                                                      </select>
+                                                                      <select formControlName="dayTo"
+                                                                        [ariaPlaceholder]="'Day to'"
+                                                                        (readonly)="isViewSurcharge">
+                                                                        <option value="Monday">Monday</option>
+                                                                        <option value="Tuesday">Tuesday</option>
+                                                                        <option value="Wednesday">Wednesday</option>
+                                                                        <option value="Thursday">Thursday</option>
+                                                                        <option value="Friday" selected>Friday</option>
+                                                                        <option value="Saturday">Saturday</option>
+                                                                        <option value="Sunday">Sunday</option>
+                                                                      </select>
+                                                                    </div>
+
+                                                                    <div *ngIf="dim.value.parameter === 'Month'">
+                                                                      <select id="month" name="month"
+                                                                        formControlName="monthFrom"
+                                                                        (readonly)="isViewSurcharge">
+                                                                        <option value="January">January</option>
+                                                                        <option value="February">February</option>
+                                                                        <option value="March">March</option>
+                                                                        <option value="April">April</option>
+                                                                        <option value="May">May</option>
+                                                                        <option value="June">June</option>
+                                                                        <option value="July">July</option>
+                                                                        <option value="August">August</option>
+                                                                        <option value="September">September</option>
+                                                                        <option value="October">October</option>
+                                                                        <option value="November">November</option>
+                                                                        <option value="December">December</option>
+                                                                      </select>
+                                                                      <select id="month" name="month"
+                                                                        formControlName="monthTo"
+                                                                        (readonly)="isViewSurcharge">
+                                                                        <option value="January">January</option>
+                                                                        <option value="February">February</option>
+                                                                        <option value="March">March</option>
+                                                                        <option value="April">April</option>
+                                                                        <option value="May">May</option>
+                                                                        <option value="June">June</option>
+                                                                        <option value="July">July</option>
+                                                                        <option value="August">August</option>
+                                                                        <option value="September">September</option>
+                                                                        <option value="October">October</option>
+                                                                        <option value="November">November</option>
+                                                                        <option value="December">December</option>
+                                                                      </select>
+                                                                    </div>
+
+                                                                    <div *ngIf="dim.value.parameter === 'Holiday'">
+                                                                      <nz-select
+                                                                        class="nz-form-select wrap-inline-select custom-input"
+                                                                        style="border-bottom: none;" nzShowSearch
+                                                                        (readonly)="isViewSurcharge"
+                                                                        nzPlaceHolder="Please select" nzAllowClear nzPlaceHolder=""  
+                                                                        formControlName="value">
+                                                                        <nz-option
+                                                                          *ngFor="let item of ['15th Aug','26th Jan']"
+                                                                          [nzLabel]="item" [nzValue]="item"></nz-option>
+                                                                      </nz-select>
+                                                                    </div>
+                                                                  </td>
+                                                                  <td>
+                                                                    <nz-select
+                                                                      class="nz-form-select wrap-inline-select custom-input"
+                                                                      style="border-bottom: none; width: 150px;"
+                                                                      formControlName="surchargeType">
+                                                                      <nz-option [nzLabel]="'Percentage'"
+                                                                        [nzValue]="'Percentage'"></nz-option>
+                                                                      <nz-option [nzLabel]="'Lumpsum'"
+                                                                        [nzValue]="'Lumpsum'"></nz-option>
+                                                                    </nz-select>
+                                                                  </td>
+                                                                  <td>
+
+                                                                    <input type="text" class="form-control"
+                                                                      (readonly)="isViewSurcharge"
+                                                                      [attr.disabled]="isView ? 'disabled' : null"
+                                                                      formControlName="surcharge"
+                                                                      oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/ +/g, ' ')" />
+                                                                  </td>
+                                                                  <td>
+                                                                    <a>
+                                                                      <em class="bi bi-x-circle cursor-pointer"
+                                                                        (click)="removeSurchargeItem(step,k)"></em></a>
+                                                                  </td>
+                                                                </tr>
+                                                              </ng-container>
+
+                                                            </tbody>
+                                                          </table>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      class="form-group wrap-form-field wrap-form-action d-flex justify-content-center mt-4 mb-4">
+                                                      <button class="btn btn-outline-primary btn-lg btn" type="submit"
+                                                        *ngIf="!isView" (click)="onSaveDim(j)">
+                                                        {{ isEditItem ? "Update" : isCloningItem ? "Clone Item" : "Save"
+                                                        }}
+                                                      </button>
+                                                      <button class="btn1 btn-lg" type="submit"
+                                                        (click)="onCancelDimModal()">
+                                                        Cancel
+                                                      </button>
+                                                    </div>
+                                                  </div>
+                                                </ng-container>
+                                              </ng-template>
+                                            </tr>
+                                          </ng-container>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </nz-collapse-panel>
+                        <nz-collapse-panel [nzHeader]="'Rules'" (click)="openRuleFromCollapse()">
+                          <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+                            <div class="wrap-table-area">
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <div class="wrap-table-area wrap-form-field costtable">
+                                    <table aria-describedby="mytable3">
+                                      <thead>
+                                        <tr class="field-name">
+                                          <th scope="col" class="text-white">Steps</th>
+                                          <th scope="col" class="text-white">Parameter</th>
+                                          <th scope="col" class="text-white">Condition</th>
+                                          <th scope="col" class="text-white">Value</th>
+                                          <th scope="col" class="text-white">Expression</th>
+                                          <th scope="col"><a (click)="addStepItem()">
+                                              <em class="bi bi-plus-circle cursor-pointer"></em></a></th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <ng-container formArrayName="ruleSteps">
+                                          <ng-container *ngFor="let step of ruleSteps.controls; let k=index"
+                                            [formGroupName]="k">
+                                            <tr>
+
+                                              <td><input type="text" class="form-control rounded-0"
+                                                  formControlName="seqNo" placeholder="{{k+1}}" [value]="k+1"
+                                                  disabled /></td>
+
+                                              <td>
+                                                <nz-select class="form-select"
+                                                  [attr.disabled]="isView ? 'disabled' : null" nzShowSearch nzAllowClear nzPlaceHolder=""  
+                                                  formControlName="parameter">
+                                                  <nz-option *ngFor="let item of allParametrs"
+                                                    [nzLabel]="returnVal(item?.name)"
+                                                    [nzValue]="returnVal(item?.name)"></nz-option>
+                                                </nz-select>
+                                              </td>
+                                              <td>
+                                                <nz-select class="form-select" formControlName="condition"
+                                                  [attr.disabled]="isView ? 'disabled' : null"
+                                                  (change)="onConditionSelect($event,k)">
+                                                  <nz-option *ngFor="let item of symbols" [nzLabel]="item"
+                                                    [nzValue]="item">
+                                                  </nz-option>
+                                                </nz-select>
+                                              </td>
+                                              <td>
+                                                <ng-container
+                                                  *ngIf="step.value.parameter !== 'Cargo' && step.value.parameter !== 'Vessel' && (step.value.condition !=='between' && step.value.condition !=='not between')">
+                                                  <input type="text" class="form-control rounded-0" placeholder="Value"
+                                                    formControlName="value" nz-input (input)="onInput($event)"
+                                                    [nzAutocomplete]="auto" />
+                                                  <nz-autocomplete #auto>
+                                                    <nz-auto-option *ngFor="let option of options"
+                                                      [nzValue]="option.name">{{ option.name }}</nz-auto-option>
+                                                  </nz-autocomplete>
+                                                </ng-container>
+                                                <ng-container
+                                                  *ngIf="step.value.parameter !== 'Cargo' && step.value.parameter !== 'Vessel' && step.value.parameter !== 'Time' && (step.value.condition ==='between' || step.value.condition ==='not between')">
+                                                  <div class="row">
+                                                    <div class="col">
+                                                      <input type="text" class="form-control rounded-0"
+                                                        placeholder="From" formControlName="from" nz-input
+                                                        (input)="onInput($event)" [nzAutocomplete]="autoFrom" />
+                                                      <nz-autocomplete #autoFrom>
+                                                        <nz-auto-option *ngFor="let option of options"
+                                                          [nzValue]="option.name">{{ option.name }}</nz-auto-option>
+                                                      </nz-autocomplete>
+                                                    </div>
+                                                    <div class="col">
+                                                      <input type="text" class="form-control rounded-0" placeholder="To"
+                                                        formControlName="to" nz-input (input)="onInput($event)"
+                                                        [nzAutocomplete]="autoTo" />
+                                                      <nz-autocomplete #autoTo>
+                                                        <nz-auto-option *ngFor="let option of options"
+                                                          [nzValue]="option.name">{{ option.name }}</nz-auto-option>
+                                                      </nz-autocomplete>
+                                                    </div>
+                                                  </div>
+                                                </ng-container>
+                                                <ng-container *ngIf="step.value.parameter === 'Cargo'">
+                                                  <nz-select class="nz-form-select"
+                                                    style="border-bottom: none !important; width: 200px;"
+                                                    [attr.disabled]="isView ? 'disabled' : null" nzShowSearch
+                                                    nzAllowClear nzPlaceHolder=""   formControlName="value">
+                                                    <nz-option *ngFor="let item of cargoList"
+                                                      [nzLabel]="item?.item_text"
+                                                      [nzValue]="item?.item_text"></nz-option>
+                                                  </nz-select>
+                                                </ng-container>
+
+                                                <ng-container *ngIf="step.value.parameter === 'Vessel'">
+                                                  <nz-select class="nz-form-select"
+                                                    style="border-bottom: none !important; width: 200px;"
+                                                    [attr.disabled]="isView ? 'disabled' : null" nzShowSearch
+                                                    nzAllowClear nzPlaceHolder=""   formControlName="value">
+                                                    <nz-option *ngFor="let item of vesselTypeList"
+                                                      [nzLabel]="item?.item_text"
+                                                      [nzValue]="item?.item_text"></nz-option>
+                                                  </nz-select>
+                                                </ng-container>
+
+                                                <ng-container
+                                                  *ngIf="step.value.parameter === 'Time' && (step.value.condition ==='between' || step.value.condition ==='not between')">
+                                                  <nz-time-picker formControlName="from"></nz-time-picker>
+                                                  <nz-time-picker formControlName="to"></nz-time-picker>
+                                                </ng-container>
+
+                                              </td>
+                                              <td><input type="text" class="form-control rounded-0"
+                                                  placeholder="Expression" formControlName="expression"
+                                                  oninput="this.value= this.value.replace(' ', '')" value="" /> </td>
+                                              <td>
+                                                <a (click)="removeSeqItemRule(k)">
+                                                  <em class="bi bi-x-circle cursor-pointer"></em></a>
+                                              </td>
+                                            </tr>
+                                          </ng-container>
+                                        </ng-container>
+                                    </table>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </nz-collapse-panel>
+                      </nz-collapse>
+
+                    </div>
+
+                    <div [ngClass]="changeColumns ? 'col-5':'dis-none'">
+                      <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasScrolling"
+                        data-bs-backdrop="false" data-bs-scroll="true" aria-labelledby="offcanvasScrollingLabel"
+                        style="width:100%;position: inherit;">
+                        <div class="offcanvas-body">
+                          <nz-collapse>
+                            <nz-collapse-panel *ngFor="let doc of allDocuments;let i = index;let last = last"
+                              [nzHeader]="doc?.name + ' ' + 'Source:' + doc.source + ' ' + 'Source Date:' +doc?.sourceDate"
+                              [nzActive]="last">
+                              <pdf-viewer [src]="doc?.url" [page]="page" [original-size]="false" [zoom]="zoom"
+                                [contentEditable]="true" [render-text]="true"
+                                style="height: 600px;border: 2px solid #015cac;"></pdf-viewer>
+                              <div class="d-flex justify-content-center" style="gap: 10px;">
+                                <a>
+                                  <em class="bi bi-plus-circle cursor-pointer" style="zoom: 1.5;"
+                                    (click)="incrementZoom(0.1)"></em></a>
+                                <a>
+                                  <em class="bi bi-dash-circle cursor-pointer" style="zoom: 1.5;"
+                                    (click)="incrementZoom(-0.1)"></em></a>
+                              </div>
+                            </nz-collapse-panel>
+                          </nz-collapse>
+                        </div>
+                      </div>
+
+
+
+                    </div>
+                  </div>
+
+
+                  <div class="form-group wrap-form-field wrap-form-action d-flex justify-content-center mt-4 mb-4">
+                    <button class="btn btn-outline-primary btn-lg btn" type="submit" (click)="onSaveInputs('')"
+                      *ngIf="!isView">
+                      {{ isEditItem && editIndex !== null? "Update" : "Save" }}
+                    </button>
+                    <button class="btn1 btn-lg" type="submit" (click)="onCancelModal()">
+                      Cancel
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+
+          </ng-container>
+
+        </ng-template>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #contentRate let-modal>
+  <ng-container>
+    <div>
+      <div class="table-responsive">
+        <div class="wrap-table-area wrap-form-field costtable">
+          <h1 class="main-h pt-4">{{isEditRateItem? 'Edit' : 'Add'}} Rate Parameter</h1>
+          <div class="wrap-table-height">
+            <form [formGroup]="rateNameForm">
+              <input type="text" class="form-control" formControlName="name" placeholder="rate column name" />
+              <div
+                *ngIf="rateNameForm.get('name') && (rateNameForm.get('name').dirty || rateNameForm.get('name').touched)"
+                class="invalid-feedback">
+                <div *ngIf="rateNameForm.get('name').hasError('pattern')">Input can only contain alphanumeric characters
+                  and underscores.</div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="form-group wrap-form-field wrap-form-action d-flex justify-content-center mt-4 mb-4">
+        <button class="btn btn-outline-primary btn-lg btn" type="submit" [disabled]="rateNameForm.invalid"
+          (click)="onSaveRateColumn()">
+          {{ "Save" }}
+        </button>
+        <button class="btn1 btn-lg" type="submit" (click)="onCancelRateModal()">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>

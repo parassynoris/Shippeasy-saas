@@ -1,0 +1,428 @@
+<!-- Work is under progress -->
+
+<div class=" table-with-gheading">
+    <div class="wrapper mb-4">
+        <div class="container-fluid">
+            <div class="wrap-content">
+                <div class="row">
+                    <div class="page-title-box">
+                        <ol class="breadcrumb ">
+                            <li class="breadcrumb-item">SHIPEASY
+                            </li>
+                            <li class="breadcrumb-item active color-red">Add Consolidation</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <div class="pb-5">
+                <div>
+                    <form [formGroup]="consolidatuonDetailsform">
+
+                        <div class="row  ">
+                            <div class="col-md-3">
+                                <label class="form-label">Job No.</label>
+                                <div class="input-container ">
+                                    <nz-select class="form-select" nzShowSearch nzAllowClear
+                                        (ngModelChange)="setselect($event)" formControlName="jobNo">
+                                        <nz-option *ngFor="let test of batchList" [nzLabel]="test?.batchNo"
+                                            [nzValue]="test?.batchId"></nz-option>
+                                    </nz-select>
+                                    <div *ngIf="submitted && f.jobNo?.errors" class="invalid-feedback">
+                                        <div *ngIf="f.jobNo.errors.required">Job No. is
+                                            required</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-9 text-end">
+                                <span class="simple-text">20 ft Container capacity is 33.2 CBM</span>
+
+                                <span class="simple-text"> 40 ft Container capacity is 67.7 CBM</span>
+
+                                <button *ngIf="false" class="btn btn-outline-primary" (click)="onShow()">Show</button>
+
+                            </div>
+                        </div>
+                        <div class="my-2" *ngIf="false">OR</div>
+                        <div class="row" *ngIf="false">
+                            <div class="col-md-3">
+                                <label class="form-label" for="date">Freight Type
+                                </label>
+                                <div class="input-container ">
+                                    <nz-select class="form-select" nzShowSearch nzAllowClear
+                                        (ngModelChange)="setselect($event)" formControlName="shipment_Type">
+                                        <nz-option *ngFor="let test of shipmentTypes" [nzLabel]="test?.typeName"
+                                            [nzValue]="test?.systemtypeId"></nz-option>
+                                    </nz-select>
+                                    <div *ngIf="submitted && f.shipment_Type?.errors" class="invalid-feedback">
+                                        <div *ngIf="f.shipment_Type.errors.required">Freight Type is
+                                            required</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label" for="from"> {{
+                                    types === 'Ocean' ? 'Port' :
+                                    types === 'Air' ? 'Air Port' :
+                                    types === 'Land' ? 'Port' : 'Port'
+                                    }} </label>
+                                <div class=" wrap-ngx-sets   ">
+
+
+                                    <div class="wrap-input  input-field">
+                                        <ng-autocomplete [data]="portData" [initialValue]=""
+                                            [searchKeyword]="'portName'" formControlName="port"
+                                            placeholder="Search Port" [itemTemplate]="itemTemplate"
+                                            [notFoundTemplate]="notFoundTemplate"
+                                            (inputChanged)="onLocationSearch($event)">
+                                        </ng-autocomplete>
+                                        <ng-template #itemTemplate let-item>
+                                            <a [innerHTML]="item.portName"></a>
+                                        </ng-template>
+
+                                        <ng-template #notFoundTemplate let-notFound>
+                                            <div>No location Found</div>
+                                        </ng-template>
+
+
+                                    </div>
+                                    <div *ngIf="submitted && f.port.errors" class="invalid-feedback">
+                                        <div *ngIf="f.port.errors.required">Port is required</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">
+                                    {{
+                                    types === 'Ocean' ? 'Carrier' :
+                                    types === 'Air' ? 'Airline' :
+                                    types === 'Land' ? 'Transporter' : 'Carrier'
+                                    }}
+
+                                </label>
+                                <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="shipping_line"
+                                    (ngModelChange)="CarrierChange()"
+                                    [ngClass]="{'is-invalid': submitted && f.shipping_line.errors}">
+                                    <nz-option *ngFor="let shippingLine of getshippingLineList()"
+                                        [nzLabel]="shippingLine.name" [nzValue]="shippingLine.shippinglineId">
+                                    </nz-option>
+                                </nz-select>
+                                <div *ngIf="submitted && f.shipping_line?.errors" class="invalid-feedback">
+                                    <div *ngIf="f.shipping_line.errors.required">
+                                        {{ types === 'Ocean' ? 'Carrier' : types === 'Air' ? 'Airport' : 'Transporter'
+                                        }} is required
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3" *ngIf="types === 'Ocean'">
+                                <label class="form-label">Vessel Name</label>
+
+                                <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="plannedVessel"
+                                    (ngModelChange)="setVoyage($event)"
+                                    [ngClass]="{'is-invalid': submitted && f.plannedVessel.errors}">
+                                    <nz-option *ngFor="let vessel of voyageListData" [nzLabel]="vessel.vesselName"
+                                        [nzValue]="vessel.vesselId"></nz-option>
+                                </nz-select>
+                                <div *ngIf="submitted && f.plannedVessel?.errors" class="invalid-feedback">
+                                    <div *ngIf="f.plannedVessel.errors.required">Vessel Name is required
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3" *ngIf="types === 'Ocean'">
+                                <div class="form-field-section">
+                                    <label class="form-label">Voyage No. </label>
+                                    <nz-select class="form-select" nzShowSearch formControlName="voyage"
+                                        [ngClass]="{'is-invalid': submitted && f.voyage.errors}">
+                                        <nz-option *ngFor="let vessel of setVoyageList"
+                                            [nzLabel]="vessel?.voyage_number"
+                                            [nzValue]="vessel?.voyage_number"></nz-option>
+                                    </nz-select>
+                                    <div *ngIf="submitted && f.voyage?.errors" class="invalid-feedback">
+                                        <div *ngIf="f.voyage.errors.required">Voyage No is required</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3" *ngIf="types === 'Air'">
+                                <label class="form-label">Flight No.</label>
+
+                                <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="flightNo"
+                                    [ngClass]="{'is-invalid': submitted && f.flightNo.errors}">
+                                    <nz-option *ngFor="let vessel of flightList" [nzLabel]="vessel?.flight"
+                                        [nzValue]="vessel?.airId"></nz-option>
+                                </nz-select>
+                                <div *ngIf="submitted && f.flightNo.errors" class="invalid-feedback">
+                                    <div *ngIf="f.flightNo.errors.required">Flight No. is required</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3" *ngIf="types == 'Land'">
+                                <label class="form-label">Vehicle No.</label>
+
+                                <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="vehicleNo"
+                                    [ngClass]="{'is-invalid': submitted && f.vehicleNo.errors}">
+                                    <nz-option *ngFor="let vessel of vehicalList" [nzLabel]="vessel?.vehicleLicence"
+                                        [nzValue]="vessel?.landId"></nz-option>
+                                </nz-select>
+                                <div *ngIf="submitted && f.vehicleNo?.errors" class="invalid-feedback">
+                                    <div *ngIf="f.vehicleNo.errors.required">Vehicle No. is required</div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-4" *ngIf="false">
+                            <div class="form-field-section">
+                                <label class="form-label">Booking No</label>
+
+                                <nz-select (ngModelChange)="onChangeContainer()" class="form-select px-0"
+                                    formControlName="batchNo" nzMode="multiple"
+                                    [ngClass]="{'is-invalid': submitted && f.batchNo.errors}">
+                                    <nz-option *ngFor="let option of batchList" [nzLabel]="option?.batchNo"
+                                        [nzValue]="option?.batchId"></nz-option>
+                                </nz-select>
+                                <div *ngIf="submitted && f.batchNo.errors" class="invalid-feedback">
+                                    <div *ngIf="f.batchNo.errors.required">Booking No is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" *ngIf="false">
+                            <div class="form-field-section">
+                                <label class="form-label">Select Yard
+                                </label>
+                                <nz-select class="form-select px-0" formControlName="yard" nzShowSearch nzAllowClear
+                                    (ngModelChange)="getContainerData($event)"
+                                    [ngClass]="{'is-invalid': submitted && f.yard.errors}">
+                                    <nz-option *ngFor="let option of yardList" [nzLabel]="option?.locationName"
+                                        [nzValue]="option?.locationId"></nz-option>
+                                </nz-select>
+                                <div *ngIf="submitted && f.yard.errors" class="invalid-feedback">
+                                    <div *ngIf="f.yard.errors.required">Select Yard is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" *ngIf="false">
+                            <div class="form-field-section">
+                                <label class="form-label">Container
+                                </label>
+                                <div class="d-flex">
+                                    <nz-select class="form-select px-0" formControlName="containerType" nzShowSearch
+                                        nzAllowClear [ngClass]="{'is-invalid': submitted && f.containerType.errors}"
+                                        (ngModelChange)="onChangeContainer()">
+                                        <nz-option *ngFor="let option of containerList"
+                                            [nzLabel]="option?.containerNo + ' (' + option?.containerType + ')'"
+                                            [nzValue]="option?.containermasterId">
+                                        </nz-option>
+                                    </nz-select>
+                                    <span *ngIf="!containerList?.length && this.consolidatuonDetailsform.value.yard"
+                                        class="fs-5 ml-2 pointer-events" (click)="openADD()">+</span>
+                                </div>
+                                <div *ngIf="submitted && f.containerType.errors" class="invalid-feedback">
+                                    <div *ngIf="f.containerType.errors.required">Container is required</div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+                        <!-- </div> -->
+                    </form>
+                    <div *ngIf="false">
+                        <div class="mt-3">
+                            Total Volume of Bookings: {{totalVolume}} Cubic Meter
+                        </div>
+
+                        <div>
+                            Overdue Volume: {{exceeding40ftVolume}} Cubic Meter
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12" *ngIf="containerListForTable.length !== 0">
+                        <div class="table-responsive table-design">
+                            <div class="wrap-table-area  wrap-table-design wrap-form-field costtable " id="htmlData">
+                                <table aria-describedby="mytable" class="gfg" id="tablerecords">
+                                    <thead>
+                                        <tr class="field-name">
+                                            <th scope="col"># </th>
+                                            <th scope="col"> Container No.</th>
+                                            <th scope="col">Total Volume</th>
+                                            <th scope="col">Available Volume</th>
+                                        </tr>
+
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let batch of containerListForTable; let i=index">
+                                            <td class="text-center">{{i+1}}</td>
+                                            <td class="uppercase">{{batch?.containerNo}}</td>
+                                            <td class="uppercase">{{batch?.volume | number : '1.2-2'}}</td>
+                                            <td class="uppercase">{{batch?.availableVolume | number : '1.2-2'}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="no-data-availble" *ngIf="containerListForTable.length === 0">
+                                    {{'common.no_data' | translate}}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-12 text-end mt-2">
+                        <button [disabled]="qrData.length == 0" (click)="assignContainer()"
+                            class="btn btn-outline-primary"><em class="bi bi-plus-circle"></em> Assign
+                            Container</button>
+                    </div>
+                    <div class="col-md-12 mb-5">
+                        <div class="table-responsive table-design">
+                            <div class="wrap-table-area  wrap-table-design wrap-form-field costtable " id="htmlData">
+                                <table aria-describedby="mytable" class="gfg" id="tablerecords">
+                                    <thead>
+                                        <tr class="field-name">
+                                            <th scope="col"># <input type="checkbox" (change)="onCheckAll($event)"
+                                                    id="all"> </th>
+                                            <th scope="col"> Job No.</th>
+                                            <th scope="col"> Package</th>
+                                            <th scope="col"> Qty</th>
+                                            <th scope="col" data-order="desc" data-name="name"> Package Size(lxwxh) <em
+                                                    class="typcn typcn-arrow-unsorted arrow-iconss typcn typcn-arrow-unsorted arrow-icons-sort"></em>
+                                            </th>
+
+                                            <!-- for future use -->
+                                            <!-- <th scope="col"  (click)="sort('primaryNo.primaryNo')">{{ 'smartagent.smartAgent.phoneNo' | translate }}   <em class="typcn typcn-arrow-unsorted arrow-iconss typcn typcn-arrow-unsorted arrow-icons-sort"></em></th> -->
+                                            <th scope="col" data-order="desc" data-name="primaryMailId">Package Weight
+                                                <em
+                                                    class="typcn typcn-arrow-unsorted arrow-iconss typcn typcn-arrow-unsorted arrow-icons-sort"></em>
+                                            </th>
+
+                                            <th scope="col" data-order="desc" data-name="panNo">Package Volume <em
+                                                    class="typcn typcn-arrow-unsorted arrow-iconss typcn typcn-arrow-unsorted arrow-icons-sort"></em>
+                                            </th>
+
+                                            <!-- <th scope="col">Weight <em   class="typcn typcn-arrow-unsorted arrow-iconss typcn typcn-arrow-unsorted arrow-icons-sort"></em></th> -->
+                                            <th scope="col"> Assign Qty</th>
+                                            <th scope="col"> Bin</th>
+                                            <th scope="col"> Container</th>
+                                            <th class="text-center">Action</th>
+                                        </tr>
+
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let batch of qrData; let i=index">
+                                            <td class="text-center"><input type="checkbox"
+                                                    [(ngModel)]="batch.isSelected" (click)="onCheck($event,batch,i)">
+                                            </td>
+                                            <td class="uppercase">{{batch?.batchNo}}</td>
+                                            <td class="uppercase">{{batch?.pkgname}}</td>
+                                            <td class="uppercase">{{batch?.quantity}}</td>
+                                            <td class="uppercase">{{batch?.length}} x {{batch?.width}} x
+                                                {{batch?.height}} {{batch?.unit}}</td>
+                                            <td class="uppercase">{{batch?.weight}} KG</td>
+
+                                            <td class="uppercase"> {{ batch?.volume}} CBM </td>
+                                            <td >
+                                                <input class="form-control custom-input" type="number"
+                                             (keyup)="calculateVolume(batch,i)"
+                                                    [(ngModel)]="batch.assignQty" name="assignQty{{i}}"  
+                                                #assignQty="ngModel"
+                                                required
+                                                min="1"
+                                                [max]="batch.quantity"
+                                                />
+
+                                                <div class="text-danger text-xs mt-1"
+                                                    *ngIf="assignQty.invalid && assignQty.touched">
+                                                    <div *ngIf="assignQty.errors?.required">Is Required</div>
+                                                    <div *ngIf="assignQty.errors?.min">Must be at least 1</div>
+                                                    <div *ngIf="assignQty.errors?.max">Must be less than qty. {{ batch.quantity
+                                                        }}</div>
+                                                </div>
+                                            </td>
+                                            <td class="uppercase">{{batch?.binSelection}}</td>
+                                            <td class="wrap1">{{batch?.assignContainer?.containerNo}}</td>
+                                            <td class="text-center">
+                                                <div *ngIf="batch?.assignContainer?.containerNo">
+                                                    <button class="btn btn-outline-primary"
+                                                        (click)="onUnassigned(batch,i)">
+                                                        <em class="bi bi-dash-circle"></em> UnAssign Container
+                                                    </button>
+                                                </div>
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="no-data-availble" *ngIf="qrData.length === 0">
+                                    {{'common.no_data' | translate}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="form-group wrap-form-action btn-onscreen">
+                    <button class="btn1 float-end " type="submit" (click)="onClose()">
+                        {{ 'common.cancel' | translate }}
+                    </button>
+                    <button class="btn btn-outline-primary float-end " type="submit" (click)="onSave()">
+                        {{ editMode ? 'Update' :'common.save' | translate }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <ng-template #lockContainer let-c="close" let-d="dismiss">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+      </div>
+      <div class="modal-body mt-4 d-flex align-items-center">
+        <em class="bi bi-question-circle text-danger fs-2 text-center float-start me-2"> </em> <span
+          class=" text-dark fs-6">Are you sure you want to lock this container?</span>
+
+          <div class="table-responsive table-design"> 
+            <div class="wrap-table-area  wrap-table-design wrap-form-field costtable " id="htmlData">
+            <table aria-describedby="mytable" class="gfg" id="tablerecords">
+              <thead>
+                <tr class="field-name">
+                  <th scope="col">#  </th>
+                  <th scope="col"> Container No.</th>
+                  <th scope="col"   data-order="desc"
+                                data-name="name"> Available Volume <em class="typcn typcn-arrow-unsorted arrow-iconss typcn typcn-arrow-unsorted arrow-icons-sort"></em></th> -->
+
+<!-- for future use -->
+<!-- <th scope="col"  (click)="sort('primaryNo.primaryNo')">{{ 'smartagent.smartAgent.phoneNo' | translate }}   <em class="typcn typcn-arrow-unsorted arrow-iconss typcn typcn-arrow-unsorted arrow-icons-sort"></em></th> -->
+
+<!-- </tr>
+               
+              </thead>
+              <tbody>
+                <tr *ngFor="let container of assignedContainers; let i=index">
+                  <td class="text-center"><input type="checkbox" [(ngModel)]="container.isSelected"></td>
+                  <td class="uppercase">{{container?.containerNo}}</td>
+                  <td class="uppercase">{{container?.availableVolume}}</td>
+                 
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <div class="text-center">
+          <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+            {{ "common.no" | translate }}
+          </button>
+          <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+            {{ "common.yes" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+</ng-template> -->

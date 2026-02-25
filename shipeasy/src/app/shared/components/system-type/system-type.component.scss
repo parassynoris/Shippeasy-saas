@@ -1,0 +1,34 @@
+
+@media only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px)  {
+	td:nth-of-type(1):before { content: "Name"; }
+	td:nth-of-type(2):before { content: "User Name"; }
+	td:nth-of-type(3):before { content: "Role"; }
+    td:nth-of-type(4):before { content: "Designation"; }
+    td:nth-of-type(5):before { content: "Designation"; }
+	td:nth-of-type(6):before { content: "Action"; }
+}
+.table-with-gheading table td{
+	white-space:wrap;
+	width:400px;
+}
+
+.custom-class{
+	max-width: 40px;
+	white-space: unset;
+}
+
+.globally-chnage-mobile-view {
+	margin-bottom: 10px;
+}
+
+.action-field{
+  white-space:wrap;
+  width:200px;
+}
+
+.wrap{
+	white-space:wrap;
+  width:275px;
+}
+

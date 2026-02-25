@@ -1,0 +1,83 @@
+<div class="modal-content nz-allSelect">
+  <div class="modal-header">
+    <h4 class="modal-title">
+      <ng-container *ngIf="!isData"> {{ 'common.add' | translate }} {{ 'smartagent.smartAgent.department.department' | translate }}</ng-container>
+      <ng-container *ngIf="isData"> {{ 'common.edit' | translate }} {{ 'smartagent.smartAgent.department.department' | translate }}</ng-container>
+    </h4>
+    <button type="button" class="btn-close shadow-none" (click)="onClose()" aria-label="Close">
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="wrap-form-field padding-space  modal-bottom-alignment-for-mobile-view">
+      <form [formGroup]="addDepartment" class="row g-3 mt-3">
+        <div class="col-md-4">
+          <label class="form-label">{{ 'smartagent.smartAgent.department.deptName' | translate
+            }}</label><span class="text-danger">*</span>
+          <input formControlName="deptName" type="text" class="form-control custom-input" 
+            [ngClass]="{ 'is-invalid': submitted && f.deptName.errors }" placeholder="Department Name"  value="">
+          <div *ngIf="submitted && f.deptName.errors" class="invalid-feedback">
+            <div *ngIf="f.deptName.errors.required">{{ 'smartagent.smartAgent.department.deptName' | translate}} {{ 'common.isRequired' | translate }}</div>
+          </div>
+        </div>
+
+        <div class="col-md-4 nz-select">
+          <label class="form-label">Department Head</label><span class="text-danger">*</span>
+            <input formControlName="deptManager" type="text" class="form-control custom-input" 
+            [ngClass]="{ 'is-invalid': submitted && f.deptManager.errors }" placeholder="Department Head"  value="">
+          <div *ngIf="submitted && f.deptManager.errors" class="invalid-feedback">
+            <div *ngIf="f.deptManager.errors.required">Department Head {{ 'common.isRequired' | translate }}</div>
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+          <label class="form-label">{{ 'smartagent.smartAgent.department.email' | translate
+            }}</label><span class="text-danger">*</span>
+          <input formControlName="deptEmail" type="text" class="form-control custom-input" placeholder="Email" value=""
+            [ngClass]="{ 'is-invalid': submitted && f.deptEmail.errors }">
+
+          <div *ngIf="submitted && f.deptEmail.errors" class="invalid-feedback">
+            <div *ngIf="f.deptEmail.errors.required">{{ 'smartagent.smartAgent.department.email' | translate}} {{ 'common.isRequired' | translate }}</div>
+            <div *ngIf="f.deptEmail.errors.pattern">{{'error.err_valid_email' | translate}}</div>
+          </div>
+        </div>
+        <div class="col-md-3" *ngIf="isData">
+          <label class="form-label">Chat With Customer</label>
+          <nz-select  class="form-select" nzShowSearch nzAllowClear
+            formControlName="assignedChatPerson"
+            [ngClass]="{'is-invalid': submitted && f.assignedChatPerson.errors}"
+            >
+            <nz-option *ngFor="let user of  userdetails"
+              [nzLabel]="user?.userName" [nzValue]="user?.userId"></nz-option>
+          </nz-select>
+
+          <div *ngIf="submitted && f.assignedChatPerson.errors" class="invalid-feedback">
+            <div *ngIf="f.assignedChatPerson.errors.required">Chat With Customer is
+              required</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="taggle form-check form-switch">
+            <label class="form-check-label" for="flexSwitchCheckDefault">{{ 'smartagent.smartAgent.department.status' | translate }}</label>
+            <input class="form-check-input ml-1" formControlName="status" type="checkbox" id="flexSwitchCheckDefault">
+          </div>
+        </div>
+        
+        
+        <div class="col-md-12">
+          <button class="btn1 float-end mt-3" (click)="onClose()" type="submit">
+            {{ "common.cancel" | translate }}
+          </button>
+          <button type="submit" class="btn btn-outline-primary float-end mt-3" (click)="saveDepartment()" *ngIf="isType !== 'show'">
+            <ng-container *ngIf="!isData">
+              {{ 'common.save' | translate }}
+            </ng-container>
+            <ng-container *ngIf="isData">
+              {{ 'common.update' | translate }}
+            </ng-container>
+          </button>
+         
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

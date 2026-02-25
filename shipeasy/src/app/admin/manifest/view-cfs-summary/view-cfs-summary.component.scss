@@ -1,0 +1,13 @@
+@import '../../../../assets/styles/mixins/global.scss';
+.table-with-gheading table th {
+    color: white;
+    background-color: var(--theme-red-color);
+    border: 1px solid var(--theme-border-color);
+    padding: 10px;
+}
+.table-responsive {
+    overflow: unset;
+}
+.display-none{
+    display: none;
+}

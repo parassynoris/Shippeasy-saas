@@ -1,0 +1,233 @@
+@import '../../../../../assets/styles/mixins/global.scss';
+
+#percent-sign {
+  top: 0;
+  right: 18px;
+  color: #555;
+  position: relative;
+  z-index: 1;
+}
+.display-print{
+  display: none;
+}
+.wrap-section {
+  margin-top: 20px;
+
+  .wrap-bank-details {
+    span {
+      font-size: 12px;
+      display: inline-block;
+
+      &.wrap-label {
+        margin-right: 25px;
+        width: 21%;
+      }
+    }
+  }
+}
+.justify{
+  justify-content: space-evenly;
+  display: flex;
+  padding-top: 30px;
+}
+.padd{
+  padding-right: 10px;
+}
+.form-select:disabled {
+  background-color: transparent;
+}
+
+.form-control:disabled,
+.form-control[readonly] {
+  background-color: transparent;
+  opacity: 1;
+}
+
+.wrap-bank-left {
+  padding: 12px 0;
+}
+
+.wrap-percentage-area {
+  font-size: 12px;
+  padding: 12px 0;
+
+  input {
+    border: 0;
+    outline: 0;
+    border: 1px solid #ced4da !important;
+    color: var(--theme-light-text-color);
+    font-size: 12px;
+    font-weight: normal;
+    padding: 6px;
+    border-radius: 0;
+  }
+}
+
+span.per {
+  margin: 0 12px;
+}
+
+ 
+
+#leftContainer {
+  float: left;
+}
+
+.data-header {
+  letter-spacing: 0px !important;
+  font-weight: 600;
+}
+
+.invoice-data {
+  margin-left: 10px;
+}
+
+.veselother h2 {
+  padding: 7px 15px !important;
+  box-shadow: none !important;
+  font-size: 14px !important;
+  color: var(--theme-black-320) !important;
+  background-color: var(--theme-light-bg) !important;
+}
+
+.remark-section {
+  margin-top: 14px;
+
+  .form-label {
+    @include new-heading-12;
+  }
+}
+
+.wrap-form-field {
+  margin-top: 23px;
+
+  .main-h {
+    font-size: 12px;
+    margin-bottom: 15px;
+    color: var(--link-text-color);
+    text-transform: capitalize;
+  }
+}
+
+.footer-heading {
+  text-align: right;
+  padding-right: 10px;
+}
+
+.table-with-gheading {
+  min-height: 0vh !important;
+  margin-bottom: 30px;
+  width: 99%;
+}
+
+@media only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px) {
+  td:nth-of-type(1):before {
+    content: "Job No";
+  }
+
+  td:nth-of-type(2):before {
+    content: "Charge Group";
+  }
+
+  td:nth-of-type(3):before {
+    content: "Charge Name";
+  }
+
+  td:nth-of-type(4):before {
+    content: "Container No";
+  }
+
+  td:nth-of-type(5):before {
+    content: "Chargeable Amount";
+  }
+
+  td:nth-of-type(6):before {
+    content: "SAC Code";
+  }
+
+  td:nth-of-type(7):before {
+    content: "Tax Amount";
+  }
+
+  td:nth-of-type(8):before {
+    content: "Non Charge";
+  }
+
+  td:nth-of-type(9):before {
+    content: "Tax Exemp";
+  }
+
+  td:nth-of-type(10):before {
+    content: "Bill Amount";
+  }
+
+  td:nth-of-type(11):before {
+    content: "Action";
+  }
+
+  .footer-ui {
+    td:nth-of-type(1):before {
+      content: "Total Chargeable Amount";
+    }
+
+    td:nth-of-type(2):before {
+      content: "Total SAC Code";
+    }
+
+    td:nth-of-type(3):before {
+      content: "Total Tax Amount";
+    }
+
+    td:nth-of-type(4):before {
+      content: "Total Bill Amount";
+    }
+
+    .footer-heading {
+      text-align: left;
+      padding-right: 0px;
+    }
+  }
+}
+ 
+
+ 
+.select-table {
+  position: absolute;
+  z-index: 2;
+  background-color: white;
+  padding: 10px;
+  box-shadow: 0 0px 0px 0 rgb(0 0 0 / 0%), 0 4px 10px 0 rgb(0 0 0 / 10%);
+.overLay{
+  max-height: 300px;
+  overflow: overlay;
+}
+  thead {
+    tr {
+      margin-bottom: 5px;
+      color: white !important;
+      background-color: var(--theme-red-color);
+
+      th {
+        padding: 5px;
+        color: white !important;
+        white-space: unset !important;
+        font-size: 12px !important;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid #ced4da !important;
+      td {
+        padding: 5px;
+        font-size: 12px !important;
+        white-space: unset !important;
+      }
+    }
+    tr:hover td {
+      background-color: #f5f5f5 !important;
+      }
+  }
+}

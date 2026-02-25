@@ -1,0 +1,163 @@
+<ng-container *ngIf="currentUrl === 'bl'">
+ 
+
+    <div class="table-header-area pt-3">
+      <div>
+        <table-filters [TDP]="[false, false, true, true]" (filterInput)="applyFilter($event)" (onClickExport)="export()">
+        </table-filters>
+      </div>
+      <div class="header-right" *ngIf="!isShow">
+        <a (click)="onOpenNew()" class="max-con new-action  btn btn-outline-primary btn-sm rounded-pill">{{
+          'stolt.batch.bl.new_bill_of_lading' | translate }}</a>
+      </div>
+    </div>
+  
+    <div class="table-card">
+      <div class="table-design example-container mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" matSort class="" summary="agreement">
+  
+          <ng-container matColumnDef="#">
+            <th scope="col" mat-header-cell *matHeaderCellDef>
+              #
+            </th>
+            <td mat-cell *matCellDef="let element;let i = index">
+              {{ element?.id}}
+            </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="blNumber">
+            <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+              BL No.
+            </th>
+            <td class="text-end" mat-cell *matCellDef="let element">
+              {{ element?.blNumber }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="blDate">
+            <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+              BL Date
+            </th>
+            <td class="text-end" mat-cell *matCellDef="let element">
+              {{ element?.blDate | date: 'dd-MM-yyyy'}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="blTypeName">
+            <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+              BL Type
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element?.blTypeName }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="shipperName">
+            <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+              Shipper
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element?.shipperName }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="consigneeName">
+            <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+              Consignee
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element?.consigneeName }}
+            </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="voyageId">
+            <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+              Voyage
+            </th>
+            <td class="text-end" mat-cell *matCellDef="let element">
+              {{ element?.voyageId }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="vesselName">
+            <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+              Vessel
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element?.vesselName }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="polName">
+            <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+              POL
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element?.polName }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="status">
+            <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+              Status
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element?.status ? 'Active' : 'In Active' }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="action">
+            <th scope="col" id="action" class="charterersPdfHead" mat-header-cell   *matHeaderCellDef>
+              {{ 'Actions' }}
+            </th>
+            <td class="borderBottom" mat-cell *matCellDef="let element">
+  
+              <div class="wrap-inside icon-space" >
+                <span nz-tooltip nzTooltipTitle="Split BL" class="mtop" *ngIf="!isShow">
+                  <a (click)="onOpenSplitBatch(element)"><em class="bi bi-view-stacked color-pencil-red"></em> </a>
+                </span>
+  
+                <span class="mtop" *ngIf="!isShow">
+                  <a (click)="onOpenEdit(element.blId ,'edit')"><em class="bi bi-pencil color-pencil-red"></em> </a>
+                </span>
+                <span  nz-tooltip nzTooltipTitle="View" ><a (click)="onOpenEdit(element.blId , 'show')"><em class="bi bi-eye globally-change-icon-color color-pencil-red"></em> </a></span>
+  
+                <span *ngIf="!isShow"><a (click)="email(element)"><em class="bi bi-envelope-fill color-pencil-red"></em> </a></span>
+  
+                <span *ngIf="!isShow"><a (click)="removeRow(content1,element)"><em class="bi bi-trash color-pencil-red"></em> </a></span>
+  
+              </div>
+            </td>
+          </ng-container>
+  
+  
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+              <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+               <span *ngIf="!loaderService?.isLoadingcircle && !dataSource?.data?.length">No data available</span>
+            </td>
+          </tr>
+        </table>
+  
+      </div>
+      <div [ngClass]="{'display-none' : dataSource.filteredData.length < 10}">
+        <mat-paginator [pageSizeOptions]="pagenation" showFirstLastButtons aria-label="Select page">
+        </mat-paginator>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="currentUrl === 'add' || currentUrl === 'edit' || currentUrl === 'show'">
+    <app-new-cons-bl [isType]="currentUrl"  (CloseBillSection)="onBillAction($event)"></app-new-cons-bl>
+  </ng-container>
+  <ng-template #content1 let-c="close" let-d="dismiss">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+        </button>
+      </div>
+      <div class="modal-body mt-4">
+        <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2"> </em> <span
+          class=" text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+      </div>
+      <div class="modal-footer">
+        <div class="text-center">
+          <button type="button" class="btn btn-secondary  btn-sm me-3" (click)="d('Cross click')">No</button>
+          <button type="button" class="btn btn-danger  btn-sm" (click)="c('yes')">Yes</button>
+        </div>
+      </div>
+    </div>
+  </ng-template>

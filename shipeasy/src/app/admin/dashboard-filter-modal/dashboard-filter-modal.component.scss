@@ -1,0 +1,111 @@
+ 
+ 
+.wrap-form{
+  text-align: left;
+}
+.form-check-label{
+  font-weight: 600;
+  line-height: 140%;
+}
+#basic-addon1{
+  background-color: #fff !important;
+  border-right: none;
+  font-weight: 500;
+}
+// .form-check-input{
+//   color: black;
+// }
+// .form-check-input::after{
+//   background: black;
+// }
+.form-control{
+  border-left: none;
+}
+a{
+  text-decoration: none;
+}
+.my-card{
+  background-color: #fff;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(58,112,191,0.1);
+    border-radius: 5px;
+    padding: 14px;
+}
+.custome-modal-footer{
+  border-top: 1px solid #ffffff17;
+  background-color: #fff;
+}
+.family{
+  font-family: 'Jost', sans-serif;
+}
+.close{
+  margin-top: -3rem;
+  .close-action{
+    background-color: white;
+    color: #007BFF;
+    padding-bottom: 5px;
+    border-radius: 50%;
+    height: 31px;
+    width: 31px;
+    display: inline-block;
+    text-align: center;
+    i{
+      font-size: 18px;
+    }
+  }
+}
+.wrap-input{
+  border-bottom: 1px solid #ffffff17;
+}
+// $input-theme: igx-input-group-theme(
+//   $idle-bottom-line-color: none,
+
+//   $focused-bottom-line-color: none,
+//   $idle-secondary-color: none,
+//   $focused-secondary-color: none
+// );
+// :host ::ng-deep {
+
+//   // @include igx-input-group($input-theme);
+
+// }
+input[type=date]:required:invalid::-webkit-datetime-edit {
+  color: transparent;
+}
+input[type=date]:focus::-webkit-datetime-edit {
+  color: getColor(text80) !important;
+}
+// ::-webkit-calendar-picker-indicator {
+//   filter: invert(1);
+// }
+.back{
+  font-weight: 500;
+}
+.datepicker-label{
+  background-color: transparent;
+  min-width: 84px;
+}
+.auto-label-shift{
+  padding-top: 25px !important;
+}
+@media only screen and (max-width: 756px) {
+.mobile-rep{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+}
+
+.app-dashboard-filter-modal-background {
+  padding: 24px;
+  background-color: #fff;
+}
+
+.white-color {
+  color: #444;
+}
+
+// ::ng-deep textarea:valid,input:focus,input:valid {
+//   border-color: #ffffff17 !important;
+//   color: #505050;
+// }

@@ -1,0 +1,45 @@
+@import '../../../../../../assets/styles/mixins/global.scss';
+
+.wrap-form-field{
+    padding: 8px 30px;
+    .form-label{
+      font-size: 12px;
+      color: var(--theme-light-gray-color);
+    }
+    .form-control:focus, .form-select:focus{ box-shadow: none;
+      border-color: var(--link-text-color);}
+      .custom-input {
+        border: 0;
+        outline: 0;
+        border-bottom: 1px solid var(--theme-border-bottom-color);
+        color: var(--theme-light-text-color);
+        @include new-heading-12;
+        font-weight: normal;   
+      }
+     select {
+        border: 0;
+        outline: 0;
+        border-bottom: 1px solid var(--theme-border-bottom-color);
+      @include new-heading-12;
+        border-radius: 0; 
+      }
+      .form-check{
+      .form-check-label{
+        @include new-heading-12;
+      }
+      }
+  }
+  .wrap-form-action{
+    .btn{
+          font-size: 12px;
+          padding: 4px 15px;
+          border-radius: 50px;
+          margin-right: 4px;
+          &:first-child{
+            margin-right: 0px;
+          }
+    }
+  }
+  .form-label {
+    margin-bottom: 0rem;
+}

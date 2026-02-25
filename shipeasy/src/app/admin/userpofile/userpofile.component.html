@@ -1,0 +1,213 @@
+<div class="table-with-gheading">
+  <div class="wrapper">
+    <div class="container-fluid">
+      <div class="wrap-content">
+        <div class="row">
+          <div class="col-sm-12">
+           
+            <div class="wrap-bar mt-4">
+              <div class="wrap-left">
+                <h1>{{ 'masters.user.myprofile' | translate }}</h1>
+              </div>
+            </div>
+            <div class="row mt-5">
+              <div class="col-md-12">
+                <div class="card">
+
+                  <div class="card-body">
+                    <div class="profile-header row">
+                      <div class=" col-md-4 margin-auto">
+                        
+
+                        <div class="add-vendor-profile-image-upload">
+                          <img [src]="imageURL" />
+                          <div class="file-upload-box-alignment">
+                            <div class="file-upload">
+                              <i class="fa-solid fa-pen-to-square"></i>
+                              <input type="file" (change)="uploadImage($event)" accept=".jpg,.jpeg,.bmp,.png" />
+                            </div>
+                          </div>
+                        </div>
+
+
+                      </div>
+                      <div class="col-md-8 mt-5 view-top-alignment-view">
+                        <h3 class="username text-capit">{{userprofileData.userName}} </h3>
+                      
+                      </div>
+                    </div>
+
+                    <div class="row mt-5 pb-4 border-top" *ngIf="!commonFunctions?.getUserType()">
+                      <div class="col-md-12 m-5 mobile-view-space-remove">
+                        <form [formGroup]="profileForm">
+                         
+                          <div class="mb-4 row">
+                            <label class="col-sm-3 col-form-label" for="firstname">{{ 'masters.user.firstname' | translate }}<span class="text-danger">*</span></label>
+                            <div class="col-sm-8">
+                              <input class="form-control custom-input shadow-none" type="text"  formControlName="firstname" 
+                              [ngClass]="{ 'is-invalid': submitted && f.firstname.errors }">
+                              <div *ngIf="submitted && f.firstname.errors" class="invalid-feedback">
+                                <div *ngIf="f.firstname.errors.required">{{'masters.user.firstname' | translate}} is required</div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="mb-4 row">
+                            <label class="col-sm-3 col-form-label" for="firstname">{{ 'masters.user.lastname' | translate }}<span class="text-danger">*</span></label>
+                            <div class="col-sm-8">
+                              <input class="form-control custom-input shadow-none" type="text"  formControlName="lastname" 
+                              [ngClass]="{ 'is-invalid': submitted && f.lastname.errors }">
+                              <div *ngIf="submitted && f.lastname.errors" class="invalid-feedback">
+                                <div *ngIf="f.lastname.errors.required">{{'masters.user.lastname' | translate}} is required</div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="mb-4 row">
+                            <label for="inputPassword" class="col-sm-3 col-form-label">{{ 'stolt.masters.user.email' | translate }}<span class="text-danger">*</span></label>
+                            <div class="col-sm-8">
+                              <input type="email" disabled class="form-control custom-input shadow-none" (keyup)="f.isEmail.setValue(true)" formControlName="email" 
+                              [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
+                              <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                                <div *ngIf="f.email.errors.pattern">{{'error.err_valid_email' | translate}}</div>
+                              </div>
+                            </div>
+                          </div>
+ 
+                          <div class="mb-4 row">
+                            <label for="inputPassword" class="col-sm-3 col-form-label">{{ 'stolt.masters.user.phone_no' | translate }}<span class="text-danger">*</span></label>
+                            <div class="col-sm-8">
+                              <input type="tel" maxlength="10" class="form-control custom-input shadow-none"  formControlName="primaryPhone" 
+                              [ngClass]="{ 'is-invalid': submitted && f.primaryPhone.errors }" (keyup)="f.isMobile.setValue(true)" >
+                              <div *ngIf="submitted && f.primaryPhone.errors" class="invalid-feedback">
+                                <div *ngIf="f.primaryPhone.errors.required">{{'masters.user.phone_no' | translate}} is required</div>
+                              </div>
+                            </div>
+                          </div>
+
+
+                          <div class="mb-4 row">
+                            <label for="inputPassword" class="col-sm-3 col-form-label">User Name<span class="text-danger">*</span></label>
+                            <div class="col-sm-8">
+                              <input disabled type="text" class="form-control custom-input shadow-none"  formControlName="userName" >
+                            </div>
+                          </div>
+
+                          <div class="mb-4 row">
+                            <label for="inputPassword" class="col-sm-3 col-form-label">Role<span class="text-danger">*</span></label>
+                            <div class="col-sm-8">
+                              <input disabled type="text" class="form-control custom-input shadow-none"  formControlName="role" >
+                            </div>
+                          </div>
+
+                          
+                          <div class="mb-4 row">
+                            <label for="inputPassword" class="col-sm-3 col-form-label"> Address Line 1<span class="text-danger">*</span></label>
+                            <div class="col-sm-8">
+                              <input type="text" class="form-control custom-input shadow-none" formControlName="address" 
+                              [ngClass]="{ 'is-invalid': submitted && f.address.errors }">
+                              <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
+                                <div *ngIf="f.address.errors.required">{{'masters.user.address' | translate}} is required</div>
+                              </div>
+                            </div>
+                          </div>
+
+                          
+                          <div class="mb-4 row">
+                            <label for="inputPassword" class="col-sm-3 col-form-label">Address Line 2 </label>
+                            <div class="col-sm-8">
+                              <input type="text" class="form-control custom-input shadow-none" formControlName="address2" 
+                              [ngClass]="{ 'is-invalid': submitted && f.address2.errors }">
+                              <div *ngIf="submitted && f.address2.errors" class="invalid-feedback">
+                                <div *ngIf="f.address2.errors.required">{{'masters.user.address' | translate}} 2 is required</div>
+                              </div>
+                            </div>
+                          </div>
+
+
+                          <div class="mb-4 row">
+                            <label for="inputPassword" class="col-sm-3 col-form-label">Country<span class="text-danger">*</span></label>
+                            <div class="col-sm-8"> 
+                              <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear formControlName="country"
+                              [ngClass]="{'is-invalid': submitted && f.country.errors}" (ngModelChange)="getStateList()">
+                              <nz-option *ngFor="let country of countryList" [nzLabel]="country?.countryName"
+                                [nzValue]="country?.countryId"></nz-option>
+                            </nz-select>
+                              <div *ngIf="submitted && f.country.errors" class="invalid-feedback">
+                                <div *ngIf="f.country.errors.required">Country is required</div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="mb-4 row">
+                            <label for="inputPassword" class="col-sm-3 col-form-label">{{ "smartagent.smartAgent.AllformAddedit.state" | translate
+                            }}<span class="text-danger">*</span></label>
+                            <div class="col-sm-8"> 
+                              <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear formControlName="state"
+                              [ngClass]="{'is-invalid': submitted && f.state.errors}" (ngModelChange)="getCityList()">
+                              <nz-option *ngFor="let state of stateList" [nzLabel]="state?.typeDescription"
+                                [nzValue]="state?.stateId"></nz-option>
+                            </nz-select>
+                              <div *ngIf="submitted && f.state.errors" class="invalid-feedback">
+                                <div *ngIf="f.state.errors.required">State is required</div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="mb-4 row">
+                            <label for="inputPassword" class="col-sm-3 col-form-label">{{ "smartagent.smartAgent.AllformAddedit.city" | translate
+                            }}<span class="text-danger">*</span></label>
+                            <div class="col-sm-8"> 
+                              <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear formControlName="city"
+                              [ngClass]="{'is-invalid': submitted && f.city.errors}">
+                              <nz-option *ngFor="let city of cityList" [nzLabel]="city?.cityName" [nzValue]="city?.cityId"></nz-option>
+                            </nz-select>
+                              <div *ngIf="submitted && f.city.errors" class="invalid-feedback">
+                                <div *ngIf="f.city.errors.required">City is required</div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="mb-4 row">
+                            <label for="inputPassword" class="col-sm-3 col-form-label">Zip / Postal code<span class="text-danger">*</span></label>
+                            <div class="col-sm-8">
+                              <input class="form-control custom-input shadow-none" formControlName="pinCode" 
+                              type="number" maxlength="6"
+                                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                              [ngClass]="{ 'is-invalid': submitted && f.pinCode.errors }">
+                              <div *ngIf="submitted && f.pinCode.errors" class="invalid-feedback">
+                                <div *ngIf="f.pinCode.errors.required">Zip / Postal code is required</div>
+                              </div>
+                            </div>
+                          </div>
+                          
+
+
+                          <div class="form-group wrap-form-action">
+                            <button class="btn btn-outline-primary me-3" (click)="update()" routerLink="/">
+                              {{ 'common.update' | translate }}
+                            </button>
+                            <button class="btn btn-outline-secondary me-3" (click)="reset()">
+                              {{ 'common.reset' | translate }}
+                            </button>
+                            <button class="btn btn-outline-secondary btn-lg mx-1 me-3"  (click)="back()">
+                              {{ "common.back" | translate }}
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+
+                    <div class="row mt-5 pb-4 border-top" *ngIf="commonFunctions?.getUserType()">
+                      <app-add-party [partyMaster]="commonFunctions?.getCustomerDetails()" (setRefreshPartyMasterList)="getRefreshPartyMasterList()"></app-add-party>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

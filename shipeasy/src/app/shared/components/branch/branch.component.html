@@ -1,0 +1,271 @@
+<ng-container *ngIf="currentUrl === 'branch'">
+  <div class="mat-table-with-gheading mt-3">
+    <div class="wrap-table-area " *ngIf="false">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2 ">
+            
+            <div class="mt-2">
+              <span>
+                <h5>{{ fromSize }}-{{ count }} of {{ toalLength }}</h5>
+              </span>
+            </div>
+            <div class="mt-2">
+              <span class="prv" [class.disable-arrow-sign]="fromSize === 1" (click)="prev()"><em
+                  class="typcn typcn-chevron-left"></em></span>
+              <span class="prv" [class.disable-arrow-sign]="count === toalLength" (click)="next()"><em
+                  class="typcn typcn-chevron-right"></em></span>
+            </div>
+            <div class="mt-2"><select class="form-select form-select-sm " (change)="filter($event)">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+              </select></div>
+              <div class="mt-2">
+                <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="openPDF()">{{
+                  'common.print' | translate }} {{
+                    'common.list' | translate }}</a>
+              </div>
+              <div class="mt-2">
+                <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="exportAsExcelFile()">{{
+                  'common.exportToExcel' | translate }}</a>
+              </div>
+            <div class="mt-2">
+              <a class="new-action" (click)="onOpenNew()">{{ 'smartagent.smartAgent.branch.addBranch' | translate }}</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="table-responsive">
+            <table aria-describedby="mytable" class="gfg">
+              <thead>
+                <tr class="field-name">
+                  <th scope="col"> {{ 'smartagent.smartAgent.branch.branchName' | translate }}<em
+                      class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                      <th scope="col"><input type="text" class="form-control" id=""
+                        [(ngModel)]="currency"></th>
+                  <th scope="col">{{ 'smartagent.smartAgent.branch.city' | translate }}<em
+                      class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                      <th scope="col">{{ 'smartagent.smartAgent.branch.Country' | translate }}<em
+                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                  <th scope="col">{{ 'smartagent.smartAgent.branch.portServices' | translate }} <em
+                      class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                  <th scope="col">{{ 'common.status' | translate }} <em class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                  <th scope="col"></th>
+                </tr>
+                <tr>
+                  <th scope="col"><input type="text" class="form-control" [(ngModel)]="branchname" (keydown.enter)="search()"></th>
+                  <th scope="col"><input type="text" class="form-control" [(ngModel)]="city" (keydown.enter)="search()"></th>
+                  <th scope="col"><input type="text" class="form-control" [(ngModel)]="country" (keydown.enter)="search()"></th>
+                  <th scope="col"><input type="text" class="form-control" [(ngModel)]="portname" (keydown.enter)="search()"></th>
+                  <th scope="col">
+                  <select [(ngModel)]="status" class="form-control" (change)="search()">
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
+                  </select></th>
+                  <th scope="col" class="wrap-table-btn">
+                    <button type="button" (click)="search()" class="btn btn-outline-primary">{{ 'common.search_btn' |
+                      translate }}</button>
+                    <a (click)="clear()" class="clearbtn">{{ 'common.clear' | translate }}</a>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let branch of branchList">
+                  <td class="uppercase">{{branch.branchName}}</td>
+                  <td>{{branch?.currency }}</td>
+                  <td> {{branch.addressInfo?.cityName}}</td>
+                  <td> {{branch.addressInfo?.countryName}}</td>
+                  <td>{{branch.portName}}</td>
+                 <td><span>{{branch?.status ? 'Active' : 'Inactive'}}</span></td>
+                  <td class="action-field">
+                    <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop"><a
+                        (click)="onOpenEdit(branch.branchId)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                    </span>
+
+                    <span class="form-check form-switch">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        id="flexSwitchCheckChecked"
+                        (change)="changeStatus(branch)"
+                        [checked]="branch?.status"
+                      />
+                      <label
+                        class="form-check-label"
+                        for="flexSwitchCheckChecked"
+                      ></label>
+                    </span>
+
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="no-data-availble" *ngIf="branchList.length === 0">
+            {{'common.no_data' | translate}}
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="table-header-area">
+      <div>
+        <table-filters [TDP]="[false, false, true, true]" (filterInput)="applyFilter($event)"
+          (onClickExport)="export()">
+        </table-filters>
+      </div>
+      <div class="header-right" >  
+        <a (click)="onOpenNew()"   class="max-con new-action  btn btn-outline-primary btn-sm rounded-pill"
+        >{{ 'smartagent.smartAgent.branch.addBranch' | translate }}</a>
+      </div>
+    </div>
+  
+    <div class="table-card">
+    <div class="table-design example-container mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource" matSort class="" summary="agreement">
+      
+        <ng-container matColumnDef="#"  >
+          <th scope="col" mat-header-cell *matHeaderCellDef  >
+            # <em class="custom-tooltip" [attr.title]="'Toggle Filters'"  (click)="toggleFilters = !toggleFilters" class="bi bi-search"></em>
+          </th>
+          <td mat-cell *matCellDef="let element;let i = index">
+            {{ element?.id}}
+          </td>
+        </ng-container>
+   
+        <ng-container matColumnDef="branchName"  >
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+            Branch 
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <a (click)="navigateToNewTab(element)">{{ element?.branchName | titlecase}}</a>  
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="currency"  >
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+            Currency
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element?.currency   }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="addressInfo.cityName"  >
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+            City
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element?.addressInfo?.cityName | titlecase}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="addressInfo.countryName"  >
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+           Country
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element?.addressInfo?.countryName  | titlecase}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="portName"  >
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+            Port
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element?.portName  }}
+          </td>
+        </ng-container>
+        
+        <ng-container matColumnDef="status"  >
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+            Status  
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element?.status ? 'Active' : 'Inactive' }}
+          </td>
+        </ng-container>
+   
+        <ng-container matColumnDef="action"  >
+          <th scope="col" id="action" class="charterersPdfHead" mat-header-cell   *matHeaderCellDef >
+            {{ 'Actions' }}
+          </th>
+          <td class="borderBottom" mat-cell *matCellDef="let element" > 
+                <!-- <em class="bi bi-three-dots dots-color-change cursor-pointer wrap-batch1  border px-1 em-icon"> -->
+                  <!-- <div class="">
+                    <div class=""> -->
+                    <div  class="wrap-inside icon-space" >
+                      <span  class="mtop">
+                        <a (click)="onOpenEdit(element.branchId)"><em class="bi bi-pencil color-pencil-red"></em> </a>
+                      </span>
+                      <span class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                          (change)="changeStatus(element)" [checked]="element?.status" />
+                        <label class="form-check-label" for="flexSwitchCheckChecked"> </label>
+                      </span>
+                 
+                    </div>
+                     <!-- </div>
+                  </div> -->
+                <!-- </em>  -->
+          </td>
+        </ng-container>
+  
+  
+        <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index" [matColumnDef]="headersFilter">
+          <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+            <div  class="filters-container" [class.animate]="!toggleFilters"  > 
+              <!-- <em *ngIf="i == 0" class="custom-tooltip" [attr.title]="'Clear Filters'" (click)="clearFilters();toggleFilters = !toggleFilters" class="bi bi-x-circle"></em> -->
+              <div *ngIf="i > 0 && i < displayedColumns1.length - 1" appearance="outline">
+                <input class="form-control input-txt"  placeholder="Press 'Enter' to search" [(ngModel)]="filtersModel[i]" (keyup.enter)="searchColumns()" >
+              </div>
+              <em *ngIf="i == displayedColumns1.length - 1" class="custom-tooltip" [attr.title]="'Clear Filters'" (click)="clearFilters();toggleFilters = !toggleFilters" class="bi bi-x-circle"></em>
+            </div>
+          </th>
+        </ng-container>
+  
+  
+        <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-header-row class="no-default-height"  *matHeaderRowDef="displayedColumns1"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+            <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+          <span *ngIf="!loaderService?.isLoadingcircle && !dataSource?.data?.length">No data available</span>
+          </td>
+        </tr>
+      </table>
+     
+    </div> 
+    <div [ngClass]="{'display-none' : toalLength < 10}">
+      <mat-paginator [length]="toalLength" [pageSize]="pageSize" [pageIndex]="pageNumber-1"
+        (page)="onPageChange($event)"  [pageSizeOptions]="_gc.PAGINATOR_OPTIONS" showFirstLastButtons></mat-paginator>
+    </div>
+  </div>
+  </div>
+
+</ng-container>
+<ng-container *ngIf="currentUrl === 'addbranch' || currentUrl === 'editbranch'">
+  <app-addbranch [isFiledVisiable]="prentPath"></app-addbranch>
+</ng-container>
+
+<ng-template #content1 let-c="close" let-d="dismiss">    
+  <div class="modal-content">
+  <div class="modal-header">    
+             
+            <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">    
+               
+            </button>    
+        </div>    
+        <div class="modal-body mt-4 d-flex align-items-center">
+          <em class="bi bi-question-circle text-danger fs-2 text-center float-start me-2"> </em> <span
+              class=" text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+      </div>  
+        <div class="modal-footer"> 
+          <div class="text-center">   
+            <button type="button" class="btn btn-secondary  btn-sm me-3" (click)="d('Cross click')" >{{'common.no'|translate}}</button>    
+            <button type="button" class="btn btn-danger  btn-sm" (click)="c('yes')">{{'common.yes'|translate}}</button>    
+        </div> 
+      </div>
+        </div>   
+    </ng-template> 

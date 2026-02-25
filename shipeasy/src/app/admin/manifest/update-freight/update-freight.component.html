@@ -1,0 +1,132 @@
+<div class="table-with-gheading">
+    <div class="wrap-content">
+       
+        <div class="row">
+            <div class="horz-bar mb-3">
+                <span>Vessel : {{vesseldata}} || </span>
+                <span>Voyage : {{voyageData}}</span>
+        
+            </div>
+            <div class="col-md-12 table-with-gheading">
+                <div class="horz-bar">Update Freight </div>
+                <div class="table-responsive">
+                    <div class="wrap-table-area  wrap-table-design wrap-form-field"
+                        id="htmlData">
+                        <table aria-describedby="mytable">
+                            <thead>
+                                <tr class="field-name">
+                                    <th scope="col"></th>
+                                    <th scope="col">Master BL</th>
+                                    <th scope="col">Container</th>
+                                    <th scope="col">POO</th>
+                                    <th scope="col">POL</th>
+                                    <th scope="col">POD</th>
+                                    <th scope="col">FPOD</th>
+                                    <th scope="col">Consignee</th>
+                                    <th scope="col">Notify Party</th>
+                                    <th scope="col">Freight Term</th>
+                                    <th scope="col">Freight Amount</th>
+                                    <th scope="col">Currency</th>
+                                </tr>
+                                <tr>
+                                    <th scope="col"> </th>
+                                    <th scope="col"> 
+                                        <input type="text" class="form-control" [(ngModel)]="blNo" 
+                                        [ngModelOptions]="{standalone: true}" (keydown.enter)="search()">
+                                    </th>
+                                    <th scope="col">
+                                        <input type="text" class="form-control" [(ngModel)]="containers" 
+                                        [ngModelOptions]="{standalone: true}" (keydown.enter)="search()"> </th>
+                                    <th scope="col"> 
+                                        <input type="text" class="form-control" [(ngModel)]="pooname" 
+                                        [ngModelOptions]="{standalone: true}" (keydown.enter)="search()">
+                                    </th>
+                                    <th scope="col"> 
+                                        <input type="text" class="form-control" [(ngModel)]="polname" 
+                                        [ngModelOptions]="{standalone: true}" (keydown.enter)="search()">
+                                    </th>
+                                    <th scope="col">
+                                        <input type="text" class="form-control" [(ngModel)]="podName" 
+                                        [ngModelOptions]="{standalone: true}" (keydown.enter)="search()">
+                                    </th>
+                                    <th scope="col"><input type="text" class="form-control" [(ngModel)]="fpodName" 
+                                        [ngModelOptions]="{standalone: true}"(keydown.enter)="search()"
+                                        >
+                                    </th>
+                                    <th scope="col"><input type="text" class="form-control" [(ngModel)]="consignee" 
+                                        [ngModelOptions]="{standalone: true}"(keydown.enter)="search()"
+                                        >
+                                    </th>
+                                  
+                                    <th scope="col"><input type="text" class="form-control" [(ngModel)]="notify" 
+                                        [ngModelOptions]="{standalone: true}"(keydown.enter)="search()"
+                                        >
+                                    </th>
+                                  
+                                    <th scope="col"><nz-select class="form-select" nzShowSearch nzAllowClear (ngModelChange)="search()">
+                                        <nz-option *ngFor="let data of chargeTermList" [nzLabel]="data.typeName"
+                                          [nzValue]="data.typeName"></nz-option>
+                                      </nz-select>
+                                    </th>
+                                    <th scope="col"><input type="text" class="form-control" [(ngModel)]="amount" 
+                                        [ngModelOptions]="{standalone: true}" (keydown.enter)="search()"
+                                        >
+                                    </th>
+                                    <th scope="col">
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear 
+                                        [(ngModel)]="currency" (ngModelChange)="search()"> 
+                                        <nz-option *ngFor="let data of currencyList" [nzLabel]="data?.currencyShortName"
+                                          [nzValue]="data?.currencyShortName"></nz-option>
+                                      </nz-select>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let bl of houseBlList;let i =index">
+                                    <td>{{i+1}}</td>
+                                    <td>{{bl?.blNumber}}</td>
+                                    <td><span *ngFor="let ctr of bl?.containers">{{ctr?.containerNumber}},<br> </span></td>
+                                    <td>{{bl?.POO}}</td>
+                                    <td>{{bl?.importPolName}}</td>
+                                    <td>{{bl?.importPodName}}</td>
+                                    <td>{{bl?.importFpodName}}</td>
+                                    <td>{{bl?.consigneeName}}</td>
+                                    <td>{{bl?.notify_party1Name}}</td>
+                                    <td>
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear [(ngModel)]="bl.freightTerm">
+                                        <nz-option *ngFor="let data of chargeTermList" [nzLabel]="data.typeName"
+                                          [nzValue]="data.typeName"></nz-option>
+                                      </nz-select>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" [(ngModel)]="bl.freightAmount" >
+                                    </td>
+                                    <td>
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear 
+                                        [(ngModel)]="bl.freightCurrencyId" > 
+                                        <nz-option *ngFor="let data of currencyList" [nzLabel]="data?.currencyShortName"
+                                          [nzValue]="data?.currencyId"></nz-option>
+                                      </nz-select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="no-data-availble mt-0" *ngIf="houseBlList.length === 0">
+                    {{'common.no_data' | translate}}
+                </div>
+            </div>
+        </div>
+        <div class="btn-onscreen my-3">
+            <div class="form-group wrap-form-action">
+              <button  class="btn btn-outline-primary  float-end " (click)="updateBl()">
+                Update Freight
+              </button>
+              <button  class="btn btn-outline-primary  float-end " (click)="back()">
+                Back
+              </button>
+            </div>
+          </div>
+    </div>
+</div>

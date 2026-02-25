@@ -1,0 +1,167 @@
+<!-- <form [formGroup]="quotationform" class="nz-allSelect">
+    <div class="wrap-form-field">
+        <div class="modal-header px-1">
+            <h5 class="modal-title position-relative start-0">Add Agent Advise</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                (click)="closePopup()"></button>
+        </div>
+        <div class="modal-body px-1">
+            <div class="row g-3">
+            </div>
+            <div class="modal-footers mt-4">
+                <div class="wrap-form-field">
+                    <div class="form-group wrap-form-action d-flex justify-content-center mb-0">
+                        <button (click)="closePopup()" class="btn1 float-end" data-bs-dismiss="modal" type="submit">
+                            {{ 'common.cancel' | translate }}
+                        </button>
+                        <button class="btn btn-outline-primary float-end" type="button">
+                            {{ 'common.save' | translate }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form> -->
+
+<div class="container mb-4">
+    <div class="row py-2 align-items-baseline">
+        <div class="col-6">
+            <span class="heading--label color--black">Agent Advice</span>
+        </div>
+        <div class="col-6 text-end">
+            <!-- <a data-bs-toggle="modal" data-bs-target="#search"
+                        class="heading--button color--secondary need-help" (click)="openWebChat()">
+                        Need Help?
+                    </a> -->
+            <button class="btn btn-outline-primary btn-lg float-end" appBackButton>Back</button>
+        </div>
+    </div>
+
+    <div   class="wrap-qform">
+        <div class=" qoutation-from-card">
+            <form [formGroup]="quotationform">
+            <div class=" qoutation-from-grid">
+                <div class="">
+                    <label  class="heading--formlabel text-uppercase color--black d-block text-start" for="shipmentType">Freight
+                        Type
+                        <span class="text-danger">*</span></label>
+                    <div class="input-container input-field">
+                        <nz-select class="form-select" nzShowSearch nzAllowClear 
+                        nzPlaceHolder="Select freight type" id="shipmentType" formControlName="shipmentType" 
+                            (ngModelChange)="setselect($event)">
+                            <nz-option *ngFor="let test of shipmentTypes" [nzLabel]="test?.typeName"
+                                [nzValue]="test?.systemtypeId"></nz-option>
+                        </nz-select>
+                        <div *ngIf=" quotationform.controls['shipmentType'].errors &&
+                    quotationform.controls['shipmentType'].touched" class="invalid-error">
+                            <div *ngIf="quotationform.controls['shipmentType'].errors.required">Freight Type is
+                                required</div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="">
+                    <label class="heading--formlabel text-uppercase color--black d-block text-start" for="from">Origin
+                        <span class="text-danger">*</span></label>
+                    <div class=" wrap-ngx-sets input-field  ">
+
+
+                        <div class="wrap-input  ">
+                            <ng-autocomplete (keydown)="setValueOrigin($event)" [data]="locationData" [initialValue]="" [searchKeyword]="'portName'"
+                                formControlName="from" id="from" placeholder="Enter Location" [itemTemplate]="itemTemplate"
+                                [notFoundTemplate]="notFoundTemplate" (inputChanged)="onLocationSearch($event)">
+                            </ng-autocomplete>
+                            <ng-template #itemTemplate let-item>
+                                <a [innerHTML]="item.portName"></a>
+                            </ng-template>
+
+                            <ng-template #notFoundTemplate let-notFound>
+                                <div>No location Found</div>
+                            </ng-template>
+
+
+                        </div>
+
+                        <span *ngIf=" quotationform.controls['from'].errors &&
+                            quotationform.controls['from'].touched" class="invalid-error">
+                            <span *ngIf="quotationform.controls['from'].errors.required">Please Select Port
+                            </span>
+                        </span>
+                    </div>
+                </div>
+                <div class="pb-1">
+                    <span class="btn-swap" (click)="
+                    onSwap(
+                      this.quotationform.value.fromType,
+                      this.quotationform.value.from,
+                      this.quotationform.value.toType,
+                      this.quotationform.value.to
+                    )
+                  ">
+                      <em class="bi bi-arrow-left-right color--themecolor"></em>
+                  </span>
+                </div>
+                <div class="">
+                    <label class="heading--formlabel text-uppercase color--black d-block text-start"
+                        for="to">Destination
+                        <span class="text-danger">*</span></label>
+                    <div class=" wrap-ngx-sets input-field  ">
+                        <div class="wrap-input ">
+                            <ng-autocomplete  (keydown)="setValueDesti($event)" id="to" [data]="locationData" [initialValue]="" [searchKeyword]="'portName'"
+                                formControlName="to" placeholder="Enter Location" [itemTemplate]="itemTemplate"
+                                [notFoundTemplate]="notFoundTemplate" (inputChanged)="onLocationSearch($event)">
+                            </ng-autocomplete>
+                            <ng-template #itemTemplate let-item>
+                                <a [innerHTML]="item.portName"></a>
+                            </ng-template>
+
+                            <ng-template #notFoundTemplate let-notFound>
+                                <div>No location Found</div>
+                            </ng-template>
+
+                        </div>
+                        <span *ngIf=" quotationform.controls['to'].errors &&
+                            quotationform.controls['to'].touched" class="invalid-error">
+                            <span *ngIf="quotationform.controls['to'].errors.required"> Please Select Port
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+            <div class="col-md-6">
+                <input class="file-input" type="file" #fileInput (change)="setFileName($event)" style="display: none" />
+                <div class="card-upload card-upload-content-alignment  button1" (click)="openFile()"
+                    *ngIf="!filename">
+                    <div class="text-center text-center-box d-flex flex-column align-items-center" *ngIf="!filename">
+                        <span class="color--secondary center-alignment-choose-file">Choose file</span>
+                        <p class="center-alignment-text">or Drag & Drop it into this field</p>
+                    </div>
+                </div>
+                <div class="ids-border-card bg--bgprimary" *ngIf="filename">
+                    <div class="text-center">
+                        <!-- <div class="form-check-radio form-check-radio-label-space-remove">
+                            <input checked type="radio" id="radio" />
+                            <label for="radio">&nbsp;</label>
+                        </div>  -->
+                        <p>{{ filename.name }}</p>
+                        <span class="color--secondary button2" (click)="openFile()">
+                            Reupload
+                        </span>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </form>
+        </div>
+            <div class="col-md-12 text-end mt-3">
+                <button class="btn btn-primary-outline" style="position: relative; top: -75px; left: -30%;" (click)="saveAgentAdvise()">
+                    Create
+                </button>
+            </div>
+     
+
+        </div> 
+</div>

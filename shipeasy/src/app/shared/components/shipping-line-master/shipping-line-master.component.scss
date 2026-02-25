@@ -1,0 +1,50 @@
+.width15{
+    width: 15%;
+}
+.width10{
+    width: 10%;
+}
+::ng-deep {
+	.cdk-overlay-container,
+	.cdk-overlay-pane {
+	  z-index: 2000 !important;
+	}
+
+  }
+  .modal-body{
+	.table-with-gheading {
+		min-height: auto;
+		margin-bottom: 0px;
+	}
+  }
+ 
+  .globally-chnage-mobile-view {
+	margin-bottom: 10px;
+}
+
+.disaplay-non{
+	pointer-events: none;
+	opacity: .7;
+  }
+
+  ::ng-deep {
+    .wrap-modal-autosearch {
+        nz-select {
+ 
+            input,
+            select {
+                padding: 0 0px !important;
+                border: 1px solid rgb(207 202 202) !important;
+            }
+        }
+ 
+        .nz-form-select.wrap-inline-select nz-select-top-control {
+            height: 32px !important;
+        }
+    }
+ 
+    .cdk-overlay-container,
+    .cdk-overlay-pane {
+        z-index: 2000 !important;
+    }
+}

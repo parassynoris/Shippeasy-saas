@@ -1,0 +1,128 @@
+<div class="table-with-gheading">
+  <div class="wrap-content">
+     
+      <div class="row">
+          <div class="horz-bar mb-3">
+              <span>Vessel : {{vesseldata}} || </span>
+              <span>Voyage : {{voyageList}}</span>
+
+          </div>
+          <div class="col-md-12 table-with-gheading">
+              <div class="horz-bar">IGM Generation </div>
+              <div class="table-responsive">
+                  <div class="wrap-table-area  wrap-table-design wrap-form-field"
+                      id="htmlData">
+                      <form [formGroup]="blForm">
+                          <table aria-describedby="mytable">
+                              <thead>
+                                  <tr class="field-name">
+                                      <th scope="col"></th>
+                                      <th scope="col">SR No.</th>
+                                      <th scope="col">BL No.</th>
+                                      <th scope="col">Discharge Port</th>
+                                      <th scope="col">Consignee</th>
+                                      <th scope="col">Cargo Status</th>
+                                      <th scope="col">CFS Location</th>
+                                      <th scope="col">FPOD</th>
+                                      <th scope="col">Departure Mode</th>
+                                      <th scope="col">Container Status</th>
+  
+                                  </tr>
+                                  <tr>
+                                      <th scope="col"></th>
+                                      <th scope="col"> </th>
+                                      <th scope="col"> </th>
+                                      <th scope="col"> </th>
+                                      <th scope="col"> </th>
+                                      <th scope="col"> </th>
+                                      <th scope="col">
+                                     </th>
+                                      <th scope="col">
+                                      </th>
+                                      <th scope="col"> </th>
+                                      <th scope="col"> </th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <ng-container formArrayName="blData">
+                                      <ng-container *ngFor="let bl of getControls(); let i = index"
+                                      [formGroupName]="i">
+                                      <tr>
+                                          <td>
+                                            <input type="checkbox" formControlName="isIgm">
+                                          </td>
+                                          <td>{{i+1}}</td>
+                                          <td>{{bl?.controls?.blNumber?.value}}</td>
+                                          <td>{{bl?.controls?.importPodName?.value}}</td>
+                                          <td>{{bl?.controls?.consigneeName?.value}}</td>
+                                          <td>
+                                            <nz-select class="w-100 border-0" nzShowSearch nzAllowClear formControlName="cargoStatus"
+                                            >
+                                            <nz-option *ngFor="let loadPlace of itemTypeList"
+                                              [nzLabel]="loadPlace.typeName" [nzValue]="loadPlace.typeName"></nz-option>
+                                          </nz-select>
+                                          </td>
+                                          <td>
+                                            <nz-select class="w-100 border-0" nzShowSearch formControlName="cfsLocationId"
+                                            nzAllowClear>
+                                            <nz-option *ngFor="let cfs of CFSlocationList" [nzLabel]="cfs?.locationName"
+                                            [nzValue]="cfs?.locationId"></nz-option>
+                                            </nz-select>
+                                          </td>
+                                          <td>
+                                            <nz-select class="w-100 border-0" nzShowSearch nzAllowClear formControlName="importFpod" (ngModelChange)="fpodChange($event,i)">
+                                                <nz-option *ngFor="let fpod of portList" [nzLabel]="fpod?.portDetails?.portName"
+                                                  [nzValue]="fpod?.portId"></nz-option>
+                                              </nz-select>
+                                          </td>
+                                          <td>
+                                            <div class="radio-button-style">
+                                              <input type="radio" [name]="'departureMode'+i" [id]="'departureMode'+i" value="Rail" formControlName="departureMode"
+                                                />
+                                              <label [for]="'departureMode'+i">Rail</label>
+                                            </div>
+                                            <div class="radio-button-style">
+                                              <input type="radio" [name]="'departureMode'+i" [id]="'departureMode'+i" value="Truck" formControlName="departureMode"
+                                                />
+                                              <label [for]="'departureMode'+i">Truck</label>
+                                            </div>
+                                            <div class="radio-button-style">
+                                              <input type="radio" [name]="'departureMode'+i" [id]="'departureMode'+i" value="Vessel" formControlName="departureMode"
+                                                />
+                                              <label [for]="'departureMode'+i">Vessel</label>
+                                            </div>
+                                          </td>
+                                          <td>
+                                            <nz-select class="w-100 border-0" nzShowSearch nzAllowClear formControlName="containerStatus"
+                                            >
+                                            <nz-option *ngFor="let con of containerStatusList" [nzLabel]="con?.typeName"
+                                              [nzValue]="con?.typeName"></nz-option>
+                                            </nz-select>
+                                          </td>
+                                      </tr>
+                                      </ng-container>
+                                  
+                                  </ng-container>
+                                  
+                              
+                              </tbody>
+                          </table>
+                      </form>
+                     
+                  </div>
+              </div>
+              <div class="no-data-availble mt-0" *ngIf="houseBlList.length === 0">
+                  {{'common.no_data' | translate}}
+              </div>
+          </div>
+      </div>
+      <div class="btn-onscreen  my-3" >
+          <div class="form-group wrap-form-action ">
+              <button class="btn btn-outline-primary float-end" (click)="back()"> 
+                Back </button>
+                <button class="btn btn-outline-primary float-end" (click)="updateData()"> 
+                  Update </button>
+          </div>
+        </div>
+  </div>
+</div>

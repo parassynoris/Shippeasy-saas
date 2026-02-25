@@ -1,0 +1,560 @@
+<div class="table-with-gheading">
+
+    <div class="wrap-table-area">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="float-clear-mobile-view d-flex flex-column flex-sm-row gap-3 float-start search-section">
+                    <div class="input-group custom-input">
+                        <input type="text" class="form-control" placeholder="Search" aria-label="Search">
+                    </div>
+                </div>
+                <div
+                    class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2 ">
+                    <div class="mt-2">
+                        <span>
+                            <h5>1-10 of 80</h5>
+                        </span>
+                    </div>
+                    <div class="mt-2">
+                        <span class="prv"><em class="typcn typcn-chevron-left"></em></span>
+                        <span class="prv"><em class="typcn typcn-chevron-right"></em></span>
+                    </div>
+                    <div class="mt-2"><select class="form-select form-select-sm ">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select></div>
+                    <div class="mt-2">
+                        <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="openPDF()">{{
+                            'common.print' | translate }} {{
+                              'common.list' | translate }}</a>
+                        </div>
+                  <div class="mt-2">
+                        <a class="new-action" (click)="open(AddClause)">{{"common.add" | translate}}  {{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.TRAMP_PORT_TARIFF_DETAIL' | translate }}</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="table-responsive" id="htmlData">
+                    <div class="wrap-table-area  wrap-table-design wrap-form-field costtable tableFixHead">
+                    <table aria-describedby="mytable" class="gfg">
+                        <thead>
+                            <tr class="field-name">
+                                <th scope="col">Action</th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.PORT_TARIFF_ID' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.PORT_ID' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.PORT_DA_CHARGE_ID' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.BUDGET_DEFAULT' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.PORT_DA_UNIT_ID' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.LUMPSUM_DEFAULT' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.CURRENCY_ID' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.SERVICE_TAX' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.EDUCATION_CESS' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.HIGHER_EDUCATION_CESS' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.VAT' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.OTHER_TAX' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.ACCOUNT_CODE' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.LAST_UPDATE' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.LAST_UPDATE_USER_ID' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.VESSEL_UNIT' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.RATE_PER_UNIT' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.TERMINAL_ID' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.LOADED' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.COASTAL' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.MIN_DA_QTY' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.FROM_DATE' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.TO_DATE' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.FOREIGN' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.EMPTY' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.COASTAL_OR_FOREIGN' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.GEN' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.LIQUID' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.MOTHER' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.DAUGHTER' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.IS_MANDATE' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.BASE_CHARGE_CODE' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.BASE_PERCENTAGE' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.VESSEL_TYPE_ID' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.REMARKS' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.SEQ_NO' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.VENDOR_ID' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.REBATE_PER' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.BIRTH_LOCATION' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.PILOTAGE_LOCATION' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.MINIMUM_AMOUNT' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.ANCHORAGE_LOCATION' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.COMMODITY_GROUP_ID' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.SLAB_APPLICABLE' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.PILOTAGE_TYPE_ID' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.MIN_CURRENCY_ID' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+
+                                <th scope="col"></th>
+                            </tr>
+                            <tr><th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="date" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+
+                                <th scope="col"  class="wrap-table-btn">
+                                    <button type="button" class="bi bi-search btn btn-outline-primary btn-sm rounded-pill"></button>
+                                    <a routerLink="#"  class="bi bi-arrow-clockwise btn btn-outline-primary btn-sm rounded-pill"></a>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="action-field">
+                                    <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop"><a
+                                            (click)="open(AddClause)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                                    </span>
+                                  
+                                    <span class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" role="switch"
+                                            id="flexSwitchCheckChecked" checked>
+                                        <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                                    </span>
+                                </td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.PORT_TARIFF_ID' | translate }}
+                                </td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.PORT_ID' | translate }}</td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.PORT_DA_CHARGE_ID' | translate
+                                    }}</td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.BUDGET_DEFAULT' | translate }}
+                                </td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.PORT_DA_UNIT_ID' | translate }}
+                                </td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.LUMPSUM_DEFAULT' | translate }}
+                                </td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.CURRENCY_ID' | translate }}</td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.SERVICE_TAX' | translate }}</td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.EDUCATION_CESS' | translate }}
+                                </td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.HIGHER_EDUCATION_CESS' | translate }}
+                                </td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.VAT' | translate }}</td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.OTHER_TAX' | translate }}</td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.ACCOUNT_CODE' | translate }}
+                                </td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.LAST_UPDATE' | translate }}</td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.LAST_UPDATE_USER_ID' | translate
+                                    }}</td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.VESSEL_UNIT' | translate }}</td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.RATE_PER_UNIT' | translate }}
+                                </td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.TERMINAL_ID' | translate }}</td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.LOADED' | translate }}</td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.COASTAL' | translate }}</td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.MIN_DA_QTY' | translate }}</td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.FROM_DATE' | translate }}</td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.TO_DATE' | translate }}</td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.FOREIGN' | translate }}</td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.EMPTY' | translate }}</td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.COASTAL_OR_FOREIGN' | translate
+                                    }}</td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.GEN' | translate }}</td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.LIQUID' | translate }}</td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.MOTHER' | translate }}</td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.DAUGHTER' | translate }}</td>
+                                <td class="">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.IS_MANDATE' | translate }}</td>
+
+                                <td>{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.BASE_CHARGE_CODE' | translate }} </td>
+                                <td>{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.BASE_PERCENTAGE' | translate }} </td>
+                                <td>{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.VESSEL_TYPE_ID' | translate }} </td>
+                                <td>{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.REMARKS' | translate }} </td>
+                                <td>{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.SEQ_NO' | translate }} </td>
+                                <td>{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.VENDOR_ID' | translate }} </td>
+                                <td>{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.REBATE_PER' | translate }} </td>
+                                <td>{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.BIRTH_LOCATION' | translate }} </td>
+                                <td>{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.PILOTAGE_LOCATION' | translate }} </td>
+                                <td>{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.MINIMUM_AMOUNT' | translate }} </td>
+                                <td>{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.ANCHORAGE_LOCATION' | translate }} </td>
+                                <td>{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.COMMODITY_GROUP_ID' | translate }} </td>
+                                <td>{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.SLAB_APPLICABLE' | translate }} </td>
+                                <td>{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.PILOTAGE_TYPE_ID' | translate }} </td>
+                                <td>{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.MIN_CURRENCY_ID' | translate }} </td>
+
+
+                                
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<ng-template #AddClause let-modal>
+    <div class="modal-content">
+        <div class="modal-headers mt-2">
+        <h4 class="modal-title">{{"common.add" | translate}}  {{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.TRAMP_PORT_TARIFF_DETAIL' | translate }}</h4>
+            <button type="button" class="btn-close shadow-none float-end" (click)="onSave()" aria-label="Close">
+
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="wrap-form-field padding-space">
+                <form class="row g-3" [formGroup]="locationForm">
+
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.PORT_TARIFF_ID' |
+                            translate }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.PORT_ID' | translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.PORT_DA_CHARGE_ID' |
+                            translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.BUDGET_DEFAULT' |
+                            translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.PORT_DA_UNIT_ID' |
+                            translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.LUMPSUM_DEFAULT' |
+                            translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.CURRENCY_ID' | translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.SERVICE_TAX' | translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.EDUCATION_CESS' |
+                            translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.HIGHER_EDUCATION_CESS' |
+                            translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.VAT' | translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.OTHER_TAX' | translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.ACCOUNT_CODE' | translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.LAST_UPDATE' | translate
+                            }}</label>
+                        <input type="date" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.LAST_UPDATE_USER_ID' |
+                            translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.VESSEL_UNIT' | translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.RATE_PER_UNIT' | translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.MIN_DA_QTY' | translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.COASTAL' | translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.LOADED' | translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.TERMINAL_ID' | translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.FROM_DATE' | translate
+                            }}</label>
+                        <input type="date" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.TO_DATE' | translate
+                            }}</label>
+                        <input type="date" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.FOREIGN' | translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.EMPTY' | translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.COASTAL_OR_FOREIGN' |
+                            translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.GEN' | translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.LIQUID' | translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.MOTHER' | translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.DAUGHTER' | translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.IS_MANDATE' | translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.BASE_CHARGE_CODE' |
+                            translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.BASE_PERCENTAGE' |
+                            translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.VESSEL_TYPE_ID' |
+                            translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.REMARKS' | translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.SEQ_NO' | translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.VENDOR_ID' | translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.REBATE_PER' | translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.BIRTH_LOCATION' |
+                            translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.PILOTAGE_LOCATION' |
+                            translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.MINIMUM_AMOUNT' |
+                            translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.ANCHORAGE_LOCATION' |
+                            translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.COMMODITY_GROUP_ID' |
+                            translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.SLAB_APPLICABLE' |
+                            translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.PILOTAGE_TYPE_ID' |
+                            translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_PORT_TARIFF_DETAIL.MIN_CURRENCY_ID' |
+                            translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+
+
+
+
+
+                    <div class="form-group wrap-form-action mt-4">
+                        <button class="btn1 btn-lg float-end" (click)="onSave()" type="submit">
+                            {{ 'common.cancel' | translate }}
+                        </button>
+                        <button (click)="locationsMasters()" class="btn btn-outline-primary btn-lg float-end"
+                            type="submit">
+                            {{ 'common.save' | translate }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-template>

@@ -1,0 +1,312 @@
+<div class="table-with-gheading">
+    <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+        <div class="row align-items-center">
+            <div class="col-md-12 mb-5">
+                <form [formGroup]="addRuleForm" class="row g-3 mt-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Charge Code<span class="text-danger">*</span>
+                        </label>
+
+                        <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="chargeCode"
+                            [ngClass]="{ 'is-invalid': submitted && f.chargeCode.errors }">
+                            <nz-option *ngFor="let charge of costitemData" [nzLabel]="charge?._source?.costitemName"
+                                [nzValue]="charge?._source?.costitemId"></nz-option>
+                        </nz-select>
+                        <div *ngIf="submitted && f.chargeCode.errors" class="invalid-feedback">
+                            <div *ngIf="f.chargeCode.errors.required">
+                                Charge Code {{ "common.isRequired" | translate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Charge Description<span class="text-danger">*</span>
+                        </label>
+
+                        <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="chargeDescription"
+                            [ngClass]="{
+                                            'is-invalid': submitted && f.chargeDescription.errors
+                                        }">
+                            <nz-option *ngFor="let charge of costitemData" [nzLabel]="charge?._source?.costitemName"
+                                [nzValue]="charge?._source?.costitemId"></nz-option>
+                        </nz-select>
+                        <div *ngIf="submitted && f.chargeDescription.errors" class="invalid-feedback">
+                            <div *ngIf="f.chargeDescription.errors.required">
+                                Charge Code {{ "common.isRequired" | translate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Rule Name<span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="form-control custom-input" value="{{
+                                'stolt.masters.product.addproduct.product_name_value'
+                                | translate
+                            }}" formControlName="ruleName" [ngClass]="{ 'is-invalid': submitted && f.ruleName.errors }" />
+                        <div *ngIf="submitted && f.ruleName.errors" class="invalid-feedback">
+                            <div *ngIf="f.ruleName.errors.required">
+                                Rule Name {{ "common.isRequired" | translate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Rule Type<span class="text-danger">*</span>
+                        </label>
+
+                        <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="ruleType"
+                            [ngClass]="{ 'is-invalid': submitted && f.ruleType.errors }">
+                            <nz-option *ngFor="let ruletype of ruleTypeList" [nzLabel]="ruletype?._source?.typeName"
+                                [nzValue]="ruletype?._source?.typeName"></nz-option>
+                        </nz-select>
+                        <div *ngIf="submitted && f.ruleType.errors" class="invalid-feedback">
+                            <div *ngIf="f.ruleType.errors.required">
+                                Rule Type {{ "common.isRequired" | translate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="mb-0 p-0 form-label">Effective Date</label>
+                        <mat-form-field appearance="outline" class="custom-date-picker">
+                           <div class="d-flex align-items-center  w-100">
+                            <input matInput [matDatepicker]="pickerEta1" formControlName="effectiveDate" (ngModelChange)="changeFromDate()" class="h-0"/>
+                          <mat-datepicker-toggle matSuffix [for]="pickerEta1"></mat-datepicker-toggle>
+                           </div>
+                            <mat-datepicker #pickerEta1></mat-datepicker>
+                        </mat-form-field>
+                        <mat-error>
+                          <div  *ngIf="submitted && f?.effectiveDate?.errors?.required" class="set-error-msg">
+                            Effective Date is required</div>
+                      </mat-error>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="mb-0 p-0 form-label">Validity</label>
+                        <mat-form-field appearance="outline" class="custom-date-picker">
+                           <div class="d-flex align-items-center  w-100">
+                            <input matInput [matDatepicker]="pickerEta11" formControlName="validity" class="h-0" [disabled]="disabledEtdDate"/>
+                          <mat-datepicker-toggle matSuffix [for]="pickerEta11"></mat-datepicker-toggle>
+                           </div>
+                            <mat-datepicker #pickerEta11></mat-datepicker>
+                        </mat-form-field>
+                        <mat-error>
+                          <div  *ngIf="submitted && f?.validity?.errors?.required" class="set-error-msg">Validity is required</div>
+                      </mat-error>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Currency<span class="text-danger">*</span>
+                        </label>
+                        <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="currency"
+                            [ngClass]="{ 'is-invalid': submitted && f.currency.errors }">
+                            <nz-option *ngFor="let currency of currencyData"
+                                [nzLabel]="currency?._source?.currencyShortName"
+                                [nzValue]="currency?._source?.currencyId"></nz-option>
+                        </nz-select>
+                        <div *ngIf="submitted && f.currency.errors" class="invalid-feedback">
+                            <div *ngIf="f.currency.errors.required">
+                                Currency {{ "common.isRequired" | translate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Menu<span class="text-danger">*</span>
+                        </label>
+                        <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="menu"
+                            [ngClass]="{ 'is-invalid': submitted && f.menu.errors }">
+                            <nz-option *ngFor="let menu of menus" [nzLabel]="menu?.name"
+                                [nzValue]="menu?.value"></nz-option>
+                        </nz-select>
+                        <div *ngIf="submitted && f.menu.errors" class="invalid-feedback">
+                            <div *ngIf="f.menu.errors.required">
+                                Menu {{ "common.isRequired" | translate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Effective Date Basis<span class="text-danger">*</span>
+                        </label>
+                        <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="effectiveDateBasis"
+                            [ngClass]="{
+                                            'is-invalid': submitted && f.effectiveDateBasis.errors
+                                        }">
+                            <nz-option *ngFor="let basisdate of basisData" [nzLabel]="basisdate?.name"
+                                [nzValue]="basisdate?.value"></nz-option>
+                        </nz-select>
+                        <div *ngIf="submitted && f.effectiveDateBasis.errors" class="invalid-feedback">
+                            <div *ngIf="f.effectiveDateBasis.errors.required">
+                                Menu {{ "common.isRequired" | translate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="mx-0 px-0 mt-3 my-2 text-start margintop20">
+                            <button class="btn btn-link p-0 additional-btn" (click)="addNewVariable()">
+                                <em class="bi-plus me-1"></em>Add
+                            </button>
+                        </div>
+                        <table #tableAll aria-describedby="mytable" class="gfg">
+                            <thead>
+                                <tr class="field-name">
+                                    <th scope="col">Sr. No.</th>
+                                    <th scope="col">Variable</th>
+                                    <th scope="col">Condition</th>
+                                    <th scope="col">Value</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+
+                            <ng-container formArrayName="variableDetails">
+                                <tr *ngFor="let variable of getVariablearray(); let i = index" [formGroupName]="i">
+                                    <td>
+                                        {{ i + 1 }}
+                                    </td>
+
+                                    <td class="text-center">
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear
+                                            formControlName="variable">
+                                            <nz-option *ngFor="let vari of variableList" [nzLabel]="vari?.name"
+                                                [nzValue]="vari?.value"></nz-option>
+                                        </nz-select>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear
+                                            formControlName="condition">
+                                            <nz-option *ngFor="let condition of condtionList"
+                                                [nzLabel]="condition?.name" [nzValue]="condition?.value"></nz-option>
+                                        </nz-select>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <input type="text" class="form-control custom-input" value="{{
+                                                'stolt.masters.product.addproduct.product_name_value'
+                                                | translate
+                                            }}" formControlName="value" />
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </ng-container>
+                        </table>
+                    </div>
+
+                    <div>
+                        <h3>Basis</h3>
+        
+                        <table #tableAll aria-describedby="mytable" class="gfg">
+                            <thead>
+                                <tr class="field-name">
+                                    <th scope="col"><button class="btn btn-link p-0 additional-btn" (click)="addNewBasis()">
+                                        <em class="bi-plus me-1"></em>
+                                    </button></th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Basis</th>
+                                    <th scope="col">Currency</th>
+                                    <th scope="col">Rate</th>
+                                    <th scope="col">Base Amount</th>
+                                    <th scope="col">Min Amount</th>
+                                    <th scope="col">Max Amount</th>
+                                    <th scope="col">Included</th>
+                                    <th scope="col">Condition</th>
+
+                                </tr>
+                            </thead>
+
+                            <ng-container formArrayName="basisDetails">
+                                <tr *ngFor="let basis of getBasisArray(); let i = index" [formGroupName]="i">
+                                    <td>
+                                        {{ i + 1 }}
+                                    </td>
+
+                                    <td class="text-center">
+                                       
+                                        <nz-select class="form-select nz-select" nzShowSearch nzAllowClear formControlName="description"
+                                        [ngClass]="{
+                                                        'is-invalid': submitted && f.description.errors
+                                                    }">
+                                        <nz-option *ngFor="let charge of costitemData" [nzLabel]="charge?._source?.costitemName"
+                                            [nzValue]="charge?._source?.costitemId"></nz-option>
+                                    </nz-select>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear
+                                            formControlName="basis">
+                                            <nz-option 
+                                                nzLabel="Container" nzValue="container"></nz-option>
+                                        </nz-select>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="currency"
+                                        [ngClass]="{ 'is-invalid': submitted && f.currency.errors }">
+                                        <nz-option *ngFor="let currency of currencyData"
+                                            [nzLabel]="currency?._source?.currencyShortName"
+                                            [nzValue]="currency?._source?.currencyId"></nz-option>
+                                    </nz-select>
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="text" class="form-control custom-input" value="{{
+                                            'stolt.masters.product.addproduct.product_name_value'
+                                            | translate
+                                        }}" formControlName="rate" />
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="text" class="form-control custom-input" value="{{
+                                            'stolt.masters.product.addproduct.product_name_value'
+                                            | translate
+                                        }}" formControlName="baseAmount" />
+                                    </td>
+
+                                    <td class="text-center">
+                                        <input type="text" class="form-control custom-input" value="{{
+                                            'stolt.masters.product.addproduct.product_name_value'
+                                            | translate
+                                        }}" formControlName="minAmount" />
+                                    </td>
+
+                                    <td class="text-center">
+                                        <input type="text" class="form-control custom-input" value="{{
+                                            'stolt.masters.product.addproduct.product_name_value'
+                                            | translate
+                                        }}" formControlName="maxAmount" />
+                                    </td>
+
+                                    <td class="text-center">
+                                        <input type="text" class="form-control custom-input" value="{{
+                                            'stolt.masters.product.addproduct.product_name_value'
+                                            | translate
+                                        }}" formControlName="included" />
+                                    </td>
+                                    <td>
+                                        <button (click)="checkCondition()">
+                                            Condition
+                                        </button>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </table>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="form-group wrap-form-action btn-onscreen">
+        <button class="btn1 float-end" (click)="onClose($event)" type="submit">
+          {{ "common.cancel" | translate }}
+        </button>
+        <!-- <button *ngIf="isEditMode" (click)="productMasters()" class="btn btn-outline-primary float-end"
+          type="submit">
+          Update
+        </button> -->
+        <button   class="btn btn-outline-primary float-end"
+          type="submit">
+          {{ "common.save" | translate }}
+        </button>
+      </div>
+</div>

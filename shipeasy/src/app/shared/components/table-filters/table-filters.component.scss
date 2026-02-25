@@ -1,0 +1,46 @@
+// @import '../../../assets/styles/mixins/global.scss';
+.tableFilterContainer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  // padding-bottom: 10px;
+  gap: 5px;
+  font-size: 12px;
+}
+.w-60{
+  width: 60%;
+}
+.tableFilterContainer .drawerIcon {
+  padding: 0 1px;
+}
+
+.tableFilterContainer .drawerIcon mat-icon {
+  font-size: var(--xLargeFontSize) !important;
+  color: var(--gray) !important;
+}
+
+.searchIcon {
+  position: relative !important;
+  color: var(--gray) !important;
+  top: 7px !important;
+}
+
+.errorHintRegex {
+  color: var(--diabosRed) !important;
+}
+
+.tableFilterContainer .drawerIcon.mappedExportIcon mat-icon {
+  font-size: var(--xLargeFontSize) !important;
+  color: var(--diabosBlue) !important;
+}
+.globle-search {
+  width: -webkit-fill-available;
+  border-radius: 50px;
+}
+ 
+.hover:hover{
+  .color-pencil-red{
+    color: white !important;;
+  }
+}

@@ -1,0 +1,351 @@
+@import '../../../../assets/styles/mixins/global.scss';
+
+.form-field-section {
+  .form-label {
+    font-size: 12px;
+    color: var(--theme-light-gray-color);
+    margin-bottom: 0px;
+  }
+
+}
+::ng-deep .modal-xl .modal-lg {
+  max-width: 90%;
+}
+
+.new-action {
+  border: 0;
+  background-color: transparent;
+}
+
+.addnew {
+
+  color: var(--link-text-color);
+  text-decoration: none;
+  font-weight: 600;
+  background: transparent;
+  border: 0;
+
+}
+
+.alignment {
+  margin-right: 2em;
+}
+
+.footer-heading {
+  text-align: right;
+  padding-right: 10px;
+}
+
+.without-space {
+  table {
+    border-spacing: 0 8px;
+
+    th {
+      white-space: inherit;
+    }
+  }
+}
+
+.wrap-inner-table.wrap-form-field {
+  position: relative;
+
+  &::after {
+    position: absolute;
+    left: 0px;
+    top: -12px;
+    width: 17px;
+    height: 10px;
+    content: "\a";
+    border-style: solid;
+    border-width: 10px 15px 10px 0;
+    border-color: #007BFF transparent transparent transparent;
+  }
+}
+
+.action-field {
+  .active {
+    i {
+      color: #0d6efd;
+    }
+  }
+}
+
+.wrap-form-action {
+  margin-top: 15px;
+}
+
+.hover-active {
+  cursor: pointer;
+}
+
+.wrap-form-field h5 {
+  font-size: 12px;
+  color: var(--theme-light-text-color);
+  font-weight: 600;
+
+}
+
+.wrap-form-field.padding-space {
+  padding: 10px 20px;
+}
+
+.btn-sm {
+  border-radius: 50px;
+}
+
+.modal-header {
+
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.modal-title {
+  color: #007BFF;
+}
+
+.btn-close {
+
+  color: #007BFF;
+}
+
+.modal-content {
+  padding: 10px 10px;
+  border: 0;
+}
+
+.modal-body {
+  padding: 0px;
+
+}
+
+.modal-header .btn-close {
+  padding: 0;
+  margin: 0;
+}
+
+.costtable table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.costtable th {
+  background-color: #f5f5f5
+}
+
+.costtable th,
+.costtable td {
+  padding: 8px;
+  text-align: left;
+  border: 1px solid #e0e0e0;
+}
+
+.scroll {
+  height: 125px;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #ebebeb;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+  background-color:#a9a9a9 ;
+}
+
+table.vendorassi {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.vendorassi th {
+
+  border: 0;
+}
+
+.vendorassi th,
+.vendorassi td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #bbb;
+}
+
+select.form-select-sm {
+  font-size: 12px;
+  padding: 8px;
+  font-weight: normal !important;
+  /* color: #e5e5e5; */
+}
+
+@media only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px) {
+
+  /*
+Label the data
+*/
+  .expand-area {
+    td {
+      padding-left: 10px;
+    }
+  }
+
+  .alignment {
+    margin-right: 19em;
+  }
+
+  .collapse-ui {
+
+
+
+
+    td:nth-of-type(1):before {
+      content: "Charge Group";
+    }
+
+    td:nth-of-type(2):before {
+      content: "Charge Name";
+    }
+
+    td:nth-of-type(3):before {
+      content: "Charge Term";
+    }
+
+    td:nth-of-type(4):before {
+      content: "Currency";
+    }
+
+    td:nth-of-type(5):before {
+      content: "Quantity";
+    }
+
+    td:nth-of-type(6):before {
+      content: "Exg.Rate";
+    }
+
+    td:nth-of-type(7):before {
+      content: "SHIPEASY Amount";
+    }
+
+    td:nth-of-type(8):before {
+      content: "AGENT Amount";
+    }
+
+    td:nth-of-type(9):before {
+      content: "GST";
+    }
+
+    td:nth-of-type(10):before {
+      content: "Total Amount";
+    }
+  }
+
+  .wrap-inner-table.wrap-form-field {
+    &::after {
+      top: -17px;
+      width: 23px;
+      height: 47px;
+      border-width: 16px 22px 10px 0;
+    }
+  }
+
+
+
+
+  .footer-ui {
+    td:nth-of-type(1):before {
+      content: "Sum Amount";
+    }
+
+    td:nth-of-type(2):before {
+      content: "Sum GST";
+    }
+
+    td:nth-of-type(3):before {
+      content: "Total Sum Amount";
+    }
+
+    .footer-heading {
+      text-align: left;
+      padding-right: 0px;
+    }
+  }
+
+
+}
+
+.table-charge {
+  overflow: overlay;
+  max-width: 100%;
+
+  table {
+    // width: auto; 
+    border-collapse: separate;
+    border-spacing: 0;
+
+    .form-select {
+      min-width: 100px;
+    }
+
+    .custom-input {
+      min-width: 100px;
+    }
+
+    td:first-child,
+    th:first-child {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+    }
+
+    td:nth-child(2),
+    th:nth-child(2) {
+      position: sticky;
+      left: 20px;
+      z-index: 1;
+      min-width: 350px;
+    }
+
+    td:last-child,
+    th:last-child {
+      position: sticky;
+      right: 0;
+      z-index: 1;
+    }
+
+  }
+
+}
+.w-100{
+  width: 100% !important;
+}
+.custom-btn {
+  border: 1px solid #007BFF;
+  background-color: white;
+  color: #007BFF;
+  transition: all 0.3s ease;
+  width: 60px; /* Set width to make the button square */
+  height: 35px; /* Set height for a square-like look */
+  border-radius: 4px; /* Rounded corners, adjust as needed for softer/harder edges */
+  font-size: 0.875rem; /* Adjust font size */
+  text-align: center;
+  
+  display: flex; /* Flexbox for centering text */
+  justify-content: center;
+  align-items: center;
+}
+
+.custom-btn:hover {
+  background-color: #007BFF;
+  color: white;
+  border-color: #007BFF;
+}

@@ -1,0 +1,224 @@
+
+<section class="content-section common-pd" style="margin-top: 140px">
+  <div class="container">
+    <div class="col commonHeading pl-0">
+      Quick Search for <span class="wb-bold">{{ querySearch }}</span>
+    </div>
+    <div class="globally-mat-sass-card">
+      <div class="content-container">
+        <div class="row">
+            <div>
+              <div class="mb-3">
+                <span *ngFor="let item of master">
+                  <button
+                    mat-raised-button
+                    class=" materialButton mr-2 ml-2"
+                    [ngClass]="item === selectedTab ? 'materialButton' : 'materialButton1'"
+                    (click)="select(item)">
+                    <span class="text-capitalize">{{ item }}</span>
+                  </button>
+                </span>
+                  <div *ngFor="let items of  tabledata" class="mt-3">
+                    <div  class="cursorPointer mb-4 globally-mat-sass-card"  *ngIf="selectedTab=='batch'" (click)="navigate(items,'batch')">
+                      <div class="row">
+                        <div class="col d-flex align-items-baseline w-100 cursorPointer" >
+                          <div class="col text-left justy col-md-12">
+                            <div class="col-md-5">
+                            <div class="justy">
+                          <span class="indexName font pr-1">Job No :</span>  
+                          <span class="indexName pr-1 font-weight font1">{{items?.batchNo ?? 'N/A'}}</span>
+                        </div>
+                        <div class="justy">
+                          <span class="indexName font pr-1">Consignee Name :</span>
+                          <span class="indexName font pr-1">{{items?.enquiryDetails?.basicDetails?.consigneeName ?? 'N/A'}}</span>
+                        </div>
+                      </div>
+                      <div class="col-md-5">
+                        <div class="justy">
+                          <span class="indexName font pr-1"> Inquiry No    :</span>
+                          <span class="indexName font pr-1">{{items?.enquiryDetails?.enquiryNo ?? 'N/A'}}</span>
+                        </div>
+                          <div class="justy">
+                          <span class="indexName font pr-1"> Status        :</span>
+                          <span class="indexName font pr-1" [ngClass]="items?.statusOfBatch ? (items?.statusOfBatch === 'Job Created' ? 'green' : (items?.statusOfBatch === 'Job Closed' ? 'red' : 'blue')) : (items?.status ? 'green' : 'red')">{{items?.statusOfBatch ?? 'N/A'}}</span>
+                        </div>
+                      </div>
+                        </div>
+                        </div>
+                       </div>
+                    </div>
+                    <div  class="cursorPointer mb-4 globally-mat-sass-card" *ngIf="selectedTab=='carrierbooking'" (click)="navigate(items,'carrierbooking')">
+                      <div class="row">
+                        <div class="col d-flex align-items-baseline w-100 cursorPointer" >
+                          <div class="col text-left justy col-md-12">
+                            <div class="col-md-5">
+                              <div class="justy">
+                          <span class="indexName font pr-1">Booking No :</span> 
+                          <span class="indexName font1 pr-1">{{items?.basicDetails?.BookingNumber ?? 'N/A'}}</span> 
+                        </div>
+                        <div class="justy">
+                          <span class="indexName font pr-1">Consignee Name :</span> 
+                          <span class="indexName  font pr-1">{{items?.consigneeName ?? 'N/A'}}</span> 
+                        </div>
+                        </div>
+                        <div class="col-md-5">
+                          <div class="justy">
+                          <span class="indexName font pr-1"> Inquiry No :</span>
+                          <span class="indexName font pr-1">{{items?.enquiryNo ?? 'N/A'}}</span>
+                        </div>
+                        <div class="justy">
+                          <span class="indexName font pr-1"> Status :</span>
+                          <span class="indexName font pr-1">{{items?.status ?? 'N/A'}}</span>
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                        <div  class="cursorPointer mb-4 globally-mat-sass-card"  *ngIf="selectedTab=='container'" (click)="navigate(items,'container')">
+                          <div class="row">
+                        <div class="col d-flex align-items-baseline w-100 cursorPointer">
+                          <div class="col text-left justy col-md-12">   
+                            <div class="col-md-5">           
+                              <div class="justy">
+                          <span class="indexName font pr-1">Container No :</span> 
+                          <span class="indexName font1 pr-1">{{items?.containerNumber?? 'N/A'}}</span> 
+                        </div>
+
+                          <div class="justy">
+                          <span class="indexName font pr-1">Job No :</span> 
+                          <span class="indexName font pr-1">{{items?.batchNo?? 'N/A'}}</span> 
+                        </div>
+
+                          </div>
+                          <div class="col-md-5">
+    
+
+
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                        <div  class="cursorPointer mb-4 globally-mat-sass-card" *ngIf="selectedTab=='enquiry'" (click)="navigate(items,'enquiry')">
+                          <div class="row">
+                        <div class="col d-flex align-items-baseline w-100 cursorPointer" >
+                          <div class="col text-left justy col-md-12">
+                            <div class="col-md-5"> 
+                              <div class="justy">
+                          <span class="indexName font pr-1">Consignee Name :</span> 
+                          <span class="indexName font1 pr-1 color-changes">{{items?.basicDetails?.consigneeName ?? 'NA'}}</span> 
+                        </div>
+
+                          <div class="justy">
+                          <span class="indexName font pr-1"> Inquiry No :</span>
+                          <span class="indexName font1 pr-1 color-changes">{{items?.enquiryNo ?? 'N/A'}}</span>
+                        </div>
+
+                        </div>
+                          <div class="col-md-5"> 
+                            <div class="justy">
+                          <span class="indexName font pr-1"> Status :</span>
+                          <span class="indexName font pr-1 color-changes" [ngClass]="items?.enquiryStatus ? (items?.enquiryStatus === 'Job Created' ? 'green' : (items?.enquiryStatus === 'Job Closed' ? 'red' : 'blue')) : (items?.enquiryStatus ? 'green' : 'red')">{{items?.enquiryStatus ?? 'N/A'}}</span>
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                        <div class="cursorPointer mb-4 globally-mat-sass-card" *ngIf="selectedTab=='bl'"
+                          (click)="navigate(items,'bl')">
+                          <div class="row">
+                            <div class="col d-flex align-items-baseline w-100 cursorPointer">
+                              <div class="col text-left justy col-md-12">
+                                <div class="col-md-5">
+                                  <div class="justy">
+                                    <span class="indexName font pr-1">Job No :</span>
+                                    <span class="indexName font1 pr-1 color-changes">{{tabledata[0].containers[0].batchNo || 'N/A'}}</span>
+                                  </div>
+                        
+                                  <div class="justy">
+                                    <span class="indexName font pr-1"> Bl No :</span>
+                                    <span class="indexName font1 pr-1 color-changes">
+                                      {{ tabledata[0]?.blNumber || 'N/A' }}
+                                    </span>
+                                  </div>
+                        
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div  class="cursorPointer mb-4 globally-mat-sass-card" *ngIf="selectedTab=='invoice'" (click)="navigate(items,'invoice')">
+                          <div class="row">
+                        <div class="col d-flex align-items-baseline w-100" >
+                          <div class="col text-left justy col-md-12">
+                            <div class="col-md-5"> 
+                              <div class="justy">
+                          <span class="indexName font pr-1">InvoiceNo :</span> 
+                          <span class="indexName font1 pr-1 color-changes">{{items?.invoiceNo ?? 'N/A'}}</span> 
+                        </div>
+                          <div class="justy">
+                          <span class="indexName font pr-1">Invoice Type :</span>
+                          <span class="indexName font pr-1 color-changes">{{items?.invoiceType ?? 'N/A'}}</span>
+                        </div>
+                        </div>
+                          <div class="col-md-5"> 
+                            <div class="justy">
+                          <span class="indexName font pr-1">Status :</span>
+                          <span class="indexName font pr-1 color-changes">{{items?.invoiceStatus ?? 'N/A'}}</span>
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                        <div  class="cursorPointer mb-4 globally-mat-sass-card"  *ngIf="selectedTab=='quotation'" (click)="navigate(items,'quotation')">
+                          <div class="row">
+                        <div class="col d-flex align-items-baseline w-100 cursorPointer" >
+                          <div class="col text-left justy col-md-12">
+                            <div class="col-md-5"> 
+                              <div class="justy">
+                          <span class="indexName font pr-1">Quotation No. :</span> 
+                          <span class="indexName font1 pr-1 color-changes">{{items?.quotationNo ?? 'N/A'}}</span> 
+                        </div>
+                          <div class="justy">
+                          <span class="indexName font pr-1"> Inquiry No :</span>
+                          <span class="indexName font1 pr-1 color-changes">{{items?.enquiryNo ?? 'N/A'}}</span>
+                        </div>
+                        </div>
+                          <div class="col-md-5"> 
+                            <div class="justy">
+                          <span class="indexName font pr-1">Status :</span> 
+                          <span class="indexName font pr-1 color-changes" [ngClass]="items?.quoteStatus ? (items?.quoteStatus === 'Job Created' ? 'green' : (items?.quoteStatus === 'Job Closed' ? 'red' : 'blue')) : (items?.quoteStatus ? 'green' : 'red')">{{items?.quoteStatus ?? 'N/A'}}</span> 
+                          </div>
+                          </div>
+                          </div>
+                        </div>
+                        </div>
+                        </div>
+                  </div>
+                  <div class="text-center noDataAvailable" *ngIf="tabledata.length === 0">
+                    NO DATA AVAILABLE
+                  </div>
+                  <div class="text-wrap">
+                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons aria-label="Select page">
+                    </mat-paginator>
+                  </div>
+                 
+                  <!-- <mat-paginator
+                  class="mat-paginator"
+                  aria-label="Select page"
+                  [pageSizeOptions]="[5, 10, 25, 100]"
+                  showFirstLastButtons
+                ></mat-paginator> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+</section>
+
+

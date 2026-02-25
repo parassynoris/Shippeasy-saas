@@ -1,0 +1,692 @@
+<div class="table-with-gheading pt-2">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="wrap-form-field  ">
+        <div class="row">
+          <div class="col float-start">
+            <!-- <h1 *ngIf="isAddMode === 'addbranch'">
+              {{ "smartagent.smartAgent.branch.addBranch" | translate }}
+            </h1> -->
+            <h1 *ngIf="isAddMode === 'editbranch'">
+              {{ "smartagent.smartAgent.branch.editBranch" | translate }}
+            </h1>
+          </div>
+          <!-- <div class="col">
+            <button class="new-action float-end btn btn-outline-primary" (click)="backbtn()">{{
+              "common.back" | translate
+              }}</button>
+          </div> -->
+        </div>
+        <form [formGroup]="addBranchForm" class="row g-3  mb-5">
+          <div class="col-md-4">
+            <label for="Vendor" class="form-label">{{ "smartagent.smartAgent.AllformAddedit.branchName" | translate
+              }}<span class="text-danger">*</span></label>
+            <input type="text" class="form-control custom-input" id="Vendor " placeholder="Branch Name" value=""
+              formControlName="branchName" [ngClass]="{ 'is-invalid': submitted && f.branchName.errors }" appCapitalizeFirst />
+            <div *ngIf="submitted && f.branchName.errors" class="invalid-feedback">
+              <div *ngIf="f.branchName.errors.required">
+                {{
+                "smartagent.smartAgent.AllformAddedit.branchNameisrequired"
+                | translate
+                }}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="Country" class="form-label">{{ "smartagent.smartAgent.AllformAddedit.country" | translate
+              }}<span class="text-danger">*</span></label>
+
+
+            <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Country" formControlName="country"
+              [ngClass]="{'is-invalid': submitted && f.country.errors}" (ngModelChange)="getStateList()">
+              <nz-option *ngFor="let country of sort(countryList,'countryName')" [nzLabel]="country?.countryName"
+                [nzValue]="country?.countryId"></nz-option>
+            </nz-select>
+
+            <div *ngIf="submitted && f.country.errors" class="invalid-feedback">
+              <div *ngIf="f.country.errors.required">
+                {{
+                "smartagent.smartAgent.AllformAddedit.countryisrequired"
+                | translate
+                }}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label for="State" class="form-label">{{ "smartagent.smartAgent.AllformAddedit.state" | translate
+              }}<span class="text-danger">*</span></label>
+
+            <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="State" formControlName="state"
+              [ngClass]="{'is-invalid': submitted && f.state.errors}" (ngModelChange)="getCityList()">
+              <nz-option *ngFor="let state of sort(stateList,'typeDescription')" [nzLabel]="state?.typeDescription"
+                [nzValue]="state?.stateId"></nz-option>
+            </nz-select>
+            <div *ngIf="submitted && f.state.errors" class="invalid-feedback">
+              <div *ngIf="f.state.errors.required">
+                {{
+                "smartagent.smartAgent.AllformAddedit.stateisrequired"
+                | translate
+                }}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label for="City" class="form-label">{{ 'smartagent.smartAgent.AllformAddedit.city' | translate }}<span
+                class="text-danger">*</span></label>
+
+            <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="City" formControlName="city"
+              [ngClass]="{'is-invalid': submitted && f.city.errors}">
+              <nz-option *ngFor="let city of sort(cityList,'cityName')" [nzLabel]="city?.cityName" [nzValue]="city?.cityId"></nz-option>
+            </nz-select>
+            <div *ngIf="submitted && f.city.errors" class="invalid-feedback">
+              <div *ngIf="f.city.errors.required">
+                {{
+                "smartagent.smartAgent.AllformAddedit.cityisrequired"
+                | translate
+                }}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="Pincode" class="form-label">{{ "smartagent.smartAgent.AllformAddedit.pincode" | translate
+              }}<span class="text-danger">*</span></label>
+            <input type="text" class="form-control custom-input" formControlName="pinCode" id="Pincode "
+              placeholder="Pin Code" maxlength="6"
+              oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^0-9]/g,'').replace(/ +/g, ' ')"
+              [ngClass]="{ 'is-invalid': submitted && f.pinCode.errors }" />
+            <div *ngIf="submitted && f.pinCode.errors" class="invalid-feedback">
+              <div *ngIf="f.pinCode.errors.required">
+                {{
+                "smartagent.smartAgent.AllformAddedit.pincodeisrequired"
+                | translate
+                }}
+              </div>
+              <div *ngIf="f.pinCode.errors.pattern">
+                {{ "error.err_only_number" | translate }}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="Address" class="form-label">{{ "smartagent.smartAgent.AllformAddedit.address" | translate
+              }}<span class="text-danger">*</span></label>
+            <textarea rows="3" cols="50" type="text" class="form-control" id="Address" placeholder="Address"
+              value="Narsi Natha Street,Mumbai" formControlName="address"
+              [ngClass]="{ 'is-invalid': submitted && f.address.errors }"></textarea>
+            <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
+              <div *ngIf="f.address.errors.required">
+                {{
+                "smartagent.smartAgent.AllformAddedit.addressisrequired"
+                | translate
+                }}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+              <label for="currentLocation" class="form-label">
+                Current Location      
+              </label>
+              <input type="text" class="form-control custom-input text-color" 
+                     formControlName="currentLocation" placeholder="Current Location"   ngx-google-places-autocomplete
+                     (onAddressChange)="handleworkAddress($event)"/>
+            
+          </div>
+
+          <div class="col-md-4">
+            <label for="localCurrency" class="form-label">{{
+              "smartagent.smartAgent.AllformAddedit.currency" | translate
+              }}</label><span class="text-danger">*</span>
+          
+            <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Currency"
+              formControlName="currency" [ngClass]="{ 'is-invalid': submitted && addBranchForm.get('currency').errors }">
+              <nz-option *ngFor="let currency of currencyList" [nzLabel]="currency?.currencyShortName"
+                [nzValue]="currency?.currencyShortName"></nz-option>
+            </nz-select>
+            <div *ngIf="submitted && addBranchForm.get('currency').errors" class="invalid-feedback">
+              <div *ngIf="addBranchForm.get('currency').errors.required">
+                {{
+                "smartagent.smartAgent.AllformAddedit.currencyisrequired"
+                | translate
+                }}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="Primaryphone" class="form-label">{{
+              "smartagent.smartAgent.AllformAddedit.primaryPhoneNo"
+              | translate
+              }}<span class="text-danger">*</span></label>
+            <div class="input-group mb-3">
+              <div class="col">
+                <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Country Code"
+                formControlName="primaryCountryCode" maxlength="10"
+                [ngClass]="{'is-invalid': submitted && f.primaryCountryCode.errors}">
+                <nz-option *ngFor="let callingCode of callingCodeList" [nzLabel]="callingCode?.countryPhoneCode"
+                    [nzValue]="callingCode?.countryPhoneCode"></nz-option>
+            </nz-select>
+                <div *ngIf="submitted && f.primaryCountryCode.errors" class="invalid-feedback"
+                  style="position: absolute">
+                  <div *ngIf="f.primaryCountryCode.errors.required">
+                    {{
+                    "smartagent.smartAgent.AllformAddedit.primaryPhoneNoisrequired"
+                    | translate
+                    }}
+                  </div>
+                </div>
+              </div>
+             
+              <div class="col-8">
+                <input type="number" maxlength="11" [ngClass]="{
+                    'is-invalid': submitted && f.primaryNo.errors}" placeholder="Primary Number" (wheel)="$event.preventDefault()"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"class="form-control custom-input" formControlName="primaryNo" value="" />
+                <div *ngIf="submitted && f.primaryNo.errors" class="invalid-feedback" style="position: absolute">
+                  <div *ngIf="f.primaryNo.errors.required">
+                    {{
+                    "smartagent.smartAgent.AllformAddedit.primaryPhoneNoisrequired"
+                    | translate
+                    }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="Secondaryphone" class="form-label">{{
+              "smartagent.smartAgent.AllformAddedit.secondaryPhoneNo"
+              | translate
+              }}</label>
+            <div class="input-group mb-3">
+              <div class="col">
+                <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Country Code"
+                formControlName="secondaryCountryCode"
+                [ngClass]="{'is-invalid': submitted && f.secondaryCountryCode.errors}">
+                <nz-option *ngFor="let callingCode of callingCodeList" [nzLabel]="callingCode?.countryPhoneCode"
+                    [nzValue]="callingCode?.countryPhoneCode"></nz-option>
+            </nz-select>
+              </div>
+              <div class="col-8">
+                <input type="number" maxlength="11" (wheel)="$event.preventDefault()"
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  class="form-control custom-input" formControlName="secondaryNo" value="" placeholder="Secondary Number" />
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="Faxno" class="form-label">{{
+              "smartagent.smartAgent.AllformAddedit.faxNo" | translate
+              }}</label>
+            <div class="input-group mb-3">
+              <div class="col mrgn-l">
+                <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Country Code"
+                formControlName="faxCountryCode"
+                [ngClass]="{'is-invalid': submitted && f.faxCountryCode.errors}">
+                <nz-option *ngFor="let callingCode of callingCodeList" [nzLabel]="callingCode?.countryPhoneCode"
+                    [nzValue]="callingCode?.countryPhoneCode"></nz-option>
+            </nz-select>
+              </div>
+              <div class="col mrgn-l">
+                <input type="text" class="form-control custom-input" formControlName="faxAreaCode" value="" maxlength="10"
+                  placeholder="Fax AreaCode" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" />
+              </div>
+              <div class="col">
+                <input type="text" class="form-control custom-input" formControlName="faxNo" value="" maxlength="10"
+                  placeholder="Fax Number" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" />
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4" *ngIf="false">
+            <label for="website" class="form-label">{{ "smartagent.smartAgent.AllformAddedit.website" | translate }}
+            </label>
+            <input type="text" class="form-control custom-input" formControlName="website" id="website " placeholder=""
+              value="" [ngClass]="{ 'is-invalid': submitted && f.website.errors }" />
+            <div *ngIf="submitted && f.website.errors" class="invalid-feedback">
+              <div *ngIf="f.website.errors.required">
+                {{
+                "smartagent.smartAgent.AllformAddedit.websiteisrequired"
+                | translate
+                }}
+              </div>
+              <div *ngIf="f.website.errors.pattern">
+
+                {{ "error.err_pattern" | translate }}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="Primaryemailid" class="form-label">Primary Email Id</label>
+            <input type="text" class="form-control custom-input" formControlName="primaryEmailId" id="Primaryemailid"
+              placeholder="Primary Email Id" value="" [ngClass]="{ 'is-invalid': submitted && f.primaryEmailId.errors }" />
+            <div *ngIf="submitted && f.primaryEmailId.errors" class="invalid-feedback">
+              <div *ngIf="f.primaryEmailId.errors.required">
+                {{
+                "smartagent.smartAgent.AllformAddedit.primaryemailIdisrequired"
+                | translate
+                }}
+              </div>
+              <div *ngIf="f.primaryEmailId.errors.pattern">
+                {{ "error.err_valid_email" | translate }}
+              </div>
+            </div>
+          </div>
+
+
+          <div class="col-md-4">
+            <label for="secondaryEmailId" class="form-label">Secondary Email Id</label>
+            <input type="text" class="form-control custom-input" formControlName="secondaryEmailId"
+              id="secondaryEmailId" placeholder="Secondary Email Id" value=""
+              [ngClass]="{ 'is-invalid': submitted && f.secondaryEmailId.errors }" />
+            <div *ngIf="submitted && f.secondaryEmailId.errors" class="invalid-feedback">
+              <div *ngIf="f.secondaryEmailId.errors.required">
+                {{
+                "smartagent.smartAgent.AllformAddedit.secondaryemailIdisrequired"
+                | translate
+                }}
+              </div>
+              <div *ngIf="f.secondaryEmailId.errors.pattern">
+                {{ "error.err_valid_email" | translate }}
+              </div>
+            </div>
+          </div>
+
+          
+
+          <!-- <div class="col-md-4">
+            <label for="Commercialnumber" class="form-label">{{
+              "smartagent.smartAgent.AllformAddedit.commericalRegistrationNumber"
+              | translate 
+              }}</label>
+            <input type="number" class="form-control custom-input" formControlName="commercialNumber"
+              id="commercialNumber" placeholder="" value="" maxlength="25"
+              oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^0-9]/g,'').replace(/ +/g, ' ')" />
+          </div> -->
+
+          <div class="col-md-4">
+            <label for="Vendortype" class="form-label">{{ "smartagent.smartAgent.AllformAddedit.picType" | translate
+              }}</label> 
+
+            <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Pic Type" formControlName="picType"
+              [ngClass]="{'is-invalid': submitted && f.picType.errors}">
+
+              <nz-option *ngFor="let picType of picTypeList" [nzLabel]="picType?.typeName"
+                [nzValue]="picType?.typeName"></nz-option>
+              <nz-option nzLabel="xyz" nzValue="xyz"></nz-option>
+            </nz-select>
+            <div *ngIf="submitted && f.picType.errors" class="invalid-feedback">
+              <div *ngIf="f.picType.errors.required">
+                {{
+                "smartagent.smartAgent.AllformAddedit.picTypeisrequired"
+                | translate
+                }}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="VendorName" class="form-label">{{ "smartagent.smartAgent.AllformAddedit.picName" | translate
+              }}<span class="text-danger">*</span></label>
+            <div class="input-group ">
+              <div class="col mrgn-l">
+                <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Pic Name" formControlName="picName"
+              [ngClass]="{'is-invalid': submitted && f.picName.errors}">
+
+              <nz-option *ngFor="let picType of picNameList" [nzLabel]="picType?.typeName"
+                [nzValue]="picType?.typeName"></nz-option>
+              <nz-option nzLabel="Mr." nzValue="Mr."></nz-option>
+            </nz-select>
+                <div *ngIf="submitted && f.picName.errors" class="invalid-feedback">
+                  <div *ngIf="f.picName.errors.required">
+                    {{
+                    "smartagent.smartAgent.AllformAddedit.picNameisrequired"
+                    | translate
+                    }}
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <input type="text" class="form-control custom-input" formControlName="picName2" value="" placeholder="Pic Name"
+                  [ngClass]="{ 'is-invalid': submitted && f.picName2.errors }" />
+                <div *ngIf="submitted && f.picName2.errors" class="invalid-feedback">
+                  <div *ngIf="f.picName2.errors.required">
+                    {{
+                    "smartagent.smartAgent.AllformAddedit.picNameisrequired"
+                    | translate
+                    }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="VendorMobile" class="form-label">{{
+              "smartagent.smartAgent.AllformAddedit.picMobileNo" | translate
+              }}<span class="text-danger">*</span></label>
+            <div class="input-group ">
+              <div class="col">
+                <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Pic Mobile No"
+                formControlName="picMobileCountry"
+                [ngClass]="{'is-invalid': submitted && f.picMobileCountry.errors}">
+                <nz-option *ngFor="let callingCode of callingCodeList" [nzLabel]="callingCode?.countryPhoneCode"
+                    [nzValue]="callingCode?.countryPhoneCode"></nz-option>
+            </nz-select>
+                <div *ngIf="submitted && f.picMobileCountry.errors" class="invalid-feedback">
+                  <div *ngIf="f.picMobileCountry.errors.required">
+                    {{
+                    "smartagent.smartAgent.AllformAddedit.picMobileNorequired"
+                    | translate
+                    }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-8">
+                <input type="number" class="form-control custom-input" maxlength="11" (wheel)="$event.preventDefault()"
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  formControlName="picMobilenumber" value="" [ngClass]="{
+                    'is-invalid': submitted && f.picMobilenumber.errors
+                  }" placeholder="Pic Mobile Number" />
+                <div *ngIf="submitted && f.picMobilenumber.errors" class="invalid-feedback">
+                  <div *ngIf="f.picMobilenumber.errors.required">
+                    {{
+                    "smartagent.smartAgent.AllformAddedit.picMobileNorequired"
+                    | translate
+                    }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="VendorEmail" class="form-label">{{ "smartagent.smartAgent.AllformAddedit.picEmailid" | translate
+              }}<span class="text-danger">*</span></label>
+            <input type="text" class="form-control custom-input" id="Website " placeholder="Pic EmailId"
+              value="www.concordmaritime.com" formControlName="picEmailId"
+              [ngClass]="{ 'is-invalid': submitted && f.picEmailId.errors }" />
+            <div *ngIf="submitted && f.picEmailId.errors" class="invalid-feedback">
+              <div *ngIf="f.picEmailId.errors.required">
+                {{
+                "smartagent.smartAgent.AllformAddedit.picEmailidisrequired"
+                | translate
+                }}
+              </div>
+              <div *ngIf="f.picEmailId.errors.pattern">
+                {{ "error.err_valid_email" | translate }}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="taxtype" class="form-label">{{
+              "smartagent.smartAgent.AllformAddedit.taxType" | translate
+              }}</label>
+              <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Tax Type" formControlName="taxType"
+                  [ngClass]="{'is-invalid': submitted && f.taxType.errors}">
+                  <nz-option *ngFor="let taxType of taxTypeList" [nzLabel]="taxType?.typeName"
+                    [nzValue]="taxType?.typeName"></nz-option>
+                </nz-select>
+            <!-- <div class="input-group ">
+              <div class="col">
+                <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="" formControlName="taxType"
+                  [ngClass]="{'is-invalid': submitted && f.taxType.errors}">
+                  <nz-option *ngFor="let taxType of taxTypeList" [nzLabel]="taxType?.typeName"
+                    [nzValue]="taxType?.typeName"></nz-option>
+                </nz-select>
+              </div>
+              <div class="col border-start">
+                <input type="number" class="form-control custom-input" value="" formControlName="taxCode" maxlength="4"
+                  oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^0-9]/g,'').replace(/ +/g, ' ')" />
+              </div>
+            </div> -->
+          </div>
+
+          <div class="col-md-4">
+            <label for="taxId" class="form-label">{{ (f.taxType.value === 'GST') ? 'GST' : 'TAX' }} No.<span class="text-danger">*</span></label>
+            <input type="text" class="form-control custom-input" formControlName="taxId" [ngClass]="{'is-invalid': submitted && f.taxId.errors}" placeholder="Tax Type" />
+            <div *ngIf="submitted && f.taxId.errors" class="invalid-feedback">
+              <div *ngIf="f.taxId.errors.required">
+                {{ (f.taxType.value === 'GST') ? 'GST' : 'TAX' }} No. is required
+              </div>   
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="panNo" class="form-label">{{
+              "Pan No." | translate
+              }}</label>
+            <input  class="form-control custom-input" id="panNo" formControlName="panNo"
+              placeholder="Pan No." value="" />
+          </div>
+
+          <div class="col-md-4" *ngIf="isWarehouse">
+            <label for="taxId" class="form-label">Job Code (Bonded)</label>
+            <input type="text" style="text-transform: uppercase;"  class="form-control custom-input"   formControlName="jobCode" 
+            [ngClass]="{'is-invalid': submitted && f.jobCode.errors}" placeholder="Job Code"/>
+
+            <div *ngIf="submitted && f.jobCode.errors" class="invalid-feedback">
+              <div *ngIf="f.jobCode.errors.required">
+                Code is required
+              </div> 
+              <div *ngIf="f.jobCode.errors.maxlength">
+                Maximum 4 characters 
+              </div>  
+            </div>
+          </div>
+
+          <div class="col-md-4" *ngIf="isWarehouse">
+            <label for="taxId" class="form-label">Job Code (Non Bonded)</label>
+            <input type="text" style="text-transform: uppercase;"  class="form-control custom-input"   formControlName="jobCodeNB" 
+            [ngClass]="{'is-invalid': submitted && f.jobCodeNB.errors}" placeholder="Job Code"/>
+
+            <div *ngIf="submitted && f.jobCodeNB.errors" class="invalid-feedback">
+              <div *ngIf="f.jobCodeNB.errors.required">
+                Code is required
+              </div> 
+              <div *ngIf="f.jobCodeNB.errors.maxlength">
+                Maximum 4 characters 
+              </div>  
+            </div>
+          </div>
+
+          <div class="col-md-4 " *ngIf="isImport">
+            <label for="taxId" class="form-label">Import Job Counter</label>
+            <input type="number" style="text-transform: uppercase;"  class="form-control custom-input"   formControlName="batchCounter" (wheel)="$event.preventDefault()"
+            [ngClass]="{'is-invalid': submitted && f.batchCounter.errors}" placeholder="Import Job Counter" />
+
+            <div *ngIf="submitted && f.batchCounter.errors" class="invalid-feedback">
+              <div *ngIf="f.batchCounter.errors.required">
+                Import Job Counter is required
+              </div> 
+            </div>
+          </div>
+
+          <div class="col-md-4 " *ngIf="isExport">
+            <label for="taxId" class="form-label">Export Job Counter</label>
+            <input type="number" style="text-transform: uppercase;"  class="form-control custom-input"   formControlName="exportBatchCounter" (wheel)="$event.preventDefault()"
+            [ngClass]="{'is-invalid': submitted && f.exportBatchCounter.errors}" placeholder="Export Job Counter" />
+
+            <div *ngIf="submitted && f.exportBatchCounter.errors" class="invalid-feedback">
+              <div *ngIf="f.exportBatchCounter.errors.required">
+                Export Job Counter is required
+              </div> 
+            </div>
+          </div>
+
+          <div class="col-md-4  mb-5" *ngIf="currentLogin !== 'warehouse'">
+            <label for="taxId" class="form-label">Invoice Counter</label>
+            <input type="number" style="text-transform: uppercase;"  class="form-control custom-input"   formControlName="invoiceCounter" (wheel)="$event.preventDefault()"
+            [ngClass]="{'is-invalid': submitted && f.invoiceCounter.errors}" placeholder="Invoice Counter" />
+
+            <div *ngIf="submitted && f.invoiceCounter.errors" class="invalid-feedback">
+              <div *ngIf="f.invoiceCounter.errors.required">
+                Invoice Counter is required
+              </div> 
+            </div>
+          </div>
+
+          <div class="col-md-4  mb-5" *ngIf="isWarehouse">
+            <label for="taxId" class="form-label">Warehouse Counter(Bonded)</label>
+            <input type="number" style="text-transform: uppercase;"  class="form-control custom-input"   formControlName="warehouseCounter" (wheel)="$event.preventDefault()"
+            [ngClass]="{'is-invalid': submitted && f.warehouseCounter.errors}" placeholder="Warehouse Counter(Bonded)" />
+
+            <div *ngIf="submitted && f.warehouseCounter.errors" class="invalid-feedback">
+              <div *ngIf="f.warehouseCounter.errors.required">
+                Invoice Counter is required
+              </div> 
+            </div>
+          </div>
+
+          <div class="col-md-4  mb-5" *ngIf="isWarehouse">
+            <label for="taxId" class="form-label">Warehouse Counter(Non Bonded)</label>
+            <input type="number" style="text-transform: uppercase;"  class="form-control custom-input"   formControlName="warehouseCounterNB" (wheel)="$event.preventDefault()"
+            [ngClass]="{'is-invalid': submitted && f.warehouseCounterNB.errors}" placeholder="Warehouse Counter(Non Bonded)" />
+
+          </div>
+
+          
+
+          <div class="col-md-4" *ngIf="isFiledVisiable === 'smartagent'">
+            <label for="sezunitaddress" class="form-label">{{
+              "smartagent.smartAgent.AllformAddedit.sezunitaddress"
+              | translate
+              }}
+            </label>
+            <input type="text" class="form-control custom-input" placeholder="" formControlName="sezUnitAddress"
+              value="" />
+          </div>
+
+          <!-- <div class="col-md-4">
+            <label for="DAndBNumber" class="form-label">{{
+              "smartagent.smartAgent.AllformAddedit.d&bNo" | translate
+              }}</label>
+            <input type="number" class="form-control custom-input" id="DAndBNumber" formControlName="dAndBNumber"
+              placeholder="" value="" maxlength="25"
+              oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^0-9]/g,'').replace(/ +/g, ' ')" />
+          </div> -->
+
+          <!-- <div class="col-md-4">
+            <label for="port" class="form-label">{{ "smartagent.smartAgent.AllformAddedit.port" | translate
+              }}<span class="text-danger">*</span></label>
+            <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="" formControlName="portName"
+              [ngClass]="{'is-invalid': submitted && f.portName.errors}">
+              <nz-option *ngFor="let port of portList" [nzLabel]="port?.portDetails?.portName"
+                [nzValue]="port?.portDetails?.portName"></nz-option>
+            </nz-select>
+
+            <div *ngIf="submitted && f.portName.errors" class="invalid-feedback">
+              <div *ngIf="f.portName.errors.required">
+                {{
+                "smartagent.smartAgent.AllformAddedit.portrequired"
+                | translate
+                }}
+              </div>
+            </div>
+          </div> -->
+
+          <div class="col-md-4" *ngIf="false">
+            <label for="localCurrency" class="form-label">{{
+              "smartagent.smartAgent.AllformAddedit.localCurrency"
+              | translate
+              }}</label>
+            <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Local Currency" formControlName="currency"
+              [ngClass]="{'is-invalid': submitted && f.currency.errors}">
+              <nz-option *ngFor="let currency of currencyList" [nzLabel]="currency?.currencyShortName"
+                [nzValue]="currency?.currencyShortName"></nz-option>
+            </nz-select>
+
+          </div>
+
+          <div class="col-md-4" *ngIf="isFiledVisiable === 'vendor'">
+            <label for="vendortype" class="form-label">{{ "smartagent.smartAgent.AllformAddedit.vendorType" | translate
+              }}<span class="text-danger">*</span></label>
+            <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="" formControlName="vendorType"
+              [ngClass]="{'is-invalid': submitted && f.vendorType.errors}">
+              <nz-option nzLabel="xyz" nzValue="xyz"></nz-option>
+            </nz-select>
+
+            <div *ngIf="submitted && f.vendorType.errors" class="invalid-feedback">
+              <div *ngIf="f.vendorType.errors.required">
+                {{
+                "smartagent.smartAgent.AllformAddedit.vendorType" | translate
+                }}
+                is required
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4" *ngIf="isFiledVisiable === 'smartagent'">
+            <label for="Principalservices" class="form-label">&nbsp;</label>
+            <div class="col">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" formControlName="pda" from
+                  value="option1" />
+                <label class="form-check-label" for="inlineCheckbox1">{{
+                  "smartagent.smartAgent.AllformAddedit.pda" | translate
+                  }}</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="inlineCheckbox2" formControlName="iPda"
+                  value="option2" />
+                <label class="form-check-label" for="inlineCheckbox2">{{
+                  "smartagent.smartAgent.AllformAddedit.IPDA" | translate
+                  }}</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="inlineCheckbox3" formControlName="fda"
+                  value="option3" />
+                <label class="form-check-label" for="inlineCheckbox3">{{
+                  "smartagent.smartAgent.AllformAddedit.FDA" | translate
+                  }}</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="inlineCheckbox3" formControlName="sda"
+                  value="option3" />
+                <label class="form-check-label" for="inlineCheckbox3">{{
+                  "smartagent.smartAgent.AllformAddedit.SDA" | translate
+                  }}</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group" *ngIf="isFiledVisiable === 'smartagent'">
+            <span>{{
+              "smartagent.smartAgent.AllformAddedit.branchActive" | translate
+              }}</span>
+            <label class="switch" style="margin-left: 20px">
+              <input type="checkbox" checked formControlName="branchActive" />
+              <span class="slider round"></span>
+            </label>
+          </div>
+          <div class="form-group wrap-form-action btn-onscreen mb-3">
+            <button class="btn1 btn-lg float-end" type="submit" (click)="onCancel()">
+              {{ "common.cancel" | translate }}
+            </button>
+            <button *ngIf="this.isAddMode === 'addbranch'" class="btn btn-outline-primary btn-lg float-end"
+              (click)="onSave()">
+              {{ "common.save" | translate }}
+            </button>
+            <button *ngIf="this.isAddMode !== 'addbranch'" class="btn btn-outline-primary btn-lg float-end"
+              (click)="onSave()">
+              {{ "common.update" | translate }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- <ul class="menuright">
+    <li>
+      <a href=""><em class="mdi mdi-folder-upload"></em></a>
+    </li>
+    <li>
+      <a href=""><em class="bi bi-pencil color-pencil-red"></em></a>
+    </li>
+    <li>
+      <a href=""><em class="mdi mdi-comment-text"></em></a>
+    </li>
+  </ul> -->
+</div>

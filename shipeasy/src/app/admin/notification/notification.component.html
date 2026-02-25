@@ -1,0 +1,139 @@
+<div class="table-with-gheading notification">
+  <div class="wrapper wrap-table-area">
+    <div class="container-fluid">
+      <div class="wrap-content">
+        <div class="row">
+          <div class="col-sm-12">
+         
+            <div class="wrap-bar mt-4">
+              <div class="wrap-left">
+                <h1 class="boldheading">Notification ({{totalLength}})</h1>
+              </div>
+             <div class="d-flex justify-content-end">
+              <div class="d-flex align-items-center col-1">
+                <div class="d-flex padding-left">
+                        <input class="mr-1" type="checkbox"  id="inlineCheckbox1" (change)="onCheckBoxChange($event, 'unread')" [checked]="this.unreadChecked"/>
+                       
+                    <label class="form-check-label">Unread</label>
+                </div>
+            </div>  
+
+            <div class="d-flex align-items-center">
+              <div class="d-flex padding-left">
+                      <input class="mr-1 margin" type="checkbox"  id="inlineCheckbox1" (change)="onCheckBoxChange($event, 'read')" [checked]="this.readChecked"/>
+                   
+                  <label class="form-check-label">Read</label>
+              </div>
+          </div>
+          <div class="text-end btn-link1 mx-4" > 
+            <button class="btn btn-outline-primary marginleft mt-1" (click)="readNotificationAll()" style="font-size: 12px;">
+           Mark All As Read
+         </button></div>
+             </div>
+              
+              
+            </div>
+            <div class="row mt-3 mb-5">
+             <div class="row justify-content-beetwen align-items-center pr-0">
+              <div class="row d-flex  my-4 mt-2 align-items-en pr-0">
+                <!-- <div class="col-md-2">
+                      <label class="mb-0 p-0 form-label">From</label>
+                      <mat-form-field appearance="outline" class="custom-date-picker">
+                       <div class="d-flex align-items-center  w-100">
+                        <input matInput [matDatepicker]="pickerEta21" [(ngModel)]="startDate" (dateChange)="onchangespend()"  class="h-0" placeholder="Form Date" />
+                      <mat-datepicker-toggle matSuffix [for]="pickerEta21"></mat-datepicker-toggle>
+                       </div>
+                        <mat-datepicker #pickerEta21></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                      <label class="mb-0 p-0 form-label">To</label>
+                       <mat-form-field appearance="outline" class="custom-date-picker">
+                       <div class="d-flex align-items-center  w-100">
+                        <input matInput [matDatepicker]="pickerEta22" [(ngModel)]="endDate" (dateChange)="onchangespend()" class="h-0" [max]="maxDate" [min]="startDate" placeholder="To Date" />
+                      <mat-datepicker-toggle matSuffix [for]="pickerEta22"></mat-datepicker-toggle>
+                       </div>
+                        <mat-datepicker #pickerEta22></mat-datepicker>
+                      </mat-form-field> 
+                    </div> -->
+                    <div class="row d-flex  my-4 mt-2 align-items-end">
+                      <div class="col-md-4 ">
+                        <label class="form-label">From To Date</label>
+                        <nz-range-picker [(ngModel)]="dateRange" (ngModelChange)="onchangespend()" style="width: 100%; height: 30px;">
+                        </nz-range-picker>
+                      </div>
+                      <div class="col-md-1 mb-1">
+                        <button type="button" class="btn btn-outline-primary" (click)="clear()">{{ 'common.clear' |
+                          translate }}</button>
+                      </div>
+                    </div>
+                                   
+                 <div class="col-md-1"></div>
+                  <div class="col-md-7 pr-0">
+                    <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2" style="margin-top: -61px;margin-right: -504px;">
+                      <div class="mt-2">
+                        <span>
+                          <h5>{{ fromSize }}-{{ count }} of {{ totalLength }}</h5>
+                        </span>
+                      </div>
+                      <div class="mt-2">
+                        <span class="prv" [class.disable-arrow-sign]="fromSize === 1" (click)="prev()"><i class="fa-solid fa-chevron-left"></i></span>
+                        <span class="prv" [class.disable-arrow-sign]="count === totalLength" (click)="next()"><i class="fa-solid fa-chevron-right"></i></span>
+                      </div>
+                      
+                      <div class="mt-2">
+                        <select class="form-select form-select-sm" (change)="filter($event)">
+                          <option value="10">10</option>
+                          <option value="20">20</option>
+                          <option value="50">50</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+             </div>
+              <div class="col-md-12">
+                <div class="">
+                  <ng-container class="" *ngIf="notificationList.length > 0; else noData">
+                    <div class="notification-design-change" *ngFor="let data of notificationList;let i = index"  >
+                      <div [ngClass]="{'read-back': data.read}">
+                        <div class="mb-1">
+                          <span class="namebold">{{data.notificationName}}</span>
+                          <span class="float-end fontweight font-12">{{ formatDate(data.createdOn) }}</span>
+                        </div>
+                       <div class="row">
+                        <div class="col-md-8" >
+                          <p class="description" style="margin: 0;" [innerHTML]="formatDescription(data?.description)"></p>
+                        </div>
+                        <div class="col-md-4 ">
+                          <div class="text-end d-flex gap-1 justify-content-end">
+                            <button *ngIf="!data?.read" type="button" class="btn btn-outline-primary font-12"  (click)="readNotification(data)">Read</button>
+                            <!-- <ng-container *ngIf="data?.reminderData?.reminderStatus == 'Pending'">
+                              <button *ngIf="data?.isReminder" type="button" class="btn btn-outline-primary font-12"  (click)="save(data?.reminderData,true);readNotification(data)">Complete</button>
+                              <button *ngIf="data?.isReminder" type="button" class="btn btn-outline-primary font-12"  (click)="save(data?.reminderData,false);readNotification(data)">Reminde me later</button> 
+                            </ng-container>  -->
+                          </div>
+                        
+                        </div> 
+                      </div>
+                      </div>
+                      </div>
+                      
+                  </ng-container>
+                  
+                  <ng-template #noData>
+                    <div class="no-data-availble mt-0">
+                      <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+                  <span *ngIf="!loaderService?.isLoadingcircle ">No data available</span>
+                    </div>
+                  </ng-template>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

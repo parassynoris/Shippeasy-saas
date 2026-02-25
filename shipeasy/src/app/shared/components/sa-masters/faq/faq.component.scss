@@ -1,0 +1,154 @@
+// @import '../../../sass/common.scss';
+.wrap-all-faq{
+.wrap-menu{
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    padding-top: 50px !important;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    text-align: center;
+    border-radius: 20px;
+  .heading--h6{
+    font-weight: 400;
+  }
+}
+.question{
+  font-size: 12px;
+}
+.back{
+  em{
+    font-size: 12px;
+  }
+}
+.ids-card{
+  margin-bottom: 40px;
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0.993), rgb(255, 255, 255)), #f5f5faef;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  border-radius: 20px;
+  border: 0;
+  &:last-child{
+    margin-bottom: 0px;
+  }
+.ids-card-body {
+  padding: 34px;
+  .list-group{
+    .list-group-item{
+      padding: 0;
+      border-top: 1px solid getColor(bordercolor);
+      border-bottom: 0;
+      .justify-center{
+        align-items: center;
+        padding: 12px 10px;
+      }
+    }
+  }
+  .wrap-answer{
+    background: #F7F7FA;
+    padding: 18px;
+  }
+}
+}
+.pbauto {
+  padding-bottom: 15px;
+  cursor: pointer;
+}
+}
+.responsive-show{
+  display: none;
+}
+.input-group{
+  border-bottom: 1px solid #eaeaea;
+  input, select{
+    border: none;
+    padding: 10px 0;
+    background: none;
+    border-radius: 0;
+    width: 100%;
+    &:focus{
+      box-shadow: none;
+      outline: none;
+    }
+  }
+}
+
+@media (max-width: 554px) {
+  .menu-title{
+    margin-bottom: 11px!important;
+  }
+  .responsive-show{
+    display: block;
+  }
+  .desktop-show{
+    display: none;
+  }
+  .wrap-all-faq{
+    .container{
+      padding-bottom: 0 !important;
+    }
+  .responsive{
+    padding: 0;
+    .ids-card{
+      border-radius: 0;
+      margin-bottom: 13px
+    }
+  }
+}
+}
+.font-12{
+  font-size: 12px;
+}
+.font-20{
+  font-size: 20px;
+}
+.font-16{
+  font-size: 16px;
+}
+.font-14{
+  font-size: 14px;
+  
+  font-family: 'Roboto';
+}
+.color--lightMenu{ 
+  color: black;
+}
+::ng-deep {
+  .wrap-modal-autosearch {
+      nz-select {
+
+          input,
+          select {
+              padding: 0 0px !important;
+              border: 1px solid rgb(207 202 202) !important;
+          }
+      }
+
+      .nz-form-select.wrap-inline-select nz-select-top-control {
+          height: 32px !important;
+      }
+  }
+
+  .cdk-overlay-container,
+  .cdk-overlay-pane {
+      z-index: 2000 !important;
+  }
+}
+.z-index{
+  z-index: 99999 !important;
+}
+.content{
+  padding: 0px !important;
+}
+.overflow{
+  overflow-y: scroll;
+   height: 70vh;
+
+ 
+
+}
+.overflow::-webkit-scrollbar {
+  display: none;
+}
+.contents{
+  margin: 0px !important;
+  padding: 0px !important;
+}

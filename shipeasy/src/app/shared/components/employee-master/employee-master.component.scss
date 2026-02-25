@@ -1,0 +1,50 @@
+
+  .addnew{
+
+    color: var(--link-text-color);
+    text-decoration: none;
+    font-weight: 400;
+    background: transparent;
+    border: 0;
+
+}
+.width20{
+    width: 20%;
+}
+.width15{
+    width: 15%;
+}
+.width10{
+    width: 10%;
+}
+@media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px) {
+   /* Force table to not be like tables anymore */
+   /* Hide table headers (but not display: none;
+   , for accessibility) */
+   /* Label the data */
+    
+    td:nth-of-type(1):before {
+        content: "Principal Name";
+   }
+    td:nth-of-type(2):before {
+        content: "Contact Type";
+   }
+    td:nth-of-type(3):before {
+        content: "Contact Name ";
+   }
+    td:nth-of-type(4):before {
+        content: "Contact Phone";
+   }
+   td:nth-of-type(5):before {
+    content: "Contact Email";
+}
+}
+::ng-deep {
+
+    .cdk-overlay-container,
+    .cdk-overlay-pane {
+      z-index: 2000 !important;
+    }
+
+  
+  }

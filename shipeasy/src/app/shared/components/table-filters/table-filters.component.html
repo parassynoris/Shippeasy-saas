@@ -1,0 +1,46 @@
+<div class="tableFilterContainer">
+    
+    <div class="drawerIcon" matTooltip="Open Filters" (click)="openFilters()" *ngIf="displayFilterIcon">
+        <!-- <mat-icon fontIcon="filter_alt"></mat-icon> -->
+        <em class="bi bi-funnel-fill text-secondary"></em>
+    </div>
+
+    <div class="drawerIcon" matTooltip="Show/Hide Columns"  (click)="openShowHide()" *ngIf="displayShowHideIcon">
+        <!-- <mat-icon fontIcon="exposure"></mat-icon> -->
+        <em class="bi bi-exposure text-secondary"></em>
+    </div>
+
+ 
+
+    <div class="input-group w-30"  *ngIf="displaySearchBox && !KeyUpSearch"> 
+      <input class="form-control custom-input search-input" type="text"  placeholder="Press 'Enter' to Search..."  (keyup.enter)="onFilterInputTextChange($event)"  autocomplete="off">
+        
+    </div>
+    <div class="w-30" *ngIf="displaySearchBox && KeyUpSearch"> 
+        <input class="form-control custom-input search-input" type="text"  placeholder="Press 'Enter' to Search..."  (keyup)="onFilterInputTextChange($event)"  autocomplete="off">
+     
+    </div>
+    <!-- <div>
+        <button type="button" title="Search"
+        class="bi bi-search btn btn-outline-primary btn-sm rounded-pill"
+        (click)="onFilterInputTextChange()" ></button>
+    </div>
+    <div>
+        <button type="button" title="Clear"
+        class="bi bi-arrow-clockwise btn btn-outline-primary btn-sm rounded-pill"
+        (click)="this.searchValue = '';onFilterInputTextChange()"></button>
+    </div> -->
+
+    <div class="drawerIcon max-con new-action  btn btn-outline-primary btn-sm rounded-pill hover" matTooltip="Export List" (click)="export()" *ngIf="displayExportIcon">
+        <!-- <mat-icon accessControl [featureCode]= "featurecode ? featurecode : false" accessType="export-import" 
+        fontIcon="file_download"></mat-icon> -->Export List 
+        <em class="custom-tooltip" [attr.title]="'Export to excel'" class="bi bi-download  color-pencil-red"></em> 
+    </div>
+
+    <div class="drawerIcon mappedExportIcon  max-con new-action  btn btn-outline-primary btn-sm rounded-pill hover" matTooltip="Export Full List" (click)="mappedExport()" *ngIf="displayMappedExportIcon" >
+        <!-- <mat-icon accessControl [featureCode]= "featurecode ? featurecode : false"
+        accessType="export-import" fontIcon="file_download"></mat-icon> -->Export Full List
+        <em class="bi bi-download color-pencil-red"></em> 
+    </div>
+   
+</div>

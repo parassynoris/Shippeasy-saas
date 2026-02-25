@@ -1,0 +1,19 @@
+/* css start  */
+
+  .tableFixHead td:nth-child(2),
+  .tableFixHead th:nth-child(2) {
+    position: sticky;
+    left: 88px;
+    z-index: 1;
+    background-color: white;
+  }
+  .tableFixHead td:nth-child(3),
+  .tableFixHead th:nth-child(3){
+    position: sticky;
+    left: 208px;
+    z-index: 1 !important;
+    background-color: white;
+  }
+
+  
+  

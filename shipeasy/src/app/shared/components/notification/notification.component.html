@@ -1,0 +1,72 @@
+<div class="table-with-gheading mt-5">
+    <div class="row">
+        <div class="col-md-12 mb-5">
+            <div class="table-responsive mb-3">
+                <div class="costtable">
+
+                    <table aria-describedby="mytable">
+                        <thead>
+                            <tr>
+                                <th scope="col">Module</th>
+                                <th scope="col" colspan="3" *ngFor="let dept of departmentListForHeader">
+                                    {{dept.deptName}}
+                                </th>
+                            </tr>
+                            <tr>
+                                <th scope="col" class="text-start">{{
+                                    'smartagent.smartAgent.notification.PortcallNotifications' | translate}}</th>
+                                <th scope="col" colspan="3" *ngFor="let toccpc of ToCCPCList">{{toccpc.name}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let notificationMaster of notificationMasterList;index as i">
+                                <td class="text-start">
+                                    <em class="bi bi-chevron-down" (click)="openWrrow(i)"></em>
+                                    {{notificationMaster.notificationType}}<br>
+                                    <div *ngIf="expandRow === i">
+                                        <div class="custom-form-control">
+                                            <label class="form-label">TO</label>
+                                            <input class="form-control custom-input"
+                                                [(ngModel)]="notificationMaster.tomail" type="text" />
+                                        </div>
+
+                                        <div class="custom-form-control">
+                                            <label class="form-label">CC</label>
+                                            <input class="form-control custom-input"
+                                                [(ngModel)]="notificationMaster.ccmail" type="text" />
+                                        </div>
+                                        <div class="custom-form-control">
+                                            <label class="form-label">PC</label>
+                                            <input class="form-control custom-input"
+                                                [(ngModel)]="notificationMaster.pcmail" type="text" />
+                                        </div>
+                                    </div>
+                                </td>
+                                <td colspan="3" *ngFor="let department of notificationMaster.departments">
+                                    <input type="checkbox" [(ngModel)]="department.isToEmail"> -
+                                    <input type="checkbox" [(ngModel)]="department.isCCEmail"> -
+                                    <input type="checkbox" [(ngModel)]="department.isPCEmail">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="no-data-availble" *ngIf="notificationMasterList.length === 0">
+                    {{'common.no_data' | translate}}
+                  </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group wrap-form-action btn-onscreen">
+                    <button type="button" class="btn1 float-end" type="button"> {{
+                        'common.cancel' | translate }}</button>
+                    <button type="button" class="btn btn-outline-primary float-end" (click)="ngOnSave()"
+                        type="submit">
+                        {{
+                        'common.save' |
+                        translate }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>

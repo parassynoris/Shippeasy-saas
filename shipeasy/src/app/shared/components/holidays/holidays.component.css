@@ -1,0 +1,160 @@
+.menuright {
+    position: fixed;
+    right: 0;
+    top: 40%;
+    width: 10px;
+    margin: -2.5em 0 0 0;
+    z-index: 5;
+    background: var(--theme-white-background-color);
+    color: var(--link-text-color);
+    font-weight: bold;
+   
+    text-align: left;
+    
+    padding: 10px 30px 10px 0px;
+    box-shadow: var(--theme-shadow);
+    border-radius: 10px 0 0px 10px;
+  }
+  .menuright li{
+
+    width: 30px;
+    border-bottom: 1px solid var(--theme-border-color-light);
+    list-style: none;
+    padding: 0px 0 0px 3px;
+  }
+  .menuright li:last-child{
+
+    border-bottom:0;
+   
+  }
+
+@media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px) {
+   
+    td:nth-of-type(1):before {
+        content: "Holiday Name";
+   }
+    td:nth-of-type(2):before {
+        content: "Country";
+   }
+    td:nth-of-type(3):before {
+        content: "Date ";
+   }
+    td:nth-of-type(4):before {
+        content: "Year";
+   }
+}
+
+
+
+
+.work{
+    width: 65%;
+
+}
+.work table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 15px;
+}
+.work table .form-control {
+    padding: 2px 8px;
+    border-radius: 50px;
+}
+.work table .field-name th {
+    padding-left: 10px;
+}
+.work table .field-name th i {
+    color: var(--link-text-color);
+    font-size: 12px;
+}
+.work table th {
+    color: #454545;
+    padding: 2px;
+    font-weight: 600;
+    font-size: 12px;
+}
+.work table .wrap-table-btn button {
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 50px;
+}
+.work table .wrap-table-btn .clearbtn {
+    color: var(--link-text-color);
+    text-decoration: none;
+    padding-left: 11px;
+    font-size: 12px;
+}
+.work table td {
+    border: 1px solid var(--theme-border-color);
+    padding: 15px 10px;
+    border-right: hidden;
+    font-size: 12px;
+    color: #746969;
+}
+.work table td:first-child {
+    border-radius: 5px 0 0 5px;
+}
+.work table td:last-child {
+    border-radius: 0px 5px 5px 0;
+    border-right: 1px solid #e3e3e3;
+}
+
+
+
+
+@media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px) {
+   /* Force table to not be like tables anymore */
+   /* Hide table headers (but not display: none;
+   , for accessibility) */
+   /* Label the data */
+   .work{
+    width: 100%;
+
+}
+   .work table, thead, tbody, th, td, tr {
+        display: block;
+   }
+   .work table thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+   }
+   .work table tr {
+        border: 1px solid var(--theme-gobally-border-color);
+        margin: 0 0 1rem 0;
+   }
+ 
+   .work table td {
+       /* Behave like a "row" */
+        border: none;
+        border-bottom: 1px solid #e0e0e0;
+        position: relative;
+        padding-left: 50%;
+   }
+   .work table td:before {
+       /* Now like a table header */
+        position: absolute;
+       /* Top/left values mimic padding */
+        top: 6px;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+   }
+   .work table .action-field {
+        text-align: left;
+   }
+   
+   .work td:nth-of-type(1):before {
+        content: "Day";
+   }
+   .work td:nth-of-type(2):before {
+        content: "From";
+   }
+   .work td:nth-of-type(3):before {
+        content: "To ";
+   }
+   .work td:nth-of-type(4):before {
+        content: "24x7";
+   }
+}

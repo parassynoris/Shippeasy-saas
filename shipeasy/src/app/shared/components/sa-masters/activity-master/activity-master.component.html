@@ -1,0 +1,271 @@
+<div class="table-header-area mt-2">
+    <div class="mat-table-with-gheading">
+        <div class="wrapper">
+            <div class="container-fluid">
+                <div class=" pt-2">
+                    <div class="wrap-mat-table-area">
+                        <div class="table-header-area pt-2">
+                            <div>
+                                <table-filters [TDP]="[false, false, true, true]" (filterInput)="applyFilter($event)" (onClickExport)="exportAsExcelFile()">
+                                </table-filters>
+                            </div>
+                            <div class="header-right">
+                                <a class="new-action btn btn-outline-primary btn-sm rounded-pill" appAccessControl
+                                    featureCode="['STM016']" accessType="add" (click)="open(AddClause)">Add Activity</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-card">
+                        <div class="table-design example-container mat-elevation-z8">
+                            <table mat-table [dataSource]="dataSource" matSort class="full-width-table"
+                                summary="agreement">
+                                <ng-container matColumnDef="#">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef style="width: 3%;">
+                                        # <em class="custom-tooltip" [attr.title]="'Toggle Filters'"
+                                            (click)="toggleFilters = !toggleFilters" class="bi bi-search"></em>
+                                    </th>
+                                    <td mat-cell *matCellDef="let element; let i = index">
+                                        {{ element?.id}}
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="action">
+                                    <th scope="col" id="action" class="charterersPdfHead" mat-header-cell
+                                        *matHeaderCellDef style="width: 8%;">
+                                        {{ 'Actions' }}
+                                    </th>
+                                    <td class="borderBottom" mat-cell *matCellDef="let element; let i = index">
+
+                                        <div class="d-flex" style="align-items: center;">
+                                            <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}"
+                                                class="mtop">
+                                                <a routerLink="#" appAccessControl featureCode="['STM016']"
+                                                    accessType="update" (click)="open(AddClause, element)"><em
+                                                        class="bi bi-pencil color-pencil-red"></em></a>
+                                            </span>
+                                            <span nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}"
+                                                class="mx-1">
+                                                <a appAccessControl featureCode="['STM011']" accessType="view"
+                                                    (click)="open(AddClause, element,'show')">
+                                                    <em class="bi bi-eye globally-change-icon-color"></em>
+                                                </a>
+                                            </span>
+                                            <span class="form-check form-switch mx1 mb-0 mt-1">
+                                                <input appAccessControl featureCode="['STM011']" accessType="update"
+                                                    class="form-check-input" type="checkbox" role="switch"
+                                                    id="flexSwitchCheckChecked" (change)="changeStatus(element,i)"
+                                                    [checked]="element.status" />
+                                                <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                                            </span>
+                                        </div>
+                                    </td>
+
+
+                                </ng-container>
+                                <ng-container matColumnDef="vesselLineup">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header
+                                        style="width: 25%;">
+                                        vesselLineup
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{ element?.vesselLineup }}
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="status">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header
+                                        style="width: 25%;">
+                                        Status
+                                    </th>
+                                    <td mat-cell *matCellDef="let element" style="text-align: left !important">
+                                        {{ element?.status? "Active" : "Inactive"}}
+                                    </td>
+                                </ng-container>
+
+                                <!-- <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index" [matColumnDef]="headersFilter">
+                                    <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+                                        <div class="filters-container" [class.animate]="!toggleFilters">
+                                            <em *ngIf="i > 0 && i < displayedColumns1.length - 2" class="custom-tooltip" [attr.title]="'Clear Filters'"
+                                                (click)="clearFilters();toggleFilters = !toggleFilters" class="bi bi-x-circle"></em>
+                                            <div *ngIf="i > 1 && i < displayedColumns1.length - 0" appearance="outline">
+                                                <input class="form-control input-txt" placeholder="Press 'Enter' to search"
+                                                    [(ngModel)]="filtersModel[i]" (keyup.enter)="searchColumns()">
+                                            </div>                                
+                                        </div>
+                                    </th>
+                                </ng-container> -->
+
+                                <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index" [matColumnDef]="headersFilter">
+                                    <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+                                      <div class="filters-container" [class.animate]="!toggleFilters">
+                                        <em 
+                                          *ngIf="i > 0 && i < displayedColumns1.length - 2" 
+                                          class="custom-tooltip bi bi-x-circle" 
+                                          [attr.title]="'Clear Filters'" 
+                                          (click)="clearFilters(); toggleFilters = !toggleFilters">
+                                        </em>
+                                        <div *ngIf="i > 1 && i < displayedColumns1.length - 0" appearance="outline">
+                                          <ng-container *ngIf="displayedColumns[i] === 'status'; else textInput">
+                                            <select 
+                                              class="form-control" 
+                                              [(ngModel)]="filtersModel[i]" 
+                                              (change)="searchColumns()">
+                                              <option value="">All</option>
+                                              <option value="active">Active</option>
+                                              <option value="inactive">Inactive</option>
+                                            </select>
+                                          </ng-container>
+                                          <ng-template #textInput>
+                                            <input 
+                                              class="form-control input-txt" 
+                                              placeholder="Press 'Enter' to search" 
+                                              [(ngModel)]="filtersModel[i]" 
+                                              (keyup.enter)="searchColumns()">
+                                          </ng-template>
+                                        </div>
+                                      </div>
+                                    </th>
+                                  </ng-container>
+                                <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumns">
+                                </tr>
+                                <tr mat-header-row class="no-default-height" *matHeaderRowDef="displayedColumns1"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns">
+                                </tr>
+                                <tr class="mat-row" *matNoDataRow>
+                                    <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+                                        <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+                                        <span *ngIf="!loaderService?.isLoadingcircle && !dataSource?.data?.length">No
+                                            data available</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div [ngClass]="{'display-none' : toalLength < 10}">
+                            <mat-paginator [length]="toalLength" [pageSize]="pageSize" [pageIndex]="pageNumber-1"
+                                (page)="onPageChange($event)" [pageSizeOptions]="_gc.PAGINATOR_OPTIONS"
+                                showFirstLastButtons></mat-paginator>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #AddClause let-modal>
+    <div class="modal-content nz-allSelect vessel-master-component">
+        <div class="modal-headers mt-2">
+            <h4 *ngIf="!vesselIdToUpdate" class="modal-title">
+                {{ "common.add" | translate }}
+                Activity
+            </h4>
+            <h4 *ngIf="vesselIdToUpdate" class="modal-title">
+                {{ "common.edit" | translate }}
+                Activity
+            </h4>
+            <button type="button" class="btn-close shadow-none float-end" (click)="onSave()"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+                <form [formGroup]="addVesselForm">
+                    <div class="container">
+                        <!-- Row for Vessel Lineup Select and Add Field Button -->
+                        <div class="row g-3 mb-2 d-flex align-items-center">
+                            <!-- Column for Vessel Lineup Select -->
+                            <div class="col-md-3">
+                                <label for="ownershipType" class="form-label">Vessel Lineup<span
+                                        class="text-danger">*</span></label>
+                                <nz-select class="form-control" nzShowSearch nzAllowClear nzPlaceHolder="Vessel Lineup"
+                                    formControlName="vesselLineup"
+                                    [ngClass]="{'is-invalid': submitted && addVesselForm.get('vesselLineup').errors}">
+                                    <nz-option *ngFor="let data of shippinglineData" [nzLabel]="data?.typeName"
+                                        [nzValue]="data?.typeName"></nz-option>
+                                </nz-select>
+                                <div *ngIf="submitted && addVesselForm.get('vesselLineup').errors"
+                                    class="invalid-feedback">
+                                    <div *ngIf="addVesselForm.get('vesselLineup').errors.required">Vessel Lineup is
+                                        required</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <button type="button" class="custom-btn" (click)="addField()" >Add Activity</button>
+                            </div>
+                        </div>
+
+
+                        <div class="container mt-3">
+                            <div formArrayName="fields">
+                              <div *ngFor="let fieldGroup of fieldsArray.controls; let i = index" [formGroupName]="i"
+                                   class="mt-3 d-flex align-items-center">
+                                <div class="form-row w-100 align-items-center">
+                                  <div class="form-group col-md-3">
+                                    <label for="activity">Activity<span class="text-danger">*</span></label>
+                                    <nz-select class="form-control" nzShowSearch nzAllowClear nzPlaceHolder="Select Activity"
+                                               formControlName="activity"
+                                               [ngClass]="{ 'is-invalid': submitted && fieldGroup.get('activity').errors }">
+                                      <nz-option *ngFor="let activity of activityType" [nzLabel]="activity.typeName"
+                                                 [nzValue]="activity.typeName"></nz-option>
+                                    </nz-select>
+                                    <div *ngIf="submitted && fieldGroup.get('activity').errors" class="invalid-feedback">
+                                      <div *ngIf="fieldGroup.get('activity').errors.required">Activity is required</div>
+                                    </div>
+                                  </div>
+                          
+                                  <div class="form-group col-md-3 mt-1">
+                                    <label for="dataType" class="form-label">Data Type<span class="text-danger">*</span></label>
+                                    <nz-select class="form-control" nzShowSearch nzAllowClear nzPlaceHolder="Data Type"
+                                               formControlName="dataType"
+                                               [ngClass]="{ 'is-invalid': submitted && fieldGroup.get('dataType').errors }">
+                                      <nz-option *ngFor="let data of ownershipeType" [nzLabel]="data" [nzValue]="data"></nz-option>
+                                    </nz-select>
+                                    <div *ngIf="submitted && fieldGroup.get('dataType').errors" class="invalid-feedback">
+                                      <div *ngIf="fieldGroup.get('dataType').errors.required">Data Type is required</div>
+                                    </div>
+                                  </div>
+                          
+                                <div class="d-flex align-items-center">
+                                    <div class="form-group col-md-1 mb-0 pt-3" style="padding-left: 0px; margin-right: 2px;">
+                                        <div class="taggle form-check form-switch">
+                                            <input class="form-check-input mx-2" formControlName="status" type="checkbox" id="flexSwitchCheckDefault">
+                                        </div>
+                                    </div>
+                                
+                                    <div class="form-group col-md-5 mb-0 pt-2" *ngIf="show !== 'show'">
+                                        <a type="button" 
+                                           (click)="removeField(i)" 
+                                           [class.disabled]="isDisabled" 
+                                           [attr.disabled]="isDisabled ? true : null" 
+                                           appAccessControl 
+                                           featureCode="['STM0116']" 
+                                           accessType="delete">
+                                          <i class="bi bi-trash color-pencil-red"></i>
+                                        </a>
+                                      </div>
+                                </div>
+                            </div>
+                         </div>
+                     </div>
+                </div>
+            </div>
+
+                    <div class="form-group wrap-form-action mt-4">
+                        <button class="btn1 btn-lg float-end" (click)="onSave()" type="submit">
+                            {{ "common.cancel" | translate }}
+                        </button>
+                        <button *ngIf="show !== 'show'" (click)="vesselMasters()" class="btn btn-outline-primary btn-lg float-end" type="submit">
+                            <ng-container *ngIf="!vesselIdToUpdate">
+                              {{ "common.save" | translate }}
+                            </ng-container>
+                            <ng-container *ngIf="vesselIdToUpdate">
+                              {{ "common.update" | translate }}
+                            </ng-container>
+                          </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</ng-template>

@@ -1,0 +1,5 @@
+.header{
+    padding: 5px;
+    color: white;
+    background-color: var(--theme-red-color);
+}

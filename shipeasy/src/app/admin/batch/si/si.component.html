@@ -1,0 +1,1260 @@
+<div class="table-with-gheading">
+  <div class="wrap-table-area">
+
+    <form [formGroup]="newenquiryForm">
+
+      <div class="text-end mt-2">
+        <!-- <button (click)="bookingListBtn(bookingList)" class="btn expand-all px-4">Cancelled Booking List</button> -->
+        <button *ngIf="!callapseALL" (click)="callapseALL = !callapseALL" #expand class="btn btn-outline-primary px-0"
+          type="button" data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded="false"
+          [attr.aria-controls]="expandKeys">Expand All</button>
+
+
+        <button *ngIf="callapseALL" (click)="callapseALL = !callapseALL" class="btn1  px-0" type="button"
+          data-bs-toggle="collapse" data-bs-target="#demo" aria-expanded="true" aria-controls="demo">
+          Collapse All
+        </button>
+      </div>
+      <div class="accordion form-accordian  " id="accordionPanelsStayOpenExample">
+        <div class="accordion-item">
+          <h2 class="accordion-header mt-2" id="shipping instruction">
+            <button class="accordion-button" [class.collapsed]="!isBookingPanelOpen" type="button"
+              (click)="toggleButton('booking')" aria-expanded="isBookingPanelOpen" aria-controls="shippingDetails">
+              Booking
+            </button>
+
+          </h2>
+          <div id="shippingDetails" class=" multi-collapse accordion-collapse collapse show"
+            aria-labelledby="shipping instruction" data-bs-parent="#accordionPanelsStayOpenExample"
+            [class.show]="isBookingPanelOpen">
+            <div class="accordion-body">
+              <div class="wrap-form-field">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="row g-4 align-items-center">
+                      <div class="col-md-3" *ngIf="activeFright == 'air'">
+                        <label class="form-label"> Final Airline </label>
+                        <input type="text" disabled
+                          class="form-control custom-input" formControlName="finalAirline" placeholder="Final Airline"
+                          [value]="batchDetail?.routeDetails?.finalShippingLineName || batchDetail?.quotationDetails?.carrierName || '-'">
+                    </div>
+                    
+                
+                      <div class="col-md-3" *ngIf="activeFright == 'air'">
+                        <label class="form-label">Flight No.<span class="text-danger">*</span></label>
+              
+                        <nz-select [nzDisabled]="bookingCancel" class="form-select" nzShowSearch nzAllowClear
+                            formControlName="flightNo" nzPlaceHolder="Flight No."
+                            [ngClass]="{'is-invalid': submitted && f.flightNo.errors}">
+                            <nz-option *ngFor="let vessel of flightList | filterByType : 'airlineId' : this.batchDetails?.quotationDetails?.carrierId " [nzLabel]="vessel?.flight"
+                                [nzValue]="vessel?.airId"></nz-option>
+                        </nz-select>
+                        <div *ngIf="submitted && f.flightNo.errors" class="invalid-feedback">
+                            <div *ngIf="f.flightNo.errors.required">Flight No. is required</div>
+                        </div>
+                    </div>
+              
+                    <div class="col-md-3" *ngIf="activeFright == 'land'">
+                        <label class="form-label">Vehicle No.<span class="text-danger">*</span></label>
+              
+                        <nz-select [nzDisabled]="bookingCancel" class="form-select" nzShowSearch nzAllowClear
+                            formControlName="vehicleNo" nzPlaceHolder="Vehicle No."
+                            [ngClass]="{'is-invalid': submitted && f.vehicleNo.errors}">
+                            <nz-option *ngFor="let vessel of vehicalList | filterByType : 'typeCarrierId' : this.batchDetails?.quotationDetails?.carrierId" [nzLabel]="vessel?.vehicleLicence"
+                                [nzValue]="vessel?.landId"></nz-option>
+                        </nz-select>
+                        <div *ngIf="submitted && f.vehicleNo.errors" class="invalid-feedback">
+                            <div *ngIf="f.vehicleNo.errors.required">Vehicle No. is required</div>
+                        </div>
+                    </div>
+                 
+                    <ng-container *ngIf="activeFright == 'ocean'">
+                      <div class="col-md-3">
+                        <label class="form-label">{{ 'stolt.batch.route.final_vessel' | translate }}<span class="text-danger">*</span></label>
+                        <nz-select [nzDisabled]="bookingCancel" class="form-select" nzShowSearch nzAllowClear
+                          formControlName="finalVessel" [ngClass]="{'is-invalid': submittedbooking && f.finalVessel.errors}" nzPlaceHolder="Final Vessel">
+                          <nz-option
+                            *ngFor="let vessel of vesseldataShipping | filter: this.batchDetails?.finalShippingLineId || ''"
+                            [nzLabel]="vessel?.vesselName" [nzValue]="vessel.vesselId"></nz-option>
+                        </nz-select>
+                        <div *ngIf="submittedbooking && f.finalVessel.errors" class="invalid-feedback">
+                          <div *ngIf="f.finalVessel.errors.required">{{ 'stolt.batch.route.final_vessel' | translate }}
+                            {{ 'common.isRequired' | translate }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <label class="form-label">{{ 'stolt.enquiry.new.plannedVessel' | translate }}</label>
+
+                        <nz-select [nzDisabled]="true" class="form-select" nzShowSearch nzAllowClear
+                          formControlName="plannedVessel"
+                          [ngClass]="{'is-invalid': submittedbooking && f.plannedVessel.errors}" nzPlaceHolder="Planned Vessel">
+                          <nz-option
+                            *ngFor="let plannedVessel of vesseldataShipping | filter: this.batchDetails?.shippingLineId || ''"
+                            [nzLabel]="plannedVessel.vesselName" [nzValue]="plannedVessel.vesselId"></nz-option>
+                        </nz-select>
+                      </div>
+                      <div class="col-md-3" *ngIf="false">
+                        <label class="form-label">{{ 'stolt.enquiry.new.backupVessel' | translate }}</label>
+
+                        <nz-select [nzDisabled]="true" class="form-select" nzShowSearch nzAllowClear
+                          formControlName="backupVessel" [ngClass]="{'is-invalid': submittedbooking && f.backupVessel.errors}">
+                          <nz-option
+                            *ngFor="let  backupVessel of  vesseldataShipping | filter: this.batchDetails?.shippingLineId2 || ''"
+                            [nzLabel]="backupVessel.vesselName" [nzValue]="backupVessel.vesselId"></nz-option>
+                        </nz-select>
+                      </div>
+                    </ng-container>
+                      <div class="col-md-3">
+                        <label class="form-label"> Booking Number <span class="text-danger">*</span></label>
+                        <input [attr.disabled]="bookingCancel ? 'disabled' : null" type="text"
+                          class="form-control custom-input" formControlName="bookingNumber" placeholder="Booking Number"
+                          [ngClass]="{ 'is-invalid': submittedbooking && f.bookingNumber.errors }">
+                        <div *ngIf="submittedbooking && f.bookingNumber.errors" class="invalid-feedback">
+                          <div *ngIf="f.bookingNumber.errors.required">Booking Number {{ 'common.isRequired' | translate
+                            }}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-3 mrgn">
+                        <label class="form-label"> {{'common.attachment' | translate }}</label>
+                        <span class="bg-light text-dark float-end" *ngIf="f.siAttachment.value">{{siAttachmentName}}</span>
+                        <input [attr.disabled]="bookingCancel ? 'disabled' : null" type="file"
+                        [disabled]="!disabledAttachment"
+                          class="form-control custom-input" (change)="onFileSelected($event,'siAttachment','')"
+                          >
+                        <!-- <div *ngIf="submittedbooking && f.siAttachment.errors" class="invalid-feedback">
+                          <div *ngIf="f.siAttachment.errors.required">{{
+                            'smartagent.portenquiry.document.uploadDocumentRequired' |
+                            translate }} </div>
+                          <div *ngIf="fileTypeNotMatched">{{ 'smartagent.portenquiry.document.fileTypeNotMatched' |
+                            translate }}</div>
+                        </div> -->
+                        <div *ngIf="showErrorMsg === 'siAttachment'">
+                          <div *ngIf="!submittedbooking && fileTypeNotMatched">
+                            {{'smartagent.portenquiry.document.fileTypeNotMatched' | translate }}
+                          </div>
+                        </div>
+                        
+                       
+                      </div>
+
+                      <div class="col-md-3">
+                        <label class="mb-0 p-0 form-label">SI Cutoff <span class="text-danger">*</span></label>
+                        <nz-date-picker 
+                          nzShowTime
+                          class="form-select custom-input" 
+                          nzFormat="dd-MM-yyyy HH:mm:ss"
+                          formControlName="siCutOff" 
+                          [nzDisabled]="bookingCancel" 
+                          [ngClass]="{'is-invalid': submittedbooking && f?.siCutOff?.errors}"
+                          style="width: 100%;">
+                        </nz-date-picker>
+                        <ng-container *ngIf="submittedbooking && f?.siCutOff?.errors">
+                          <div class="set-error-msg">
+                            SI Cutoff {{ 'common.isRequired' | translate }}
+                          </div>
+                        </ng-container>
+                      </div>
+                      
+                      <div class="col-md-3">
+                        <label class="mb-0 p-0 form-label">Doc Cutoff <span class="text-danger">*</span></label>
+                        <nz-date-picker 
+                          nzShowTime
+                          class="form-select custom-input" 
+                          nzFormat="dd-MM-yyyy HH:mm:ss"
+                          formControlName="docCutOff" 
+                          [nzDisabled]="bookingCancel" 
+                          [ngClass]="{'is-invalid': submittedbooking && f?.docCutOff?.errors}"
+                          style="width: 100%;">
+                        </nz-date-picker>
+                        <ng-container *ngIf="submittedbooking && f?.docCutOff?.errors">
+                          <div class="set-error-msg">
+                            Doc Cutoff {{ 'common.isRequired' | translate }}
+                          </div>
+                        </ng-container>
+                      </div>
+                      
+                      <div class="col-md-3" *ngIf="activeFright !== 'air'">
+                        <label class="mb-0 p-0 form-label">Gate Cutoff <span class="text-danger">*</span></label>
+                        <nz-date-picker 
+                          nzShowTime
+                          class="form-select custom-input" 
+                          nzFormat="dd-MM-yyyy HH:mm:ss"
+                          formControlName="gateCutOff" 
+                          [nzDisabled]="bookingCancel" 
+                          [ngClass]="{'is-invalid': submittedbooking && f?.gateCutOff?.errors}"
+                          style="width: 100%;">
+                        </nz-date-picker>
+                        <ng-container *ngIf="submittedbooking && f?.gateCutOff?.errors">
+                          <div class="set-error-msg">
+                            Gate Cutoff {{ 'common.isRequired' | translate }}
+                          </div>
+                        </ng-container>
+                      </div>
+                      
+                      <div class="col-md-3">
+                        <label class="form-label"> Remark</label>
+                        <input [attr.disabled]="bookingCancel ? 'disabled' : null" type="text"
+                          class="form-control custom-input" placeholder="Remark" formControlName="siRemark"
+                          [ngClass]="{ 'is-invalid': submittedbooking && f.siRemark.errors }">
+                        <div *ngIf="submittedbooking && f.siRemark.errors" class="invalid-feedback">
+                          <div *ngIf="f.siRemark.errors.required">Remark {{ 'common.isRequired' | translate }}</div>
+                        </div>
+                      </div>
+                      <div class="col-md-3 mrgn1">
+                        <div [ngClass]="{ 'pointer-none': bookingCancel}" class="form-field-section mt-4 pt-2">
+                          <input type="checkbox" class="m-2" disabled formControlName="bookingConfirmed" placeholder="Booking Confirmed"
+                            [ngClass]="{ 'is-invalid': submittedbooking && !f.bookingConfirmed.value }">
+                          <label for="Principal" class=" ">Booking Confirmed</label>
+                          <!-- <div *ngIf="submittedbooking && !f.bookingConfirmed.value" class="invalid-feedback">
+                            <div *ngIf="!f.bookingConfirmed.value">Booking Confirmed {{ 'common.isRequired' |
+                              translate }}</div>
+                          </div> -->
+                        </div>
+                      </div>
+                      
+                      <div class="col-md-4" *ngIf="false">
+                        <div class="row">
+
+                        </div>
+                      </div>
+
+                      <!-- <div class="col-md-1 wrap-form-field mt-4 pt-4">
+                        <div class="form-group wrap-form-action">
+                          <button [disabled]="bookingCancel" class="btn btn-outline-primary btn-lg float-start"
+                            (click)="uploadDoc('siAttachment','si')">
+                            Upload
+                          </button>
+                        </div>
+                      </div> -->
+
+                      
+                      <div class="col-md-3">
+
+                        <label class="form-label"> Email <span style="font-size: 10.5px;">(use semi-colon to seperate
+                            multiple emails)</span> <span class="text-danger"> *</span></label>
+                            <i class="bi bi-info-circle" matTooltip="This field is required. Please enter a valid email address for contact purposes." matTooltipClass="custom-tooltip" style="padding-left: 4px; margin-bottom: 2px;" ></i>
+                        <input  type="text"
+                          class="form-control custom-input" placeholder="" formControlName="siMail"
+                          [ngClass]="{ 'is-invalid': submittedbooking && f.siMail.errors }">
+                        <div *ngIf="submittedbooking && f.siMail.errors" class="invalid-feedback">
+                          <div *ngIf="f.siMail.errors.required">Email {{ 'common.isRequired' | translate }}</div>
+                        </div>
+                      </div>
+                    
+                      <!-- <div class="col-md-3 wrap-form-field mt-4 pt-5 display">
+                        <div class="form-group wrap-form-action row" *ngIf="!isShow"> -->
+                          <div class="col-md-3 mt-5">
+                          <button *ngIf="this.currentUrl !== 'show'" 
+                            class="btn1 btn-lg float-start"
+                            (click)="emailSend('siMail','bookingNumber','siCutOff','siAttachment','siAttachmentName','siRemark','bookingConfirmed')">
+                            Send
+                          </button>
+                          <button *ngIf="bookingCancel && this.currentUrl !== 'show'" class="btn1 float-start mx-4"
+                            (click)="bookingBtn(booking);">
+                            Booking Cancel
+                          </button>
+                          </div>
+                         
+                          <div class="col-md-3 d-flex justify-content-between">
+                            <button class="btn1 float-start" [disabled]="!instructionId"
+                            (click)="downnloadEdi('bookingrequest',batchDetails?.batchId)"
+                               class="btn btn-outline-primary float-end">Download EDI(Booking Request)
+                            </button>
+                            <button class="btn1 float-start" [disabled]="!instructionId"
+                            (click)="downnloadEdi('bookingconfirmation',batchDetails?.batchId)"
+                               class="btn btn-outline-primary float-end ">Download EDI(Booking Confirm)
+                            </button>
+                          </div>
+                        <!-- </div>
+                      </div> -->
+
+                      
+                      <div class="col-md-12  wrap-form-action border-top mt-3  " *ngIf="!isshowDetails">
+                        <button (click)="onClose($event)" class="btn1  float-end ">
+                          {{ 'common.cancel' | translate }}
+                        </button>
+                        <button *ngIf="!isShow && !instructionData[0]?.si?.bookingConfirmed"
+                          (click)="onSave(false,'booking')" class="btn btn-outline-primary  float-end ">
+                          {{ 'common.save' | translate }}
+                        </button>
+                        <button [disabled]="!instructionId"
+                        (click)="downnloadEdi('shippinginstruction',instructionId)"
+                           class="btn btn-outline-primary  float-end ">Download EDI
+                        </button>
+                        <!-- <button *ngIf="bookingCancel" (click)="sendShipperEmail(shipperUpload)" class="btn btn-outline-primary  float-end ">
+                      Send Email to Shipper
+                    </button> -->
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item"
+          [ngStyle]="{'pointer-events': instructionData[0]?.si?.bookingConfirmed ? '' : 'none'}">
+          <h2 class="accordion-header" id="siCust">
+            <button class="accordion-button" [class.collapsed]="!isSICustomerPanelOpen" type="button"
+              (click)="toggleButton('siCustomer')" aria-expanded="isSICustomerPanelOpen" aria-controls="siDetails">
+              SI From Customer
+            </button>
+
+          </h2>
+          <div id="siDetails" class=" multi-collapse accordion-collapse collapse " aria-labelledby="siCust"
+            data-bs-parent="#accordionPanelsStayOpenExample" [class.show]="isSICustomerPanelOpen">
+            <div class="accordion-body">
+              <div class="wrap-form-field">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="row">
+                      <div class="col-md-12 wrap-form-field ">
+                        <div class="form-group wrap-form-action pb-1">
+                          <button class="btn btn-outline-primary btn-lg float-end" *ngIf="!isShow" (click)="openDate()"
+                            [disabled]="disableAdvise()">
+                            Add Revised Date
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row mt-4 align-items-center" *ngIf="isShown">
+                      <div class="col-md-3">
+                        <label class="mb-0 p-0 form-label">
+                          Cut Off Revised <span class="text-danger">*</span>
+                        </label>
+                        <nz-date-picker 
+                          nzShowTime
+                          class="form-select custom-input"
+                          nzFormat="dd-MM-yyyy HH:mm:ss"
+                          formControlName="siReceived"
+                          [ngClass]="{'is-invalid': submittedSIForm && f?.siReceived?.errors}"
+                          style="width: 100%;">
+                        </nz-date-picker>
+                        
+                        <ng-container *ngIf="submittedSIForm && f?.siReceived?.errors?.required">
+                          <div class="set-error-msg">
+                            SI Received {{ 'common.isRequired' | translate }}
+                          </div>
+                        </ng-container>
+                      </div>
+                      
+                      <div class="col-md-3">
+                        <label class="form-label"> Attachment</label>
+                        <input type="file" class="form-control custom-input" formControlName="siReceivedAttachment"
+                          (change)="onFileSelected($event,'siReceivedAttachment','')"
+                          [disabled]="!disabledAttachment">
+                        <!-- <div *ngIf="submittedSIForm && f.siReceivedAttachment.errors" class="invalid-feedback">
+                          <div *ngIf="f.siReceivedAttachment.errors.required">{{
+                            'smartagent.portenquiry.document.uploadDocumentRequired' |
+                            translate }} </div>
+                          <div *ngIf="fileTypeNotMatched">{{ 'smartagent.portenquiry.document.fileTypeNotMatched' |
+                            translate }}</div>
+                        </div> -->
+                        <div *ngIf="showErrorMsg === 'siReceivedAttachment'">
+                          <div *ngIf="!submittedSIForm && fileTypeNotMatched">{{
+                            'smartagent.portenquiry.document.fileTypeNotMatched' | translate }}</div>
+                        </div>
+                        <div class="col-md-12 p-0 mt-1" *ngIf="f.siReceivedAttachmentName.value">
+                          <span class="bg-light text-dark">{{siReceivedAttachmentName}}</span>
+                        </div>
+                      </div>
+                      <!-- <div class="col-md-1 wrap-form-field mt-4 ">
+                        <div class="form-group wrap-form-action">
+                          <button class="btn btn-outline-primary btn-lg float-start"
+                            (click)="uploadDoc('siReceivedAttachment','si')">
+                            Upload
+                          </button>
+                        </div>
+                      </div> -->
+
+                      <div class="col-md-3">
+                        <label class="form-label"> Remark</label>
+                        <input type="text" class="form-control custom-input" formControlName="siReceivedRemark" placeholder="Remark"
+                          [ngClass]="{ 'is-invalid': submittedSIForm && f.siReceivedRemark.errors }">
+                        <div *ngIf="submittedSIForm && f.siReceivedRemark.errors" class="invalid-feedback">
+                          <div *ngIf="f.siReceivedRemark.errors.required">Remark {{ 'common.isRequired' | translate }}
+                          </div>
+                        </div>
+                      </div>
+                      <!-- <div class="col-md-3">
+                        <label class="form-label"> Email <span style="font-size: 10.5px;">(use semi-colon to seperate
+                            multiple email)</span> <span class="text-danger">
+                            *</span></label>
+                        <input type="email" class="form-control custom-input" placeholder="Email"
+                          formControlName="siReceivedMail"
+                          [ngClass]="{ 'is-invalid': submittedSIForm && f.siReceivedMail.errors }">
+                        <div *ngIf="submittedSIForm && f.siReceivedMail.errors" class="invalid-feedback">
+                          <div *ngIf="f.siReceivedMail.errors.required">Email {{ 'common.isRequired' | translate }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-1 wrap-form-field mt-4">
+                        <div class="form-group wrap-form-action">
+                          <button *ngIf="this.currentUrl !== 'show'" class="btn btn-outline-primary btn-lg float-start fplt"
+                            [disabled]="disableEmail('siReceivedMail','')"
+                            (click)="emailSend('siReceivedMail','bookingNumber','siReceived','siReceivedAttachment','siReceivedAttachmentName','siReceivedRemark')">
+                            Send
+                          </button>
+                        </div>
+                      </div> -->
+                      <div class="row mt-2">
+                        <div class="col-md-4">
+                          <label class="form-label"> Email <span style="font-size: 10.5px;">(use semi-colon to separate multiple emails)</span> <span class="text-danger">*</span></label>
+                          <input type="email" class="form-control custom-input" placeholder="Email" formControlName="siReceivedMail" [ngClass]="{ 'is-invalid': submittedSIForm && f.siReceivedMail.errors }">
+                          <div *ngIf="submittedSIForm && f.siReceivedMail.errors" class="invalid-feedback">
+                            <div *ngIf="f.siReceivedMail.errors.required">Email {{ 'common.isRequired' | translate }}</div>
+                          </div>
+                        </div>
+                        <div class="col-md-1 wrap-form-field mt-4">
+                          <div class="form-group wrap-form-action">
+                            <button *ngIf="currentUrl !== 'show'" class="btn btn-outline-primary btn-lg float-start"
+                                    [disabled]="disableEmail('siReceivedMail','')"
+                                    (click)="emailSend('siReceivedMail','bookingNumber','siReceived','siReceivedAttachment','siReceivedAttachmentName','siReceivedRemark')">
+                              Send
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      
+                    </div>
+                    <div class="col-md-12 mt-3">
+                      <div class="table-responsive">
+                        <table aria-describedby="mytable" class="gfg">
+                          <thead>
+                            <tr class="field-name">
+                              <th scope="col"> Sr. No </th>
+                              <th scope="col">SI Revised Date </th>
+                              <th scope="col">Remark</th>
+                              <th scope="col">Attachment </th>
+                              <th scope="col">Email</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="collapse-ui" *ngFor="let data of revisedList; let i = index">
+                              <td>{{i + 1}}</td>
+                              <td>{{data?.siRevised | date:"dd-MM-YYYY,hh:mm"}}</td>
+                              <td>{{data?.remark}}</td>
+                              <td>
+                                {{ (data?.attachment && data.attachment.trim() !== '' && data.attachment !== 'null') ? data.attachment : '-' }}
+                              </td>                                                           
+                              <td>{{data?.emailId}}</td>
+                            </tr>
+                            <tr *ngIf="revisedList?.length === 0">
+                              <td colspan="5" class="p-0">
+                                <div class="no-data-availble mt-0">
+                                  {{'common.no_data' | translate}}
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+
+                    <div class="row mt-4 align-items-center">
+                      <div class="col-md-3">
+                        <label class="mb-0 p-0">SI Filed <span class="text-danger">*</span></label>
+                        <i 
+                          class="bi bi-info-circle" 
+                          matTooltip="This field is required. Please enter the date on which the Shipping Instruction (SI) was filed." 
+                          matTooltipClass="custom-tooltip"
+                          style="padding-left: 4px; margin-bottom: 2px;">
+                        </i>
+                        
+                        <nz-date-picker 
+                          nzShowTime
+                          class="form-select custom-input"
+                          nzFormat="dd-MM-yyyy HH:mm:ss"
+                          formControlName="filedDate"
+                          [ngClass]="{'is-invalid': submittedSIForm && f?.filedDate?.errors}"
+                          style="width: 100%;">
+                        </nz-date-picker>
+                        
+                        <ng-container *ngIf="submittedSIForm && f?.filedDate?.errors?.required">
+                          <div class="set-error-msg">
+                            SI Filed {{ 'common.isRequired' | translate }}
+                          </div>
+                        </ng-container>
+                      </div>
+                      
+                      <div class="col-md-3">
+                        <label class="form-label"> Attachment</label>
+                        <span class="bg-light text-dark float-end" *ngIf="f.filedAttachmentName.value">{{filedAttachmentName}}</span>
+                        <input type="file" class="form-control custom-input"
+                          (change)="onFileSelected($event,'filedAttachment','')" 
+                          [disabled]="!disabledAttachment">
+                        <!-- <div *ngIf="submittedSIForm && f.filedAttachment.errors" class="invalid-feedback">
+                          <div *ngIf="f.filedAttachment.errors.required">Attachment {{ 'common.isRequired' | translate
+                            }}
+                          </div>
+                        </div> -->
+                      </div>
+
+                      <div class="col-md-3">
+                        <label class="form-label"> Remark</label>
+                        <input type="text" class="form-control custom-input" placeholder="Remark"
+                          formControlName="filedRemark" [ngClass]="{ 'is-invalid': submittedSIForm && f.filedRemark.errors }" >
+                        <div *ngIf="submittedSIForm && f.filedRemark.errors" class="invalid-feedback">
+                          <div *ngIf="f.filedRemark.errors.required">Remark {{ 'common.isRequired' | translate }}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <label class="form-label">Instruction from Customer </label>
+                        <textarea type="textarea" #matInput class="form-control" placeholder="Instruction"
+                          formControlName="instruction" [ngClass]="{ 'is-invalid': submittedSIForm && f.instruction.errors }">
+                        </textarea>
+                        <div *ngIf="submittedSIForm && f.instruction.errors" class="invalid-feedback">
+                          <div *ngIf="f.instruction.errors.required">Remark {{ 'common.isRequired' | translate }}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-12  wrap-form-action border-top mt-3  " *ngIf="!isshowDetails">
+                        <button (click)="onClose($event)" class="btn1  float-end ">
+                          {{ 'common.cancel' | translate }}
+                        </button>
+                        <button *ngIf="!isShow" (click)="onSave(false,'SIForm')"
+                          class="btn btn-outline-primary  float-end ">
+                          {{ 'common.save' | translate }}
+                        </button>
+                        <!-- <button *ngIf="bookingCancel" (click)="sendShipperEmail(shipperUpload)" class="btn btn-outline-primary  float-end ">
+                      Send Email to Shipper
+                    </button> -->
+                      <!-- </div> -->
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+        <div class="accordion-item" *ngIf="this.batchDetail?.enquiryDetails?.basicDetails?.ShipmentTypeName !== 'Air'"
+          [ngStyle]="{'pointer-events': instructionData[0]?.si?.bookingConfirmed ? '' : 'none'}">
+          <h2 class="accordion-header" id="volume">
+            <button class="accordion-button" [class.collapsed]="!isVolumePanelOpen" type="button"
+              (click)="toggleButton('volume')" aria-expanded="isVolumePanelOpen" aria-controls="volumedetails">
+              Volume Gross Mass<i class="bi bi-info-circle" matTooltip="Please add Container before adding VGM" matTooltipClass="custom-tooltip" style="padding-left: 4px; margin-bottom: 2px;"></i>
+            </button>
+
+          </h2>
+          <div id="volumedetails" class=" multi-collapse accordion-collapse collapse " aria-labelledby="volume"
+            data-bs-parent="#accordionPanelsStayOpenExample" [class.show]="isVolumePanelOpen">
+            <div class="accordion-body">
+              <div class="wrap-form-field">
+                <div class="row align-items-center">
+                  <div class="col-md-12">
+                    <div class="table-responsive">
+                      <table aria-describedby="mytable" class="gfg">
+                        <thead>
+                          <tr class="field-name">
+                            <th scope="col"> {{ "stolt.batch.bl.container_no" | translate }}<span
+                                class="text-danger">*</span> </th>
+                            <th scope="col"> VGM Received On<span class="text-danger">*</span> </th>
+                            <th scope="col"> Attachment </th>
+                            <th scope="col"> Remark </th>
+                            <th scope="col"> Email <span style="font-size: 10.5px;">(use semi-colon to seperate
+                                multiple emails)</span> <span class="text-danger"> *</span> </th>
+                            <th scope="col"> <a title="Add New VGM"
+                                class="max-con new-action bi bi-plus-lg  btn btn-outline-primary btn-sm rounded-pill"
+                                *ngIf="!isShow" (click)="addInputField('')"></a>
+                                <i class="bi bi-box-arrow-up-right" (click)="navigateToNewTab()" matTooltip="Add Container"></i>
+                              </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <ng-container formArrayName="vgmArray">
+                            <tr *ngFor="let vgm of vgmArray.controls; let i=index" [formGroupName]="i">
+
+                              <td>
+                                <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear
+                                  formControlName="containerNo" [ngClass]="{
+                                    'margin-bottoms': vgm?.get('vgmAttachmentName')?.value,
+                                    'is-invalid': submittedVgm && vgm?.get('containerNo')?.errors
+                                  }">
+                                  <nz-option *ngFor="let data of containerList" [nzLabel]="data?.containerNumber"
+                                    [nzValue]="data?.containerNumber"></nz-option>
+                                </nz-select>
+
+                                <div *ngIf="submittedVgm && vgm?.get('containerNo')?.errors" class="invalid-feedback">
+                                  <div *ngIf="vgm?.get('containerNo')?.errors.required">Container is
+                                    required</div>
+                                </div>
+                              </td>
+                              <td>
+                                <mat-form-field appearance="outline" class="custom-date-picker" [ngClass]="{ 'margin-bottoms':vgm?.get('vgmAttachmentName')?.value }">
+                                  <div class="d-flex align-items-center  w-100">
+                                    <input matInput >
+                                    <!-- <mat-datepicker-toggle matSuffix [for]="picker7"></mat-datepicker-toggle>
+                                    <ngx-mat-datetime-picker [color]="color" [touchUi]="touchUi"
+                                      [enableMeridian]="enableMeridian" #picker7>
+                                    </ngx-mat-datetime-picker> -->
+                                    <nz-date-picker  
+                                    nzShowTime
+                                    class="form-select custom-input fixed" 
+                                    nzFormat="dd-MM-yyyy HH:mm:ss"
+                                    formControlName="vgmReceived" 
+                                    [nzDisabledDate]="disabledDate"
+                                    [ngClass]="{'is-invalid': submittedVgm && f?.docCutOff?.errors}"
+                                   >
+                                  </nz-date-picker>
+                                  </div>
+                                </mat-form-field>
+                                <mat-error>
+                                  <div *ngIf="submittedVgm && vgm?.get('vgmReceived')?.errors?.required" class="set-error-msg">Date is
+                                    required</div>
+                                </mat-error>
+                              </td>
+                              <td>
+                                <span class="d-flex">
+                                  <input type="file" class=" custom-input" style="width: 100%;"
+                                    (change)="onFileSelected1($event,'vgmAttachment',i)"
+                                    [disabled]="!disabledAttachment"
+                                    >
+                                  <!-- <button class="btn btn-outline-primary btn-sm new-action"
+                                    (click)="uploadDoc1('vgmAttachment','vgm',i)">
+                                    <i class="fa fa-upload"></i>
+                                  </button> -->
+                                </span>
+
+
+                                <div *ngIf="showErrorMsg === 'vgmAttachment'">
+                                  <div *ngIf="!submittedVgm && fileTypeNotMatched">{{
+                                    'smartagent.portenquiry.document.fileTypeNotMatched' | translate }}</div>
+                                </div>
+                                <div class="col-md-12 p-0 mt-1" *ngIf="vgm?.get('vgmAttachmentName')?.value ">
+                                  <span class="bg-light text-dark">{{vgm?.get('vgmAttachmentName')?.value}}</span>
+                                </div>
+                              </td>
+                              <td><input type="text" class="custom-input" style="width: 100%;" placeholder="Remark" [ngClass]="{ 'margin-bottoms':vgm?.get('vgmAttachmentName')?.value }"
+                                  formControlName="vgmRemark">
+
+                              </td>
+                              <td>
+                                <span class="d-flex" [ngClass]="{ 'margin-bottoms':vgm?.get('vgmAttachmentName')?.value }">
+                                  <input type="email" class=" custom-input" style="width: 85%;"
+                                    formControlName="vgmEmail"
+                                    [ngClass]="{'is-invalid': submittedVgm && vgm?.get('vgmEmail')?.errors}">
+                                    <!-- <button *ngIf="this.currentUrl !== 'show'" [disabled]="disableEmail('vgmEmail',i)"
+                                    class="btn btn-outline-primary btn-sm new-action"
+                                    (click)="emailSemd1('vgmEmail','containerNo','vgmReceived','vgmAttachment','vgmAttachmentName','vgmRemark',i)">
+                                    <img src="assets\img\iconss\send.svg" alt="Send">
+                                  </button>
+                                  <button class="btn btn-outline-primary btn-sm new-action"
+                                    (click)="removeConatiner(i)">
+                                    <i class="bi bi-trash color-pencil-red"></i>
+                                  </button> -->
+                                  <i *ngIf="this.currentUrl !== 'show'" [disabled]="disableEmail('vgmEmail',i)" class=" color-pencil-red max-con new-action bi bi-cursor btn btn-outline-primary btn-sm rounded-pill" (click)="emailSemd1('vgmEmail','containerNo','vgmReceived','vgmAttachment','vgmAttachmentName','vgmRemark',i)"  ></i>
+
+                                    <i class=" color-pencil-red max-con new-action bi bi-trash btn btn-outline-primary btn-sm rounded-pill"  (click)="removeConatiner(i)"></i>
+                                </span>
+
+                              </td>
+
+                            </tr>
+                          </ng-container>
+
+                        </tbody>
+                      </table>
+
+                    </div>
+                    <div class="no-data-availble" *ngIf="vgmArray.controls.length === 0">
+                      {{'common.no_data' | translate}}
+                    </div>
+
+                  </div>
+                  <div class="col-md-12  wrap-form-action border-top mt-3  " *ngIf="!isshowDetails">
+                    <button (click)="onClose($event)" class="btn1  float-end ">
+                      {{ 'common.cancel' | translate }}
+                    </button>
+                    <button *ngIf="!isShow" (click)="onSave(false,'vgm')" class="btn btn-outline-primary  float-end ">
+                      {{ 'common.save' | translate }}
+                    </button>
+                    <button [disabled]="!batchDetails?.batchId"
+                    (click)="downnloadEdi('vgm',batchDetails?.batchId)"
+                       class="btn btn-outline-primary  float-end ">Download EDI
+                    </button>
+                    <!-- <button *ngIf="bookingCancel" (click)="sendShipperEmail(shipperUpload)" class="btn btn-outline-primary  float-end ">
+                  Send Email to Shipper
+                </button> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item"
+          [ngStyle]="{'pointer-events': instructionData[0]?.si?.bookingConfirmed ? '' : 'none'}">
+          <h2 class="accordion-header" id="Declaration">
+            <button class="accordion-button" [class.collapsed]="!isDeclarationPanelOpen" type="button"
+              (click)="toggleButton('declaration')" aria-expanded="isDeclarationPanelOpen"
+              aria-controls="Declarationdetails">
+              Dangerous Goods Declaration
+            </button>
+
+          </h2>
+          <div id="Declarationdetails" class=" multi-collapse accordion-collapse collapse "
+            aria-labelledby="Declaration" data-bs-parent="#accordionPanelsStayOpenExample"
+            [class.show]="isDeclarationPanelOpen">
+            <div class="accordion-body">
+              <div class="wrap-form-field">
+                <div class="row align-items-center">
+                  <div class="col-md-12">
+                    <div class="row g-4 align-items-center">
+                      <div class="col-md-3">
+                        <label class="form-label"> Container No.<span class="text-danger">*</span> </label>
+                        <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear
+                          formControlName="dgContainerNo"
+                          [ngClass]="{'is-invalid': submittedGoods && f.dgContainerNo.errors}">
+                          <nz-option *ngFor="let data of containerList" [nzLabel]="data?.containerNumber"
+                            [nzValue]="data?.containerNumber"></nz-option>
+                        </nz-select>
+                        <div *ngIf="submittedGoods && f.dgContainerNo.errors" class="invalid-feedback">
+                          <div *ngIf="f.dgContainerNo.errors.required">Container No. {{ 'common.isRequired' | translate
+                            }}
+                          </div>
+                        </div>
+
+                      </div>
+                      <div class="col-md-3">
+                        <label class="mb-0 p-0 form-label">DG Received</label>
+                          <nz-date-picker 
+                          nzShowTime
+                          class="form-select custom-input" 
+                          nzFormat="dd-MM-yyyy HH:mm:ss"
+                          formControlName="dgReceived" 
+                          [ngClass]="{'is-invalid': submittedGoods && f?.dgReceived?.errors}"
+                          style="width: 100%;">
+                        </nz-date-picker>
+                      </div>
+                      <div class="col-md-3">
+                        <label class="form-label">HAZ approval no</label>
+                        <input type="number" class="form-control custom-input" formControlName="doNumber" placeholder="HAZ No"
+                          [ngClass]="{ 'is-invalid': submittedGoods && f.doNumber.errors }">
+
+                      </div>
+
+
+                      <div class="col-md-3">
+                        <label class="form-label"> Attachment</label>
+                        <span class="bg-light text-dark float-end" *ngIf="f.dgAttachmentName.value">{{dgAttachmentName}}</span>
+                        <input type="file" class="form-control custom-input"
+                          (change)="onFileSelected($event,'dgAttachment','')"
+                          [disabled]="!disabledAttachment">
+                        <!-- <div *ngIf="submittedGoods && f.dgAttachment.errors" class="invalid-feedback">
+                          <div *ngIf="f.dgAttachment.errors.required">{{
+                            'smartagent.portenquiry.document.uploadDocumentRequired' |
+                            translate }} </div>
+                          <div *ngIf="fileTypeNotMatched">{{ 'smartagent.portenquiry.document.fileTypeNotMatched' |
+                            translate }}</div>
+                        </div> -->
+                        <div *ngIf="showErrorMsg === 'dgAttachment'">
+                          <div *ngIf="!submittedGoods && fileTypeNotMatched">{{
+                            'smartagent.portenquiry.document.fileTypeNotMatched' | translate }}</div>
+                        </div>
+                      </div>
+                      <!-- <div class="col-md-1 wrap-form-field mt-4 pt-4">
+                        <div class="form-group wrap-form-action">
+                          <button class="btn btn-outline-primary btn-lg float-start"
+                            (click)="uploadDoc('dgAttachment', 'dg')">
+                            Upload
+                          </button>
+                        </div>
+                      </div> -->
+                      <div class="col-md-3">
+                        <label class="form-label"> Remark</label>
+                        <input type="text" class="form-control custom-input" placeholder="Remark"
+                          formControlName="dgRemark" [ngClass]="{ 'is-invalid': submittedGoods && f.dgRemark.errors }">
+                        <div *ngIf="submittedGoods && f.dgRemark.errors" class="invalid-feedback">
+                          <div *ngIf="f.dgRemark.errors.required">Remark {{ 'common.isRequired' | translate }}</div>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <label class="form-label"> Email <span style="font-size: 10.5px;" > (use semi-colon to seperate
+                            multiple emails)</span><i class="bi bi-info-circle" matTooltip="This field is required. Please enter a valid email address for contact purposes." matTooltipClass="custom-tooltip" style="padding-left: 4px; margin-bottom: 2px;"></i> </label>
+                        <input type="email" class="form-control custom-input" placeholder="" formControlName="doEmail"
+                          [ngClass]="{ 'is-invalid': submittedGoods && f.doEmail.errors }">
+
+                      </div>
+                      <div class="col-md-1 wrap-form-field mt-4 pt-4">
+                        <div class="form-group wrap-form-action">
+                          <button *ngIf="this.currentUrl !== 'show' && !isShow" [disabled]="disableEmail('doEmail','')"
+                            class="btn btn-outline-primary btn-lg float-start"
+                             (click)="emailSend('doEmail','dgContainerNo','dgReceived','dgAttachment','dgAttachmentName','dgRemark','doDate','doNumber')">
+                            Send
+                          </button>
+                        </div>
+                      </div>
+
+                      <div class="col-md-12  wrap-form-action border-top mt-3  " *ngIf="!isshowDetails">
+                        <button (click)="onClose($event)" class="btn1  float-end ">
+                          {{ 'common.cancel' | translate }}
+                        </button>
+                        <button *ngIf="!isShow" (click)="onSave(false,'goods')"
+                          class="btn btn-outline-primary  float-end ">
+                          {{ 'common.save' | translate }}
+                        </button>
+                        <!-- <button *ngIf="bookingCancel" (click)="sendShipperEmail(shipperUpload)" class="btn btn-outline-primary  float-end ">
+                      Send Email to Shipper
+                    </button> -->
+                      </div>
+
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item" 
+          [ngStyle]="{'pointer-events': instructionData[0]?.si?.bookingConfirmed ? '' : 'none'}">
+          <h2 class="accordion-header" id="masterbl" *ngIf="this.batchDetail?.enquiryDetails?.basicDetails?.ShipmentTypeName === 'Ocean'">
+            <button class="accordion-button" [class.collapsed]="!isMasterBLDraftPanelOpen" type="button"
+              (click)="toggleButton('masterBLDraft')" aria-expanded="isMasterBLDraftPanelOpen"
+              aria-controls="masterbldetails">
+              Master BL Draft Received
+            </button>
+
+          </h2>
+          <h2 class="accordion-header" id="masterbl" *ngIf="this.batchDetail?.enquiryDetails?.basicDetails?.ShipmentTypeName === 'Air'">
+            <button class="accordion-button" [class.collapsed]="!isMasterBLDraftPanelOpen" type="button"
+              (click)="toggleButton('masterBLDraft')" aria-expanded="isMasterBLDraftPanelOpen"
+              aria-controls="masterbldetails">
+              AWB MBL Draft received
+            </button>
+
+          </h2>
+          <div id="masterbldetails" class=" multi-collapse accordion-collapse collapse " aria-labelledby="masterbl"
+            data-bs-parent="#accordionPanelsStayOpenExample" [class.show]="isMasterBLDraftPanelOpen">
+            <div class="accordion-body">
+              <div class="wrap-form-field">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="row g-4 align-items-center">
+                      <div class="col-md-3">
+                        <label class="mb-0 p-0 form-label">Draft Received<span class="text-danger">*</span></label>
+                        <nz-date-picker
+                          nzShowTime
+                          class="form-select custom-input"
+                          nzFormat="dd-MM-yyyy HH:mm:ss"
+                          formControlName="firstPrint"
+                          [ngClass]="{'is-invalid': submittedblMasterDraft && f?.firstPrint?.errors}"
+                          style="width: 100%;"
+                        ></nz-date-picker>
+                        <!-- Custom error message handling -->
+                        <div *ngIf="submittedblMasterDraft && f?.firstPrint?.errors?.required" class="set-error-msg">
+                          Draft received date is required
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <label class="form-label"> Attachment</label>
+                        <span class="bg-light text-dark float-end" *ngIf="f.firstPrintAttachmentName.value">{{firstPrintAttachmentName}}</span>
+                        <input type="file" class="form-control custom-input"
+                          (change)="onFileSelected($event,'firstPrintAttachment','')"
+                          [disabled]="!disabledAttachment"
+                        
+                          [ngClass]="{ 'is-invalid': submitted && f.firstPrintAttachment.errors }">
+                        <!-- <div *ngIf="submitted && f.firstPrintAttachment.errors" class="invalid-feedback">
+                          <div *ngIf="f.firstPrintAttachment.errors.required">{{
+                            'smartagent.portenquiry.document.uploadDocumentRequired' |
+                            translate }} </div>
+                          <div *ngIf="fileTypeNotMatched">{{ 'smartagent.portenquiry.document.fileTypeNotMatched' |
+                            translate }}</div>
+                        </div> -->
+                        <div *ngIf="showErrorMsg === 'firstPrintAttachment'">
+                          <div *ngIf="!submitted && fileTypeNotMatched">{{
+                            'smartagent.portenquiry.document.fileTypeNotMatched' | translate }}</div>
+                        </div>
+                      </div>
+                      <!-- <div class="col-md-1 wrap-form-field mt-4 pt-4">
+                        <div class="form-group wrap-form-action">
+                          <button class="btn btn-outline-primary btn-lg float-start"
+                            (click)="uploadDoc('firstPrintAttachment', 'firstPrint')">
+                            Upload
+                          </button>
+                        </div>
+                      </div> -->
+                      <div class="col-md-3">
+                        <label class="form-label"> Remark</label>
+                        <input type="text" class="form-control custom-input" placeholder="Remark"
+                          formControlName="firstPrintRemark"
+                          [ngClass]="{ 'is-invalid': submitted && f.firstPrintRemark.errors }">
+                        <div *ngIf="submitted && f.firstPrintRemark.errors" class="invalid-feedback">
+                          <div *ngIf="f.firstPrintRemark.errors.required">Remark {{ 'common.isRequired' | translate }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <input type="checkbox" class="m-2" formControlName="approvedByCustomer" placeholder="By Customer">
+                        <label for="approvedByCustomer" class=" ">Approved by customer</label>
+
+
+                        <div *ngIf="submitted && f.approvedByCustomer.errors" class="invalid-feedback">
+                          <div *ngIf="f.approvedByCustomer.errors.required">Booking Number {{ 'common.isRequired' |
+                            translate
+                            }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <input type="checkbox" class="m-2" formControlName="rejectByCustomer" placeholder="By Customer">
+                        <label for="rejectByCustomer" class=" ">Reject by customer</label>
+
+
+                        <div *ngIf="submitted && f.rejectByCustomer.errors" class="invalid-feedback">
+                          <div *ngIf="f.rejectByCustomer.errors.required">Booking Number {{ 'common.isRequired' |
+                            translate
+                            }}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-3">
+                        <label class="form-label"> Email <span style="font-size: 10.5px;">(use semi-colon to seperate
+                            multiple emails)</span><i class="bi bi-info-circle" matTooltip="This field is required. Please enter a valid email address for contact purposes." matTooltipClass="custom-tooltip" style="padding-left: 4px; margin-bottom: 2px;"></i> 
+                          </label>
+                        <input type="email" class="form-control custom-input" placeholder=""
+                          formControlName="firstPrintEmail"
+                          [ngClass]="{ 'is-invalid': submitted && f.firstPrintEmail.errors }">
+                        <div *ngIf="submitted && f.firstPrintEmail.errors" class="invalid-feedback">
+                          <div *ngIf="f.firstPrintEmail.errors.required">Email {{ 'common.isRequired' | translate }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-1 wrap-form-field mt-4 pt-4">
+                        <div class="form-group wrap-form-action">
+                          <button *ngIf="this.currentUrl !== 'show'&&!isShow" [disabled]="disableEmail('firstPrintEmail','')"
+                            class="btn btn-outline-primary btn-lg float-start"
+                           (click)="emailSend('firstPrintEmail','firstPrintRemark','firstPrint','firstPrintAttachment','firstPrintAttachmentName')">
+                            Send
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-12 wrap-form-action border-top mt-3" *ngIf="!isshowDetails">
+                      <button (click)="onClose($event)" class="btn1  float-end ">
+                        {{ 'common.cancel' | translate }}
+                      </button>
+                      <button *ngIf="!isShow" (click)="onSave(false,'blMasterDraft')"
+                        class="btn btn-outline-primary  float-end ">
+                        {{ 'common.save' | translate }}
+                      </button>
+                      <!-- <button *ngIf="bookingCancel" (click)="sendShipperEmail(shipperUpload)" class="btn btn-outline-primary  float-end ">
+                    Send Email to Shipper
+                  </button> -->
+                    </div>
+
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item"
+          [ngStyle]="{'pointer-events': instructionData[0]?.si?.bookingConfirmed ? '' : 'none'}">
+          <h2 class="accordion-header" id="masterbl1" *ngIf="this.batchDetail?.enquiryDetails?.basicDetails?.ShipmentTypeName === 'Ocean'">
+            <button class="accordion-button" [class.collapsed]="!isMasterBLOriginalPanelOpen" type="button"
+              (click)="toggleButton('masterBLOriginal')" aria-expanded="isMasterBLOriginalPanelOpen"
+              aria-controls="masterbl1details">
+              Master BL Original Received
+            </button>
+          </h2>
+          <h2 class="accordion-header" id="masterbl1" *ngIf="this.batchDetail?.enquiryDetails?.basicDetails?.ShipmentTypeName === 'Air'">
+            <button class="accordion-button" [class.collapsed]="!isMasterBLOriginalPanelOpen" type="button"
+              (click)="toggleButton('masterBLOriginal')" aria-expanded="isMasterBLOriginalPanelOpen"
+              aria-controls="masterbl1details">
+              AWB MBL Original Received
+            </button>
+          </h2>
+          <div id="masterbl1details" class=" multi-collapse accordion-collapse collapse " aria-labelledby="masterbl1"
+            data-bs-parent="#accordionPanelsStayOpenExample" [class.show]="isMasterBLOriginalPanelOpen">
+            <div class="accordion-body">
+              <div class="wrap-form-field">
+                <div class="row align-items-center">
+                  <div class="col-md-12">
+                    <div class="row g-4 mt-3 mb-2 align-items-center">
+                      <div class="col-md-3">
+                        <label class="mb-0 p-0 form-label">Original Received <span class="text-danger">*</span> </label>
+                        <nz-date-picker 
+                        nzShowTime
+                        class="form-select custom-input" 
+                        nzFormat="dd-MM-yyyy HH:mm:ss"
+                        formControlName="finalPrint" 
+                        [ngClass]="{'is-invalid': submittedblMasterOriginal && f?.finalPrint?.errors}"
+                        style="width: 100%;">
+                      </nz-date-picker>
+                        <mat-error>
+                          <div *ngIf="submittedblMasterOriginal && f?.finalPrint?.errors?.required" class="set-error-msg">Original received date is required</div>
+                        </mat-error>
+                      </div>
+                      <div class="col-md-3">
+                        <label class="form-label"> Attachment</label>
+                        <span class="bg-light text-dark float-end"  *ngIf="f.finalPrintAttachmentName.value">{{f.finalPrintAttachmentName.value}}</span>
+                        <input class="form-control custom-input" type="file" id="formFileMultiple"
+                          (change)="onFileSelected($event,'finalPrintAttachment','')"
+                          [disabled]="!disabledAttachment"
+                          [ngClass]="{ 'is-invalid': submittedblMasterOriginal && f.finalPrintAttachment.errors }">
+                        <!-- <div *ngIf="submittedblMasterOriginal && f.finalPrintAttachment.errors" class="invalid-feedback">
+                          <div *ngIf="f.finalPrintAttachment.errors.required">{{
+                            'smartagent.portenquiry.document.uploadDocumentRequired' |
+                            translate }} </div>
+                          <div *ngIf="fileTypeNotMatched">{{ 'smartagent.portenquiry.document.fileTypeNotMatched' |
+                            translate }}</div>
+                        </div> -->
+                        <div *ngIf="showErrorMsg === 'finalPrintAttachment'">
+                          <div *ngIf="!submittedblMasterOriginal && fileTypeNotMatched">{{
+                            'smartagent.portenquiry.document.fileTypeNotMatched' | translate }}</div>
+                        </div>
+                      </div>
+                      <!-- <div class="col-md-1 wrap-form-field mt-4 pt-4">
+                        <div class="form-group wrap-form-action">
+                          <button class="btn btn-outline-primary btn-lg float-start"
+                            (click)="uploadDoc('finalPrintAttachment', 'finalPrint')">
+                            Upload
+                          </button>
+                        </div>
+                      </div> -->
+                      <div class="col-md-4">
+                        <label class="form-label"> Remark</label>
+                        <input type="text" class="form-control custom-input" placeholder="Remark"
+                          formControlName="finalPrintRemark"
+                          [ngClass]="{ 'is-invalid': submittedblMasterOriginal && f.finalPrintRemark.errors }">
+                        <div *ngIf="submittedblMasterOriginal && f.finalPrintRemark.errors" class="invalid-feedback">
+                          <div *ngIf="f.finalPrintRemark.errors.required">Remark {{ 'common.isRequired' | translate }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <label class="form-label"> Email <span style="font-size: 10.5px;">(use semi-colon to seperate
+                            multiple emails)</span><i class="bi bi-info-circle" matTooltip="This field is required. Please enter a valid email address for contact purposes." matTooltipClass="custom-tooltip" style="padding-left: 4px; margin-bottom: 2px;"></i> </label>
+                        <input type="email" class="form-control custom-input" placeholder="Email"
+                          formControlName="finalPrintEmail"
+                          [ngClass]="{ 'is-invalid': submittedblMasterOriginal && f.finalPrintEmail.errors }">
+                        <div *ngIf="submittedblMasterOriginal && f.finalPrintEmail.errors" class="invalid-feedback">
+                          <div *ngIf="f.finalPrintEmail.errors.required">Email {{ 'common.isRequired' | translate }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-1 wrap-form-field mt-4 pt-4">
+                        <div class="form-group wrap-form-action">
+                          <button *ngIf="this.currentUrl !== 'show' && !isShow" [disabled]="disableEmail('finalPrintEmail','')"
+                            class="btn btn-outline-primary btn-lg float-start"
+                            (click)="emailSend('finalPrintEmail','finalPrintRemark','finalPrint','finalPrintAttachment','finalPrintAttachmentName')">
+                            Send
+                          </button>
+                        </div>
+                      </div>
+                      <div class="col-md-6 wrap-form-field mt-4 pt-4" *ngIf="false">
+                        <div class="form-group wrap-form-action">
+                          <span class="divider mx-2"></span>
+                          <!-- <button (click)="onSave(false,'')" class="btn btn-outline-primary">
+                        {{ 'common.save' | translate }}
+                      </button> -->
+                          <button class="btn btn-outline-primary  " (click)="onSave(false,'','Approve')">
+                            Approve
+                          </button>
+                          <button class="btn btn-outline-primary  " (click)="onSave(false,'','Reject')">
+                            Reject
+                          </button>
+                          <button *ngIf="this.currentUrl !== 'show'" [disabled]="this.isApprovedSave !== 'Approve' && this.isApprovedSave !== 'Reject'"
+                            class="btn btn-outline-primary  " (click)="emailApprove()">
+                            Email Send
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-12 wrap-form-action border-top mt-3" *ngIf="!isshowDetails">
+                      <button (click)="onClose($event)" class="btn1  float-end ">
+                        {{ 'common.cancel' | translate }}
+                      </button>
+                      <button *ngIf="!isShow" (click)="onSave(false,'blMasterOriginal')"
+                        class="btn btn-outline-primary float-end ">
+                        {{ 'common.save' | translate }}
+                      </button>
+                      <!-- <button *ngIf="bookingCancel" (click)="sendShipperEmail(shipperUpload)" class="btn btn-outline-primary  float-end ">
+                    Send Email to Shipper
+                  </button> -->
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="accordion-item display-none">
+        <h2 class="accordion-header" id="demo1">
+          <button type="button" data-bs-toggle="collapse" data-bs-target="#demo" aria-expanded="false"
+            aria-controls="demo">
+          </button>
+        </h2>
+        <div id="demo" aria-labelledby="demo1" data-bs-parent="#accordionPanelsStayOpenExample">
+          <div class="accordion-body">
+          </div>
+        </div>
+      </div>
+
+
+
+
+      <ng-template #booking let-c="close" let-d="dismiss">
+        <div class="modal-content nz-allSelect">
+          <div class="modal-header">
+            <!-- <h6>Booking Cancel</h6> -->
+            <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+            </button>
+          </div>
+          <div class="modal-body mt-2">
+            <div class="col-md-12">
+              <div class="row g-4">
+                <div class="col-md-12" ><span class="simple-text">Are you sure you want to cancel Booking ?</span></div>
+                <div class="col-md-6" *ngIf="false">
+                  <label class="form-label">Booking Number</label>
+                  <input disabled [value]="this.newenquiryForm.value?.bookingNumber" class="form-control custom-input">
+                </div>
+                <div class="col-md-6 nz-select" *ngIf="false">
+                  <label class="form-label">Cancel Reason</label>
+                  <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="cancelReson"  nzPlaceHolder="Cancel Reason"
+                    [ngClass]="{'is-invalid': submitted && f.cancelReson.errors}">
+                    <nz-option nzLabel="Carrier Cancel" nzValue="Carrier Cancel"></nz-option>
+                    <nz-option nzLabel="Customer Reason" nzValue="Customer Reason"></nz-option>
+                  </nz-select>
+                  <div *ngIf="submitted && f.cancelReson.errors" class="invalid-feedback">
+                    <div *ngIf="f.cancelReson.errors.required">Reason {{ 'common.isRequired' | translate }}</div>
+                  </div>
+                </div>
+                <div class="col-md-6 nz-select" *ngIf="false">
+                  <label class="mb-0 p-0 form-label">Date</label>
+                  <mat-form-field appearance="outline" class="custom-date-picker">
+                    <div class="d-flex align-items-center  w-100">
+                      <input matInput [ngxMatDatetimePicker]="picker13" formControlName="cancelDate" placeholder="Date">
+                      <mat-datepicker-toggle matSuffix [for]="picker13"></mat-datepicker-toggle>
+                      <ngx-mat-datetime-picker [color]="color" [touchUi]="touchUi" [enableMeridian]="enableMeridian"
+                        #picker13>
+                      </ngx-mat-datetime-picker>
+                    </div>
+                  </mat-form-field>
+                  <mat-error>
+                    <div *ngIf="submitted && f?.cancelDate?.errors?.required" class="set-error-msg">Date {{ 'common.isRequired' | translate
+                      }}</div>
+                  </mat-error>
+                </div>
+                <div class="col-md-12">
+                  <label class="form-label">Remarks<span class="text-danger">*</span></label>
+                  <!-- <input class="form-control custom-input" formControlName="cancelRemark" placeholder="Remark"> -->
+                  <textarea class="form-control custom-input" formControlName="cancelRemark" rows="3"
+                  cols="30">
+                </textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="text-center">
+              <button type="button" class="btn btn-secondary  btn-sm me-3"
+                (click)="d('Cross click')">{{'common.no'|translate}}</button>
+              <button type="button" [disabled]="!newenquiryForm.get('cancelRemark').value" class="btn btn-danger  btn-sm"
+                (click)="saveCancelReason()">{{'common.yes'|translate}}</button>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template #bookingList let-c="close" let-d="dismiss">
+        <div class="modal-content nz-allSelect">
+          <div class="modal-header">
+            <h5>Booking Cancel List</h5>
+          </div>
+          <div class="modal-body ">
+            <div class="col-md-12 p-0">
+              <div class="table-responsive">
+                <table aria-describedby="mytable" class="">
+                  <tr class="field-name">
+                    <th scope="col">Sr No</th>
+                    <th scope="col">Booking No</th>
+                    <th scope="col">Vessel</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Cancel Reason</th>
+                    <th scope="col">Remark</th>
+                  </tr>
+                  <tr *ngFor="let data of bookingCancelArray;let i=index">
+                    <td class="action-field">{{i+1}}</td>
+                    <td class="action-field">{{data?.bookingNumber}}</td>
+                    <td class="action-field">{{data?.finalVesselName || data?.plannedVesselName}}</td>
+                    <td class="action-field">{{data?.bookingCancelDate | date : 'dd-MM-YYYY'}}</td>
+                    <td class="action-field">{{data?.bookingCancelReson}}</td>
+                    <td class="action-field">{{data?.bookingCancelRemarks}}</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="text-center">
+              <button type="button" class="btn1  btn-sm me-3"
+                (click)="d('Cross click')">{{'common.cancel'|translate}}</button>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template #shipperUpload let-c="close" let-d="dismiss">
+        <div class="modal-content nz-allSelect">
+          <div class="modal-header">
+            <h5>Send Email To Shipper</h5>
+          </div>
+          <div class="modal-body ">
+            <div class="col-md-12 p-0">
+              <div class="col-md-12 nz-select">
+                <label class="form-label">Upload downloaded SI file</label>
+                <input type="file" class="form-control custom-input"
+                  (change)="shipperUploadFile($event,'shipperAttachment')"
+                  [ngClass]="{ 'is-invalid': submitted && f.shipperAttachment.errors }">
+                <div *ngIf="submitted && f.shipperAttachment.errors" class="invalid-feedback">
+                  <div *ngIf="f.shipperAttachment.errors.required">{{
+                    'smartagent.portenquiry.document.uploadDocumentRequired' |
+                    translate }} </div>
+                  <div *ngIf="fileTypeNotMatched">{{ 'smartagent.portenquiry.document.fileTypeNotMatched' |
+                    translate }}</div>
+                </div>
+                <div *ngIf="showErrorMsg === 'shipperAttachment'">
+                  <div *ngIf="!submitted && fileTypeNotMatched">
+                    {{'smartagent.portenquiry.document.fileTypeNotMatched' | translate }}
+                  </div>
+                </div>
+                <div class="col-md-12 p-0 mt-1" *ngIf="shipperAttachmentName">
+                  <span class="bg-light text-dark">{{shipperAttachmentName}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="text-center">
+              <button *ngIf="this.currentUrl !== 'show'" type="button" class="btn btn-danger  btn-sm me-3" (click)="sendToShipper()">Send</button>
+            </div>
+            <div class="text-center">
+              <button type="button" class="btn1  btn-sm me-3"
+                (click)="d('Cross click')">{{'common.cancel'|translate}}</button>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+<!-- </div> -->
+    </form>
+
+  </div>
+</div>

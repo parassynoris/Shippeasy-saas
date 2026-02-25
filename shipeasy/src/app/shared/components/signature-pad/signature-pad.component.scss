@@ -1,0 +1,23 @@
+canvas {  
+    display: block; 
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    appearance: none;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+
+  }
+  .bottom-btn{
+    position: relative;
+    .bottom-btn-1{
+      position: absolute;
+      left: 15px;
+      top: -26px;
+    }
+  }

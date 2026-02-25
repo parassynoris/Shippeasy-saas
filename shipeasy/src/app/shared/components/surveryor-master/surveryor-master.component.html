@@ -1,0 +1,76 @@
+<ng-template #AddSurvey let-modal>
+    <div class="modal-content">
+      <div class="modal-headers mt-2">
+        <h4 class="modal-title">
+          <ng-container *ngIf="!this.idToUpdate; else surveyUpdate">
+            {{ 'common.add' | translate }} {{ "stolt.masters.SURVEY_MASTER.survey" | translate }}
+          </ng-container>
+          <ng-template #surveyUpdate>
+            {{ 'common.edit' | translate }} {{ "stolt.masters.SURVEY_MASTER.survey" | translate }}
+          </ng-template>
+        </h4>
+        <button type="button" class="btn-close shadow-none float-end" (click)="onSave()" aria-label="Close"></button>
+      </div>
+  
+      <div class="modal-body">
+        <div class="wrap-form-field padding-space">
+          <form class="row g-3" [formGroup]="addSurveyForm">
+            <div class="col-md-4">
+              <label class="form-label">Survey Code</label><span class="text-danger">*</span>
+              <input type="text" class="form-control custom-input" formControlName="surveyCode" placeholder="Survey Code"
+                [ngClass]="{ 'is-invalid': submitted && f.surveyCode.errors }" />
+              <div *ngIf="submitted && f.surveyCode.errors" class="invalid-feedback">
+                <div *ngIf="f.surveyCode.errors.required">Survey Code is required</div>
+              </div>
+            </div>
+  
+            <div class="col-md-4">
+              <label class="form-label">Survey Name</label><span class="text-danger">*</span>
+              <input type="text" class="form-control custom-input" formControlName="surveyName" placeholder="Survey Name"
+                [ngClass]="{ 'is-invalid': submitted && f.surveyName.errors }" />
+              <div *ngIf="submitted && f.surveyName.errors" class="invalid-feedback">
+                <div *ngIf="f.surveyName.errors.required">Survey Name is required</div>
+              </div>
+            </div>
+  
+            <div class="col-md-4">
+              <label class="form-label">Description</label>
+              <input type="text" class="form-control custom-input" formControlName="description" placeholder="Description"
+                [ngClass]="{ 'is-invalid': submitted && f.description.errors }" />
+            </div>
+  
+            <div class="col-md-4">
+              <label class="form-label">Country</label><span class="text-danger">*</span>
+              <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Select Country"
+                formControlName="countryId" [ngClass]="{ 'is-invalid': submitted && f.countryId.errors }">
+                <nz-option *ngFor="let country of countryList" [nzLabel]="country?.countryName" [nzValue]="country?.countryId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.countryId.errors" class="invalid-feedback">
+                <div *ngIf="f.countryId.errors.required">Country is required</div>
+              </div>
+            </div>
+  
+            <div class="col-md-4 d-flex align-items-center">
+              <input type="checkbox" formControlName="isActive" />
+              <label class="form-label px-1">Is Active</label>
+            </div>
+  
+            <div class="form-group wrap-form-action mt-4">
+              <button class="btn1 btn-lg float-end" (click)="onSave()" type="submit">
+                {{ "common.cancel" | translate }}
+              </button>
+              <button (click)="saveSurveyMaster()" *ngIf="show !== 'show'" class="btn btn-outline-primary btn-lg float-end" type="submit">
+                <ng-container *ngIf="!this.idToUpdate; else surveyUpdateBtn">
+                  {{ 'common.save' | translate }}
+                </ng-container>
+                <ng-template #surveyUpdateBtn>
+                  {{ 'common.update' | translate }}
+                </ng-template>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  

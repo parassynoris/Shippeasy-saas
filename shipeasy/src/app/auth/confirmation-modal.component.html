@@ -1,0 +1,39 @@
+<div mat-dialog-content class="pb-2" class="confirmMationText">
+  <!-- {{ data.message }} -->
+  {{
+    data.message?.length > 200
+      ? data.message.slice(0, 200) + "..."
+      : data.message
+  }}
+  <form [formGroup]="confirmForm">
+    <mat-form-field *ngIf="data?.statusUpdateModal" class="remark">
+      <mat-label class="fieldRequired">Remarks</mat-label>
+      <textarea
+        rows="8"
+        class="remarksTextBox"
+        matInput
+        #remarks
+        oninput="this.value = this.value === ' ' ? '' : this.value "
+        formControlName="remarksEntered"
+        maxlength="4000"
+        autocomplete="off"
+      ></textarea>
+      <mat-error>{{
+        getFormFieldErrorMessage("confirmForm", "remarksEntered")
+      }}</mat-error>
+      <mat-hint align="end">{{ remarks.value?.length }} / 4000</mat-hint>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions align="center">
+  <button mat-button (click)="closeConfirmDialog(true)" class="confirmationBtn">
+    Yes
+  </button>
+  <button
+    mat-button
+    (click)="closeConfirmDialog(false)"
+    class="confirmationBtn"
+  >
+    No
+  </button>
+</div>

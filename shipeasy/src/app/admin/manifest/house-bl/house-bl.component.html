@@ -1,0 +1,54 @@
+<div class="table-with-gheading">
+    <div class="wrap-content">
+       
+        <div class="row">
+            <div class="col-md-12 table-with-gheading">
+                <div class="horz-bar">List of Master BL & Its House BL </div>
+                <div class="table-responsive">
+                    <div class="wrap-table-area  wrap-table-design wrap-form-field"
+                        id="htmlData">
+                        <table aria-describedby="mytable">
+                            <thead>
+                                <tr class="field-name">
+                                    <th scope="col">Master BL</th>
+                                    <th scope="col">Consignee</th>
+                                    <th scope="col">Notify</th>
+                                    <th scope="col">Port Of Destination</th>
+                                    <th scope="col">Final Destination</th>
+                                    <th scope="col">BL(s)</th>
+                                    <th scope="col">Container(s)</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let bl of houseBlList">
+                                    <td>{{bl?.blType}}</td>
+                                    <td>{{bl?.consigneeName}}</td>
+                                    <td>{{bl?.notify_party1Name}} 
+                                        {{bl?.notify_party2Name}}
+                                        {{bl?.notify_party3Name}}
+                                    </td>
+                                    <td>{{bl?.entryPort}}</td>
+                                    <td>{{bl?.placeOfDeliveryName}}</td>
+                                    <td>{{bl?.blNumber}}</td>
+                                    <td>
+                                        <span *ngFor="let ct of bl?.containers">{{ct?.containerNumber}}, </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="no-data-availble mt-0" *ngIf="houseBlList.length === 0">
+                    {{'common.no_data' | translate}}
+                </div>
+            </div>
+        </div>
+        <div class="btn-onscreen  my-3" >
+            <div class="form-group wrap-form-action ">
+                <button class="btn btn-outline-primary float-end" (click)="back()"> 
+                  Back </button>
+            </div>
+          </div>
+    </div>
+</div>

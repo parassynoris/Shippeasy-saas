@@ -1,0 +1,205 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title" *ngIf="!fromParent">{{ "common.add" | translate }} {{
+      'smartagent.smartAgent.activity.activity' | translate}}</h4>
+    <h4 class="modal-title" *ngIf="fromParent">{{ "common.edit" | translate }} {{
+      'smartagent.smartAgent.activity.activity' | translate}}</h4>
+    <button type="button" class="btn-close shadow-none" (click)="onSave()" aria-label="Close">
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="wrap-form-field padding-space  modal-bottom-alignment-for-mobile-view">
+      <form class="row g-3" [formGroup]="activityForm">
+       
+        <div class="col-md-4">
+          <label class="form-label">{{ "smartagent.smartAgent.activity.container_status_code" | translate}}<span
+              class="text-danger">*</span></label>
+          <input type="text" class="form-control custom-input" id=" " formControlName="containerStatusCode" placeholder=""
+            [ngClass]="{ 'is-invalid': submitted && f.containerStatusCode.errors }" />
+          <div *ngIf="submitted && f.containerStatusCode.errors" class="invalid-feedback">
+            <div *ngIf="f.containerStatusCode.errors.required">
+              {{"smartagent.smartAgent.activity.container_status_code" | translate }}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">{{ "smartagent.smartAgent.activity.container_status_designation" | translate}}<span
+              class="text-danger">*</span></label>
+          <input type="text" class="form-control custom-input" id=" " formControlName="containerDesignastion" placeholder=""
+            [ngClass]="{ 'is-invalid': submitted && f.containerDesignastion.errors }" />
+          <div *ngIf="submitted && f.containerDesignastion.errors" class="invalid-feedback">
+            <div *ngIf="f.containerDesignastion.errors.required">
+              {{"smartagent.smartAgent.activity.container_status_designation" | translate }}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">{{ "smartagent.smartAgent.activity.description" | translate}}<span
+              class="text-danger">*</span></label>
+          <input type="text" class="form-control custom-input" id=" " formControlName="description" placeholder=""
+            [ngClass]="{ 'is-invalid': submitted && f.description.errors }" />
+            <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+              <div *ngIf="f.description.errors.required">
+                {{"smartagent.smartAgent.activity.description" | translate }}
+              </div>
+            </div>
+          </div>
+
+        <div class="col-md-4">
+            <label class="form-label">{{ "smartagent.smartAgent.activity.activity_type_id" | translate}}<span
+              class="text-danger">*</span></label>
+              <input type="text" class="form-control custom-input" id=" " formControlName="activityType" placeholder=""
+                [ngClass]="{ 'is-invalid': submitted && f.activityType.errors }" />
+          <div *ngIf="submitted && f.activityType.errors" class="invalid-feedback">
+            <div *ngIf="f.activityType.errors.required">
+              {{"smartagent.smartAgent.activity.activity_type_validation" | translate }}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">{{ "smartagent.smartAgent.activity.activity_status" | translate}}<span
+              class="text-danger">*</span></label>
+          <select formControlName="activityStatus" class="form-select custom-input" [ngClass]="{ 'is-invalid': submitted && f.activityStatus.errors }">
+            <option value="true">{{ "smartagent.smartAgent.activity.commercial" |
+              translate}}</option>
+            <option value="false">{{ "smartagent.smartAgent.activity.non_commercial" |
+              translate}}</option>
+          </select>
+          <div *ngIf="submitted && f.activityStatus.errors" class="invalid-feedback">
+            <div *ngIf="f.activityStatus.errors.required">
+              {{"smartagent.smartAgent.activity.activity_status" | translate }}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">{{ "smartagent.smartAgent.activity.mt_laden_flag" | translate}}<span
+              class="text-danger">*</span></label>
+          <select formControlName="ladenFlag" class="form-select custom-input" [ngClass]="{ 'is-invalid': submitted && f.ladenFlag.errors }">
+            <option value="Commercial(C)">{{ "smartagent.smartAgent.activity.commercial" |
+              translate}}</option>
+            <option value="Non Commercial(NC)">{{ "smartagent.smartAgent.activity.non_commercial" |
+              translate}}</option>
+          </select>
+          <div *ngIf="submitted && f.ladenFlag.errors" class="invalid-feedback">
+            <div *ngIf="f.ladenFlag.errors.required">
+              {{"smartagent.smartAgent.activity.mt_laden_flag" | translate }}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">{{ "smartagent.smartAgent.activity.damage_avail_flag" | translate}}<span
+              class="text-danger">*</span></label>
+          <select formControlName="damageFlag" class="form-select custom-input" [ngClass]="{ 'is-invalid': submitted && f.damageFlag.errors }">
+            <option value="Commercial(C)">{{ "smartagent.smartAgent.activity.commercial" |
+              translate}}</option>
+            <option value="Non Commercial(NC)">{{ "smartagent.smartAgent.activity.non_commercial" |
+              translate}}</option>
+          </select>
+          <div *ngIf="submitted && f.damageFlag.errors" class="invalid-feedback">
+            <div *ngIf="f.damageFlag.errors.required">
+              {{"smartagent.smartAgent.activity.activity_type_validation" | translate }}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">{{ "smartagent.smartAgent.activity.in_out_bound_flag" | translate}}<span
+              class="text-danger">*</span></label>
+          <select formControlName="in_out_boundFlag" class="form-select custom-input" [ngClass]="{ 'is-invalid': submitted && f.in_out_boundFlag.errors }">
+            <option value="Commercial(C)">{{ "smartagent.smartAgent.activity.commercial" |
+              translate}}</option>
+            <option value="Non Commercial(NC)">{{ "smartagent.smartAgent.activity.non_commercial" |
+              translate}}</option>
+          </select>
+          <div *ngIf="submitted && f.in_out_boundFlag.errors" class="invalid-feedback">
+            <div *ngIf="f.in_out_boundFlag.errors.required">
+              {{"smartagent.smartAgent.activity.activity_type_validation" | translate }}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">{{ "smartagent.smartAgent.activity.voyage_mandatory" | translate}}<span
+              class="text-danger">*</span></label>
+              <input class="form-check-input ml-2" type="checkbox" formControlName="voyage_mandatory" id="icd">
+
+
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">{{ "smartagent.smartAgent.activity.booking_mandatory" | translate}}<span
+              class="text-danger">*</span></label>
+              <input class="form-check-input ml-2" type="checkbox" formControlName="booking_mandatory" id="icd">
+
+
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">{{ "smartagent.smartAgent.activity.do_validity_verification" | translate}}<span
+              class="text-danger">*</span></label>
+              <input class="form-check-input ml-2" type="checkbox" formControlName="do_validity_verification" id="icd">
+
+
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">{{ "smartagent.smartAgent.activity.is_initial_move" | translate}}<span
+              class="text-danger">*</span></label>
+              <input class="form-check-input ml-2" type="checkbox" formControlName="is_initial_move" id="icd">
+
+
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">{{ "smartagent.smartAgent.activity.is_add_active" | translate}}<span
+              class="text-danger">*</span></label>
+              <input class="form-check-input ml-2" type="checkbox" formControlName="is_add_active" id="icd">
+
+
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">{{ "smartagent.smartAgent.activity.is_delete_active" | translate}}<span
+              class="text-danger">*</span></label>
+              <input class="form-check-input ml-2" type="checkbox" formControlName="is_delete_active" id="icd">
+
+
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">{{ "smartagent.smartAgent.activity.is_rotation_mandate" | translate}}<span
+              class="text-danger">*</span></label>
+              <input class="form-check-input ml-2" type="checkbox" formControlName="is_rotation_mandate" id="icd">
+
+
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">{{ "smartagent.smartAgent.activity.is_act_date_mod_app" | translate}}<span
+              class="text-danger">*</span></label>
+              <input class="form-check-input ml-2" type="checkbox" formControlName="is_act_date_mod_app" id="icd">
+
+
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">{{ "smartagent.smartAgent.activity.is_Rr_wagan_no_app" | translate}}<span
+              class="text-danger">*</span></label>
+              <input class="form-check-input ml-2" type="checkbox" formControlName="is_Rr_wagan_no_app" id="icd">
+
+
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">{{ "smartagent.smartAgent.activity.is_vendor_Ref_app" | translate}}<span
+              class="text-danger">*</span></label>
+              <input class="form-check-input ml-2" type="checkbox" formControlName="is_vendor_Ref_app" id="icd">
+
+
+        </div>
+       <div class="form-group wrap-form-action mt-4">
+          <button class="btn1 btn-lg float-end" (click)="onSave()">
+            {{ "common.cancel" | translate }}
+          </button>
+          <button (click)="activityMasters()" class="btn btn-outline-primary btn-lg float-end">
+            <ng-container *ngIf="!fromParent">
+              {{ "common.save" | translate }}
+            </ng-container>
+            <ng-container *ngIf="fromParent">
+              {{ "common.update" | translate }}
+            </ng-container>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

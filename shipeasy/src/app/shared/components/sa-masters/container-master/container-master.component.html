@@ -1,0 +1,741 @@
+<!-- <div class="table-with-gheading">
+  <div class="wrap-table-area">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="float-clear-mobile-view d-flex flex-column flex-sm-row gap-3 float-start search-section">
+          <div class="input-group custom-input">
+            <input type="text" class="form-control" aria-label="Search" />
+          </div>
+        </div>
+        <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2">
+          <div class="mt-2">
+            <span>
+              <h5>{{ fromSize }}-{{ count }} of {{ toalLength }}</h5>
+            </span>
+          </div>
+          <div class="mt-2">
+            <span class="prv" [class.disable-arrow-sign]="fromSize === 1" (click)="prev()"><i class="fas fa-arrow-left"></i>
+            </span>
+            <span class="prv" [class.disable-arrow-sign]="count === toalLength" (click)="next()"><i class="fas fa-arrow-right"></i>
+            </span>
+          </div>
+          <div class="mt-2">
+            <select class="form-select form-select-sm" (change)="filter($event)">
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+          <div class="mt-2">
+            <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="openPDF()">{{
+              'common.print' | translate }} {{
+                'common.list' | translate }}</a>
+          </div>
+          <div class="mt-2">
+            <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="exportAsExcelFile()">{{
+              'common.exportToExcel' | translate }}</a>
+          </div>
+          <div class="mt-2">
+            <a class="new-action btn btn-outline-primary btn-sm rounded-pill" appAccessControl featureCode="['STM0126']" accessType="add" 
+            (click)="open(AddClause)">{{ 'common.add' | translate }} {{
+              "stolt.masters.ContainerMaster.Container_Master" | translate }}</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="table-responsive" id="htmlData">
+          <table aria-describedby="mytable" class="gfg">
+            <thead>
+              <tr class="field-name">
+                <th scope="col"class="text-center">Action
+                </th>
+                <th scope="col">#</th>
+                <th scope="col">
+                  {{ "stolt.masters.ContainerMaster.ContainerNo" | translate }}
+                  <em (click)="sortList(containerList,'containerNo')"  class="fas typcn typcn-arrow-unsorted arrow-iconssort"></em>
+                </th>
+                <th scope="col">
+                  {{ "stolt.masters.ContainerMaster.ContainerSize" | translate }}
+                  <em (click)="sortList(containerList,'containerSize')"  class="fas typcn typcn-arrow-unsorted arrow-iconssort"></em>
+                </th>
+                <th scope="col">
+                  {{ "stolt.masters.ContainerMaster.TankStatus" | translate }} 
+                  <em (click)="sortList(containerList,'tankStatus')"  class="fas typcn typcn-arrow-unsorted arrow-iconssort"></em>
+                </th>
+                <th scope="col">
+
+                  {{ "stolt.masters.ContainerMaster.TankType" | translate }}
+                  <em (click)="sortList(containerList,'tankType')"  class="fas typcn typcn-arrow-unsorted arrow-iconssort"></em>
+                </th>
+                <th scope="col">
+                  {{ "stolt.masters.ContainerMaster.TARWeight" | translate }}
+                  <em (click)="sortList(containerList,'tarWeight')"  class="fas typcn typcn-arrow-unsorted arrow-iconssort"></em> 
+                </th>
+                <th scope="col">
+                  {{ "stolt.masters.ContainerMaster.TankCapacity" | translate }}
+                  <em (click)="sortList(containerList,'tankCapacity')"  class="fas typcn typcn-arrow-unsorted arrow-iconssort"></em>
+                </th>
+                <th scope="col">
+                  {{ "stolt.masters.ContainerMaster.ExitOffhireDate" | translate }}
+                  <em (click)="sortList(containerList,'exitOffHireDate')"  class="fas typcn typcn-arrow-unsorted arrow-iconssort"></em>
+                </th>
+                <th scope="col">
+                  {{ "stolt.masters.ContainerMaster.OnhireDate" | translate }}
+                  <em (click)="sortList(containerList,'onHireDate')"  class="fas typcn typcn-arrow-unsorted arrow-iconssort"></em>
+                </th>
+                <th scope="col">
+                  {{ "stolt.masters.ContainerMaster.DateOfManufacture" | translate }}
+                  <em (click)="sortList(containerList,'dateOfManufacture')"  class="fas typcn typcn-arrow-unsorted arrow-iconssort"></em> 
+                </th>
+                <th scope="col">
+                  {{ "stolt.masters.ContainerMaster.OneWay" | translate }}
+                  <em (click)="sortList(containerList,'oneWay')"  class="fas typcn typcn-arrow-unsorted arrow-iconssort"></em> 
+                </th>
+                <th scope="col"class="text-center">
+                  
+                </th>
+              </tr>
+              <tr>
+                <th scope="col" class="wrap-table-btn">
+                  
+                </th>
+                <th scope="col"></th>
+                <th scope="col">
+                  <input type="text" class="form-control" id="" [(ngModel)]="containerno" (keydown.enter)="search()" />
+                </th>
+                <th scope="col">
+                  <input type="text" class="form-control" id="" [(ngModel)]="Size" (keydown.enter)="search()" />
+                </th>
+                <th scope="col">
+                  <input type="text" class="form-control" id="" [(ngModel)]="tankStatus" (keydown.enter)="search()" />
+                </th>
+                <th scope="col">
+                  <input type="text" class="form-control" id="" [(ngModel)]="tankType" (keydown.enter)="search()" />
+                </th>
+                <th scope="col">
+                  <input type="text" class="form-control" id="" [(ngModel)]="tarWeight" (keydown.enter)="search()" />
+                </th>
+                <th scope="col">
+                  <input type="text" class="form-control" id="" [(ngModel)]="tankCapacity" (keydown.enter)="search()" />
+                </th>
+                <th scope="col">
+                  <input type="date" class="form-control" id="" [(ngModel)]="exitOffHireDate"
+                    (change)="search()" />
+                </th>
+                <th scope="col">
+                  <input type="date" class="form-control" id="" [(ngModel)]="onHireDate" (change)="search()" />
+                </th>
+                <th scope="col">
+                  <input type="date" class="form-control" id="" [(ngModel)]="dateOfManufacture"
+                    (change)="search()" />
+                </th>
+                <th>
+                  <select class="form-control" [(ngModel)]="oneWay"(change)="search()">
+                   <option value="true">Active</option>
+                    <option value="false">Inactive</option>
+                  </select>
+                </th>
+                <th scope="col">
+                  <button type="button" class="bi bi-search btn btn-outline-primary btn-sm rounded-pill"
+                    (click)="search()">
+
+                  </button>
+                  <a class="bi bi-arrow-clockwise btn btn-outline-primary btn-sm rounded-pill" (click)="clear()">
+                  </a>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let container of containerList; let i = index">
+                <td class="action-field">
+                  <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop">
+                    <a appAccessControl featureCode="['STM0126']" accessType="update" 
+                      (click)="open(AddClause, container)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                  </span>
+                  <span nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}">
+                    <a appAccessControl featureCode="['STM0126']" accessType="view" 
+                    (click)="open(AddClause, container,'show')"><em
+                        class="bi bi-eye globally-change-icon-color"></em></a></span>
+                  
+                  <span class="form-check form-switch">
+                    <input appAccessControl featureCode="['STM0126']" accessType="update" 
+                    class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                      (change)="changeStatus(container)" [checked]="container?.status" />
+                    <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                  </span>
+                </td>
+               <td>{{i+1}}</td>
+                <td class="uppercase1">{{ container.containerNo }}</td>
+                <td class="uppercase text-end">{{ container.containerSize }}</td>
+                <td class="uppercase">{{ container.tankStatus }}</td>
+                <td class="uppercase3">{{ container.tankType }}</td>
+                <td class="uppercase4 text-end">{{ container.tarWeight }}</td>
+                <td class="uppercase">{{ container.tankCapacity }}</td>
+                <td class="uppercase text-end">{{ container.exitOffHireDate | date:'dd-MM-yyyy' }}</td>
+                <td class="uppercase text-end">{{ container.onHireDate | date:'dd-MM-yyyy' }}</td>
+                <td class="uppercase text-end">{{ container.dateOfManufacture | date:'dd-MM-yyyy'}}</td>
+                <td class="">{{ container.oneWay ? "Active" : "Inactive"}}</td>
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="no-data-availble" *ngIf="containerList.length === 0">
+          {{'common.no_data' | translate}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<ng-template #AddClause let-modal>
+  <div class="modal-content nz-allSelect">
+    <div class="modal-headers mt-2">
+      <h4 class="modal-title" *ngIf="!isEdit">{{ 'common.add' | translate }} {{
+        "stolt.masters.ContainerMaster.Container_Master" | translate }}
+      </h4>
+      <h4 class="modal-title" *ngIf="isEdit">{{ 'common.edit' | translate }} {{
+        "stolt.masters.ContainerMaster.Container_Master" | translate }}
+      </h4>
+      <button type="button" class="btn-close shadow-none float-end" (click)="onSave()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+       
+          <form class="row g-3 align-items-center" [formGroup]="addContainerForm">
+            <div class="col-md-4">
+              <label class="form-label"> {{ "stolt.masters.ContainerMaster.ContainerNo" | translate }}<span
+                  class="text-danger">*</span></label>
+              <input type="text" class="form-control custom-input" id=" " placeholder="Container No" formControlName="containerNo"
+                value="" [ngClass]="{ 'is-invalid': submitted && f.containerNo.errors }" appCapitalizeFirst min="0" max="99999999"
+                step="1" oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 11);" maxlength="11" />
+              <div *ngIf="submitted && f.containerNo.errors" class="invalid-feedback">
+                <div *ngIf="f.containerNo.errors.required"> {{
+                  "stolt.masters.ContainerMaster.ContainerNo" |
+                  translate }} is required</div>
+              </div>
+            </div>
+            <div class="col-md-4  nz-select">
+              <label class="form-label">Container Type<span class="text-danger">*</span></label>
+             
+              <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Container Type"   formControlName="containerType"
+                [ngClass]="{'is-invalid': submitted && f.containerType.errors}">
+                <nz-option *ngFor="let containerType of  sort(containerTypeList ,'typeName')" [nzLabel]="containerType.typeName"
+                  [nzValue]="containerType.systemtypeId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.containerType.errors" class="invalid-feedback">
+                <div *ngIf="f.containerType.errors.required">Container Type is required</div>
+              </div>
+            </div>
+            <div class="col-md-4 nz-select" *ngIf="false">
+              <label class="form-label">{{ "stolt.masters.ContainerMaster.ContainerSize" | translate }}<span class="text-danger">*</span></label>
+              <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Container Size"   formControlName="containerSize"
+                [ngClass]="{'is-invalid': submitted && f.containerSize.errors}">
+                <nz-option *ngFor="let size of  sort(containerSizeList ,'typeName')" [nzLabel]="size.typeName"
+                [nzValue]="size.typeDescription"></nz-option>
+                <!-- <nz-option nzLabel="20 ft" nzValue="20"></nz-option>
+                <nz-option nzLabel="40 ft" nzValue="40"></nz-option> -->
+                <!-- <nz-option nzLabel="40" nzValue="40"></nz-option> -->
+              </nz-select>
+              <div *ngIf="submitted && f.containerSize.errors" class="invalid-feedback">
+                <div *ngIf="f.containerSize.errors.required"> {{
+                  "stolt.masters.ContainerMaster.ContainerSize" |
+                  translate }} is required</div>
+              </div>
+            </div>
+
+  
+           
+            <div class="col-md-4 nz-select">
+              <label class="form-label">{{ "stolt.masters.ContainerMaster.TankType" | translate }}</label>
+             
+              <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Container Type"   formControlName="tankType"
+                [ngClass]="{ 'is-invalid': submitted && f.tankType.errors }">
+                <nz-option *ngFor="let TankType of  sort(tanktypeList ,'typeName')" [nzLabel]="TankType.typeName"
+                  [nzValue]="TankType.systemtypeId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.tankType.errors" class="invalid-feedback">
+                <div *ngIf="f.tankType.errors.required"> {{
+                  "stolt.masters.ContainerMaster.TankType" |
+                  translate }} is required</div>
+              </div>
+            </div>
+            <div class="col-md-4 nz-select" >
+              <label class="form-label"> {{ "stolt.masters.ContainerMaster.TankStatus" | translate }}</label>
+              <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Container Status"   formControlName="tankStatus"
+                [ngClass]="{ 'is-invalid': submitted && f.tankStatus.errors }">
+                <nz-option *ngFor="let TankStatus of  sort(tankstatusList ,'typeName')" [nzLabel]="TankStatus.typeName"
+                  [nzValue]="TankStatus.systemtypeId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.tankStatus.errors" class="invalid-feedback">
+                <div *ngIf="f.tankStatus.errors.required"> {{
+                  "stolt.masters.ContainerMaster.TankStatus" |
+                  translate }} is required</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label"> {{ "stolt.masters.ContainerMaster.TARWeight" | translate }}(KG)</label>
+              <input type="number" class="form-control custom-input" formControlName="tarWeight" id=" " value="" placeholder="TAR Weight" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label"> {{ "stolt.masters.ContainerMaster.TankCapacity" | translate }}(Ltr)</label>
+              <input type="number" class="form-control custom-input" id=" " formControlName="tankCapacity" value="" placeholder="Container Capacity"/>
+            </div>
+
+            <div class="col-md-4 nz-select" >
+              <label class="form-label"> {{ 'stolt.batch.container.add_container.select_yard' | translate }}<span
+                  class="text-danger">*</span></label>
+              <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="yard"  nzPlaceHolder="Select Yard"
+                [ngClass]="{ 'is-invalid': submitted && f.yard.errors }">
+                <nz-option *ngFor="let yard of  sort(yardList ,'locationName')" [nzLabel]="yard.locationName"
+                  [nzValue]="yard.locationId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.yard.errors" class="invalid-feedback">
+                <div *ngIf="f.yard.errors.required"> {{ 'stolt.batch.container.add_container.select_yard' |
+                  translate }} is required</div>
+              </div>
+            </div>
+            
+            <div class="col-md-4 nz-select">
+              <label class="mb-0 p-0 form-label">{{ "stolt.masters.ContainerMaster.ExitOffhireDate" | translate }}</label>
+                <mat-form-field appearance="outline" class="custom-date-picker">
+                 <div class="d-flex align-items-center  w-100">
+                  <input matInput
+                  [matDatepicker]="pickerEta1" formControlName="exitOffHireDate" class="h-0" placeholder=" Hire Date"/>
+                <mat-datepicker-toggle matSuffix [for]="pickerEta1"></mat-datepicker-toggle>
+                 </div>
+                  <mat-datepicker #pickerEta1></mat-datepicker>
+                </mat-form-field>
+              
+            </div>
+            <div class="col-md-4 nz-select">
+              <label class="mb-0 p-0 form-label">{{ "stolt.masters.ContainerMaster.OnhireDate" | translate }}</label>
+              <mat-form-field appearance="outline" class="custom-date-picker">
+               <div class="d-flex align-items-center  w-100">
+                <input matInput
+                [matDatepicker]="pickerEta11" formControlName="onHireDate" class="h-0" placeholder=" Hire Date"/>
+              <mat-datepicker-toggle matSuffix [for]="pickerEta11"></mat-datepicker-toggle>
+               </div>
+                <mat-datepicker #pickerEta11></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Pay Load Capacity (Ltr)</label>
+              <input type="number" class="form-control custom-input" id="loadCapacity" formControlName="loadCapacity"
+                placeholder="Pay Load Capacity" min="0" max="99999999" step="1"
+                oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8);" maxlength="8" />
+            </div>            
+            <div class="col-md-4 ">
+              <input class="margin" type="checkbox" role="switch" id="flexSwitchCheckChecked" formControlName="oneWay"
+                (change)="clickOnOneWay($event)">
+              <label class="form-label mx-1"> {{ "stolt.masters.ContainerMaster.OneWay" | translate }}</label>
+            </div>
+            <div class="col-md-4 nz-select">
+              <label class="mb-0 p-0 form-label">{{ "stolt.masters.ContainerMaster.DateOfManufacture" | translate }}</label>
+                <mat-form-field appearance="outline" class="custom-date-picker">
+                 <div class="d-flex align-items-center  w-100">
+                  <input matInput
+                  [matDatepicker]="pickerEta12" formControlName="dateOfManufacture" class="h-0" placeholder="Date Facture"/>
+                <mat-datepicker-toggle matSuffix [for]="pickerEta12"></mat-datepicker-toggle>
+                 </div>
+                  <mat-datepicker #pickerEta12></mat-datepicker>
+                </mat-form-field>
+             
+            </div>
+  
+            <div class="col-md-4 nz-select">
+              <label class="form-label">{{ "stolt.masters.ContainerMaster.ContainerOperator" | translate }} <span class="text-danger" *ngIf="oneWay1">*</span></label>
+              <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Container Operator"   formControlName="containerOperator"
+                [ngClass]="{'is-invalid': submitted && f.containerOperator.errors && oneWay1} ">
+                <nz-option *ngFor="let oprator of  sort(containerOpratorList ,'name')" [nzLabel]="oprator?.name"
+                  [nzValue]="oprator?.partymasterId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.containerOperator.errors && oneWay1" class="invalid-feedback">
+                <div *ngIf="f.containerOperator.errors.required"> {{
+                  "stolt.masters.ContainerMaster.containermastervalidation.operatorvalidation" |
+                  translate }}</div>
+              </div>
+            </div>
+            <div class="col-md-4 nz-select">
+              <label class="form-label">{{ "stolt.masters.ContainerMaster.PickLocation" | translate }} <span class="text-danger" *ngIf="oneWay1">*</span></label>
+             
+                <nz-select class="form-select " nzShowSearch nzAllowClear nzPlaceHolder="Pick Location"   formControlName="pickLocation"
+                [ngClass]="{'is-invalid': submitted && f.pickLocation.errors && oneWay1}" >
+                 <nz-option *ngFor="let yard of   sort(yardList ,'locationName')" [nzLabel]="yard.locationName"
+                  [nzValue]="yard.locationId"></nz-option>
+               </nz-select>
+
+              <div *ngIf="submitted && f.pickLocation.errors && oneWay1" class="invalid-feedback">
+                <div *ngIf="f.pickLocation.errors.required"> {{
+                  "stolt.masters.ContainerMaster.containermastervalidation.picklocationvalidation" | translate }}</div>
+              </div>
+            </div>
+            <div class="col-md-4 nz-select">
+              <label class="form-label">{{ "stolt.masters.ContainerMaster.DropLocation" | translate }} <span class="text-danger" *ngIf="oneWay1">*</span> </label>
+            
+                <nz-select class="form-select " nzShowSearch nzAllowClear nzPlaceHolder="Drop 
+                .Location"   formControlName="dropLocation"
+                [ngClass]="{'is-invalid': submitted && f.dropLocation.errors && oneWay1}" >
+                 <nz-option *ngFor="let yard of  sort(yardList ,'locationName')" [nzLabel]="yard.locationName"
+                  [nzValue]="yard.locationId"></nz-option>
+               </nz-select>
+
+
+
+              <div *ngIf="submitted && f.dropLocation.errors && oneWay1" class="invalid-feedback">
+                <div *ngIf="f.dropLocation.errors.required"> {{
+                  "stolt.masters.ContainerMaster.containermastervalidation.droplocationvalidation"
+                  | translate }}</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <input class="margin" type="checkbox" role="switch" id="flexSwitchCheckChecked" (change)="chageSoc($event)"
+                formControlName="soc">
+              <label class="form-label mx-1">{{ "stolt.masters.ContainerMaster.SOC" | translate }}</label>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">
+                {{ "stolt.masters.ContainerMaster.MaximumGrossWeight" | translate }}
+                <span class="text-danger" *ngIf="soc">*</span>
+              </label>
+              <input type="number" class="form-control custom-input" max="8" id="maxGrossWeight" formControlName="maxGrossWeight"
+                [ngClass]="{ 'is-invalid': submitted && f.maxGrossWeight.errors && soc }" placeholder="Gross Weight" min="0"
+                max="99999999" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8);" maxlength="8" />
+              <div *ngIf="submitted && f.maxGrossWeight.errors && soc" class="invalid-feedback">
+                <div *ngIf="f.maxGrossWeight.errors.required && soc">
+                  {{"stolt.masters.ContainerMaster.containermastervalidation.maxgrossweightvalidation" | translate}}
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">
+                {{ "stolt.masters.ContainerMaster.MaximumPayload" | translate }}
+                <span class="text-danger" *ngIf="soc">*</span>
+              </label>
+              <input type="number" class="form-control custom-input" max="8" id="maxPayload" formControlName="maxPayload"
+                [ngClass]="{ 'is-invalid': submitted && f.maxPayload.errors && soc }" placeholder="Max Payload" min="0"
+                max="99999999" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8);" maxlength="8" />
+              <div *ngIf="submitted && f.maxPayload.errors && soc" class="invalid-feedback">
+                <div *ngIf="f.maxPayload.errors.required && soc">
+                  {{ "stolt.masters.ContainerMaster.containermastervalidation.maxpayloadvalidation" | translate }}
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label"> {{ "stolt.masters.ContainerMaster.Remarks" | translate }}</label>
+              <input type="text" class="form-control custom-input" maxlength="500" id=" " formControlName="remarks"
+                value=""  placeholder="Remark"/>
+            </div>
+            <div class="col-md-4 d-flex align-items-center" *ngIf="false">
+              <div class="taggle form-check form-switch">
+                <label class="form-check-label" for="flexSwitchCheckDefault"> {{
+                  "stolt.masters.ContainerMaster.ContainerCreationDate" | translate }}</label>
+                <div class="input-group date" id="datepicker">
+                  <input type="date" disabled formControlName="creationDate" class="form-control custom-input"
+                    id="date" />
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 d-flex align-items-center" *ngIf="false">
+              <div class="taggle form-check form-switch">
+                <label class="form-check-label" for="flexSwitchCheckDefault"> {{
+                  "stolt.masters.ContainerMaster.ContainerCreationUserID" | translate }}</label>
+                <input type="text" disabled class="form-control custom-input" maxlength="50" id=" "
+                  formControlName="creationUserId" />
+              </div>
+            </div>
+            <div class="col-md-4 d-flex align-items-center" *ngIf="false">
+              <div class="taggle form-check form-switch">
+                <label class="form-check-label" for="flexSwitchCheckDefault"> {{
+                  "stolt.masters.ContainerMaster.ContainerLastUpdatedDate" | translate }}</label>
+                <div class="input-group date" id="datepicker">
+                  <input type="date" disabled formControlName="lastUpdatedDate" class="form-control custom-input"
+                    id="date" />
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 d-flex align-items-center" *ngIf="false">
+              <div class="taggle form-check form-switch">
+                <label class="form-check-label" for="flexSwitchCheckDefault"> {{
+                  "stolt.masters.ContainerMaster.ContainerLastUpdatedUserID" | translate }}</label>
+                <input type="text" class="form-control custom-input" maxlength="50" id=" "
+                  formControlName="lastupdatedUserId" disabled />
+              </div>
+            </div>
+  
+            <div class="col-md-4">
+              <input class="margin" type="checkbox" formControlName="baffles">
+              <label class="form-label mx-1">{{ "stolt.masters.ContainerMaster.Baffles" | translate }}</label>
+            </div>
+            <div class="form-group wrap-form-action mt-4">
+              <button class="btn1 btn-lg float-end" (click)="onSave()" type="submit">
+                {{ "common.cancel" | translate }}
+              </button>
+              <button *ngIf="this.show !== 'show'" (click)="containerMaster()" class="btn btn-outline-primary btn-lg float-end" type="submit"
+               >
+                {{ "common.save" | translate }}
+              </button>
+            
+            </div>
+          </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #deletecontainer let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body mt-4">
+      <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2">
+      </em>
+      <span class="text-dark fs-6">{{'error.msg_delete' | translate}}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+          {{ 'common.no' | translate }}
+        </button>
+        <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+          {{ 'common.yes' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+
+
+<div class="table-header-area">
+  <div class="mat-table-with-gheading">
+    <div class="wrapper">
+      <div class="container-fluid">
+        <div class="pt-2">
+          <div class="wrap-mat-table-area">
+            <div class="table-header-area pt-2">
+              <div>
+                <table-filters [TDP]="[false, false, true, true]" (filterInput)="applyFilter($event)"
+                  (onClickExport)="exportAsExcelFile()">
+                </table-filters>
+              </div>
+              <div class="header-right">
+                <div class="mt-2">
+                  <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="openPDF()">{{
+                    'common.print' | translate }} {{
+                      'common.list' | translate }}</a>
+                </div>
+                <div class="mt-2">
+                <a class="new-action btn btn-outline-primary btn-sm rounded-pill" appAccessControl featureCode="['STM0126']" accessType="add" 
+            (click)="open(AddClause)">{{ 'common.add' | translate }} {{
+              "stolt.masters.ContainerMaster.Container_Master" | translate }}</a>
+              </div>
+            </div>
+            </div>
+          </div>
+          <div class="table-card">
+            <div class="table-design example-container mat-elevation-z8">
+              <table mat-table [dataSource]="dataSource" matSort class="full-width-table" summary="agreement">
+                <ng-container matColumnDef="#">
+                  <th scope="col" mat-header-cell *matHeaderCellDef style="width: 3%;">
+                    # <em class="custom-tooltip" [attr.title]="'Toggle Filters'"
+                      (click)="toggleFilters = !toggleFilters" class="bi bi-search"></em>
+                  </th>
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    {{ element?.id}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                  <th scope="col" id="action" class="charterersPdfHead" mat-header-cell   *matHeaderCellDef
+                    style="width: 6%;">
+                    {{ 'Actions' }}
+                  </th>
+                    <td class="borderBottom" mat-cell *matCellDef="let element; let i = index">
+                      <div class="d-flex"  style="align-items: center;">
+
+                        <!-- <span nz-tooltip nzTooltipTitle="History" class="mtop mx-1">
+                          <a appAccessControl featureCode="['STM0127']" accessType="update" 
+                          (click)="getHistory(element?.containermasterId)"><em
+                              class="bi bi-clock-history"></em></a>
+                  </span> -->
+                  
+                        <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop mx-1">
+                          <a appAccessControl featureCode="['STM0126']" accessType="update" 
+                            (click)="open(AddClause, element)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                        </span>
+                        <span nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}" class="mx-1">
+                          <a appAccessControl featureCode="['STM0126']" accessType="view" 
+                          (click)="open(AddClause, element,'show')"><em
+                              class="bi bi-eye globally-change-icon-color"></em></a></span>
+                        
+                        <span class="form-check form-switch mx1 mb-0 mt-1">
+                          <input appAccessControl featureCode="['STM0126']" accessType="update" 
+                          class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                            (change)="changeStatus(element,i)" [checked]="element?.status" />
+                          <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                        </span>
+                        <span *ngIf="!isShow" nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}" class="mtop">
+                          <a>
+                            <em class="bi bi-trash color-pencil-red"
+                            (click)="delete(deletecontainer, element?.containermasterId)">
+                          </em>
+                          </a>
+                        </span>
+                    </div>
+                    </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="containerNo">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                   Container No
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <div  >{{ element?.containerNo }}</div>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="containerSize" *ngIf="false">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Container Size
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.containerSize}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="tankStatus">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Container Status 
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.tankStatus}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="yardName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Yard
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.yardName}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="tarWeight">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                   	TARE Weight
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.tarWeight}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="tankCapacity">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Container Capacity 
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.tankCapacity}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="exitOffHireDate">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Exit / Off hire Date
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.exitOffHireDate | date:'dd-MM-yyyy'}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="onHireDate">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    On hire Date 
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.onHireDate | date:'dd-MM-yyyy'}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="dateOfManufacture">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Date Of Manufacture 
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.dateOfManufacture | date:'dd-MM-yyyy'}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="updatedBy">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                   Last Updated By 
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.updatedBy }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Status
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.status ? "Active" : "Inactive"}}
+                  </td>
+                </ng-container>
+                <!-- <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index" [matColumnDef]="headersFilter">
+                  <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+                    <div class="filters-container" [class.animate]="!toggleFilters">
+                      <em *ngIf="i > 0 && i < displayedColumns1.length - 10" class="custom-tooltip" [attr.title]="'Clear Filters'"
+                        (click)="clearFilters();toggleFilters = !toggleFilters" class="bi bi-x-circle"></em>
+                      <div *ngIf="i > 1 && i < displayedColumns1.length - 0" appearance="outline">
+                        <input class="form-control input-txt" placeholder="Press 'Enter' to search" [(ngModel)]="filtersModel[i]"
+                          (keyup.enter)="searchColumns()">
+                      </div>
+                
+                    </div>
+                  </th>
+                </ng-container> -->
+                <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index" [matColumnDef]="headersFilter">
+                  <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+                    <div class="filters-container" [class.animate]="!toggleFilters">
+                      <em *ngIf="i > 0 && i < displayedColumns1.length - 2" class="custom-tooltip bi bi-x-circle"
+                        [attr.title]="'Clear Filters'" (click)="clearFilters(); toggleFilters = !toggleFilters">
+                      </em>
+                      <div *ngIf="i > 1 && i < displayedColumns1.length - 0" appearance="outline">
+                        <ng-container *ngIf="displayedColumns[i] === 'status'; else textInput">
+                          <select class="form-control" [(ngModel)]="filtersModel[i]" (change)="searchColumns()">
+                            <option value="">All</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                          </select>
+                        </ng-container>
+                        <ng-template #textInput >
+                          <input class="form-control input-txt" placeholder="Press 'Enter' to search" [(ngModel)]="filtersModel[i]"
+                            (keyup.enter)="searchColumns()">
+                        </ng-template>
+                      </div>
+                    </div>
+                  </th>
+                </ng-container>
+                <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumns">
+                </tr>
+                <tr mat-header-row class="no-default-height" *matHeaderRowDef="displayedColumns1"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns">
+                </tr>
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+                    <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+                    <span *ngIf="!loaderService?.isLoadingcircle && !dataSource?.data?.length">No data available</span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <div [ngClass]="{'display-none' : toalLength < 10}">
+              <mat-paginator [length]="toalLength" [pageSize]="pageSize" [pageIndex]="pageNumber-1"
+                (page)="onPageChange($event)"  [pageSizeOptions]="_gc.PAGINATOR_OPTIONS" showFirstLastButtons></mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

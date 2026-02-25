@@ -1,0 +1,106 @@
+<div class="table-with-gheading">
+    <div class="wrap-content">
+       
+        <div class="row">
+            <div class="horz-bar mb-3">
+                <span>Vessel : {{vesseldata}} || </span>
+                <span>Voyage : {{voyageList}}</span>
+
+            </div>
+            <div class="col-md-12 table-with-gheading">
+                <div class="horz-bar">Update POL Remarks</div>
+                <div class="table-responsive">
+                    <div class="wrap-table-area  wrap-table-design wrap-form-field"
+                        id="htmlData">
+                        <form [formGroup]="blForm">
+                            <table aria-describedby="mytable">
+                                <thead>
+                                    <tr class="field-name">
+                                        
+                                        <th scope="col">SR No.</th>
+                                        <th scope="col">BL No.</th>
+                                        <th scope="col">HBL No.</th>
+                                        <th scope="col">POL</th>
+                                        <th scope="col">POD</th>
+                                        <th scope="col">FPOD</th>
+                                        <th scope="col">Consignee</th>
+                                        <th scope="col">Remarks</th>
+    
+    
+                                    </tr>
+                                    <tr>
+                                        <th scope="col">
+                                           
+                                        </th>
+                                        <th scope="col">
+                                            <input type="text" class="form-control" [(ngModel)]="blNo" 
+                                            [ngModelOptions]="{standalone: true}" (keydown.enter)="search()">
+                                        </th>
+                                        <th scope="col">
+                                            <input type="text" class="form-control" [(ngModel)]="hblNo" 
+                                            [ngModelOptions]="{standalone: true}" (keydown.enter)="search()">
+                                        </th>
+                                        <th scope="col">
+                                            <input type="text" class="form-control" [(ngModel)]="polName" 
+                                            [ngModelOptions]="{standalone: true}" (keydown.enter)="search()">
+                                        </th>
+                                        <th scope="col">
+                                            <input type="text" class="form-control" [(ngModel)]="podName" 
+                                            [ngModelOptions]="{standalone: true}" (keydown.enter)="search()">
+                                        </th>
+                                        <th scope="col"><input type="text" class="form-control" [(ngModel)]="fpodName" 
+                                            [ngModelOptions]="{standalone: true}"(keydown.enter)="search()"
+                                            >
+                                        </th>
+                                        <th scope="col"><input type="text" class="form-control" [(ngModel)]="consigneeName" 
+                                            [ngModelOptions]="{standalone: true}"(keydown.enter)="search()"
+                                            >
+                                        </th>
+                                        <th scope="col"> </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container formArrayName="blData">
+                                        <ng-container *ngFor="let bl of getControls(); let i = index"
+                                        [formGroupName]="i">
+                                        <tr>
+                                            <td>{{i+1}}</td>
+                                            <td>{{bl?.controls?.blNumber?.value}}</td>
+                                            <td>{{bl?.controls?.hblNo?.value}}</td>
+                                            <td>{{bl?.controls?.importPolName?.value}}</td>
+                                            <td>{{bl?.controls?.importPodName?.value}}</td>
+                                            <td>{{bl?.controls?.importFpodName?.value}}</td>
+                                            <td>{{bl?.controls?.consigneeName?.value}}</td>
+                                            <td>
+                                               <textarea  class="form-control custom-input" formControlName="polRemarks">
+
+                                               </textarea>
+                                            </td>
+                                           
+                                        </tr>
+                                        </ng-container>
+                                        
+                                    </ng-container>
+                                    
+                                
+                                </tbody>
+                            </table>
+                        </form>
+                       
+                    </div>
+                </div>
+                <div class="no-data-availble mt-0" *ngIf="houseBlList.length === 0">
+                    {{'common.no_data' | translate}}
+                </div>
+            </div>
+        </div>
+        <div class="btn-onscreen  my-3" >
+            <div class="form-group wrap-form-action ">
+                <button class="btn btn-outline-primary float-end" (click)="back()"> 
+                  Back </button>
+                  <button class="btn btn-outline-primary float-end" (click)="updateData()"> 
+                    Update </button>
+            </div>
+          </div>
+    </div>
+</div>

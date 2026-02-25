@@ -1,0 +1,730 @@
+<div class="modal-content nz-allSelect">
+  <div class="modal-header">
+    <h5 *ngIf="!showChecklist" class="modal-title" id="containerModalLabel">{{isForm ? 'Delivery Order' : 'Print Delivery Order'}}</h5>
+    <h5 *ngIf="showChecklist" class="modal-title" id="containerModalLabel">Delivery Order Checklist</h5>
+    <button type="button" class="btn-close" (click)="closePopup()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="" *ngIf="IsForList">
+      <div class="row">
+        <div class="col-md-12 without-ckecklist">
+          <div class="table-responsive">
+            <table aria-describedby="mytable1" class="gfg">
+              <thead>
+                <tr class="field-name background">
+                  <th scope="col" class="width15">{{ 'stolt.batch.container.delivery_order.delivery_order_no' |
+                    translate }}</th>
+                  <th scope="col" class="width15">HBL No.</th>
+                  <th scope="col" class="width15">Delivery To</th>
+                  <th scope="col" class="width15">{{ 'stolt.batch.container.delivery_order.delivery_date' |
+                    translate }}</th>
+                  <th scope="col" class="width15">{{ 'stolt.batch.container.delivery_order.valid_till' | translate
+                    }}</th>
+                  <th scope="col" class="width15">Extended {{ 'stolt.batch.container.delivery_order.valid_till' |
+                    translate }}</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let delivery of deliveryOrderList">
+                  <td>{{delivery.deliveryOrderNo}}</td>
+                  <td>{{delivery.hblDetails.blNumber}}</td>
+                  <td>{{delivery.depoName}}</td>
+                  <td>{{delivery.deliveryDate | date : 'dd-MM-yyyy'}}</td>
+                  <td>{{delivery.validTill | date : 'dd-MM-yyyy'}}</td>
+                  <td>{{delivery.extendedValidTill | date : 'dd-MM-yyyy'}}</td>
+                  <td class="action-field">
+                    <duv class="d-flex">
+                      <span *ngIf="batchDetail?.statusOfBatch !== 'Job Cancelled' && batchDetail?.statusOfBatch !== 'Job Closed'" nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop boot-icon"><a
+                          (click)="editDeliveryOrder(delivery);showChecklist = false"><em
+                            class="bi bi-pencil color-pencil-red"></em></a>
+                      </span>
+                      <span nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}">
+                        <a appAccessControl featureCode="['STM019']" accessType="view"
+                          (click)="getDOReport(delivery.deliveryorderId)"><em
+                            class="bi bi-eye globally-change-icon-color ml-2"></em></a>
+                      </span>
+                      <span class="mtop" nz-tooltip nzTooltipTitle="{{ 'common.download' | translate }}"><a>
+                          <em class="bi bi-download globally-change-icon-color ml-2"
+                            (click)="getDOReport(delivery.deliveryorderId,true)"></em></a>
+                      </span>
+                      <span class="mtop" nz-tooltip nzTooltipTitle="{{ 'common.shareViaWhatsapp' | translate }}"><a>
+                        <em class="bi bi-whatsapp globally-change-icon-color ml-2"
+                          (click)="shareViaWhatsapp(delivery.deliveryorderId,false,true)"></em></a>
+                    </span> 
+                    </duv>
+                    <span nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}" class="mtop"><a
+                        (click)="DeleteDeliveryOrder(content1,delivery.deliveryorderId)"><em
+                          class="typcn typcn-trash"></em></a>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="no-data-availble" *ngIf="deliveryOrderList.length === 0">
+            {{'common.no_data' | translate}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-container *ngIf="!IsForList">
+      <ng-container *ngIf="showChecklist">
+        <div class="col-md-12 ckecklist">
+          <div class="table-responsive">
+            <table aria-describedby="mytable" class="gfg">
+              <tbody>
+                <ng-container>
+                  <tr *ngFor="let check of checkListData; let i = index">
+                    <td class="text-center" *ngIf="check.checkbox">
+                      <input type="checkbox" checked class="m-2" value="">
+                    </td>
+                    <td class="text-center" *ngIf="!check.checkbox">
+                      <select class="" [(ngModel)]="check.isSelected">
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                      </select>
+                    </td>
+                    <td>{{check?.name}}</td>
+                  </tr>
+                </ng-container>
+
+                <ng-container *ngIf="false">
+                  <tr>
+                    <td class="text-center">
+                      <input type="checkbox" checked class="m-2" value="">
+                    </td>
+                    <td>
+                      AGENT Filing or Carrier Filing of IGM FILING OR CARRIER FILING OF IGM
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="text-center"></td>
+                    <td class="text-center d-flex align-items-baseline w-100">
+                      <input type="radio" value="MBL Original" name="MBL" id="mbloriginal" />
+                      <label class="form-label pr-4">MBL Original</label>
+                      <input type="radio" value="Seaway BL" name="MBL" id="seawaybl" />
+                      <label class="form-label">Seaway BL</label>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="text-center"></td>
+                    <td class="text-center d-flex align-items-baseline w-100">
+                      <input type="radio" value="HBL Original" name="HBL" id="hbloriginal" />
+                      <label class="form-label pr-4">HBL Original</label>
+                      <input type="radio" value="Seaway BL" name="HBL" id="seawaybl1" />
+                      <label class="form-label">Seaway BL</label>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="text-center">
+
+                    </td>
+                    <td class="text-center d-flex align-items-baseline w-100">
+                      <input type="radio" value="Freight Collect" name="freight" id="freightcollect" />
+                      <label class="form-label pr-4">Freight Collect</label>
+                      <input type="radio" value="Freight Prepaid" name="freight" id="freightprepaid" />
+                      <label class="form-label">Freight Prepaid</label>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="text-center">
+
+                    </td>
+                    <td class="text-center d-flex align-items-baseline w-100">
+                      <input type="radio" value="THC Collect" name="THC" id="thccollect" />
+                      <label class="form-label pr-4">THC Collect</label>
+                      <input type="radio" value="THC Prepaid" name="THC" id="thcprepaid" />
+                      <label class="form-label">THC Prepaid</label>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="text-center">
+                      <input type="checkbox" class="m-2" value="">
+                    </td>
+                    <td>
+                      Import Tank Container Factory Bond Format for (1 Year)
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="text-center">
+                      <input type="checkbox" class="m-2" value="">
+                    </td>
+                    <td>
+                      Security Cheque deposit
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="text-center">
+                      <select class="">
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                      </select>
+                    </td>
+                    <td>
+                      Payment Details received from Customer Yes /No.
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="text-center">
+                      <input type="checkbox" class="m-2" value="">
+                    </td>
+                    <td>
+                      Surrender BL Check
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="text-center">
+                      <input type="checkbox" class="m-2" value="">
+                    </td>
+                    <td>
+                      Checked Original Bill Of Lading Received With Proper Endorsements
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="text-center">
+
+                    </td>
+                    <td>
+                      <p>In Case Original B/L Not Available</p>
+                      <span class="d-flex align-items-baseline w-100">
+                        <input type="checkbox" class="m-2" value="">
+                        <p>
+                          Checked That Bank Guarantee Is Submitted As Per The Requirements Of The Principals
+                        </p>
+                      </span>
+                      <span class="d-flex align-items-baseline w-100">
+                        <input type="checkbox" class="m-2" value="">
+                        <p>
+                          Checked Principals Approval For The Guarantee
+                        </p>
+                      </span>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="text-center">
+                      <input type="checkbox" class="m-2" value="">
+                    </td>
+                    <td>
+                      Checked Receipt For Freight Payment
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="text-center">
+                      <input type="checkbox" class="m-2" value="">
+                    </td>
+                    <td>
+                      Checked Receipt For Payment Of Local Charges
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="text-center">
+                      <input type="checkbox" class="m-2" value="">
+                    </td>
+                    <td>
+                      Copy Of Seaway Bill
+                    </td>
+                  </tr>
+                </ng-container>
+
+
+              </tbody>
+            </table>
+          </div>
+          <div class="no-data-availble" *ngIf="checkListData.length === 0">
+            {{ "common.no_data" | translate }}
+          </div>
+        </div>
+        <div class="col-md-6 mt-2">
+          <label class="form-label"><b>{{ 'stolt.batch.container.delivery_order.remark' | translate }}</b></label>
+          <input type="text" class="form-control custom-input" placeholder="Remark">
+        </div>
+      </ng-container>
+      <ng-container *ngIf="!showChecklist">
+        <ng-container *ngIf="isForm ">
+          <form [formGroup]="generateDeliveryOrder">
+            <div class="form-field-section">
+              <div class="row g-3 align-items-center">
+
+                <div class="col-md-3 nz-select">
+                  <label for="typeDescription " class="form-label">DEPO Name <span class="text-danger">*</span>
+                  </label>
+                  <nz-select class="form-select " nzShowSearch nzAllowClear formControlName="depoName"
+                    [ngClass]="{'is-invalid': submitted && f.depoName.errors}" nzPlaceHolder="Depo Name">
+                    <nz-option *ngFor="let yard of  yardList" [nzLabel]="yard.locationName"
+                      [nzValue]="yard.locationId"></nz-option>
+                  </nz-select>
+                  <div *ngIf="submitted && f.depoName.errors" class="invalid-feedback">
+                    <div *ngIf="f.depoName.errors.required">
+                      DEPO name {{ "common.isRequired" | translate }}
+                    </div>
+                  </div>
+                </div>
+                <!-- <div class="col-md-4 nz-select" *ngIf="false">
+                  <label for="typeDescription " class="form-label">All Available DEPO
+                  </label>
+
+
+                  <ng-multiselect-dropdown [settings]="settings" [data]="allyardList"
+                    [ngClass]="{ 'is-invalid': submitted && f.allDepoName.errors }"
+                    [ngModelOptions]="{standalone: true}" formControlName="allDepoName">
+                  </ng-multiselect-dropdown>
+
+                  <div *ngIf="submitted && f.allDepoName.errors" class="invalid-feedback">
+                    <div *ngIf="f.allDepoName.errors.required">
+                      DEPO name {{ "common.isRequired" | translate }}
+                    </div>
+                  </div>
+                </div> -->
+                <div class="col-md-3">
+                  <label class="mb-0 p-0 form-label">{{ 'stolt.batch.container.delivery_order.delivery_date' | translate
+                    }} <span class="text-danger">*</span></label>
+                  <mat-form-field appearance="outline" class="custom-date-picker">
+                    <div class="d-flex align-items-center  w-100">
+                      <input matInput [matDatepicker]="pickerEta" formControlName="deliveryDate"
+                        (dateChange)="clearDate()" class="h-0" placeholder="Delivery Date" />
+                      <mat-datepicker-toggle matSuffix [for]="pickerEta"></mat-datepicker-toggle>
+                    </div>
+                    <mat-datepicker #pickerEta></mat-datepicker>
+                  </mat-form-field>
+                  <mat-error>
+                    <div *ngIf=" submitted && f?.deliveryDate?.errors?.required" class="set-error-msg">{{
+                      'stolt.batch.container.delivery_order.delivery_date'
+                      |
+                      translate }}
+                      is required
+                    </div>
+                  </mat-error>
+
+                </div>
+                <div class="col-md-3">
+                  <label class="mb-0 p-0 form-label">Valid till Date <span class="text-danger">*</span></label>
+                  <mat-form-field appearance="outline" class="custom-date-picker">
+                    <div class="d-flex align-items-center  w-100">
+                      <input matInput [matDatepicker]="pickerEtas" formControlName="validTill" class="h-0"     (dateChange)="applyValidTillToContainers()" [min]="this.generateDeliveryOrder.value.deliveryDate" placeholder="Valid Date" />
+                      <mat-datepicker-toggle matSuffix [for]="pickerEtas"></mat-datepicker-toggle>
+                    </div>
+                    <mat-datepicker #pickerEtas></mat-datepicker>
+                  </mat-form-field>
+                  <mat-error>
+                    <div *ngIf=" submitted && f?.validTill?.errors?.required" class="set-error-msg">{{
+                      'stolt.batch.container.delivery_order.valid_till' |
+                      translate }}
+                      is required
+                    </div>
+                  </mat-error>
+                </div>
+
+                <div class="col-md-3">
+                  <label class="form-label" style="font-size: 12px;">DO Type </label>
+                  <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="DOType"
+                    nzPlaceHolder="Select DO Type" style="font-size: 12px;">
+                    <nz-option *ngFor="let test of DOType" [nzValue]="test?.typeName"
+                      [nzLabel]="test?.typeName"></nz-option>
+                  </nz-select>
+                </div>
+
+                <div class="col-md-4" *ngIf="isEditMode">
+                  <label class="mb-0 p-0 form-label">Extended {{ 'stolt.batch.container.delivery_order.valid_till' |
+                    translate }}</label>
+                  <mat-form-field appearance="outline" class="custom-date-picker">
+                    <div class="d-flex align-items-center  w-100">
+                      <input matInput [matDatepicker]="pickerEtai" formControlName="extendedValidTill" class="h-0"
+                        [min]="this.generateDeliveryOrder.value.validTill" placeholder="Valid Date" />
+                      <mat-datepicker-toggle matSuffix [for]="pickerEtai"></mat-datepicker-toggle>
+                    </div>
+                    <mat-datepicker #pickerEtai></mat-datepicker>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-4">
+                  <label class="form-label" style="font-size: 12px;">Empty Return Location </label>
+                  <textarea type="text" rows="3" cols="30" formControlName="emptyLocation" class="form-control custom-input" placeholder="Enter Location" ></textarea>
+                </div>
+
+                <div class="col-md-4">
+                  <label class="form-label">Clearing Party</label>
+                  <textarea class="form-control custom-input" formControlName="clearingParty" rows="3" cols="30"
+                    PlaceHolder="Clearing Party"> </textarea>
+                </div>
+
+                <div class="col-md-4">
+                  <label class="form-label">{{ 'stolt.batch.container.delivery_order.remark' | translate }}</label>
+                  <textarea type="text" formControlName="remarks" rows="3" cols="30" class="form-control custom-input" placeholder="Remark"
+                    value="add remark here"></textarea>
+                </div>
+
+                <div class="col-md-3">
+                  <label class="form-label" style="font-size: 12px;">MBL<span class="text-danger">*</span></label>
+                  <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="MBL"
+                  [ngClass]="{'is-invalid': submitted && f.MBL.errors}"
+                    nzPlaceHolder="Select MBL" style="font-size: 12px;">
+                    <nz-option *ngFor="let test of mblList" [nzValue]="test?.blId"
+                      [nzLabel]="test?.blNumber"></nz-option>
+                  </nz-select>
+                  <div *ngIf="submitted && f.MBL.errors" class="invalid-feedback">
+                    <div *ngIf="f.MBL.errors.required">
+                      MBL {{ "common.isRequired" | translate }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <div class="without-ckecklist table-responsive">
+            <ng-container *ngIf="showTable()">
+              <table aria-describedby="mytable" class="gfg">
+                <thead>
+                  <tr class="field-name">
+                    <th>Select</th>
+                    <th scope="col">BL No</th>
+                    <th scope="col">Shipper</th>
+                    <th scope="col">Consignee</th>
+                    <th scope="col" style="width: 35%;">Container</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngFor="let container of blList;let i=index;">
+                    <tr *ngIf="isEditMode ? container.isSelected : true">
+                      <td>
+                        <input 
+                          [disabled]="isEditMode" 
+                          class="" 
+                          [(ngModel)]="container.isSelected"
+                          type="checkbox" 
+                          [name]="'bl_' + i"
+                          (change)="onBlSelectionChange(container)">
+                      </td>
+                      <td>{{container.blNumber}}</td>
+                      <td>{{container.shipperName}}</td>
+                      <td>{{container.consigneeName}}</td>
+                      <td style="width: 35%;">
+                        <div *ngFor="let ctr of container.containers; let j = index" class="mb-2">
+                          <div class="d-flex align-items-center">
+                            <em class="bi bi-dot fs-6 me-1"></em>
+                            <span
+                              class="me-2 container-number-text"
+                              [matTooltip]="ctr?.containerNumber"
+                              matTooltipPosition="above"
+                            >
+                              {{ ctr?.containerNumber }}
+                            </span>
+                          
+                            <mat-form-field appearance="outline" class="custom-date-picker">
+                              <div class="d-flex align-items-center w-100">
+                                <input matInput
+                                  [matDatepicker]="picker"
+                                  placeholder="Valid Till"
+                                  [(ngModel)]="ctr.validTill"
+                                  [min]="generateDeliveryOrder.value.validTill"
+                                  name="validTill_{{i}}_{{j}}" />
+                              </div>
+                              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                              <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                            <div *ngIf="isEditMode" class="form-check form-switch mx-1 mb-0 mt-1">
+                              <input
+                                class="form-check-input"
+                                type="checkbox"
+                                role="switch"
+                                id="isDetentionTaken_{{i}}_{{j}}"
+                                [(ngModel)]="ctr.isDetentionTaken"
+                                name="isDetentionTaken_{{i}}_{{j}}"
+                              />
+                              <label class="form-check-label" [for]="'isDetentionTaken_' + i + '_' + j">Detention</label>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+              <div class="no-data-availble" *ngIf="blList.length === 0">
+                {{'common.no_data' | translate}}
+              </div>
+            </ng-container>
+            <ng-container *ngIf="!showTable()">
+              <table aria-describedby="mytable" class="gfg">
+                <thead>
+                  <tr class="field-name">
+                    <th>Select</th>
+                    <th scope="col">{{ 'stolt.batch.container.delivery_order.container_no' | translate }}</th>
+                    <th *ngIf="false" scope="col">BL Details</th>
+                    <th *ngIf="false" scope="col">Size</th>
+                    <th scope="col">{{ 'stolt.batch.container.delivery_order.container_type' | translate }}</th>
+                    <th *ngIf="false" scope="col">Height</th>
+                    <!-- <th *ngIf="isExport" scope="col">{{ 'stolt.batch.container.delivery_order.previous_corgo_type' | translate }}</th> -->
+                    <th *ngIf="false" scope="col">Seal No</th>
+                    <!-- <th scope="col">Tank Status</th> -->
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngFor="let container of containerList;let i=index;">
+                    <tr *ngIf="isEditMode ? container.isSelected : true">
+                      <td><input [disabled]="isEditMode" class="" [(ngModel)]="container.isSelected" type="checkbox"
+                          [name]='i+1'></td>
+                      <td>{{container.containerNumber}}</td>
+                      <td *ngIf="false"> <em class="bi bi-three-dots dots-color-change cursor-pointer ml-2 border px-1"
+                          (click)="blIndex = !blIndex"></em></td>
+                      <td *ngIf="false">{{container.size}}</td>
+                      <td>{{container.containerTypeName}}</td>
+                      <td *ngIf="false">{{container.height}}</td>
+                      <!-- <td *ngIf="isExport">{{container.cargoType}}</td> -->
+                      <td *ngIf="false">{{container.sealNo}}</td>
+                      <!-- <td>{{container.tankStatusName}}</td> -->
+                    </tr>
+                  </ng-container>
+                  <ng-container *ngIf="blIndex">
+                    <tr class="tbHeader">
+                      <th colspan="2">BL No</th>
+                      <th>Invoice No</th>
+                      <th>Invoice Date</th>
+                      <th>Invoice Amount</th>
+                      <th>Receipt No</th>
+                      <th>Receipt Amount</th>
+                      <th>Action</th>
+                    </tr>
+                    <tr class="tbBody" *ngFor="let data of invoiceData">
+                      <td colspan="2">{{data?.blName}}</td>
+                      <td>{{data?.invoiceNo}}</td>
+                      <td>{{data?.invoice_date | date : 'dd-MM-yyyy'}}</td>
+                      <td class="text-end">{{data?.invoiceAmount}}</td>
+                      <td></td>
+                      <td></td>
+                      <td class="text-center"> <a class="pr-1" title="Go to the invoice"><em
+                            class="bi bi-link text-success" (click)="gotoInvoice(data)"></em></a></td>
+                    </tr>
+                    <tr>
+                      <div class="no-data-availble" *ngIf="invoiceData.length === 0">
+                        {{'common.no_data' | translate}}
+                      </div>
+                    </tr>
+                  </ng-container>
+
+                </tbody>
+              </table>
+              <div class="no-data-availble" *ngIf="containerList.length === 0">
+                {{'common.no_data' | translate}}
+              </div>
+            </ng-container>
+          </div>
+
+        </ng-container>
+        <ng-container *ngIf="!isForm ">
+          <div id="print-section">
+            <div class="row g-3">
+              <div class="col-md-4">
+                <label class="form-label">{{ 'stolt.batch.container.delivery_order.delivery_order_no' | translate
+                  }}</label>
+                <div>{{result?.deliveryOrderNo}}</div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">DEPO name</label>
+                <div>{{result?.depoName}}</div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{ 'stolt.batch.container.delivery_order.delivery_date' | translate }}</label>
+                <div>{{generateDeliveryOrder?.value.deliveryDate | date}}</div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{ 'stolt.batch.container.delivery_order.valid_till' | translate }}</label>
+                <div>{{generateDeliveryOrder?.value.validTill | date}}</div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Extended Valid Till</label>
+                <div>{{generateDeliveryOrder?.value.extendedValidTill | date}}</div>
+              </div>
+
+              <div class="col-md-4" >
+                <label class="form-label">{{ 'Release Type' | translate }}</label>
+                <div>{{generateDeliveryOrder?.value?.releaseType}}</div>
+              </div>
+
+              <ng-container *ngIf="batchType === 'import'">
+                <div class="col-md-4 d-flex align-items-center">
+                  <input type="checkbox" [(ngModel)]="EmailConsignee" />
+                  <label class="form-label px-2">Consignee Email</label>
+                </div>
+                <div class="col-md-4 d-flex align-items-center">
+                  <input type="checkbox" [(ngModel)]="EmailCHA" />
+                  <label class="form-label px-2">CHA Email</label>
+                </div>
+                <div class="col-md-4 d-flex align-items-center">
+                  <input type="checkbox" [(ngModel)]="EmailCFS" />
+                  <label class="form-label px-2">CFS Email</label>
+                </div>
+                <div class="col-md-4 d-flex align-items-center">
+                  <input type="checkbox" [(ngModel)]="EmailSurveyor" />
+                  <label class="form-label px-2">Surveyor Email</label>
+                </div>
+                <div class="col-md-4 d-flex align-items-center">
+                  <input type="checkbox" [(ngModel)]="EmailEmptyDepot" />
+                  <label class="form-label px-2">Empty Depot Email</label>
+                </div>
+              </ng-container>
+
+
+              <div class="col-md-8" *ngIf="batchType !== 'import'">
+                <label class="form-label"> Email <span style="font-size: 10.5px;">(use semi-colon to seperate multiple
+                    email)</span> </label>
+                <input type="email" (keyup)="checkEmail($event)" class="form-control custom-input" [(ngModel)]="EmailTo"
+                  [ngClass]="{ 'is-invalid': isRequiredForSendEmail }">
+                <div *ngIf="isRequiredForSendEmail" class="invalid-feedback">Email Invalid</div>
+              </div>
+              
+              <div class="col-md-4">
+                <label class="form-label">{{ 'stolt.batch.container.delivery_order.remark' | translate }}</label>
+                <div class="remark-box">
+                  {{generateDeliveryOrder?.value?.remarks}}
+                </div>
+              </div>
+                            
+            </div>
+            <div class="without-ckecklist table-responsive">
+              <ng-container *ngIf="showTable()">
+                <table aria-describedby="mytable1" class="gfg">
+                  <thead>
+                    <tr class="field-name">
+                      <th scope="col">HBL No</th>
+                      <th scope="col">Shipper</th>
+                      <th scope="col">consignee</th>
+                      <th scope="col" style="width: 35%;">Container</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let container of innerBlData">
+                      <td>{{container.blNumber}}</td>
+                      <td>{{container.shipperName}}</td>
+                      <td>{{container.consigneeName}}</td>
+                      <td style="width: 35%;"><span *ngFor="let ctr of  container.containers;let i=index"><span
+                            *ngIf="i!=0 && i%2==0"><br></span><em
+                            class="bi bi-dot fs-6"></em>{{ctr?.containerNumber}}</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="no-data-availble" *ngIf="innerBlData.length === 0">
+                  {{'common.no_data' | translate}}
+                </div>
+              </ng-container>
+              <ng-container *ngIf="!showTable()">
+                <table aria-describedby="mytable1" class="gfg">
+                  <thead>
+                    <tr class="field-name">
+                      <th scope="col">{{ 'stolt.batch.container.delivery_order.container_no' | translate }}
+                      </th>
+                      <th *ngIf="false" scope="col">Size</th>
+                      <th scope="col">{{ 'stolt.batch.container.delivery_order.container_type' | translate
+                        }}</th>
+                      <th *ngIf="false" scope="col">Height</th>
+                      <!-- <th  *ngIf="isExport" scope="col">{{ 'stolt.batch.container.delivery_order.previous_corgo_type' |
+                    translate }}</th> -->
+                      <th *ngIf="false" scope="col">Seal No</th>
+                      <!-- <th scope="col">Tank Status</th> -->
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let container of innerContainerData">
+                      <td>{{container.containerNumber}}</td>
+                      <td *ngIf="false">{{container.size}}</td>
+                      <td>{{container.containerTypeName}}</td>
+                      <td *ngIf="false">{{container.height}}</td>
+                      <!-- <td  *ngIf="isExport">{{container.cargoType}}</td> -->
+                      <td *ngIf="false">{{container.sealNo}}</td>
+                      <!-- <td>{{container.tankStatusName}}</td> -->
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="no-data-availble" *ngIf="innerContainerData.length === 0">
+                  {{'common.no_data' | translate}}
+                </div>
+              </ng-container>
+            </div>
+
+          </div>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+
+  </div>
+  <div class="modal-footer">
+    <div class="wrap-form-field">
+      <div class="form-group wrap-form-action">
+
+        <ng-container *ngIf="showChecklist && !IsForList">
+          <button class="btn btn-outline-secondary btn-lg float-end" (click)="showChecklist = false">
+            Generate DO
+          </button>
+          <button *ngIf="!IsForList" class="btn1 btn-lg float-end" (click)="closePopup()">
+            {{ 'common.cancel' | translate }}
+          </button>
+        </ng-container>
+        <ng-container *ngIf="!showChecklist">
+          <button *ngIf="!IsForList" class="btn1 btn-lg float-end" (click)="closePopup()">
+            {{ 'common.cancel' | translate }}
+          </button>
+          <button *ngIf="isForm && !IsForList" class="btn btn-outline-primary btn-lg float-end" (click)="onSave()"
+            type="submit">
+            {{ 'common.generateDeliveryOrder' | translate }}
+          </button>
+        </ng-container>
+
+        <button *ngIf="!isForm && !IsForList" [disabled]="this.isRequiredForSendEmail || !this.EmailTo"
+          class="btn btn-outline-primary btn-lg float-end" (click)="blobContent(deleveryID)" type="submit">
+          {{ 'common.email' | translate }}
+        </button>
+        <button *ngIf="!isForm && !IsForList" class="btn btn-outline-primary btn-lg float-end" (click)="onPrintClose()"
+          type="submit">
+          {{ 'common.edit' | translate }}
+        </button>
+        <button *ngIf="!isForm && !IsForList" printSectionId="print-section" (click)="getDOReport(deleveryID)"
+          class="btn btn-outline-primary btn-lg float-end" data-bs-dismiss="modal" type="submit">
+          {{ 'common.print' | translate }}
+        </button>
+        <button *ngIf="!isForm && !IsForList && false" (click)="downloadreport('EMPTYCONTAINER')"
+          class="btn btn-outline-primary btn-lg float-end" data-bs-dismiss="modal" type="submit">
+          Empty Letter
+        </button>
+        <button *ngIf="!isForm && !IsForList && false" (click)="downloadreport('SURVEYOR')"
+          class="btn btn-outline-primary btn-lg float-end" data-bs-dismiss="modal" type="submit">
+          Surveyor Letter
+        </button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #content1 let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+      </button>
+    </div>
+    <div class="modal-body mt-4">
+      <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2"> </em> <span
+        class=" text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary  btn-sm me-3" (click)="d('Cross click')">No</button>
+        <button type="button" class="btn btn-danger  btn-sm" (click)="c('yes')">Yes</button>
+      </div>
+    </div>
+  </div>
+</ng-template>

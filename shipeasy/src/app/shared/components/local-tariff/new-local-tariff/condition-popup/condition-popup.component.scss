@@ -1,0 +1,9 @@
+::ng-deep {
+
+    .cdk-overlay-container,
+    .cdk-overlay-pane {
+      z-index: 2000 !important;
+    }
+
+  
+  }

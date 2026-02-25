@@ -1,0 +1,253 @@
+<div class="table-with-gheading">
+    <div class="wrap-table-area">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="float-clear-mobile-view d-flex flex-column flex-sm-row gap-3 float-start search-section">
+                    <div class="input-group custom-input">
+                        <input type="text" class="form-control" placeholder="Search" aria-label="Search">
+                    </div>
+                </div>
+                <div
+                    class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2 ">
+                    <div class="mt-2">
+                        <span>
+                            <h5>{{ fromSize }}-{{ count }} of {{ toalLength }}</h5>
+                        </span>
+                    </div>
+                    <div class="mt-2">
+
+                        <span class="prv" [class.disable-arrow-sign]="fromSize === 1" (click)="prev()"><em
+                                class="typcn typcn-chevron-left"></em></span>
+                        <span class="prv" [class.disable-arrow-sign]="count === toalLength" (click)="next()"><em
+                                class="typcn typcn-chevron-right"></em></span>
+                    </div>
+                    <div class="mt-2">
+                        <select class="form-select form-select-sm" (change)="filter($event)">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                    <div class="mt-2">
+                        <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="exportAsExcelFile()">{{
+                          'smartagent.portenquiry.listpage.exporttoExcel' | translate }}</a>
+                      </div>
+                      <div class="mt-2">
+                        <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="openPDF()">{{
+                          'common.print' | translate }} {{
+                            'common.list' | translate }}</a>
+                      </div>
+                    <div class="mt-2">
+                        <a class="new-action">
+                            <button class="addnew" (click)="open(addemployee)">{{ 'masters.employee.add_new_employee' |
+                                translate
+                                }}</button>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table aria-describedby="mytable" class="">
+                        <thead>
+                            <tr class="field-name">
+                                <th scope="col" class="width20 text-center">Action</th>
+                                <th scope="col" class="width20">{{ 'masters.employee.empName' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col" class="width15">{{ 'masters.employee.designation' | translate }} </th>
+                                <th scope="col" class="width15">{{ 'masters.employee.deptName' | translate }} </th>
+                                <th scope="col" class="width15">{{ 'masters.employee.branch' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col" class="width20">{{ 'masters.employee.companyName' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col" class="width10">{{ 'masters.employee.lob' | translate }}</th>
+                                <th scope="col"></th>
+                            </tr>
+                            <tr>
+                                <th scope="col"><input type="text" class="form-control" id=""
+                                   ></th>
+                                <th scope="col"><input type="text" class="form-control" id=""
+                                        [(ngModel)]="empNameSearch" (keydown.enter)="search()"></th>
+                                <th scope="col"><input type="text" class="form-control" id=""
+                                        [(ngModel)]="designationSearch" (keydown.enter)="search()"></th>
+                                <th scope="col"><input type="text" class="form-control" id=""
+                                        [(ngModel)]="deptNameSearch" (keydown.enter)="search()">
+                                </th>
+                                <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="branchSearch"
+                                        (keydown.enter)="search()">
+                                </th>
+                                <th scope="col"><input type="text" class="form-control" id=""
+                                        [(ngModel)]="companyNameSearch" (keydown.enter)="search()">
+                                </th>
+                                <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="lobSearch"
+                                        (keydown.enter)="search()">
+                                </th>
+
+                                <th scope="col" class="wrap-table-btn">
+                                    <button type="button" class="bi bi-search btn btn-outline-primary btn-sm rounded-pill" (click)="search()">
+                                        
+                                    </button>
+                                    <a (click)="clear()" class="bi bi-arrow-clockwise btn btn-outline-primary btn-sm rounded-pill"></a>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let employee of employeeData; let i = index ">
+                                <td class="action-field">
+                                    <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}"
+                                        class="mtop boot-icon"><a (click)="open(addemployee,employee)"><em
+                                                class="bi bi-pencil color-pencil-red"></em></a>
+                                    </span>
+                                    <span nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}"><a
+                                        (click)="open(addemployee,employee,'show')"><em
+                                            class="bi bi-eye globally-change-icon-color"></em></a></span>
+                                  
+                                    <span class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" role="switch"
+                                            id="flexSwitchCheckChecked" [checked]="employee?.status"
+                                            (change)="employeeStatusChange($event.target.checked,employee)">
+                                        <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                                    </span>
+                                </td>
+                                <td>{{employee?.emp_name}}</td>
+                                <td>{{employee?.designation}}</td>
+                                <td>{{employee?.dept_name}}</td>
+                                <td>{{employee?.branch}}</td>
+                                <td>{{employee?.company_name}}</td>
+                                <td>{{employee?.lob}}</td>
+                                
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="no-data-availble" *ngIf="employeeData.length === 0">
+                    {{'common.no_data' | translate}}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<ng-template #addemployee let-modal>
+    <div class="modal-content nz-allSelect">
+        <div class="modal-header">
+            <h4 class="modal-title" *ngIf="idToUpdate === ''">{{
+                'masters.employee.add_new_employee' | translate }}</h4>
+            <h4 class="modal-title" *ngIf="idToUpdate !== ''">{{
+                'masters.employee.update_new_employee' | translate }}</h4>
+            <button type="button" class="btn-close shadow-none" (click)="onSave()" aria-label="Close">
+            </button>
+        </div>
+        <div class="modal-body">
+            <form class="row g-3 mt-1" [formGroup]="employeeForm">
+                <div class="col-md-6">
+                    <label for="empName" class="form-label">{{ 'masters.employee.empName' | translate }} <span
+                            class="text-danger">*</span></label>
+                    <input type="text" class="form-control shadow-none" id="empName" formControlName="empName"
+                        [ngClass]="{'is-invalid': submitted && employeeForm.controls['empName'].errors}">
+                    <div *ngIf="submitted && employeeForm.controls['empName'].errors?.required"
+                        class="invalid-feedback">
+                        {{'masters.employee.empName_required' | translate }}
+                    </div>
+                </div>
+                <div class="col-md-6 nz-select">
+                    <label for="deptName" class="form-label">{{ 'masters.employee.deptName' | translate }} <span
+                            class="text-danger">*</span></label> 
+
+                    <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear formControlName="deptName"  
+                    [ngClass]="{'is-invalid': submitted && f.deptName.errors}">
+          
+                    <nz-option *ngFor="let deptName of deptData" [nzLabel]="deptName?.deptName"
+                      [nzValue]="deptName?.deptName"></nz-option> 
+                  </nz-select>
+
+
+                    <div *ngIf="submitted && employeeForm.controls['deptName'].errors?.required"
+                        class="invalid-feedback">
+                        {{'masters.employee.deptName_required' | translate }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="designation" class="form-label">{{ 'masters.employee.designation' | translate }} </label>
+                    <input type="text" class="form-control shadow-none" id="designation" formControlName="designation"
+                        [ngClass]="{'is-invalid': submitted && employeeForm.controls['designation'].errors}">
+                    
+                </div>
+                <div class="col-md-6">
+                    <label for="companyName" class="form-label">{{ 'masters.employee.companyName' | translate }}</label>
+                    <input type="text" class="form-control shadow-none" id="companyName" formControlName="companyName"
+                        [ngClass]="{'is-invalid': submitted && employeeForm.controls['companyName'].errors}">
+                  
+                </div>
+                <div class="col-md-6">
+                    <label for="branch" class="form-label">{{ 'masters.employee.branch' | translate }}</label>
+                    <input type="text" class="form-control shadow-none" id="branch" formControlName="branch"
+                        [ngClass]="{'is-invalid': submitted && employeeForm.controls['branch'].errors}">
+                   
+                </div>
+                <div class="col-md-6">
+                    <label for="lob" class="form-label">{{ 'masters.employee.lob' | translate }}</label>
+                    <input type="text" class="form-control shadow-none" id="lob" formControlName="lob"
+                        [ngClass]="{'is-invalid': submitted && employeeForm.controls['lob'].errors}">
+                   
+                </div>
+                <div class="col-md-6">
+                    <label for="remark" class="form-label">{{ 'masters.employee.remark' | translate }}</label>
+                    <input type="text" class="form-control shadow-none" id="remark" formControlName="remark"
+                        [ngClass]="{'is-invalid': submitted && employeeForm.controls['remark'].errors}">
+                  
+                </div>
+                <div class="col-md-6">
+                    <div class="taggle form-check form-switch">
+                        <input class="form-check-input" formControlName="status" type="checkbox"
+                            id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">&nbsp; &nbsp; {{ "common.status" |
+                            translate
+                            }}</label>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="col-md-12">
+                <button type="button" (click)="onSave()" class="btn btn-outline-primary float-end mt-3" type="submit">{{
+                    'common.cancel' | translate
+                    }}</button>
+                <button *ngIf="!this.idToUpdate" type="button" (click)="saveEmployee()"
+                    class="btn btn-outline-primary float-end mt-3" type="submit">{{ 'common.save' | translate
+                    }}</button>
+
+                <button *ngIf="this.idToUpdate && show !== 'show'" type="button" (click)="saveEmployee()"
+                    class="btn btn-outline-primary float-end mt-3" type="submit">{{ 'common.update' | translate
+                    }}</button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #deleteuser let-c="close" let-d="dismiss">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+        </div>
+        <div class="modal-body mt-4">
+            <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2">
+            </em>
+            <span class="text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+        </div>
+        <div class="modal-footer">
+            <div class="text-center">
+                <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+                    No
+                </button>
+                <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+                    Yes
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-template>

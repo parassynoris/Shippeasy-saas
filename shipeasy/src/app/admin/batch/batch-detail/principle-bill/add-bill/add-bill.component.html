@@ -1,0 +1,709 @@
+<div class="wrap-form-field table-with-gheading">
+    <form [formGroup]="editinvoiceForm" class="mb-5">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row g-4 align-items-center">
+
+                    <div class="col-md-3" *ngIf="!this.isAddMode">
+                        <label class="form-label">{{'stolt.finance.new_invoice.invoice_no' | translate}}</label>
+                        <input disabled formControlName="invoice_no" class="form-control custom-input" type="text">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">{{'stolt.finance.new_invoice.invoice_type' | translate}} <span
+                                class="text-danger">*</span></label>
+
+
+                        <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="invoice_type"
+                            [ngClass]="{'is-invalid': submitted && f.invoice_type.errors}"
+                            (ngModelChange)="invoiceType(false)">
+                            <nz-option *ngFor="let data of  sort(invoiceTypeList ,'name')" [nzLabel]="data.name"
+                                [nzValue]="data.value"></nz-option>
+                        </nz-select>
+                        <div *ngIf="submitted && f.invoice_type.errors" class="invalid-feedback">
+                            <div *ngIf="f.invoice_type.errors.required">
+                                {{'stolt.finance.new_invoice.invoicetype_required' |
+                                translate}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">{{ 'stolt.enquiry.new.shipper' | translate }} </label>
+                        <nz-select nzDisabled="true" class="form-select" nzShowSearch nzAllowClear
+                            formControlName="shipper" [ngClass]="{'is-invalid': submitted && f.shipper.errors}">
+                            <nz-option *ngFor="let shipper of  sort(shipperList ,'name')" [nzLabel]="shipper?.name"
+                                [nzValue]="shipper?.partymasterId"></nz-option>
+                            <nz-option *ngIf="showDefault" nzLabel="SHIPEASY" nzValue="SHIPEASY"></nz-option>
+                        </nz-select>
+                        <div *ngIf="submitted && f.shipper.errors" class="invalid-feedback">
+                            <div *ngIf="f.shipper.errors.required">{{ 'stolt.enquiry.new.shipper' | translate }} is
+                                required
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label"> {{'stolt.finance.new_invoice.bill_to' | translate}} <span
+                                class="text-danger">*</span></label>
+                        <input disabled class="form-control  custom-input" formControlName="bill_to" type="text">
+
+                        <div *ngIf="submitted && f.bill_to.errors" class="invalid-feedback">
+                            <div *ngIf="f.bill_to.errors.required"> Bill From is required
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3" *ngIf="false">
+                        <label class="form-label"> {{'stolt.finance.new_invoice.bill_to' | translate}} <span
+                                class="text-danger">*</span></label>
+                        <nz-select (ngModelChange)="setGSTValue()" style="width: 95%;" class="form-select" nzShowSearch
+                            nzAllowClear formControlName="bill_to"
+                            [ngClass]="{'is-invalid': submitted && f.bill_to.errors}">
+                            <nz-option *ngFor="let data of  sort(partyMasterList ,'name')" [nzLabel]="data.name"
+                                [nzValue]="data.tax_number"></nz-option>
+                        </nz-select>
+                        <button #insideVendor class="findButton" (click)="showTem = !showTem">...</button>
+                        <div #insideVendor1>
+                            <div class=" select-table" *ngIf="showTem">
+                                <div class="text-end">
+                                    <button type="button" class="btn-close shadow-none p-2" aria-label="Close"
+                                        (click)="showTem = false"></button>
+                                </div>
+                                <div class="mb-2">
+                                    <input type="text" class="form-control custom-input" [(ngModel)]="searchText"
+                                        [ngModelOptions]="{standalone: true}" placeholder="Search here..">
+                                </div>
+                                <div class="overLay">
+                                    <table aria-describedby="mytable" class="gfg">
+                                        <thead>
+                                            <tr class="field-name">
+                                                <th scope="col">Name</th>
+                                                <th scope="col">Branch Name</th>
+                                                <th scope="col">Address</th>
+                                                <th scope="col">TAX No</th>
+                                                <th scope="col">City</th>
+                                                <th scope="col">Pincode</th>
+                                                <th scope="col">Place of Supply</th>
+                                                <th scope="col">Is SEZ</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of partyMasterList | searchfilter : searchText"
+                                                (click)="setVendor(item?.tax_number);showTem = !showTem">
+                                                <td>{{item.name}}</td>
+                                                <td>{{item.branch_name}}</td>
+                                                <td>{{item?.branch_address}}</td>
+                                                <td>{{item.tax_number}}</td>
+                                                <td>{{item.branch_city}}</td>
+                                                <td>{{item.pinCode}}</td>
+                                                <td>{{item.placeofSupply}}</td>
+                                                <td>{{item.isSez === 'true' ? 'Y' : 'N'}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="no-data-availble" *ngIf="partyMasterList?.length === 0">
+                                    {{'common.no_data' | translate}}
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="submitted && f.bill_to.errors" class="invalid-feedback">
+                            <div *ngIf="f.bill_to.errors.required"> Bill To is required
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-3">
+                        <label class="form-label">BL <span class="text-danger">*</span></label>
+                        <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="bl"
+                            [ngClass]="{'is-invalid': submitted && f.bl.errors}">
+                            <nz-option *ngFor="let data of blData" [nzLabel]="data.blNumber"
+                                [nzValue]="data.blId"></nz-option>
+                        </nz-select>
+                        <div *ngIf="submitted && f.bl.errors" class="invalid-feedback">
+                            <div *ngIf="f.bl.errors.required"> BL is required
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-3" *ngIf="!isExport">
+                        <label class="form-label">Consignee </label>
+                        <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="consignee"
+                            [ngClass]="{'is-invalid': submitted && f.consignee.errors}">
+                            <nz-option *ngFor="let consignee of  sort(consigneeList ,'name')"
+                                [nzLabel]="consignee?.name" [nzValue]="consignee?.partymasterId"></nz-option>
+
+                        </nz-select>
+                        <div *ngIf="submitted && f.consignee.errors" class="invalid-feedback">
+                            <div *ngIf="f.consignee.errors.required">{{ 'stolt.enquiry.new.shipper' | translate }} is
+                                required
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3" *ngIf="false">
+                        <label class="form-label">Tax Applied</label>
+                        <select formControlName="tax_applied" class="form-select custom-input">
+                            <option selected>Yes</option>
+                            <option>No</option>
+                        </select>
+                    </div>
+                    <!-- <ng-container *ngIf="invoiceTypeTab === 'Ground Rent Invoice'">
+                        <div class="col-md-3">
+                            <label class="form-label">Place of Supply</label>
+                           
+                            <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="placeOfSupply">
+                                <nz-option *ngFor="let place of supplyListData" [nzLabel]="place?.locationName"
+                                    [nzValue]="place?.locationId"></nz-option>
+                            </nz-select>
+                        </div>
+                    </ng-container> -->
+
+
+
+                    <div class="col-md-3">
+                        <label class="form-label"> {{'stolt.finance.new_invoice.bill_from' | translate}} <span
+                                class="text-danger">*</span></label>
+                        <!-- <input class="form-control  custom-input" formControlName="bill_from" type="text"> -->
+
+                        <nz-select nzDisabled="true" nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear
+                            formControlName="bill_from" [ngClass]="{'is-invalid': submitted && f.bill_from.errors}">
+
+                            <nz-option *ngFor="let branch of branchList" [nzLabel]="branch?.branchName"
+                                [nzValue]="branch?.branchId"></nz-option>
+                        </nz-select>
+                        <div *ngIf="submitted && f.bill_from.errors" class="invalid-feedback">
+                            <div *ngIf="f.bill_from.errors.required"> Bill From is required
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3  ">
+                        <label class="form-label">Bank Details<span class="text-danger">*</span></label>
+
+                        <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="bank"
+                            [ngClass]="{'is-invalid': submitted && f.bank.errors}">
+                            <nz-option *ngFor="let data of  sort(bankList ,'bankName')" [nzLabel]="data.bankName"
+                                [nzValue]="data.bankId"></nz-option>
+                        </nz-select>
+                        <div *ngIf="submitted && f.bank.errors" class="invalid-feedback">
+                            <div *ngIf="f.bank.errors.required"> Bank is required
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-3" *ngIf="false">
+                        <label class="form-label"> {{'stolt.finance.new_invoice.gst_number' | translate}} </label>
+                        <select formControlName="gst_number" class="form-select custom-input">
+                            <option selected>customer</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="mb-0 p-0 form-label">{{'stolt.finance.new_invoice.invoice_date' | translate}} <span
+                          class="text-danger">*</span></label>
+                        <mat-form-field appearance="outline" class="custom-date-picker">
+                           <div class="d-flex align-items-center  w-100">
+                            <input matInput [matDatepicker]="pickerEtaz" formControlName="invoice_date" class="h-0" [min]="todayDate"/>
+                          <mat-datepicker-toggle matSuffix [for]="pickerEtaz"></mat-datepicker-toggle>
+                           </div>
+                            <mat-datepicker #pickerEtaz></mat-datepicker>
+                        </mat-form-field>
+                        <mat-error>
+                          <div class="set-error-msg"  *ngIf="submitted && f?.invoice_date?.errors?.required">
+                            {{'stolt.finance.new_invoice.invoicetype_required' |
+                            translate}}</div>
+                      </mat-error>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label"> {{'stolt.finance.new_invoice.payments_terms' |
+                            translate}}(Days)</label>
+                        <input type="number" max="9999" formControlName="payment_terms"
+                            class="form-control custom-input"
+                            [ngClass]="{'is-invalid': submitted && f.payment_terms.errors}"
+                            (keyup)="paymentValue($event)">
+
+                        <div *ngIf="submitted && f.payment_terms.errors" class="invalid-feedback">
+                            <div *ngIf="f.payment_terms.errors.required"> Payment terms is required</div>
+                            <div *ngIf="f.payment_terms.errors.max">Maximun 4 digit</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="mb-0 p-0 form-label">Due Date </label>
+                        <mat-form-field appearance="outline" class="custom-date-picker">
+                           <div class="d-flex align-items-center  w-100">
+                            <input matInput [matDatepicker]="pickerEta1" formControlName="billdue_date" class="h-0" [min]="todayDate"/>
+                          <mat-datepicker-toggle matSuffix [for]="pickerEta1"></mat-datepicker-toggle>
+                           </div>
+                            <mat-datepicker #pickerEta1></mat-datepicker>
+                        </mat-form-field>
+                        <mat-error>
+                          <div class="set-error-msg"  *ngIf="submitted && f?.billdue_date?.errors?.required">Due Date is required</div>
+                      </mat-error>
+                    </div>
+                    <div class="col-md-3" *ngIf="false">
+                        <label class="form-label"> {{'stolt.finance.new_invoice.Tax_Applicability' |
+                            translate}}</label>
+                        <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="taxApplicability"
+                            [ngClass]="{'is-invalid': submitted && f.taxApplicability.errors}">
+                            <nz-option *ngFor="let data of  taxApplicabilityList" [nzLabel]="data?.typeName"
+                                [nzValue]="data?.typeName"></nz-option>
+                        </nz-select>
+
+                        <div *ngIf="submitted && f.taxApplicability.errors" class="invalid-feedback">
+                            <div *ngIf="f.taxApplicability.errors.required">
+                                {{'stolt.finance.new_invoice.Tax_Applicability' |
+                                translate}} {{'common.isRequired' | translate}}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3" *ngIf="false">
+                        <label class="form-label"> {{'stolt.finance.new_invoice.GST_Invoice_Type' |
+                            translate}}</label>
+                        <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="gst_invoice_type"
+                            [ngClass]="{'is-invalid': submitted && f.gst_invoice_type.errors}">
+                            <nz-option *ngFor="let data of  gstInvoiceTypeList" [nzLabel]="data?.typeName"
+                                [nzValue]="data?.typeName"></nz-option>
+                        </nz-select>
+
+                        <div *ngIf="submitted && f.gst_invoice_type.errors" class="invalid-feedback">
+                            <div *ngIf="f.gst_invoice_type.errors.required">
+                                {{'stolt.finance.new_invoice.GST_Invoice_Type' |
+                                translate}} {{'common.isRequired' | translate}}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3" *ngIf="false">
+                        <label class="form-label"> {{'stolt.finance.new_invoice.GSTR_Table' |
+                            translate}}</label>
+                        <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="gstr"
+                            [ngClass]="{'is-invalid': submitted && f.gstr.errors}">
+                            <nz-option *ngFor="let data of  gstrList" [nzLabel]="data?.typeName"
+                                [nzValue]="data?.systemtypeId"></nz-option>
+                        </nz-select>
+
+                        <div *ngIf="submitted && f.gstr.errors" class="invalid-feedback">
+                            <div *ngIf="f.gstr.errors.required"> {{'stolt.finance.new_invoice.GSTR_Table' |
+                                translate}} {{'common.isRequired' | translate}}</div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-3">
+                        <label class="form-label">Invoice Amount <span class="text-danger">*</span></label>
+                        <input type="number" disabled formControlName="invoice_amount" class="form-control custom-input"
+                            placeholder="" value="" [ngClass]="{'is-invalid': submitted && f.invoice_amount.errors}">
+                        <div *ngIf="submitted && f.invoice_amount.errors" class="invalid-feedback">
+                            <div *ngIf="f.invoice_amount.errors.required">Amount is required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label"> Remarks <span class="text-danger">*</span></label>
+                        <input formControlName="remark" class="form-control custom-input" type="text"
+                            [ngClass]="{'is-invalid': submitted && f.remark.errors}">
+                        <div *ngIf="submitted && f.remark.errors" class="invalid-feedback">
+                            <div *ngIf="f.remark.errors.required">Remarks is required
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 d-flex align-items-center">
+                        <label class="form-label px-2">Is Back Date</label>
+                        <input type="checkbox" formControlName="isBackDate" />
+                    </div>
+                    <div class="col-md-3" *ngIf="f.isBackDate.value">
+                        <label class="mb-0 p-0 form-label">Back Date</label>
+                        <mat-form-field appearance="outline" class="custom-date-picker">
+                           <div class="d-flex align-items-center  w-100">
+                            <input matInput [matDatepicker]="pickerEta2" formControlName="backDate" class="h-0" [disabled]="isLastDayOfMonth"/>
+                          <mat-datepicker-toggle matSuffix [for]="pickerEta2"></mat-datepicker-toggle>
+                           </div>
+                            <mat-datepicker #pickerEta2></mat-datepicker>
+                        </mat-form-field>
+                        <mat-error>
+                          <div class="set-error-msg" *ngIf="submitted && f?.backDate?.errors?.required">Back Date is required</div>
+                      </mat-error>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="veselother my-3 " *ngIf="false">
+            <h2>IRN Details </h2>
+        </div>
+        <div class="row" *ngIf="false">
+            <div class="col-md-6">
+                <p><span class="data-header">IRN<span class="invoice-data">:</span>{{irisResponse?.irn}}</span><span
+                        class="invoice-data text-secondary"></span>
+                </p>
+            </div>
+        </div>
+
+        <div class="wrap-table-area">
+            <div class="row">
+                <div class="col-md-12 my-2">
+                    <div
+                        class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2 ">
+                        <div class="mt-2">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mb-5">
+                    <div class="table-design">
+                        <table aria-describedby="mytable" class="gfg" *ngIf="false">
+                            <thead>
+                                <tr class="field-name">
+                                    <th scope="col"><input type="checkbox" (change)="onCheckAll($event)" id="all"></th>
+
+                                    <th scope="col">{{ 'stolt.finance.debit.new_debit_note.charge_name' | translate }}
+
+                                    </th>
+                                    <th scope="col">{{
+                                        'stolt.finance.debit.new_debit_note.container_no' | translate }}
+                                    </th>
+                                    <th scope="col">Ex. Rate
+
+                                    </th>
+                                    <th scope="col">Quantity
+
+                                    </th>
+                                    <th scope="col">Currency
+
+                                    </th>
+                                    <th scope="col">Rate
+
+                                    </th>
+                                    <th scope="col">HSN Code
+
+                                    </th>
+                                    <th scope="col">Amount in INR
+
+                                    </th>
+                                    <th scope="col">Taxable Amount in INR
+
+                                    </th>
+                                    <th scope="col">EXEMP Flag
+
+                                    </th>
+                                    <th scope="col">GST Type
+
+                                    </th>
+                                    <th scope="col">Tax %
+
+                                    </th>
+                                    <th *ngIf="!isGSTinState" scope="col">IGST
+
+                                    </th>
+                                    <th *ngIf="isGSTinState" scope="col">SGST
+
+                                    </th>
+                                    <th *ngIf="isGSTinState" scope="col">CGST
+
+                                    </th>
+
+                                    <th class="text-end" scope="col">{{ 'stolt.finance.debit.new_debit_note.tax_amount'
+                                        | translate }}
+                                    </th>
+
+                                    <th class="text-end" scope="col">Total Amount
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let invoice of costItemList; let i = index">
+                                    <td><input class="" type="checkbox" [name]='i+1' [(ngModel)]="invoice.isSelected"
+                                            [ngModelOptions]="{standalone: true}" [checked]="invoice.isSelected"
+                                            (click)="checkCharge($event,invoice,i)" /></td>
+
+                                    <td>{{invoice.costItemName}}</td>
+                                    <td class="table-select">
+                                        <nz-select class="form-select w-100" nzMode="multiple"
+                                            [ngModelOptions]="{standalone: true}" [(ngModel)]="invoice.containerNumber"
+                                            (ngModelChange)="changeContainer(invoice)">
+                                            <nz-option *ngFor="let option of containerList" nzLabel="{{option}}"
+                                                [nzValue]="option"></nz-option>
+                                        </nz-select>
+                                    </td>
+                                    <td> <input (keyup)="exChangeClick(invoice,i)" type="text" id="ex{{i}}"
+                                            class="custom-input" [value]="defaultExRate" />
+                                    </td>
+                                    <td>
+                                        <input [ngModelOptions]="{standalone: true}" [(ngModel)]="invoice.quantity"
+                                            class="custom-input w-100" disabled />
+                                    </td>
+                                    <td>{{invoice.currency}}</td>
+                                    <td class="text-end">{{invoice.rate | number : '1.2-2'}}</td>
+                                    <td>{{invoice.hsnCode}}</td>
+                                    <td class="text-end">{{calINR('inr',invoice,i) | number : '1.2-2'}}</td>
+                                    <td class="text-end">{{calINR('inr',invoice,i) | number : '1.2-2'}}</td>
+                                    <td class="text-center"> <input type="checkbox" id="exemp{{i}}"
+                                            [(ngModel)]="invoice.exemp" [ngModelOptions]="{standalone: true}"
+                                            (click)="calINR('',invoice,i)" (change)="calculateTotal()"></td>
+                                    <td class="text-center">{{invoice?.gstType}}</td>
+                                    <td class="text-center">{{invoice.exemp ? '0' :
+                                        invoice.tax[0]?.taxRate}} </td>
+                                    <td *ngIf="!isGSTinState" class="text-center">{{invoice.exemp ? '0' :
+                                        invoice?.igst | number : '1.2-2'}}</td>
+                                    <td *ngIf="isGSTinState" class="text-center">{{invoice.exemp ? '0' :
+                                        invoice?.cgst | number : '1.2-2'}}</td>
+                                    <td *ngIf="isGSTinState" class="text-center">{{invoice.exemp ? '0' :
+                                        invoice?.sgst | number : '1.2-2'}}</td>
+
+                                    <td class="text-end">{{calINR('totTax',invoice,i)| number : '1.2-2'}}</td>
+
+                                    <td class="text-end">{{calINR('totValue',invoice,i) | number : '1.2-2'}}</td>
+                                </tr>
+                                <tr class="footer-ui" *ngIf="costItemList.length > 0">
+                                    <th *ngIf="!isGSTinState" scope="col" colspan="1" class="footer-heading"></th>
+                                    <th *ngIf="isGSTinState" scope="col" colspan="2" class="footer-heading"></th>
+                                    <th scope="col" colspan="13" class="footer-heading">{{
+                                        'stolt.finance.debit.new_debit_note.total_payment' | translate }}</th>
+
+                                    <td colspan="1" class="text-end">{{ taxAmount | number : '1.2-2'}}</td>
+                                    <td colspan="1" class="text-end">{{billAmount | number : '1.2-2'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table aria-describedby="mytable" class="gfg">
+                            <thead>
+
+                                <tr class="field-name">
+                                    <th scope="col" class="text-center"># <input type="checkbox"
+                                            (change)="onCheckAll($event)" id="all"></th>
+                                    <th scope="col" class="text-center">Charge Item </th>
+                                    <th scope="col" class="text-center">Basis</th>
+                                    <th scope="col" class="text-center">Qty</th>
+                                    <th scope="col" class="text-center">GST</th>
+
+                                    <th scope="col" class="text-center">Cur.</th>
+                                    <th scope="col" class="text-center">Sell Rate</th>
+                                    <th scope="col" class="text-center">Sell Total</th>
+                                    <th scope="col" class="text-center">Ex. Rate</th>
+
+                                    <th scope="col" class="text-center">Taxable (INR)</th>
+
+                                    <ng-container *ngIf="gstType == 'cgst'">
+                                        <th scope="col" class="text-center">CGST</th>
+                                        <th scope="col" class="text-center">SGST</th>
+                                    </ng-container>
+                                    <ng-container *ngIf="gstType == 'igst'">
+                                        <th scope="col" class="text-center">IGST</th>
+                                    </ng-container>
+                                    <ng-container *ngIf="gstType == 'tax'">
+                                        <th scope="col" class="text-center">TAX</th>
+                                    </ng-container>
+                                    <th scope="col" class="text-center">Total Sell (INR)</th>
+                                    <!-- <th scope="col" class="text-center">Terms</th>
+                                    <th scope="col" class="text-center">Remarks</th>
+
+                                    <th scope="col" class="text-center">Margin</th>
+                                    <th scope="col" class="text-center">Action</th> -->
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="collapse-ui" *ngFor="let row of costItemList; let i=index">
+                                    <td>{{i+1}} <input class="" type="checkbox" [name]='i+1'
+                                            [(ngModel)]="row.isSelected" [ngModelOptions]="{standalone: true}"
+                                            [checked]="row.isSelected" (click)="checkCharge($event,row,i)" /></td>
+                                    <td>
+                                        {{row.costItemName}}
+                                    </td>
+                                    <td> {{row.basic}}
+                                    </td>
+                                    <td class="text-center"> {{row.quantity|| 1}}
+                                    </td>
+
+                                    <td>
+                                        {{row.gst || 0}}% ({{row.gstType}})
+                                    </td>
+
+                                    <td>
+                                        {{row.selEstimates.currency}}
+                                    </td>
+                                    <td class="text-end"> {{row.selEstimates.rate || 0 | number : '1.2-2'}}
+                                    </td>
+                                    <td class="text-end"> {{row.selEstimates.amount|| 0 | number : '1.2-2'}} </td>
+                                    <td class="text-center"> {{row.selEstimates.exChangeRate|| 0}}
+                                    </td>
+
+                                    <td class="text-end"> {{row.selEstimates.taxableAmount|| 0 | number : '1.2-2'}}
+                                    </td>
+
+                                    <ng-container *ngIf="gstType == 'cgst'">
+                                        <td class="text-end"> {{row.selEstimates.cgst|| 0 | number : '1.2-2'}} </td>
+                                        <td class="text-end">{{row.selEstimates.sgst|| 0 | number : '1.2-2'}} </td>
+                                    </ng-container>
+                                    <ng-container *ngIf="gstType == 'igst' || gstType == 'tax'">
+                                        <td class="text-end"> {{row.selEstimates.igst|| 0 | number : '1.2-2'}} </td>
+                                    </ng-container>
+
+                                    <td class="text-end"> {{row.selEstimates.totalAmount|| 0 | number : '1.2-2'}} </td>
+                                    <!-- <td> {{row.selEstimates.terms}}
+                                    </td>
+                                    <td>
+                                        {{row.remarks}}
+                                    </td>
+
+                                    <td class="text-end">  {{row.tenantMargin|| 0 | number : '1.2-2'}}</td>
+
+                                    <td class="action-field"> 
+                                    </td> -->
+                                </tr>
+
+                                <tr *ngIf="costItemList.length > 0">
+                                    <td colspan="5">Total</td>
+                                    <td *ngIf="gstType == 'cgst'" colspan="7"></td>
+                                    <td *ngIf="gstType == 'igst' || gstType == 'tax' " colspan="6"></td>
+                                    <td class="text-end">{{billAmount | number : '1.2-2'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="no-data-availble" *ngIf="costItemList.length === 0">
+                            {{'common.no_data' | translate}}
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row " *ngIf="false">
+
+            <div class="col-md-6  g-4" *ngIf="false">
+                <div class="col-md-6 px-0">
+                    <label class="form-label">Bank Details </label>
+
+                    <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="bank"
+                        [ngClass]="{'is-invalid': submitted && f.bank.errors}" #t [(ngModel)]="bankModel"
+                        (ngModelChange)="bankDetails(t.value)">
+                        <nz-option *ngFor="let data of  sort(bankList ,'bankName')" [nzLabel]="data.bankName"
+                            [nzValue]="data.bankId"></nz-option>
+                    </nz-select>
+
+                </div>
+            </div>
+            <div class="col-md-6 g-4 text-end" *ngIf="false">
+                <div class="wrap-percentage-area">
+                    <label class="form-label"> {{'stolt.finance.addnew_invoice.advance_percentage' | translate}}</label>
+                    <span class="per">
+                        <input type="number" maxlength="3"
+                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                            #perValue [ngModelOptions]="{standalone: true}" [(ngModel)]="advancePercent"
+                            (keyup)="calcuTotal($event.target.value)" style="width: 8%" />
+                        <span id="percent-sign">%</span>
+                    </span>
+                    <span class="total">
+                        <input type="text" class="align-center" [value]="AdvanceValue" style="width: 30%" />
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-12 wrap-section" *ngIf="bankDetail?.length !== 0">
+                <div class="wrap-bank-details">
+                    <span class="wrap-label">{{'stolt.finance.addnew_invoice.bank_name' | translate}}</span>
+                    <span class="wrap-value">{{bankDetail?.bankName}}</span>
+                </div>
+                <div class="wrap-bank-details">
+                    <span class="wrap-label">{{'stolt.finance.addnew_invoice.account_number' | translate}}</span>
+                    <span class="wrap-value">{{bankDetail?.accountNo}}</span>
+                </div>
+
+                <div class="wrap-bank-details">
+                    <span class="wrap-label">{{'stolt.finance.addnew_invoice.swift_code' | translate}}</span>
+                    <span class="wrap-value"> {{bankDetail?.swiftCode}}</span>
+                </div>
+                <div class="wrap-bank-details">
+                    <span class="wrap-label">{{'stolt.finance.addnew_invoice.routing_code' | translate}}</span>
+                    <span class="wrap-value">{{bankDetail?.routingNo}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 mb-5 pt-4" *ngIf="false">
+                <label class="form-label"> Remarks</label>
+                <input formControlName="remark" class="form-control custom-input" type="text" value="">
+
+            </div>
+        </div>
+
+
+
+
+        <div class="btn-onscreen  my-3">
+            <div class="form-group wrap-form-action">
+                <button (click)="onCloseInvoice($event)" class="btn btn-outline-secondary btn-lg float-end"
+                    type="submit">
+                    Exit
+                </button>
+
+                <ng-container *ngIf="!viewEdit">
+                    <button *ngIf="invoiceIdToUpdate?.invoiceStatus !== 'Approved'" (click)="onSave($event,'Pending')"
+                        class="btn btn-outline-primary  float-end" type="submit">
+                        Proforma Invoice
+                    </button>
+                    <button *ngIf="invoiceIdToUpdate?.invoiceStatus === 'Pending'" [disabled]="this.isAddMode "
+                        (click)="onSave($event,'Approved')" class="btn btn-outline-primary  float-end">
+                        Final Invoice
+                    </button>
+                </ng-container>
+
+                <button *ngIf="false" class="btn btn-outline-primary  float-end" (click)="digitalSign()">
+                    Digital Signature
+                </button>
+
+                <button *ngIf="invoiceIdToUpdate?.invoiceStatus == 'Approved'"
+                    class="btn btn-outline-primary btn-lg float-end" (click)="printData()">
+                    {{ "common.print" | translate }}
+                </button>
+
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<ng-template #Deletetable let-c="close" let-d="dismiss">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+        </div>
+        <div class="modal-body mt-4 d-flex align-items-center">
+            <em class="bi bi-question-circle text-danger fs-2 text-center float-start me-2"> </em> <span
+                class=" text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+        </div>
+        <div class="modal-footer">
+            <div class="text-center">
+                <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+                    {{ "common.no" | translate }}
+                </button>
+                <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+                    {{ "common.yes" | translate }}
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #check let-c="close" let-d="dismiss">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+            </button>
+        </div>
+        <div class="modal-body mt-4 d-flex align-items-center">
+            <em class="bi bi-question-circle text-danger fs-2 text-center float-start me-2"> </em> <span
+                class=" text-dark fs-6"> {{ "error.you_sure" | translate }}</span>
+        </div>
+        <div class="modal-footer">
+            <div class="text-center">
+                <button type="button" class="btn btn-secondary  btn-sm me-3"
+                    (click)="c('no')">{{'common.no'|translate}}</button>
+                <button type="button" class="btn btn-danger  btn-sm"
+                    (click)="c('yes')">{{'common.yes'|translate}}</button>
+            </div>
+        </div>
+    </div>
+</ng-template>

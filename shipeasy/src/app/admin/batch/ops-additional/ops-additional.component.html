@@ -1,0 +1,140 @@
+<div class="table-with-gheading">
+  <div class="wrap-table-area">
+    <div class="row">
+      <div class="col-md-12">
+        <div class=" d-flex flex-column flex-sm-row gap-3">
+          <div class="col-md-4">
+
+          </div>
+          <div class="col-md-8 ">
+            <div class="wrap-form-field d-flex gap-3 wrap-pagination justify-content-end alignment
+                       ">
+              <div class="mt-2" *ngIf="!isAddNewSection">
+                <a class="new-action">{{ 'stolt.batch.charges.action.applyTemplate' | translate }}</a>
+              </div>
+              <div class="mt-2" *ngIf="isAddNewSection">
+                <a class="new-action">{{ 'stolt.batch.charges.action.autoLoadCharge' | translate }}</a>
+              </div>
+              <div class="mt-2">
+                <a class="new-action" (click)="onOpen('New')" data-bs-toggle="modal" data-bs-target="#chargeModal">{{
+                  'stolt.batch.charges.action.AddNewCharge' | translate }}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-responsive my-4">
+        <div class=" costtable">
+          <table aria-describedby="mytable">
+            <thead>
+              <tr>
+                <th scope="col" colspan="10" class="text-primary">ENQUIRY RATE</th>
+              </tr>
+              <tr>
+                <th scope="col">Shipper Name</th>
+                <th scope="col">Container Type</th>
+                <th scope="col">Container Size</th>
+                <th scope="col">POR</th>
+                <th scope="col">Load<br>Place</th>
+                <th scope="col">Entry<br>Port</th>
+                <th scope="col">T/S<br>Port</th>
+                <th scope="col">ON<br>CARRIAGE</th>
+                <th scope="col">EFFECTIVE<br>FROM</th>
+                <th scope="col">EFFECTIVE<br>TO</th>
+              </tr>
+
+            </thead>
+            <tbody>
+              <ng-template ngFor let-costiteam [ngForOf]="addcharges">
+                <tr>
+
+                  <td>{{costiteam.shipper_name}}</td>
+                  <td>{{costiteam.container_type}}</td>
+                  <td>{{costiteam.container_size}}</td>
+                  <td>{{costiteam.por}}</td>
+                  <td>{{costiteam.load_place}}</td>
+                  <td>{{costiteam.entry_port}}</td>
+                  <td>{{costiteam.ts_port}}</td>
+                  <td>{{costiteam.on_carriage}}</td>
+                  <td>{{costiteam.effective_from}}</td>
+                  <td>{{costiteam.effective_to}}</td>
+
+
+                </tr>
+
+              </ng-template>
+            </tbody>
+            <thead>
+              <tr>
+                <th scope="col" colspan="8" class="text-primary">SHIPEASY EXPORT FREIGHT</th>
+              </tr>
+              <tr>
+                <th scope="col">Shipping Line</th>
+                <th scope="col">Charge Name</th>
+                <th scope="col">Freight Term</th>
+                <th scope="col">Currency</th>
+                <th scope="col">Place Payable</th>
+                <th scope="col">TAX</th>
+                <th scope="col">SHIPEASY Amount</th>
+                <th scope="col">AGENT Amount</th>
+              </tr>
+
+            </thead>
+            <tbody>
+              <ng-template ngFor let-costiteam [ngForOf]="exportFreight">
+                <tr>
+                  <td>{{costiteam.shipping_line}}</td>
+                  <td>{{costiteam.charge_name}}</td>
+                  <td>{{costiteam.freight_term}}</td>
+                  <td>{{costiteam.currency}}</td>
+                  <td>{{costiteam.place_payable}}</td>
+                  <td>{{costiteam.tax}}</td>
+                  <td>{{costiteam.stc}}</td>
+                  <td>{{costiteam.jmb}}</td>
+                </tr>
+              </ng-template>
+            </tbody>
+            <thead>
+              <tr>
+                <th scope="col" colspan="8" class="text-primary">OPS CHARGES</th>
+              </tr>
+              <tr>
+                <th scope="col">Charges</th>
+                <th scope="col">Amount Code</th>
+                <th scope="col">Vendor Code</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Charge Term</th>
+                <th scope="col">Gst%</th>
+                <th scope="col">SHIPEASY Amount</th>
+                <th scope="col">AGENT Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-template ngFor let-costiteam [ngForOf]="opsCharges">
+                <tr>
+                  <td>{{costiteam.charges}}</td>
+                  <td>{{costiteam.amount_code}}</td>
+                  <td>{{costiteam.vendor_code}}</td>
+                  <td>{{costiteam.amount}}</td>
+                  <td>{{costiteam.charge_term}}</td>
+                  <td>{{costiteam.gst}}</td>
+                  <td>{{costiteam.stc_amount}}</td>
+                  <td>{{costiteam.jmb_amount}}</td>
+                </tr>
+              </ng-template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="btn-onscreen wrap-form-action" >
+        <button (click)="onClose()" class="btn1  float-end ">
+          {{ 'common.cancel' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="chargeModal" tabindex="-1" aria-labelledby="chargeModalLabel" aria-hidden="true">
+  <app-addchanges [isTypeForm]="isHoldType"></app-addchanges>
+</div>

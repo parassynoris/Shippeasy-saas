@@ -1,0 +1,29 @@
+<div class="progress-bar-container" *ngIf="percentage > 0 && percentage < 100">
+    <div class="progress-wrapper">
+      <div class="progress-bar-bg">
+        <div 
+          class="progress-bar-fill" 
+          [style.width.%]="percentage"
+          [style.background-color]="getStatusColor()"
+        >
+          <span class="progress-text" *ngIf="percentage > 10"></span>
+        </div>
+      </div>
+      <span class="progress-text-outside" *ngIf="percentage <= 10"></span>
+    </div>
+    
+    <!-- <div class="progress-details">
+      <div class="detail-item">
+        <span class="detail-label">Status:</span>
+        <span class="detail-value" [style.color]="getStatusColor()">{{ getStatusText() }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Progress:</span>
+        <span class="detail-value">{{ loadedCount }} / {{ totalCount }} records</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">API Calls:</span>
+        <span class="detail-value">{{ completedCalls }} / {{ totalCalls }} completed</span>
+      </div>
+    </div> -->
+  </div>

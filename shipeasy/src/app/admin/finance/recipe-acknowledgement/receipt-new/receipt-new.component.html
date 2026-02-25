@@ -1,0 +1,490 @@
+<div class="table-with-gheading pb-5">
+
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="wrap-form-field padding-space  modal-bottom-alignment-for-mobile-view">
+        <div class="row ">
+          <div class="col float-start">
+            <h1>{{ 'smartagent.job.list.reciept.addnewReciept' | translate }}</h1>
+          </div>
+          <div class="col"><button class="new-action btn btn-outline-primary float-end" (click)="backbtn()">{{ 'common.back' | translate }}</button>
+          </div>
+        </div>
+      <form [formGroup]="NewReciept" class="row">
+          <div class="row mb-5 mt-3">
+            <div class="col-md-12">
+              <div class="collection-type-grid collection-type-grid-bottom-alignment">
+                <div class="custom-form-control">
+                  <div class="label-radio-button-alignment">
+                    <label> {{
+                      "smartagent.job.list.reciept.collection_type" | translate
+                      }} </label>
+                    <div class="radio-button-alignemnt" aria-label="Basic radio toggle button group">
+                      <div class="radio-button-style">
+                        <input type="radio" name="collectionType" id="collectionType" [value]="true" formControlName="collectionType"
+                          (change)="collectionType()" />
+                        <label for="collectionType">Job No</label>
+                      </div>
+                     
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="receipt-input-grid">
+                <div class="custom-form-control" *ngIf="!collectionActive">
+                  <label class="form-label">Job Number</label>
+                  <select class="form-select custom-input" formControlName="jobNumber" (change)="getJobDetails()"
+                  [ngClass]="{'is-invalid': submitted && f.jobNumber.errors}">
+                  
+                    <option *ngFor="let data of batchNoList" [value]="data?._source?.batchNo">
+                      {{data?._source?.batchNo}}
+                    </option>
+                  </select>
+                  <div *ngIf="submitted && f.jobNumber.errors" class="invalid-feedback">
+                    <div *ngIf="f.jobNumber.errors.required">Job number is required
+                    </div>
+                  </div>
+                </div>
+                <div class="custom-form-control">
+                  <label class="form-label">
+                    {{
+                    "stolt.finance.new_payment.receipt_type" | translate
+                    }}</label>
+                  <select class="form-select custom-input" formControlName="receiptType"
+                  [ngClass]="{'is-invalid': submitted && f.receiptType.errors}">
+                    <option selected>Bank</option>
+                    <option>Cash</option>
+                  </select>
+                  <div *ngIf="submitted && f.receiptType.errors" class="invalid-feedback">
+                    <div *ngIf="f.receiptType.errors.required">{{
+                      "stolt.finance.new_payment.receipt_type" | translate
+                      }} is required
+                    </div>
+                  </div>
+                </div>
+                <div class="custom-form-control">
+                  <label class="form-label">
+                    {{
+                    "stolt.finance.new_payment.remittance_type" | translate
+                    }}<span class="text-danger">*</span></label>
+                  <select class="form-select custom-input" (change)="onChange($event)" formControlName="remittanceType"
+                  [ngClass]="{'is-invalid': submitted && f.remittanceType.errors}">
+                    <option selected>Local</option>
+                    <option>Foreign</option>
+                  </select>
+                  <div *ngIf="submitted && f.remittanceType.errors" class="invalid-feedback">
+                    <div *ngIf="f.remittanceType.errors.required">{{
+                      "stolt.finance.new_payment.remittance_type" | translate
+                      }} is required
+                    </div>
+                  </div>
+                </div>
+                <div class="custom-form-control">
+                  <label class="form-label">
+                    {{
+                    "stolt.finance.new_payment.voucher_date" | translate
+                    }}<span class="text-danger">*</span></label>
+                  <input class="form-control custom-input" type="Date" formControlName="voucherDate"
+                  [ngClass]="{'is-invalid': submitted && f.voucherDate.errors}" />
+                  <div *ngIf="submitted && f.voucherDate.errors" class="invalid-feedback">
+                    <div *ngIf="f.voucherDate.errors.required">{{
+                      "stolt.finance.new_payment.remittance_type" | translate
+                      }} is required
+                    </div>
+                  </div>
+                </div>
+                <div class="custom-form-control">
+                  <label class="form-label">
+                    {{ "stolt.finance.new_payment.receipt_entry_date" | translate }}
+                    <span class="small-text">(Receipt Passed By User)</span></label>
+                  <input  [ngClass]="{'is-invalid': submitted && f.receiptEntryDate.errors}"
+                   class="form-control custom-input" type="Date" formControlName="receiptEntryDate" disabled />
+                   <div *ngIf="submitted && f.receiptEntryDate.errors" class="invalid-feedback">
+                    <div *ngIf="f.receiptEntryDate.errors.required">{{
+                      "stolt.finance.new_payment.remittance_type" | translate
+                      }} is required
+                    </div>
+                  </div>
+                  </div>
+                <div class="custom-form-control">
+                  <label class="form-label">
+                    {{
+                    "stolt.finance.new_payment.remittance_date" | translate
+                    }}<span class="text-danger">*</span></label>
+                  <input  [ngClass]="{'is-invalid': submitted && f.remittanceDate.errors}"
+                   class="form-control custom-input" type="Date" [value]="" formControlName="remittanceDate" />
+                   <div *ngIf="submitted && f.remittanceDate.errors" class="invalid-feedback">
+                    <div *ngIf="f.remittanceDate.errors.required">{{
+                      "stolt.finance.new_payment.remittance_date" | translate
+                      }} is required
+                    </div>
+                  </div>
+                  </div>
+
+                <div class="custom-form-control">
+                  <label class="form-label">
+                    {{ "stolt.finance.new_payment.department" | translate }}</label>
+                  <select class="form-select custom-input" formControlName="department"
+                  [ngClass]="{'is-invalid': submitted && f.department.errors}">
+                    <option selected>All Ports</option>
+                    <option>Cruise</option>
+                    <option>SCI</option>
+                    <option>Navy</option>
+                  </select>
+                  <div *ngIf="submitted && f.department.errors" class="invalid-feedback">
+                    <div *ngIf="f.department.errors.required"> {{ "stolt.finance.new_payment.department" | translate }} is required
+                    </div>
+                  </div>
+                </div>
+                <div class="custom-form-control">
+                  <label class="form-label">Principal Name</label>
+                  <input  [ngClass]="{'is-invalid': submitted && f.PrincipalName.errors}" 
+                  class="form-control custom-input" aria-label="Search" nz-input type="text"
+                    (input)="onPincipalInput($event)" formControlName="PrincipalName" [nzAutocomplete]="Principal" />
+                  <nz-autocomplete [nzDataSource]="principalOptions" nzBackfill #Principal>
+                  </nz-autocomplete>
+                  <div *ngIf="submitted && f.PrincipalName.errors" class="invalid-feedback">
+                    <div *ngIf="f.PrincipalName.errors.required">Principal Name is required
+                    </div>
+                  </div>
+                </div>
+                <div class="custom-form-control">
+                  <label class="form-label">Party Name</label>
+                  <input  [ngClass]="{'is-invalid': submitted && f.remittanceParty.errors}"
+                   class="form-control custom-input" type="text" placeholder="" value=""
+                    formControlName="remittanceParty" />
+                    <div *ngIf="submitted && f.remittanceParty.errors" class="invalid-feedback">
+                      <div *ngIf="f.remittanceParty.errors.required">Party Name is required
+                      </div>
+                    </div>
+                </div>
+                <div class="custom-form-control" *ngIf="optionValue === 'Foreign'">
+                  <label class="form-label">
+                    {{ "stolt.finance.new_payment.country" | translate }}</label>
+                  <input  [ngClass]="{'is-invalid': submitted && f.country.errors}"
+                   type="text" aria-label="Search" required name="principal" class="form-control  custom-input"
+                    nz-input (input)="onCountryInput($event)" [nzAutocomplete]="Party" formControlName="country">
+                  <nz-autocomplete [nzDataSource]="countryOptions" nzBackfill #Party>
+                  </nz-autocomplete>
+                  <div *ngIf="submitted && f.country.errors" class="invalid-feedback">
+                    <div *ngIf="f.country.errors.required">{{ "stolt.finance.new_payment.country" | translate }} is required
+                    </div>
+                  </div>
+                </div>
+                <div class="custom-form-control">
+                  <label class="form-label">
+                    {{ "stolt.finance.new_payment.remarks" | translate }}</label>
+                  <input  [ngClass]="{'is-invalid': submitted && f.remarks.errors}"
+                   class="form-control custom-input" type="textarea" placeholder="Remarks" value=""
+                    formControlName="remarks" />
+                    <div *ngIf="submitted && f.remarks.errors" class="invalid-feedback">
+                      <div *ngIf="f.remarks.errors.required">   {{ "stolt.finance.new_payment.remarks" | translate }} is required
+                      </div>
+                    </div>
+                </div>
+                <div class="custom-form-control">
+                  <label class="form-label">
+                    {{
+                    "stolt.finance.new_payment.deposit_bank" | translate
+                    }}</label>
+                  <select class="form-select custom-input" formControlName="depositBank"
+                  [ngClass]="{'is-invalid': submitted && f.depositBank.errors}">
+                    <option selected>Local</option>
+                    <option>Foreign</option>
+                  </select>
+                  <div *ngIf="submitted && f.depositBank.errors" class="invalid-feedback">
+                    <div *ngIf="f.depositBank.errors.required">{{
+                      "stolt.finance.new_payment.deposit_bank" | translate
+                      }} is required
+                    </div>
+                  </div>
+                </div>
+                <div class="custom-form-control">
+                  <label class="form-label">
+                    {{
+                    "stolt.finance.new_payment.remitting_bank" | translate
+                    }}</label>
+                  <input class="form-control custom-input" type="text" placeholder="" value=""
+                    formControlName="remittingBank" 
+                    [ngClass]="{'is-invalid': submitted && f.remittingBank.errors}" />
+                    <div *ngIf="submitted && f.remittingBank.errors" class="invalid-feedback">
+                      <div *ngIf="f.remittingBank.errors.required"> {{
+                        "stolt.finance.new_payment.remitting_bank" | translate
+                        }}is required
+                      </div>
+                    </div>
+                </div>
+                <div class="custom-form-control">
+                  <label class="form-label">
+                    {{ "stolt.finance.new_payment.location" | translate }}</label>
+                  <input type="text" aria-label="Search" required name="principal" class="form-control  custom-input"
+                    nz-input (input)="onLocationInput($event)"
+                    [ngClass]="{'is-invalid': submitted && f.location.errors}"
+                     [nzAutocomplete]="auto" formControlName="location">
+                  <nz-autocomplete [nzDataSource]="locationOptions" nzBackfill #auto>
+                  </nz-autocomplete>
+                  <div *ngIf="submitted && f.location.errors" class="invalid-feedback">
+                    <div *ngIf="f.location.errors.required"> {{ "stolt.finance.new_payment.location" | translate }} is required
+                    </div>
+                  </div>
+                </div>
+                <div class="custom-form-control">
+                  <label class="form-label">
+                    {{
+                    "stolt.finance.new_payment.remitting_ref_no" | translate
+                    }}</label>
+                  <input class="form-control custom-input" type="text" placeholder="" value=""
+                    formControlName="remittingRefNo" />
+                </div>
+                <div class="custom-form-control" *ngIf="optionValue === 'Foreign'">
+                  <label class="form-label">
+                    {{ "stolt.finance.new_payment.currency" | translate }}</label>
+                  <select class="form-select custom-input" formControlName="currency"
+                  [ngClass]="{'is-invalid': submitted && f.currency.errors}">
+                    <option *ngFor="let currency of currencyData" [value]="currency?._source?.currencyName">{{
+                      currency?._source?.currencyName }}</option>
+                  </select>
+                  <div *ngIf="submitted && f.currency.errors" class="invalid-feedback">
+                    <div *ngIf="f.currency.errors.required">{{ "stolt.finance.new_payment.currency" | translate }} is required
+                    </div>
+                  </div>
+                </div>
+                <div class="custom-form-control" *ngIf="optionValue === 'Foreign'">
+                  <label class="form-label">
+                    {{ "stolt.finance.new_payment.exchange" | translate }}</label>
+                  <input class="form-control custom-input" type="number"
+                    formControlName="exchange" (change)="calcInrAmount()" />
+                </div>
+                <div class="custom-form-control">
+                  <label class="form-label">
+                    {{ "stolt.finance.new_payment.amount" | translate }}</label>
+                  <input  [ngClass]="{'is-invalid': submitted && f.amount.errors}" 
+                  class="form-control custom-input" type="number"
+                    formControlName="amount" (keyup)="calcInrAmount()" />
+                    <div *ngIf="submitted && f.amount.errors" class="invalid-feedback">
+                      <div *ngIf="f.amount.errors.required"> {{ "stolt.finance.new_payment.amount" | translate }} is required
+                      </div>
+                    </div>
+                </div>
+                <div class="custom-form-control ">
+                  <label class="form-label">
+                    {{ "stolt.finance.new_payment.amt_inr" | translate }}</label>
+                  <input class="form-control custom-input" type="number" 
+                  [ngClass]="{'is-invalid': submitted && f.amtInr.errors}" 
+                    formControlName="amtInr" />
+                    <div *ngIf="submitted && f.amtInr.errors" class="invalid-feedback">
+                      <div *ngIf="f.amtInr.errors.required"> {{ "stolt.finance.new_payment.amount" | translate }} is required
+                      </div>
+                    </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+          <div class="row " *ngIf="optionValue === 'Foreign'">
+            <div class="row mt-5">
+              <div class="col float-start">
+                <h1>Foreign Inward Remittance Certificate</h1>
+              </div>
+            </div>
+            <div class="row g-4 mt-0">
+              <div class="col-md-3">
+                <label class="form-label">{{ 'smartagent.job.list.reciept.receiptNo' | translate }}</label>
+                <input type="text" class="form-control custom-input" placeholder="" [value]="constFields.receiptNo"
+                  disabled>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">{{ 'smartagent.job.list.reciept.voucherNo' | translate }}</label>
+                <input type="text" class="form-control custom-input" placeholder="" formControlName="voucherNo">
+              </div>
+           <div class="col-md-3">
+                <label class="form-label">{{ 'smartagent.job.list.reciept.fircNo' | translate }} </label>
+                <input type="number" class="form-control custom-input" placeholder="" formControlName="fircNo">
+              </div>
+              <div class="col-md-3" *ngIf="false">
+                <label class="form-label">{{ 'smartagent.job.list.reciept.fircDate' | translate }} </label>
+                <input type="date" class="form-control custom-input" placeholder="" formControlName="fircDate">
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">{{ 'smartagent.job.list.reciept.fircCreditDate' | translate }} </label>
+                <input type="date" class="form-control custom-input" placeholder="" formControlName="fircCreditDate">
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">{{ 'smartagent.job.list.reciept.documents' | translate }} </label>
+                <input type="file" class="form-control custom-input" placeholder="" (change)="saveCertificate($event)">
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="wrap-table-area" *ngIf="false">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="table-responsive">
+                <table aria-describedby="mytable" class="gfg">
+                  <thead>
+                    <tr class="field-name">
+                      <th scope="col">{{ 'smartagent.job.list.reciept.invoiceNo' | translate }}</th>
+                      <th scope="col">{{ 'smartagent.job.list.reciept.invoiceDate' | translate }}</th>
+                      <th scope="col">{{ 'smartagent.job.list.reciept.dueDate' | translate }}</th>
+                      <th scope="col">{{ 'smartagent.job.list.reciept.invoiceto' | translate }}</th>
+                      <th scope="col">{{ 'smartagent.job.list.reciept.amount' | translate }}</th>
+                      <th scope="col">{{ 'smartagent.job.list.reciept.paymentAmount' | translate }}</th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let container of paymentbillData">
+                      <td>{{container.Invoice_No}}</td>
+                      <td>{{container.Invoice_Date}}</td>
+                      <td>{{container.Due_Date}}</td>
+                      <td>{{container.Invoice_To}}</td>
+                      <td>{{container.Amount}}</td>
+                      <td>{{container.Payment_Amount}}</td>
+                    </tr>
+                    <tr>
+                      <td class="border-0"></td>
+                      <td class="border-0"></td>
+                      <td class="border-0"></td>
+                      <td class="border-0"></td>
+                      <td class="border-0 font-weight-bold">{{ 'smartagent.job.list.reciept.totalPayment' | translate }}
+                      </td>
+                      <td class="border-0">$15000</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group wrap-form-action btn-onscreen">
+          <button class="btn1 float-end" (click)="oncancel()" type="submit">
+            {{ 'common.cancel' | translate }}
+          </button>
+          <button *ngIf="!idToUpdate" class="btn btn-outline-primary float-end" (click)="onSave(AddClause)" type="submit">
+            {{ 'common.save' | translate }}
+          </button>
+          <button *ngIf="idToUpdate" class="btn btn-outline-primary float-end" (click)="onSave(AddClause)" type="submit">
+            {{ 'common.update' | translate }}
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<ng-template #AddClause let-modal>
+  <div class="modal-content">
+    <div class="modal-headers">
+      <button type="button" class="btn-close shadow-none float-end" (click)="onSaves()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <div class="wrap-form-field padding-space  modal-bottom-alignment-for-mobile-view mt-0">
+
+
+        <div>
+          <div class="receipt-modal-all-content-alignment">
+            <div class="modal-title-style">
+              <h3> Receipt Generated Successfully!</h3>
+              <div class="text-amount-all-content-alignment">
+                <div>
+                  <label for="cType"> CollectionType: </label>
+                  <span id="cType"> #1325743 </span>
+                </div>
+                <div>
+                  <label for="dtype"> Department: </label>
+                  <span id="dtype"> All Ports </span>
+                </div>
+              </div>
+            </div>
+            <div class="custom-modal-body-alignment">
+              <div class="data-grid">
+                <div>
+                  <label for="rdate"> Receipt date: </label>
+                  <span id="rdate"> 15, Jun. </span>
+                </div>
+                <div>
+                  <label>
+                    Remitting Partry/Princinpal::
+                  </label>
+                  <span> Mr.Rutvik Mangukiya </span>
+                </div>
+                <div>
+                  <label> Remittance Type:: </label>
+                  <span> Local </span>
+                </div>
+                <div>
+                  <label for="rdate"> Remittance date: </label>
+                  <span id="rdate"> 15, Jun. </span>
+                </div>
+                <div>
+                  <div>
+                    <label> Currency: </label>
+                    <span> USD </span>
+                  </div>
+                </div>
+              </div>
+              <div class="more-menu-alignment">
+                <button class="btn-link" (click)="showMore()">
+                  {{ !isShowMore ? "show more " : "show less"
+                  }}<em class="bi-caret-down" *ngIf="!isShowMore"></em><em class="bi-caret-up" *ngIf="isShowMore"></em>
+                </button>
+              </div>
+            </div>
+
+
+            <div *ngIf="isShowMore">
+              <div class="remarks-content-alignment">
+                <label> Remakrks: </label>
+                <span>
+                  Here my all remarks will be shown and Nothing to add ion this
+                  receipt.
+                </span>
+              </div>
+              <div class="modal-sub-title-alignment">
+                <h5>Remittance Details</h5>
+              </div>
+              <div class="custom-modal-body-alignment">
+                <div class="data-grid">
+                  <div>
+                    <label f> Deposit Bank: </label>
+                    <span> HDFC1 </span>
+                  </div>
+                  <div>
+                    <label f> Remitting Bank: </label>
+                    <span> STANDARD CHARATER BANK </span>
+                  </div>
+                  <div>
+                    <label> Remitting country: </label>
+                    <span> United States </span>
+                  </div>
+                  <div>
+                    <label f> Remitting Ref Number: </label>
+                    <span> REFJK451R </span>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="col-md-12 amount-text-style my-2 text-end">
+                <label class="mx-2"> Amount: </label>
+                <span> $54623.50 </span>
+              </div>
+              <div class="col-md-12 my-2 text-end amount-text-style">
+                <label class="mx-2"> Amount in INR: </label>
+                <span> 78,562/- </span>
+              </div>
+              <div class="col-md-12 text-center print-button-center-alignment my-2">
+                <button class="btn btn-primary">Print</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

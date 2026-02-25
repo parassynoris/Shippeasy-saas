@@ -1,0 +1,1693 @@
+<ng-template #AddClause let-modal>
+    <div class="modal-content nz-allSelect vessel-master-component">
+      <div class="modal-headers mt-2">
+        <h4 *ngIf="!vesselIdToUpdate" class="modal-title">
+          {{ "common.add" | translate }}
+          Vessel deatils
+        </h4>
+        <h4 *ngIf="vesselIdToUpdate" class="modal-title">
+          {{ "common.edit" | translate }}
+          Vessel deatils
+        </h4>
+        <button type="button" class="btn-close shadow-none float-end" (click)="onSave()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view pb-0">
+          <form [formGroup]="addVesselForm">
+            <div class="col-md-12 ">
+              <nz-tabset>
+                <nz-tab nzTitle="Main Details">
+                  <div class="row g-3">
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        Vessel Code 
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="vesselCode"
+                        placeholder=" Vessel Code" [ngClass]="{
+                          'is-invalid': submitted && f.vesselCode.errors
+                        }" appCapitalizeFirst/>
+                      <div *ngIf="submitted && f.vesselCode.errors" class="invalid-feedback">
+                        <div *ngIf="f.vesselCode.errors.required">
+                          Vessel Code
+                          is required
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        Vessel Name<span class="text-danger">*</span>
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="vesselName"
+                        placeholder=" Vessel Name" [ngClass]="{
+                          'is-invalid': submitted && f.vesselName.errors
+                        }" appCapitalizeFirst/>
+                      <div *ngIf="submitted && f.vesselName.errors" class="invalid-feedback">
+                        <div *ngIf="f.vesselName.errors.required">
+                         Vessel Name
+                          is required
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3">
+                      <label for="chartName" class="form-label sub-title"> {{ "stolt.masters.VesselMaster.chartName" | translate }} </label>
+                      <br>
+                      <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Chart Name" formControlName="chartName"   [ngClass]="{'is-invalid': submitted && f.chartName.errors}">
+                        <nz-option *ngFor="let chart of shippinglineData" [nzLabel]="chart?.name"
+                          [nzValue]="chart?.shippinglineId"></nz-option>
+                      </nz-select>
+      
+                      <div *ngIf="submitted && f?.chartName?.errors" class="invalid-feedback">
+                        <div *ngIf="f?.chartName?.errors?.required">
+                          {{
+                            "stolt.masters.VesselMaster.chartName" | translate
+                            }}
+                            is required
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <label for="countryId" class="form-label sub-title">Country</label>
+                      <br>
+                      <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Country" formControlName="countryId"   [ngClass]="{'is-invalid': submitted && f.countryId.errors}">
+                        <nz-option *ngFor="let country of countryList" [nzLabel]="country?.countryName"
+                          [nzValue]="country?.countryId"></nz-option>
+                      </nz-select>
+      
+                      <div *ngIf="submitted && f?.countryId?.errors" class="invalid-feedback">
+                        <div *ngIf="f?.countryId?.errors?.required">
+                           country is required
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.callSign" | translate
+                        }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="callSign"
+                        placeholder="Call Sign" [ngClass]="{
+                          'is-invalid': submitted && f.callSign.errors
+                        }" />
+                      <div *ngIf="submitted && f.callSign.errors" class="invalid-feedback">
+                        <div *ngIf="f.callSign.errors.required">
+                          {{ "stolt.masters.VesselMaster.callSign" | translate }}
+                          {{ "common.isRequired" | translate }}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.IMO_NO" | translate }}<span class="text-danger">*</span>
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="imoNo"
+                      placeholder="IMO Number" [ngClass]="{
+                        'is-invalid': submitted && f.imoNo.errors
+                      }" />
+                    <div *ngIf="submitted && f.imoNo.errors" class="invalid-feedback">
+                      <div *ngIf="f.imoNo.errors.required">
+                        {{ "stolt.masters.VesselMaster.IMO_NO" | translate }}
+                        {{ "common.isRequired" | translate }}
+                      </div>
+                    </div>
+                    </div>
+                    <div class="col-md-3">
+                       <label class="form-label">MMSI No.<span class="text-danger">*</span>
+                       
+                      </label>
+                      <input type="number" class="form-control custom-input" id=" " formControlName="mmsino"
+                        placeholder="MMSI Number" [ngClass]="{
+                          'is-invalid':
+                            submitted && f.mmsino.errors
+                        }" />
+                      <div *ngIf="submitted && f.mmsino.errors" class="invalid-feedback">
+                        <div *ngIf="f.mmsino.errors.required">
+                          MMSI No is required
+                        </div>
+                      </div>
+                    </div>
+                    <!-- <div class="col-md-3">
+                      <div class="form-check">
+                        <label class="form-check-label" for="">
+                          {{
+                          "stolt.masters.VesselMaster.DeactivateVessel"
+                          | translate
+                          }}</label>
+                        <input class="" formControlName="deActivateVessel" type="checkbox" id="" style="left: 80%;"/>
+                      
+                          <div class="error-msg" *ngIf="!this.addVesselForm.controls['deActivateVessel'].value">
+                            {{
+                              "stolt.masters.VesselMaster.DeactivateVessel"
+                              | translate
+                              }}
+                            is required
+                          </div>
+                      </div>
+                    </div> -->
+  
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{
+                        "stolt.masters.VesselMaster.InternalVesselCode"
+                        | translate
+                        }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="internalVesselCode"
+                        placeholder="Internal Code" [ngClass]="{
+                          'is-invalid': submitted && f.internalVesselCode.errors
+                        }" />
+                      <div *ngIf="submitted && f.internalVesselCode.errors" class="invalid-feedback">
+                        <div *ngIf="f.internalVesselCode.errors.required">
+                          {{
+                          "stolt.masters.VesselMaster.InternalVesselCode"
+                          | translate
+                          }}
+                          is required
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-3 nz-select">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.VESSEL_TYPE" | translate }}
+                      </label>
+   
+                      <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Vessel Type"formControlName="vesselType"
+                      [ngClass]="{
+                        'is-invalid': submitted && f.vesselType.errors
+                      }" >
+                        <nz-option *ngFor="let vessel of vesselTypeList" [nzLabel]="vessel.typeName"
+                      [nzValue]="vessel.systemtypeId"></nz-option>
+                    </nz-select>
+                      <div *ngIf="submitted && f.vesselType.errors" class="invalid-feedback">
+                        <div *ngIf="f.vesselType.errors.required">
+                          {{
+                          "stolt.masters.VesselMaster.VesselMasterValidation.VesselTypeValidation"
+                          | translate
+                          }}
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-3 nz-select">
+                      <label for="VesselSubtype" class="form-label">{{
+                        "smartagent.smartAgent.AllformAddedit.vesselSubtype"
+                        | translate
+                        }}
+                      </label>
+                     
+                      <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Vessel Sub Type"formControlName="vesselSubType"
+                      [ngClass]="{
+                        'is-invalid': submitted && f.vesselSubType.errors
+                      }" >
+                        <nz-option *ngFor="let vesselSub of vesselSubTypeList" [nzLabel]="vesselSub.typeName"
+                      [nzValue]="vesselSub.systemtypeId"></nz-option>
+                    </nz-select>
+                      <div *ngIf="submitted && f.vesselSubType.errors" class="invalid-feedback">
+                        <div *ngIf="f.vesselSubType.errors.required">
+                          {{
+                          "smartagent.smartAgent.AllformAddedit.vesselCategory"
+                          | translate
+                          }}
+                          {{ "common.isRequired" | translate }}
+                        </div>
+                      </div>
+                    </div>
+  
+                    
+  
+                    <!-- <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.chartName" | translate }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="chartName"
+                        placeholder="" [ngClass]="{
+                          'is-invalid': submitted && f.chartName.errors
+                        }" />
+                      <div *ngIf="submitted && f.chartName.errors" class="invalid-feedback">
+                        <div *ngIf="f.chartName.errors.required">
+                          {{
+                          "stolt.masters.VesselMaster.chartName" | translate
+                          }}
+                          is required
+                        </div>
+                      </div>
+                    </div> -->
+  
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{
+                        "stolt.masters.VesselMaster.portOfRegistryCode"
+                        | translate
+                        }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="portOfRegistryCode"
+                        placeholder="Registry Code" [ngClass]="{
+                          'is-invalid': submitted && f.portOfRegistryCode.errors
+                        }" />
+                      <div *ngIf="submitted && f.portOfRegistryCode.errors" class="invalid-feedback">
+                        <div *ngIf="f.portOfRegistryCode.errors.required">
+                          {{
+                          "stolt.masters.VesselMaster.portOfRegistryCode"
+                          | translate
+                          }}
+                          is required
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{
+                        "stolt.masters.VesselMaster.portOfRegistryName"
+                        | translate
+                        }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="portOfRegistryName"
+                        placeholder="Registry Name" [ngClass]="{
+                          'is-invalid': submitted && f.portOfRegistryName.errors
+                        }" />
+                      <div *ngIf="submitted && f.portOfRegistryName.errors" class="invalid-feedback">
+                        <div *ngIf="f.portOfRegistryName.errors.required">
+                          {{
+                          "stolt.masters.VesselMaster.portOfRegistryName"
+                          | translate
+                          }}
+                          is required
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.regNo" | translate }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="regNo" placeholder="REG No"
+                        [ngClass]="{ 'is-invalid': submitted && f.regNo.errors }" />
+                      <div *ngIf="submitted && f.regNo.errors" class="invalid-feedback">
+                        <div *ngIf="f.regNo.errors.required">
+                          {{ "stolt.masters.VesselMaster.regNo" | translate }} is
+                          required
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.GRT" | translate
+                        }} (In MT)
+                      </label>
+                      <input type="number" class="form-control custom-input" id=" " formControlName="grt" placeholder="GRT"
+                        [ngClass]="{ 'is-invalid': submitted && f.grt.errors }" />
+                      <div *ngIf="submitted && f.grt.errors" class="invalid-feedback">
+                        <div *ngIf="f.grt.errors.required">
+                          {{ "stolt.masters.VesselMaster.GRT" | translate }}
+                          {{ "common.isRequired" | translate }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.NRT" | translate
+                        }}(in MT)
+                      </label>
+                      <input type="number" class="form-control custom-input" id=" " formControlName="nrt" placeholder="NRT"
+                        [ngClass]="{ 'is-invalid': submitted && f.nrt.errors }" />
+                      <div *ngIf="submitted && f.nrt.errors" class="invalid-feedback">
+                        <div *ngIf="f.nrt.errors.required">
+                          {{ "stolt.masters.VesselMaster.NRT" | translate }}
+                          {{ "common.isRequired" | translate }}
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{
+                        "stolt.masters.VesselMaster.classSocietyNo" | translate
+                        }}
+                      </label>
+                      <input type="number" class="form-control custom-input" id=" " formControlName="classSocietyNo"
+                        placeholder="Society No" [ngClass]="{
+                          'is-invalid': submitted && f.classSocietyNo.errors
+                        }" />
+                      <div *ngIf="submitted && f.classSocietyNo.errors" class="invalid-feedback">
+                        <div *ngIf="f.classSocietyNo.errors.required">
+                          {{
+                          "stolt.masters.VesselMaster.classSocietyNo"
+                          | translate
+                          }}
+                          {{ "common.isRequired" | translate }}
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.summerDeadWt" | translate
+                        }}(Kgs)
+                      </label>
+                      <input type="number" class="form-control custom-input" id=" " formControlName="summerDeadWt"
+                        placeholder="Summer Dead Wt" [ngClass]="{
+                          'is-invalid': submitted && f.summerDeadWt.errors
+                        }" />
+                      <div *ngIf="submitted && f.summerDeadWt.errors" class="invalid-feedback">
+                        <div *ngIf="f.summerDeadWt.errors.required">
+                          {{
+                          "stolt.masters.VesselMaster.summerDeadWt" | translate
+                          }}
+                          {{ "common.isRequired" | translate }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{
+                        "stolt.masters.VesselMaster.preferredBerthSide"
+                        | translate
+                        }}
+                      </label>
+                      
+                        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Preferred Berth Side" class="form-control" formControlName="preferredBerthSide" [ngClass]="{
+                          'is-invalid': submitted && f.preferredBerthSide.errors
+                        }" >
+                          <nz-option nzLabel="B1" nzValue="b1"></nz-option>
+                          <nz-option nzLabel="B2" nzValue="b2"></nz-option>
+                        </nz-select>
+                      <div *ngIf="submitted && f.preferredBerthSide.errors" class="invalid-feedback">
+                        <div *ngIf="f.preferredBerthSide.errors.required">
+                          {{
+                          "stolt.masters.VesselMaster.preferredBerthSide"
+                          | translate
+                          }}
+                          {{ "common.isRequired" | translate }}
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{
+                        "stolt.masters.VesselMaster.tropicalMaxDraft"
+                        | translate
+                        }}
+                      </label>
+                      <input type="number" class="form-control custom-input" id=" " formControlName="tropicalMaxDraft"
+                        placeholder="Tropical Max Draft" [ngClass]="{
+                          'is-invalid': submitted && f.tropicalMaxDraft.errors
+                        }" />
+                      <div *ngIf="submitted && f.tropicalMaxDraft.errors" class="invalid-feedback">
+                        <div *ngIf="f.tropicalMaxDraft.errors.required">
+                          {{
+                          "stolt.masters.VesselMaster.tropicalMaxDraft"
+                          | translate
+                          }}
+                          {{ "common.isRequired" | translate }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{
+                        "stolt.masters.VesselMaster.tropicalDeadWt" | translate
+                        }}
+                      </label>
+                      <input type="number" class="form-control custom-input" id=" " formControlName="tropicalDeadWt"
+                        placeholder="Tropical Death Weight" [ngClass]="{
+                          'is-invalid': submitted && f.tropicalDeadWt.errors
+                        }" />
+                      <div *ngIf="submitted && f.tropicalDeadWt.errors" class="invalid-feedback">
+                        <div *ngIf="f.tropicalDeadWt.errors.required">
+                          {{
+                          "stolt.masters.VesselMaster.tropicalDeadWt"
+                          | translate
+                          }}
+                          {{ "common.isRequired" | translate }}
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.summerMaxWt" | translate
+                        }}
+                      </label>
+                      <input type="number" class="form-control custom-input" id=" " formControlName="summerMaxWt"
+                        placeholder="Summer Max Weight" [ngClass]="{
+                          'is-invalid': submitted && f.summerMaxWt.errors
+                        }" />
+                      <div *ngIf="submitted && f.summerMaxWt.errors" class="invalid-feedback">
+                        <div *ngIf="f.summerMaxWt.errors.required">
+                          {{
+                          "stolt.masters.VesselMaster.summerMaxWt" | translate
+                          }}
+                          {{ "common.isRequired" | translate }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{
+                        "stolt.masters.VesselMaster.reasonPrefBerth"
+                        | translate
+                        }}
+                      </label>
+                      <input type="number" class="form-control custom-input" id=" " formControlName="reasonPrefBerth"
+                        placeholder="Reason Pref Berth" [ngClass]="{
+                          'is-invalid': submitted && f.reasonPrefBerth.errors
+                        }" />
+                      <div *ngIf="submitted && f.reasonPrefBerth.errors" class="invalid-feedback">
+                        <div *ngIf="f.reasonPrefBerth.errors.required">
+                          {{
+                          "stolt.masters.VesselMaster.reasonPrefBerth"
+                          | translate
+                          }}
+                          {{ "common.isRequired" | translate }}
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.loa" | translate }} (In Mtrs)
+                      </label>
+                      <input type="number" class="form-control custom-input" id=" " formControlName="loa" placeholder="LOA"
+                        [ngClass]="{ 'is-invalid': submitted && f.loa.errors }" />
+                      <div *ngIf="submitted && f.loa.errors" class="invalid-feedback">
+                        <div *ngIf="f.loa.errors.required">
+                          {{ "stolt.masters.VesselMaster.loa" | translate }}
+                          {{ "common.isRequired" | translate }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.lbp" | translate }} (In Mtrs)
+                      </label>
+                      <input type="number" class="form-control custom-input" id=" " formControlName="lbp" placeholder="LBP"
+                        [ngClass]="{ 'is-invalid': submitted && f.lbp.errors }" />
+                      <div *ngIf="submitted && f.lbp.errors" class="invalid-feedback">
+                        <div *ngIf="f.lbp.errors.required">
+                          {{ "stolt.masters.VesselMaster.lbp" | translate }}
+                          {{ "common.isRequired" | translate }}
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.beam" | translate
+                        }} (In Mtrs)
+                      </label>
+                      <input type="number" class="form-control custom-input" id=" " formControlName="beam" placeholder="BEAM"
+                        [ngClass]="{ 'is-invalid': submitted && f.beam.errors }" />
+                      <div *ngIf="submitted && f.beam.errors" class="invalid-feedback">
+                        <div *ngIf="f.beam.errors.required">
+                          {{ "stolt.masters.VesselMaster.beam" | translate }}
+                          {{ "common.isRequired" | translate }}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.gearedVessel" | translate
+                        }}
+                      </label>
+                        <input class="" formControlName="gearedVessel" type="checkbox" id="" style="left: 80%;" [ngClass]="{
+                          'is-invalid': submitted && f.gearedVessel.errors
+                        }" />
+                      <div *ngIf="submitted && f.gearedVessel.errors" class="invalid-feedback">
+                        <div *ngIf="f.gearedVessel.errors.required">
+                          {{
+                          "stolt.masters.VesselMaster.gearedVessel" | translate
+                          }}
+                          {{ "common.isRequired" | translate }}
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.reducedGt" | translate
+                        }}
+                      </label>
+                      <input type="number" class="form-control custom-input" id=" " formControlName="reducedGt"
+                        placeholder="Reduced GT" [ngClass]="{
+                          'is-invalid': submitted && f.reducedGt.errors
+                        }" />
+                      <div *ngIf="submitted && f.reducedGt.errors" class="invalid-feedback">
+                        <div *ngIf="f.reducedGt.errors.required">
+                          {{ "stolt.masters.VesselMaster.reducedGt" | translate }}
+                          {{ "common.isRequired" | translate }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.whetherSBT" | translate
+                        }}
+                      </label>
+                       
+                        <input class="" formControlName="whetherSBT" type="checkbox" id="" style="left: 80%;" [ngClass]="{
+                          'is-invalid': submitted && f.whetherSBT.errors
+                        }" />
+                      <div *ngIf="submitted && f.whetherSBT.errors" class="invalid-feedback">
+                        <div *ngIf="f.whetherSBT.errors.required">
+                          {{
+                          "stolt.masters.VesselMaster.whetherSBT" | translate
+                          }}
+                          {{ "common.isRequired" | translate }}
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.generalRemark" | translate
+                        }}
+                      </label>
+                      <input type="number" class="form-control custom-input" id=" " formControlName="generalRemark"
+                        placeholder="Remark" [ngClass]="{
+                          'is-invalid': submitted && f.generalRemark.errors
+                        }" />
+                      <div *ngIf="submitted && f.generalRemark.errors" class="invalid-feedback">
+                        <div *ngIf="f.generalRemark.errors.required">
+                          {{
+                          "stolt.masters.VesselMaster.generalRemark" | translate
+                          }}
+                          {{ "common.isRequired" | translate }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </nz-tab>
+                <nz-tab nzTitle="Structure Details">
+                  <div class="row g-3 align-items-center">
+                    <div class="col-md-3">
+                      <label class="mb-0 p-0 form-label"> {{ "stolt.masters.VesselMaster.vesselBuildDate" | translate }} </label>
+                      <mat-form-field appearance="outline" class="custom-date-picker">
+                       <div class="d-flex align-items-center  w-100">
+                        <input matInput
+                        [matDatepicker]="pickerEtay" formControlName="vesselBuildDate" class="h-0" placeholder="Vessel Build Date"/>
+                      <mat-datepicker-toggle matSuffix [for]="pickerEtay"></mat-datepicker-toggle>
+                       </div>
+                        <mat-datepicker #pickerEtay></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+  
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.vesselBuildPlace" | translate }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="vesselBuildPlace" placeholder="Vessel Build Place"
+                        [ngClass]="{ 'is-invalid': submitted && f.vesselBuildPlace.errors }" />
+                      <div *ngIf="submitted && f.vesselBuildPlace.errors" class="invalid-feedback">
+                        <div *ngIf="f.vesselBuildPlace.errors.required">
+                          {{ "stolt.masters.VesselMaster.vesselBuildPlace" | translate }} is required
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-3">
+                      <label class="mb-0 p-0 form-label">{{ "stolt.masters.VesselMaster.vesselModifiedDate" | translate }}</label>
+                      <mat-form-field appearance="outline" class="custom-date-picker">
+                       <div class="d-flex align-items-center  w-100">
+                        <input matInput
+                        [matDatepicker]="pickerEtas" formControlName="vesselModifiedDate" class="h-0" placeholder="Vessel Modified Date"/>
+                      <mat-datepicker-toggle matSuffix [for]="pickerEtas"></mat-datepicker-toggle>
+                       </div>
+                        <mat-datepicker #pickerEtas></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+  
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.vesselHeight" | translate }} (In Mtrs)
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="vesselHeight" placeholder="Vessel Height"
+                        [ngClass]="{ 'is-invalid': submitted && f.vesselHeight.errors }" />
+                      <div *ngIf="submitted && f.vesselHeight.errors" class="invalid-feedback">
+                        <div *ngIf="f.vesselHeight.errors.required">
+                          {{ "stolt.masters.VesselMaster.vesselHeight" | translate }} is required
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.hatchCoverType" | translate }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="hatchCoverType" placeholder="Hatch Cover Type"
+                        [ngClass]="{ 'is-invalid': submitted && f.hatchCoverType.errors }" />
+                      <div *ngIf="submitted && f.hatchCoverType.errors" class="invalid-feedback">
+                        <div *ngIf="f.hatchCoverType.errors.required">
+                          {{ "stolt.masters.VesselMaster.hatchCoverType" | translate }} is required
+                        </div>
+                      </div>
+                    </div><div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.noofHatchCover" | translate }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="noofHatchCover" placeholder="Hatch Cover"
+                        [ngClass]="{ 'is-invalid': submitted && f.noofHatchCover.errors }" />
+                      <div *ngIf="submitted && f.noofHatchCover.errors" class="invalid-feedback">
+                        <div *ngIf="f.noofHatchCover.errors.required">
+                          {{ "stolt.masters.VesselMaster.noofHatchCover" | translate }} is required
+                        </div>
+                      </div>
+                    </div><div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.noofHatches" | translate }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="noofHatches" placeholder="Hatches"
+                        [ngClass]="{ 'is-invalid': submitted && f.noofHatches.errors }" />
+                      <div *ngIf="submitted && f.noofHatches.errors" class="invalid-feedback">
+                        <div *ngIf="f.noofHatches.errors.required">
+                          {{ "stolt.masters.VesselMaster.noofHatches" | translate }} is required
+                        </div>
+                      </div>
+                    </div><div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.noofHolds" | translate }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="noofHolds" placeholder="Holds"
+                        [ngClass]="{ 'is-invalid': submitted && f.noofHolds.errors }" />
+                      <div *ngIf="submitted && f.noofHolds.errors" class="invalid-feedback">
+                        <div *ngIf="f.noofHolds.errors.required">
+                          {{ "stolt.masters.VesselMaster.noofHolds" | translate }} is required
+                        </div>
+                      </div>
+                    </div><div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.perBodyinBlst" | translate }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="perBodyinBlst" placeholder="Body in Blst"
+                        [ngClass]="{ 'is-invalid': submitted && f.perBodyinBlst.errors }" />
+                      <div *ngIf="submitted && f.perBodyinBlst.errors" class="invalid-feedback">
+                        <div *ngIf="f.perBodyinBlst.errors.required">
+                          {{ "stolt.masters.VesselMaster.perBodyinBlst" | translate }} is required
+                        </div>
+                      </div>
+                    </div><div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.engineType" | translate }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="engineType" placeholder="Engine Type"
+                        [ngClass]="{ 'is-invalid': submitted && f.engineType.errors }" />
+                      <div *ngIf="submitted && f.engineType.errors" class="invalid-feedback">
+                        <div *ngIf="f.engineType.errors.required">
+                          {{ "stolt.masters.VesselMaster.engineType" | translate }} is required
+                        </div>
+                      </div>
+                    </div><div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.noofEngine" | translate }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="noofEngine" placeholder="Engine"
+                        [ngClass]="{ 'is-invalid': submitted && f.noofEngine.errors }" />
+                      <div *ngIf="submitted && f.noofEngine.errors" class="invalid-feedback">
+                        <div *ngIf="f.noofEngine.errors.required">
+                          {{ "stolt.masters.VesselMaster.noofEngine" | translate }} is required
+                        </div>
+                      </div>
+                    </div><div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.enginePower" | translate }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="enginePower" placeholder="Engine Power"
+                        [ngClass]="{ 'is-invalid': submitted && f.enginePower.errors }" />
+                      <div *ngIf="submitted && f.enginePower.errors" class="invalid-feedback">
+                        <div *ngIf="f.enginePower.errors.required">
+                          {{ "stolt.masters.VesselMaster.enginePower" | translate }} is required
+                        </div>
+                      </div>
+                    </div><div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.propulsionType" | translate }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="propulsionType" placeholder="Propulsion Type"
+                        [ngClass]="{ 'is-invalid': submitted && f.propulsionType.errors }" />
+                      <div *ngIf="submitted && f.propulsionType.errors" class="invalid-feedback">
+                        <div *ngIf="f.propulsionType.errors.required">
+                          {{ "stolt.masters.VesselMaster.propulsionType" | translate }} is required
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.noofPropellers" | translate }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="noofPropellers" placeholder="Propellers"
+                        [ngClass]="{ 'is-invalid': submitted && f.noofPropellers.errors }" />
+                      <div *ngIf="submitted && f.noofPropellers.errors" class="invalid-feedback">
+                        <div *ngIf="f.noofPropellers.errors.required">
+                          {{ "stolt.masters.VesselMaster.noofPropellers" | translate }} is required
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.maxSpeed" | translate }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="maxSpeed" placeholder="Max Speed"
+                        [ngClass]="{ 'is-invalid': submitted && f.maxSpeed.errors }" />
+                      <div *ngIf="submitted && f.maxSpeed.errors" class="invalid-feedback">
+                        <div *ngIf="f.maxSpeed.errors.required">
+                          {{ "stolt.masters.VesselMaster.maxSpeed" | translate }} is required
+                        </div>
+                      </div>
+                    </div><div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.cruisingSpeed" | translate }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="cruisingSpeed" placeholder="Cruising Speed"
+                        [ngClass]="{ 'is-invalid': submitted && f.cruisingSpeed.errors }" />
+                      <div *ngIf="submitted && f.cruisingSpeed.errors" class="invalid-feedback">
+                        <div *ngIf="f.cruisingSpeed.errors.required">
+                          {{ "stolt.masters.VesselMaster.cruisingSpeed" | translate }} is required
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-center">
+                      <label class="form-label px-2">{{ "stolt.masters.VesselMaster.thrustersUsed" | translate }}</label>
+                      <input type="checkbox" formControlName="thrustersUsed" />
+                  </div>
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.noofBowThrusters" | translate }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="noofBowThrusters" placeholder="Bow Thrusters"
+                        [ngClass]="{ 'is-invalid': submitted && f.noofBowThrusters.errors }" />
+                      <div *ngIf="submitted && f.noofBowThrusters.errors" class="invalid-feedback">
+                        <div *ngIf="f.noofBowThrusters.errors.required">
+                          {{ "stolt.masters.VesselMaster.noofBowThrusters" | translate }} is required
+                        </div>
+                      </div>
+                    </div><div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.bowThrustersPower" | translate }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="bowThrustersPower" placeholder="Thrusters Power"
+                        [ngClass]="{ 'is-invalid': submitted && f.bowThrustersPower.errors }" />
+                      <div *ngIf="submitted && f.bowThrustersPower.errors" class="invalid-feedback">
+                        <div *ngIf="f.bowThrustersPower.errors.required">
+                          {{ "stolt.masters.VesselMaster.bowThrustersPower" | translate }} is required
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-3 d-flex align-items-center">
+                      <label class="form-label px-2">{{ "stolt.masters.VesselMaster.cellularVessel" | translate }}</label>
+                      <input type="checkbox" formControlName="cellularVessel" />
+                  </div>
+                  <div class="col-md-3 d-flex align-items-center">
+                    <label class="form-label px-2">{{ "stolt.masters.VesselMaster.bulbousBow" | translate }}</label>
+                    <input type="checkbox" formControlName="bulbousBow" />
+                </div>
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.bowAndManifoldDist" | translate }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="bowAndManifoldDist" placeholder="Manifold Dist"
+                        [ngClass]="{ 'is-invalid': submitted && f.bowAndManifoldDist.errors }" />
+                      <div *ngIf="submitted && f.bowAndManifoldDist.errors" class="invalid-feedback">
+                        <div *ngIf="f.bowAndManifoldDist.errors.required">
+                          {{ "stolt.masters.VesselMaster.bowAndManifoldDist" | translate }} is required
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.noofSternThrusters" | translate }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="noofSternThrusters" placeholder="Stern Thrusters"
+                        [ngClass]="{ 'is-invalid': submitted && f.noofSternThrusters.errors }" />
+                      <div *ngIf="submitted && f.noofSternThrusters.errors" class="invalid-feedback">
+                        <div *ngIf="f.noofSternThrusters.errors.required">
+                          {{ "stolt.masters.VesselMaster.noofSternThrusters" | translate }} is required
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.sternThrusterPower" | translate }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="sternThrusterPower" placeholder="Thruster Power"
+                        [ngClass]="{ 'is-invalid': submitted && f.sternThrusterPower.errors }" />
+                      <div *ngIf="submitted && f.sternThrusterPower.errors" class="invalid-feedback">
+                        <div *ngIf="f.sternThrusterPower.errors.required">
+                          {{ "stolt.masters.VesselMaster.sternThrusterPower" | translate }} is required
+                        </div>
+                      </div>
+                    </div>
+  
+  
+  
+                  </div>
+                </nz-tab>
+                <nz-tab nzTitle="Capacity Details">
+                  <div class="row g-3">
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.totalTUECapacity" | translate }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="totalTUECapacity" placeholder="TUE Capacity"
+                        [ngClass]="{ 'is-invalid': submitted && f.totalTUECapacity.errors }" />
+                      <div *ngIf="submitted && f.totalTUECapacity.errors" class="invalid-feedback">
+                        <div *ngIf="f.totalTUECapacity.errors.required">
+                          {{ "stolt.masters.VesselMaster.totalTUECapacity" | translate }} is required
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.totaltwentyFtCapacity" | translate }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="totaltwentyFtCapacity" placeholder="Twenty Ft Capacity"
+                        [ngClass]="{ 'is-invalid': submitted && f.totaltwentyFtCapacity.errors }" />
+                      <div *ngIf="submitted && f.totaltwentyFtCapacity.errors" class="invalid-feedback">
+                        <div *ngIf="f.totaltwentyFtCapacity.errors.required">
+                          {{ "stolt.masters.VesselMaster.totaltwentyFtCapacity" | translate }} is required
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.totalfortyFtCapacity" | translate }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="totalfortyFtCapacity" placeholder="Forty Ft Capacity"
+                        [ngClass]="{ 'is-invalid': submitted && f.totalfortyFtCapacity.errors }" />
+                      <div *ngIf="submitted && f.totalfortyFtCapacity.errors" class="invalid-feedback">
+                        <div *ngIf="f.totalfortyFtCapacity.errors.required">
+                          {{ "stolt.masters.VesselMaster.totalfortyFtCapacity" | translate }} is required
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.noofReferPlugPoint" | translate }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="noofReferPlugPoint" placeholder="ReferPlug Point"
+                        [ngClass]="{ 'is-invalid': submitted && f.noofReferPlugPoint.errors }" />
+                      <div *ngIf="submitted && f.noofReferPlugPoint.errors" class="invalid-feedback">
+                        <div *ngIf="f.noofReferPlugPoint.errors.required">
+                          {{ "stolt.masters.VesselMaster.noofReferPlugPoint" | translate }} is required
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.voltageOfReferPlugPoint" | translate }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="voltageOfReferPlugPoint" placeholder="ReferPlug Point"
+                        [ngClass]="{ 'is-invalid': submitted && f.voltageOfReferPlugPoint.errors }" />
+                      <div *ngIf="submitted && f.voltageOfReferPlugPoint.errors" class="invalid-feedback">
+                        <div *ngIf="f.voltageOfReferPlugPoint.errors.required">
+                          {{ "stolt.masters.VesselMaster.voltageOfReferPlugPoint" | translate }} is required
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-3">
+                      <label class="form-label">
+                        {{ "stolt.masters.VesselMaster.typeofReferPlugPoint" | translate }}
+                      </label>
+                      <input type="text" class="form-control custom-input" id=" " formControlName="typeofReferPlugPoint" placeholder="ReferPlug Point"
+                        [ngClass]="{ 'is-invalid': submitted && f.typeofReferPlugPoint.errors }" />
+                      <div *ngIf="submitted && f.typeofReferPlugPoint.errors" class="invalid-feedback">
+                        <div *ngIf="f.typeofReferPlugPoint.errors.required">
+                          {{ "stolt.masters.VesselMaster.typeofReferPlugPoint" | translate }} is required
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </nz-tab>
+                <nz-tab nzTitle="Crane Details">
+  
+                  <div
+                  class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view"
+                >
+                    <div class="wrap-table-area">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="wrap-table-area wrap-form-field costtable">
+                            <table aria-describedby="mytable3">
+                              <thead>
+                                <th>Crane/Derricks Number</th>
+                                <th>Capacity</th>
+                                <th>Position</th>
+                                <th>Outreach</th>
+                                <th>Remarks</th>
+                                <th >Action <a (click)="addCrane('')" >
+                                  <em class="bi bi-plus-circle cursor-pointer" ></em
+                                ></a></th>
+                              </thead>
+                              <tbody>
+                                <ng-container formArrayName="cranes">
+                                  <ng-container *ngFor="let crane of cranes.controls; let k=index" [formGroupName]="k">
+                                    <tr >
+  
+                                      <td><input
+                                          type="text"
+                                          class="form-control rounded-0"
+                                          formControlName="craneNo"
+                                          [value]=""
+                                        /></td>
+                                        <td><input
+                                          type="text"
+                                          class="form-control rounded-0"
+                                          formControlName="capacity"
+                                          [value]=""
+                                        /></td>
+                                        <td><input
+                                          type="text"
+                                          class="form-control rounded-0"
+                                          formControlName="position"
+                                          [value]=""
+                                        /></td>
+                                        <td><input
+                                          type="text"
+                                          class="form-control rounded-0"
+                                          formControlName="outreach"
+                                          [value]=""
+                                        /></td>
+                                        <td><input
+                                          type="text"
+                                          class="form-control rounded-0"
+                                          formControlName="remarks"
+                                          [value]=""
+                                        /></td>
+                                        <td>
+                                          
+                                          <a (click)="removeCrane(k)">
+                                            <em class="bi bi-x-circle cursor-pointer" ></em
+                                          ></a>
+                                        </td>
+  
+  
+                                      </tr>
+                                  </ng-container>
+  
+  
+  
+                                </ng-container>
+  
+  
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+  
+                </div>
+  
+                </nz-tab>
+                <nz-tab nzTitle="Corresponding Details">
+  
+                  <div class="accordion form-accordian" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="datails">
+                          <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                              data-bs-target="#panelsDetails" aria-expanded="true" aria-controls="panelsDetails">
+                              Details
+                          </button>
+                      </h2>
+                      <div id="panelsDetails" class="accordion-collapse collapse show" aria-labelledby="datails"
+                          data-bs-parent="#accordionPanelsStayOpenExample">
+                          <div class="accordion-body">
+                              <div class="wrap-form-field">
+                                  <div class="row g-3">
+                                      <div class="col-md-3">
+                                        <label class="form-label">
+                                          {{ "stolt.masters.VesselMaster.exVesselName" | translate }}
+                                        </label>
+                                        <input type="text" class="form-control custom-input" id=" " formControlName="exVesselName" placeholder="Ex Vessel Name"
+                                          [ngClass]="{ 'is-invalid': submitted && f.exVesselName.errors }" />
+                                        <div *ngIf="submitted && f.exVesselName.errors" class="invalid-feedback">
+                                          <div *ngIf="f.exVesselName.errors.required">
+                                            {{ "stolt.masters.VesselMaster.exVesselName" | translate }} is required
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-3">
+                                        <label class="form-label">
+                                          {{ "stolt.masters.VesselMaster.exCallSign" | translate }}
+                                        </label>
+                                        <input type="text" class="form-control custom-input" id=" " formControlName="exCallSign" placeholder="Ex Call Sign"
+                                          [ngClass]="{ 'is-invalid': submitted && f.exCallSign.errors }" />
+                                        <div *ngIf="submitted && f.exCallSign.errors" class="invalid-feedback">
+                                          <div *ngIf="f.exCallSign.errors.required">
+                                            {{ "stolt.masters.VesselMaster.exCallSign" | translate }} is required
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-3 d-flex align-items-center">
+                                        <label class="form-label px-2">{{ "stolt.masters.VesselMaster.govtVessel" | translate }}</label>
+                                        <input type="checkbox" formControlName="govtVessel" />
+                                    </div>
+                                      <div class="col-md-3">
+                                        <label class="form-label">
+                                          {{ "stolt.masters.VesselMaster.owner" | translate }}
+                                        </label>
+                                        <input type="text" class="form-control custom-input" id=" " formControlName="owner" placeholder="Owner"
+                                          [ngClass]="{ 'is-invalid': submitted && f.owner.errors }" />
+                                        <div *ngIf="submitted && f.owner.errors" class="invalid-feedback">
+                                          <div *ngIf="f.owner.errors.required">
+                                            {{ "stolt.masters.VesselMaster.owner" | translate }} is required
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-3">
+                                        <label class="form-label">
+                                          {{ "stolt.masters.VesselMaster.localVesselAgent" | translate }}
+                                        </label>
+                                        <input type="text" class="form-control custom-input" id=" " formControlName="localVesselAgent" placeholder="Local Vessel Agent"
+                                          [ngClass]="{ 'is-invalid': submitted && f.localVesselAgent.errors }" />
+                                        <div *ngIf="submitted && f.localVesselAgent.errors" class="invalid-feedback">
+                                          <div *ngIf="f.localVesselAgent.errors.required">
+                                            {{ "stolt.masters.VesselMaster.localVesselAgent" | translate }} is required
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-3 d-flex align-items-center">
+                                        <label class="form-label px-2">{{ "stolt.masters.VesselMaster.containerPermission" | translate }}</label>
+                                        <input type="checkbox" formControlName="containerPermission" />
+                                    </div>
+                                      <div class="col-md-3">
+                                        <label class="form-label">
+                                          {{ "stolt.masters.VesselMaster.localAgtContact" | translate }}
+                                        </label>
+                                        <input type="text" class="form-control custom-input" id=" " formControlName="localAgtContact" placeholder="Local Agt Contact"
+                                          [ngClass]="{ 'is-invalid': submitted && f.localAgtContact.errors }" />
+                                        <div *ngIf="submitted && f.localAgtContact.errors" class="invalid-feedback">
+                                          <div *ngIf="f.localAgtContact.errors.required">
+                                            {{ "stolt.masters.VesselMaster.localAgtContact" | translate }} is required
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-3">
+                                        <label class="form-label">
+                                          {{ "stolt.masters.VesselMaster.hullAndMachineryIns" | translate }}
+                                        </label>
+                                        <input type="text" class="form-control custom-input" id=" " formControlName="hullAndMachineryIns" placeholder="Machinery Ins"
+                                          [ngClass]="{ 'is-invalid': submitted && f.hullAndMachineryIns.errors }" />
+                                        <div *ngIf="submitted && f.hullAndMachineryIns.errors" class="invalid-feedback">
+                                          <div *ngIf="f.hullAndMachineryIns.errors.required">
+                                            {{ "stolt.masters.VesselMaster.hullAndMachineryIns" | translate }} is required
+                                          </div>
+                                        </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="datails">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#pAicDetails" aria-expanded="true" aria-controls="pAicDetails">
+                                P & I Club Details
+                            </button>
+                        </h2>
+                        <div id="pAicDetails" class="accordion-collapse collapse show" aria-labelledby="datails"
+                            data-bs-parent="#accordionPanelsStayOpenExample">
+                            <div class="accordion-body">
+                                <div class="wrap-form-field">
+                                    <div class="row g-3">
+                                      <div class="col-md-3">
+                                        <label class="form-label">
+                                          {{ "stolt.masters.VesselMaster.PIClubName" | translate }}
+                                        </label>
+                                        <input type="text" class="form-control custom-input" id=" " formControlName="PIClubName" placeholder="PI Club Name"
+                                          [ngClass]="{ 'is-invalid': submitted && f.PIClubName.errors }" />
+                                        <div *ngIf="submitted && f.PIClubName.errors" class="invalid-feedback">
+                                          <div *ngIf="f.PIClubName.errors.required">
+                                            {{ "stolt.masters.VesselMaster.PIClubName" | translate }} is required
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-3">
+                                        <label class="form-label">
+                                          {{ "stolt.masters.VesselMaster.PIClubAddress" | translate }}
+                                        </label>
+                                        <input type="text" class="form-control custom-input" id=" " formControlName="PIClubAddress" placeholder="PI Club Address"
+                                          [ngClass]="{ 'is-invalid': submitted && f.PIClubAddress.errors }" />
+                                        <div *ngIf="submitted && f.PIClubAddress.errors" class="invalid-feedback">
+                                          <div *ngIf="f.PIClubAddress.errors.required">
+                                            {{ "stolt.masters.VesselMaster.PIClubAddress" | translate }} is required
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-3">
+                                        <label class="form-label">
+                                          {{ "stolt.masters.VesselMaster.PITelephoneNo" | translate }}
+                                        </label>
+                                        <input type="text" class="form-control custom-input" id=" " formControlName="PITelephoneNo" placeholder="PI Telephone No"
+                                          [ngClass]="{ 'is-invalid': submitted && f.PITelephoneNo.errors }" />
+                                        <div *ngIf="submitted && f.PITelephoneNo.errors" class="invalid-feedback">
+                                          <div *ngIf="f.PITelephoneNo.errors.required">
+                                            {{ "stolt.masters.VesselMaster.PITelephoneNo" | translate }} is required
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-3">
+                                        <label class="form-label">
+                                          {{ "stolt.masters.VesselMaster.PIFaxNo" | translate }}
+                                        </label>
+                                        <input type="text" class="form-control custom-input" id=" " formControlName="PIFaxNo" placeholder="PI FaxNo"
+                                          [ngClass]="{ 'is-invalid': submitted && f.PIFaxNo.errors }" />
+                                        <div *ngIf="submitted && f.PIFaxNo.errors" class="invalid-feedback">
+                                          <div *ngIf="f.PIFaxNo.errors.required">
+                                            {{ "stolt.masters.VesselMaster.PIFaxNo" | translate }} is required
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-3">
+                                        <label class="form-label">
+                                          {{ "stolt.masters.VesselMaster.PIEmail" | translate }}
+                                        </label>
+                                        <input type="text" class="form-control custom-input" id=" " formControlName="PIEmail" placeholder="PI Email"
+                                          [ngClass]="{ 'is-invalid': submitted && f.PIEmail.errors }" />
+                                        <div *ngIf="submitted && f.PIEmail.errors" class="invalid-feedback">
+                                          <div *ngIf="f.PIEmail.errors.required">
+                                            {{ "stolt.masters.VesselMaster.PIEmail" | translate }} is required
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-3">
+                                        <label class="form-label">
+                                          {{ "stolt.masters.VesselMaster.localCorrespondantName" | translate }}
+                                        </label>
+                                        <input type="text" class="form-control custom-input" id=" " formControlName="localCorrespondantName" placeholder="Local Correspondant Name"
+                                          [ngClass]="{ 'is-invalid': submitted && f.localCorrespondantName.errors }" />
+                                        <div *ngIf="submitted && f.localCorrespondantName.errors" class="invalid-feedback">
+                                          <div *ngIf="f.localCorrespondantName.errors.required">
+                                            {{ "stolt.masters.VesselMaster.localCorrespondantName" | translate }} is required
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-3">
+                                        <label class="form-label">
+                                          {{ "stolt.masters.VesselMaster.localTelNo" | translate }}
+                                        </label>
+                                        <input type="text" class="form-control custom-input" id=" " formControlName="localTelNo" placeholder="LocalTelNo"
+                                          [ngClass]="{ 'is-invalid': submitted && f.localTelNo.errors }" />
+                                        <div *ngIf="submitted && f.localTelNo.errors" class="invalid-feedback">
+                                          <div *ngIf="f.localTelNo.errors.required">
+                                            {{ "stolt.masters.VesselMaster.localTelNo" | translate }} is required
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-3">
+                                        <label class="form-label">
+                                          {{ "stolt.masters.VesselMaster.localTelexNo" | translate }}
+                                        </label>
+                                        <input type="text" class="form-control custom-input" id=" " formControlName="localTelexNo" placeholder="LocalTelexNo"
+                                          [ngClass]="{ 'is-invalid': submitted && f.localTelexNo.errors }" />
+                                        <div *ngIf="submitted && f.localTelexNo.errors" class="invalid-feedback">
+                                          <div *ngIf="f.localTelexNo.errors.required">
+                                            {{ "stolt.masters.VesselMaster.localTelexNo" | translate }} is required
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-3">
+                                        <label class="form-label">
+                                          {{ "stolt.masters.VesselMaster.localFaxNo" | translate }}
+                                        </label>
+                                        <input type="text" class="form-control custom-input" id=" " formControlName="localFaxNo" placeholder="Local FaxNo"
+                                          [ngClass]="{ 'is-invalid': submitted && f.localFaxNo.errors }" />
+                                        <div *ngIf="submitted && f.localFaxNo.errors" class="invalid-feedback">
+                                          <div *ngIf="f.localFaxNo.errors.required">
+                                            {{ "stolt.masters.VesselMaster.localFaxNo" | translate }} is required
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-3">
+                                        <label class="form-label">
+                                          {{ "stolt.masters.VesselMaster.localEmail" | translate }}
+                                        </label>
+                                        <input type="text" class="form-control custom-input" id=" " formControlName="localEmail" placeholder="Local Email"
+                                          [ngClass]="{ 'is-invalid': submitted && f.localEmail.errors }" />
+                                        <div *ngIf="submitted && f.localEmail.errors" class="invalid-feedback">
+                                          <div *ngIf="f.localEmail.errors.required">
+                                            {{ "stolt.masters.VesselMaster.localEmail" | translate }} is required
+                                          </div>
+                                        </div>
+                                      </div>
+  
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+  
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="datails">
+                          <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                              data-bs-target="#vesselComDetails" aria-expanded="true" aria-controls="vesselComDetails">
+                              Vessel Communication Details
+                          </button>
+                      </h2>
+                      <div id="vesselComDetails" class="accordion-collapse collapse show" aria-labelledby="datails"
+                          data-bs-parent="#accordionPanelsStayOpenExample">
+                          <div class="accordion-body">
+                              <div class="wrap-form-field">
+                                  <div class="row g-3">
+                                    <div class="col-md-3">
+                                      <label class="form-label">
+                                        {{ "stolt.masters.VesselMaster.satteliteId" | translate }}
+                                      </label>
+                                      <input type="text" class="form-control custom-input" id=" " formControlName="satteliteId" placeholder="Sattelite Id"
+                                        [ngClass]="{ 'is-invalid': submitted && f.satteliteId.errors }" />
+                                      <div *ngIf="submitted && f.satteliteId.errors" class="invalid-feedback">
+                                        <div *ngIf="f.satteliteId.errors.required">
+                                          {{ "stolt.masters.VesselMaster.satteliteId" | translate }} is required
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                      <label class="form-label">
+                                        {{ "stolt.masters.VesselMaster.satcomId" | translate }}
+                                      </label>
+                                      <input type="text" class="form-control custom-input" id=" " formControlName="satcomId" placeholder="Satcom Id"
+                                        [ngClass]="{ 'is-invalid': submitted && f.satcomId.errors }" />
+                                      <div *ngIf="submitted && f.satcomId.errors" class="invalid-feedback">
+                                        <div *ngIf="f.satcomId.errors.required">
+                                          {{ "stolt.masters.VesselMaster.satcomId" | translate }} is required
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                      <label class="form-label">
+                                        {{ "stolt.masters.VesselMaster.telephoneNo" | translate }}
+                                      </label>
+                                      <input type="text" class="form-control custom-input" id=" " formControlName="telephoneNo" placeholder="Telephone No"
+                                        [ngClass]="{ 'is-invalid': submitted && f.telephoneNo.errors }" />
+                                      <div *ngIf="submitted && f.telephoneNo.errors" class="invalid-feedback">
+                                        <div *ngIf="f.telephoneNo.errors.required">
+                                          {{ "stolt.masters.VesselMaster.telephoneNo" | translate }} is required
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                      <label class="form-label">
+                                        {{ "stolt.masters.VesselMaster.faxNo" | translate }}
+                                      </label>
+                                      <input type="text" class="form-control custom-input" id=" " formControlName="faxNo" placeholder="fax No"
+                                        [ngClass]="{ 'is-invalid': submitted && f.faxNo.errors }" />
+                                      <div *ngIf="submitted && f.faxNo.errors" class="invalid-feedback">
+                                        <div *ngIf="f.faxNo.errors.required">
+                                          {{ "stolt.masters.VesselMaster.faxNo" | translate }} is required
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                      <label class="form-label">
+                                        {{ "stolt.masters.VesselMaster.vesselCommEmail" | translate }}
+                                      </label>
+                                      <input type="text" class="form-control custom-input" id=" " formControlName="vesselCommEmail" placeholder="Vessel Comm Email"
+                                        [ngClass]="{ 'is-invalid': submitted && f.vesselCommEmail.errors }" />
+                                      <div *ngIf="submitted && f.vesselCommEmail.errors" class="invalid-feedback">
+                                        <div *ngIf="f.vesselCommEmail.errors.required">
+                                          {{ "stolt.masters.VesselMaster.vesselCommEmail" | translate }} is required
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+  
+  
+  
+  
+  
+  
+                </nz-tab>
+              </nz-tabset>
+            </div>
+  
+            <div class="form-group wrap-form-action mt-4">
+              <button class="btn1 btn-lg float-end" (click)="onSave()" type="submit">
+                {{ "common.cancel" | translate }}
+              </button>
+              <button *ngIf="show !== 'show'" (click)="vesselMasters()" class="btn btn-outline-primary btn-lg float-end" type="submit">
+                <ng-container *ngIf="!vesselIdToUpdate">
+                  {{ "common.save" | translate }}
+                </ng-container>
+                <ng-container *ngIf="vesselIdToUpdate">
+                  {{ "common.update" | translate }}
+                </ng-container>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  
+  <ng-template #AddClause let-modal>
+    <div class="modal-content">
+      <div class="modal-headers">
+        <h4 class="modal-title">{{ "common.add" | translate }} Certificate</h4>
+        <button type="button" class="btn-close shadow-none float-end" aria-label="Close"
+          (click)="modal.dismiss('Cross click')"></button>
+      </div>
+      <div class="modal-body">
+        <div class="wrap-form-field padding-space pb-0">
+          <form class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">{{
+                "smartagent.portenquiry.newnquiry.vesselDetailstab.VesselCertificate"
+                | translate
+                }}
+              </label>
+              <input type="text" class="form-control custom-input" placeholder="Vessel Certificate" />
+            </div>
+  
+            <div class="col-md-6">
+              <label class="form-label">{{
+                "smartagent.portenquiry.newnquiry.vesselDetailstab.VesselCertificateValidFrom"
+                | translate
+                }}</label>
+              <input type="date" class="form-control custom-input" placeholder="Valid From" [min]="minDate" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">{{
+                "smartagent.portenquiry.newnquiry.vesselDetailstab.VesselCertificateValidTo"
+                | translate
+                }}</label>
+              <input type="date" class="form-control custom-input" placeholder="Valid To" [max]="minDate" />
+            </div>
+            <div class="btn-onscreen wrap-form-action">
+              <button class="btn btn-outline-secondary btn-lg float-end" (click)="modal.dismiss('Cross click')">
+                {{ "common.cancel" | translate }}
+              </button>
+              <button class="btn btn-outline-primary btn-lg float-end" type="submit">
+                {{ "common.save" | translate }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  
+  <ng-template #deletevessel let-c="close" let-d="dismiss">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+      </div>
+      <div class="modal-body mt-4">
+        <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2">
+        </em>
+        <span class="text-dark fs-6">{{ "error.msg_delete" | translate }}</span>
+      </div>
+      <div class="modal-footer">
+        <div class="text-center">
+          <button type="button" class="btn btn-secondary btn-sm me-3" (click)="vesselMasters()">
+            {{ "common.no" | translate }}
+          </button>
+          <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+            {{ "common.yes" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  
+  <ng-template #AddCertificate let-modal>
+    <div class="modal-content">
+      <div class="modal-headers">
+        <h4 class="modal-title">{{ "common.add" | translate }} Certificate</h4>
+        <button type="button" class="btn-close shadow-none float-end" aria-label="Close"
+          (click)="modal.dismiss('Cross click')"></button>
+      </div>
+      <div class="modal-body">
+        <div class="wrap-form-field padding-space pb-0">
+          <form class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">{{
+                "smartagent.portenquiry.newnquiry.vesselDetailstab.VesselCertificate"
+                | translate
+                }}
+              </label>
+              <input type="text" class="form-control custom-input" placeholder="Vessel Certificate" [(ngModel)]="certificateName"
+                [ngModelOptions]="{ standalone: true }" />
+            </div>
+  
+            <div class="col-md-6">
+              <label class="form-label">{{
+                "smartagent.portenquiry.newnquiry.vesselDetailstab.VesselCertificateValidFrom"
+                | translate
+                }}</label>
+              <input type="date" class="form-control custom-input" placeholder="Valid From" [max]="minDate"
+                [(ngModel)]="certificateValidFrom" [ngModelOptions]="{ standalone: true }" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">{{
+                "smartagent.portenquiry.newnquiry.vesselDetailstab.VesselCertificateValidTo"
+                | translate
+                }}</label>
+              <input type="date" class="form-control custom-input" placeholder="Valid To" [min]="minDate"
+                [(ngModel)]="certificateValidTo" [ngModelOptions]="{ standalone: true }" />
+            </div>
+  
+            <div class="col-md-6">
+              <label class="form-label">{{
+                "smartagent.smartAgent.AllformAddedit.uploadDocument" | translate
+                }}</label>
+              <input type="file" class="form-control custom-input" (change)="filechange($event)" />
+             </div>
+  
+            <div class="wrap-form-action">
+              <button class="btn1 btn-lg float-end" (click)="modal.dismiss('Cross click')">
+                {{ "common.cancel" | translate }}
+              </button>
+              <button class="btn btn-outline-primary btn-lg float-end" (click)="saveCertificate()">
+                {{ "common.save" | translate }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  
+  <div class="table-header-area">
+    <div class="mat-table-with-gheading">
+      <div class="wrapper">
+        <div class="container-fluid">
+          <div class=" pt-2">
+            <div class="wrap-mat-table-area">
+              <div class="table-header-area pt-2">
+                <div>
+                  <table-filters [TDP]="[false, false, true, true]" (filterInput)="applyFilter($event)"
+                    (onClickExport)="exportAsExcelFile()">
+                  </table-filters>
+                </div>
+                <div class="header-right">
+                  <a class="new-action btn btn-outline-primary btn-sm rounded-pill" appAccessControl
+                    featureCode="['STM016']" accessType="add" (click)="open(AddClause)">Add Vessel Details</a>
+                </div>
+              </div>
+            </div>
+            <div class="table-card">
+              <div class="table-design example-container mat-elevation-z8">
+                <table mat-table [dataSource]="dataSource" matSort class="full-width-table" summary="agreement">
+                  <ng-container matColumnDef="#">
+                    <th scope="col" mat-header-cell *matHeaderCellDef style="width: 3%;">
+                      # <em class="custom-tooltip" [attr.title]="'Toggle Filters'"
+                        (click)="toggleFilters = !toggleFilters" class="bi bi-search"></em>
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i = index">
+                      {{ element?.id}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="action">
+                    <th scope="col" id="action" class="charterersPdfHead" mat-header-cell
+                          *matHeaderCellDef style="width: 8%;">
+                        {{ 'Actions' }}
+                    </th>
+                    <td class="borderBottom" mat-cell *matCellDef="let element; let i = index">
+                      
+                            <div class="d-flex"  style="align-items: center;">
+                              <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop">
+                                <a routerLink="#" appAccessControl featureCode="['STM016']" accessType="update"
+                                  (click)="open(AddClause, element)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                              </span>
+                                <span nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}" class="mx-1">
+                                    <a appAccessControl featureCode="['STM011']" accessType="view" (click)="open(AddClause, element,'show')">
+                                        <em class="bi bi-eye globally-change-icon-color"></em>
+                                    </a>
+                                </span>
+                                <span class="form-check form-switch mx1 mb-0 mt-1">
+                                    <input appAccessControl featureCode="['STM011']" accessType="update" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" (change)="changeStatus(element,i)" [checked]="element.status" />
+                                    <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                                </span>
+                            </div>
+                        </td>
+                    
+                    
+                </ng-container>
+                  <ng-container matColumnDef="vesselCode">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                      Vessel Code
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.vesselCode }}
+                    </td>
+                  </ng-container>
+                   <ng-container matColumnDef="vesselName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                      Vessel Name
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.vesselName}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="countryName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                      Country Name
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.countryName}}
+                    </td>
+                  </ng-container> 
+  
+                  <ng-container matColumnDef="callSign">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                      Call Sign
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.callSign}}
+                    </td>
+                  </ng-container>  
+  
+                  <ng-container matColumnDef="imoNo">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                      Imo No
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.imoNo}}
+                    </td>
+                  </ng-container>  
+  
+                  <ng-container matColumnDef="createdBy">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                      Created By
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.createdBy}}
+                    </td>
+                  </ng-container>  
+  
+                  <ng-container matColumnDef="createdOn">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                      Created On
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.createdOn | date: "dd/MM/yyyy" }}
+                    </td>
+                  </ng-container>  
+  
+                  <ng-container matColumnDef="updatedBy">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                      Updated By
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.updatedBy}}
+                    </td>
+                  </ng-container>  
+  
+                  <ng-container matColumnDef="updatedOn">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                      Updated On
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.updatedOn | date: "dd/MM/yyyy" }}
+                    </td>
+                  </ng-container>  
+  
+                  <ng-container matColumnDef="status">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                      Status
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.status? "Active" : "Inactive"}}
+                    </td>
+                  </ng-container>  
+  
+                  <!-- <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index" [matColumnDef]="headersFilter">
+                    <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+                      <div class="filters-container" [class.animate]="!toggleFilters">
+                        <em *ngIf="i > 0 && i < displayedColumns1.length - 10" class="custom-tooltip" [attr.title]="'Clear Filters'"
+                          (click)="clearFilters();toggleFilters = !toggleFilters" class="bi bi-x-circle"></em>
+                        <div *ngIf="i > 1 && i < displayedColumns1.length - 0" appearance="outline">
+                          <input class="form-control input-txt" placeholder="Press 'Enter' to search" [(ngModel)]="filtersModel[i]"
+                            (keyup.enter)="searchColumns()">
+                        </div>
+                      </div>
+                    </th>
+                  </ng-container> -->
+
+                  <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index" [matColumnDef]="headersFilter">
+                    <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+                      <div class="filters-container" [class.animate]="!toggleFilters">
+                        <em *ngIf="i > 0 && i < displayedColumns1.length - 2" class="custom-tooltip bi bi-x-circle"
+                          [attr.title]="'Clear Filters'" (click)="clearFilters(); toggleFilters = !toggleFilters">
+                        </em>
+                        <div *ngIf="i > 1 && i < displayedColumns1.length - 0" appearance="outline">
+                          <ng-container *ngIf="displayedColumns[i] === 'status'; else textInput">
+                            <select class="form-control" [(ngModel)]="filtersModel[i]" (change)="searchColumns()">
+                              <option value="">All</option>
+                              <option value="active">Active</option>
+                              <option value="inactive">Inactive</option>
+                            </select>
+                          </ng-container>
+                          <ng-template #textInput>
+                            <input class="form-control input-txt" placeholder="Press 'Enter' to search" [(ngModel)]="filtersModel[i]"
+                              (keyup.enter)="searchColumns()">
+                          </ng-template>
+                        </div>
+                      </div>
+                    </th>
+                  </ng-container>
+  
+                  <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumns">
+                  </tr>
+                  <tr mat-header-row class="no-default-height" *matHeaderRowDef="displayedColumns1"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns">
+                  </tr>
+                  <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+                      <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+                      <span *ngIf="!loaderService?.isLoadingcircle && !dataSource?.data?.length">No data available</span>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+  
+              <div [ngClass]="{'display-none' : toalLength < 10}">
+                <mat-paginator [length]="toalLength" [pageSize]="pageSize" [pageIndex]="pageNumber-1"
+                  (page)="onPageChange($event)"  [pageSizeOptions]="_gc.PAGINATOR_OPTIONS" showFirstLastButtons></mat-paginator>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

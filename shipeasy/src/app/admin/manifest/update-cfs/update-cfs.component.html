@@ -1,0 +1,153 @@
+<div class="table-with-gheading">
+    <div class="wrap-content">
+       
+        <div class="row">
+            <div class="horz-bar mb-3">
+                <span>Vessel : {{vesseldata}} || </span>
+                <span>Voyage : {{voyageList}}</span>
+
+            </div>
+            <div class="col-md-12 table-with-gheading">
+                <div class="horz-bar">Update CFS </div>
+                <div class="table-responsive">
+                    <div class="wrap-table-area  wrap-table-design wrap-form-field"
+                        id="htmlData">
+                        <form [formGroup]="blForm">
+                            <table aria-describedby="mytable">
+                                <thead>
+                                    <tr class="field-name">
+                                        
+                                        <th scope="col">SR No.</th>
+                                        <th scope="col">BL No.</th>
+                                        <th scope="col">POO</th>
+                                        <th scope="col">POD</th>
+                                        <th scope="col">FPOD</th>
+                                        <th scope="col">Container Type</th>
+                                        <th scope="col">Shipment Terms</th>
+                                        <th scope="col">Consignee</th>
+                                        <th scope="col">DPD Flag</th>
+                                        <th scope="col">Notify Party</th>
+                                        <th scope="col">HSS Party</th>
+                                        <th scope="col">CFS</th>
+
+    
+    
+                                    </tr>
+                                    <tr>
+                                        <th scope="col">
+                                           
+                                        </th>
+                                        <th scope="col">
+                                            <input type="text" class="form-control" [(ngModel)]="blNo" 
+                                            [ngModelOptions]="{standalone: true}" (keydown.enter)="search()">
+                                        </th>
+                                        <th scope="col">
+                                            <input type="text" class="form-control" [(ngModel)]="pooName" 
+                                            [ngModelOptions]="{standalone: true}" (keydown.enter)="search()">
+                                        </th>
+                                        <th scope="col">
+                                            <input type="text" class="form-control" [(ngModel)]="podName" 
+                                            [ngModelOptions]="{standalone: true}" (keydown.enter)="search()">
+                                        </th>
+                                        <th scope="col"><input type="text" class="form-control" [(ngModel)]="fpodName" 
+                                            [ngModelOptions]="{standalone: true}"(keydown.enter)="search()"
+                                            >
+                                        </th>
+                                        <th scope="col"> 
+                                            <input type="text" class="form-control" [(ngModel)]="containerTypeName" 
+                                            [ngModelOptions]="{standalone: true}" (keydown.enter)="search()">
+                                        </th>
+                                        <th scope="col">
+                                            <input type="text" class="form-control" [(ngModel)]="shipmentTerm" 
+                                            [ngModelOptions]="{standalone: true}" (keydown.enter)="search()">
+                                        </th>
+                                        <th scope="col">
+                                            <input type="text" class="form-control" [(ngModel)]="consigneeName" 
+                                            [ngModelOptions]="{standalone: true}" (keydown.enter)="search()">
+                                        </th>
+                                      
+                                        <th scope="col">
+                                          
+                                        </th>
+                                        <th scope="col">
+                                            <input type="text" class="form-control" [(ngModel)]="notifyPartyName" 
+                                            [ngModelOptions]="{standalone: true}" (keydown.enter)="search()">
+                                        </th>
+                                        <th scope="col">
+                                            
+                                        </th>
+                                        <th scope="col">
+                                            <input type="text" class="form-control" [(ngModel)]="cfsName" 
+                                            [ngModelOptions]="{standalone: true}" (keydown.enter)="search()">
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container formArrayName="blData">
+                                        <ng-container *ngFor="let bl of getControls(); let i = index"
+                                        [formGroupName]="i">
+                                        <tr>
+                                            <td>{{i+1}}</td>
+                                            <td>{{bl?.controls?.blNumber?.value}}</td>
+                                            <td>{{bl?.controls?.importPolName?.value}}</td>
+                                            <td>{{bl?.controls?.importPodName?.value}}</td>
+                                            <td>{{bl?.controls?.importFpodName?.value}}</td>
+                                            <td> {{bl?.controls?.containerTypeName?.value}}</td>
+                                            <td>
+                                                {{bl?.controls?.shippingTerm?.value}}
+                                            </td>
+                                            <td>
+                                                {{bl?.controls?.consigneeName?.value}}
+                                            </td>
+                                            <td>
+                                                {{bl?.controls?.isDPD?.value ? 'Yes' : 'No'}}
+                                            </td>
+                                            <td>
+                                                {{bl?.controls?.notify_party1Name?.value}}
+                                            </td>
+                                            <td>
+                                                {{bl?.controls?.isHSS?.value ? 'Yes' : 'No'}}
+                                            </td>
+                                            <td>
+                                                <nz-select class="w-100 border-0" nzShowSearch formControlName="cfsLocationId"
+                                                nzAllowClear>
+                                                <nz-option *ngFor="let cfs of CFSlocationList" [nzLabel]="cfs?.locationName"
+                                                [nzValue]="cfs?.locationId"></nz-option>
+                                            </nz-select>
+                                            </td>
+                                        </tr>
+                                        </ng-container>
+                                        <tr *ngIf="getControls().length !== 0">
+                                            <td colspan="11" class="border-0"></td>
+                                            <td> <nz-select class="w-100 border-0" nzShowSearch [(ngModel)]="cfs" [ngModelOptions]="{standalone: true}"
+                                                    nzAllowClear>
+                                                    <nz-option *ngFor="let cfs of CFSlocationList" [nzLabel]="cfs?.locationName"
+                                                    [nzValue]="cfs?.locationId"></nz-option>
+                                                </nz-select></td>
+                                           
+                                            <td class="border-0" (click)="applyAll()"><button class="btn btn-outline-primary">Apply All</button></td>
+                                        </tr>
+                                    </ng-container>
+                                    
+                                
+                                </tbody>
+                            </table>
+                        </form>
+                       
+                    </div>
+                </div>
+                <div class="no-data-availble mt-0" *ngIf="houseBlList.length === 0">
+                    {{'common.no_data' | translate}}
+                </div>
+            </div>
+        </div>
+        <div class="btn-onscreen  my-3" >
+            <div class="form-group wrap-form-action ">
+                <button class="btn btn-outline-primary float-end" (click)="back()"> 
+                  Back </button>
+                  <button class="btn btn-outline-primary float-end" (click)="updateData()"> 
+                    Update </button>
+            </div>
+          </div>
+    </div>
+</div>

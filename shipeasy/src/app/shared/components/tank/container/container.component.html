@@ -1,0 +1,267 @@
+   <ng-container *ngIf="!showUpdateContainer">
+  <div class="modal-content nz-select">
+    <div class="modal-header pl-0">
+      <h5 class="modal-title" id="containerModalLabel">Select Container</h5>
+      <button type="button" class="btn-close" (click)="closePopup()" aria-label="Close"></button>
+    </div>
+    <form [formGroup]="addContainerForm" class="row">
+    <div class="modal-body">
+      <div class="row" *ngIf=" this.addContainerForm?.controls?.containerSearch?.value === 'availble'">
+        <div class="col-md-4">
+          <div class="form-field-section">
+            <label class="form-label">{{ 'stolt.batch.container.add_container.select_yard' | translate }} 
+            </label>
+            
+
+            <nz-select class="form-select " nzShowSearch nzAllowClear formControlName="yard" nzPlaceHolder="Select Yard"
+            [ngClass]="{'is-invalid': submitted && f.yard.errors}"
+            (ngModelChange)="getContainerData()"  >
+             <nz-option *ngFor="let yard of  sort(yardList ,'locationName')" [nzLabel]="yard.locationName"
+              [nzValue]="yard.locationName"></nz-option>
+           </nz-select>
+            <div *ngIf="submitted && f.yard.errors" class="invalid-feedback">
+              <div *ngIf="f.yard.errors.required">{{ 'stolt.batch.container.add_container.select_yard' |
+                translate }} is required
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 " *ngIf="false">
+          <div class="form-field-section">
+            <label class="form-label">Tank Type</label>
+            <nz-select  class="form-select" nzShowSearch nzAllowClear  formControlName="containerType"
+            [ngClass]="{'is-invalid': submitted && f.containerType.errors}"
+            (ngModelChange)="getContainerData()"  >
+              <nz-option *ngFor="let TankType of tanktypeList" [nzLabel]="TankType.typeName"
+              [nzValue]="TankType.typeName"></nz-option>
+           </nz-select>
+            <div *ngIf="submitted && f.containerType.errors" class="invalid-feedback">
+              <div *ngIf="f.containerType.errors.required">{{ 'stolt.batch.container.container_type' |
+                translate }} is required
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 " *ngIf="false">
+          <div class="form-field-section">
+          <label class="form-label"> {{ "stolt.masters.ContainerMaster.TankStatus" | translate }}</label>
+          <nz-select   class="form-select" nzShowSearch nzAllowClear formControlName="tankStatus"
+            [ngClass]="{ 'is-invalid': submitted && f.tankStatus.errors }"
+            (ngModelChange)="getContainerData()">
+            <nz-option *ngFor="let TankStatus of tankstatusList" [nzLabel]="TankStatus.typeName"
+              [nzValue]="TankStatus.systemtypeId"></nz-option>
+          </nz-select>
+          <div *ngIf="submitted && f.tankStatus.errors" class="invalid-feedback">
+            <div *ngIf="f.tankStatus.errors.required"> {{
+              "stolt.masters.ContainerMaster.TankStatus" |
+              translate }} is required</div>
+          </div>
+        </div>
+        </div>
+
+    </div>
+      <div class="row mt-3"  >
+        <div class="col-md-4">
+          <input type="radio" (change)="getContainerData()" value="availble" formControlName="containerSearch" />
+          <label class="form-label px-1">All Available containers
+          </label>
+        </div>
+        <div class="col-md-4">
+          <input type="radio" (change)="getContainerData()" value="reserv" formControlName="containerSearch" />
+          <label class="form-label px-1">Reserved for this Job
+          </label>
+        </div>
+        <div class="col-md-4">
+          <input type="radio" (change)="getContainerData()" value="cutomer" formControlName="containerSearch" />
+          <label class="form-label px-1">Reserved for other customer
+          </label>
+        </div>
+      </div>
+     
+    
+      <div class="row" *ngIf="checkFilter()">
+      
+        <div class="col-md-12">
+          <div class="col-md-4 ">
+              <label class="form-label">
+              </label>
+             <input type="text" class="form-input" [(ngModel)]="searchText"
+             [ngModelOptions]="{standalone: true}" placeholder="Search here..">
+            
+          </div>
+        
+          <div class="table-responsive">
+            <table aria-describedby="mytable" class="gfg">
+              <thead>
+                <tr class="field-name">
+                  <th *ngIf="false || this.addContainerForm?.controls?.containerSearch?.value === 'availble'" scope="col">
+                    <input *ngIf="containerList.length > 0"
+                     type="checkbox" (change)="allSelect($event)"
+                    id="all"></th>
+                  <th scope="col">Container No.</th>
+                  <th scope="col">Container Type</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Customer</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Updated By</th>
+                  <th scope="col">Remarks</th>
+                 
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let container of containerList | searchfilter : searchText">
+                  <td *ngIf="false || this.addContainerForm.controls.containerSearch.value === 'availble'">
+                    <input class=""  type="checkbox" [checked]="isSelected"
+                     (change)="onContainerChange(container,$event)" [value]="container"></td>
+                  <td>{{container.containerNo}}</td>
+                  <td>{{container.containerType}}</td>
+                  <td>{{container.containerStatus}}</td>
+                  <td>{{container.customerName}}</td>
+                  <td>{{container.date | date: 'dd/MM/yyyy'}}</td>
+                  <td>{{container.updatedBy}}</td>
+                  <td>{{container.remarks}}</td>
+                  <td> <span class="mtop ft-18 "
+                    (click)="openContainer(updateContainer,container)"><a class="pl-1"><em
+                        class="bi bi-plus-circle text-secondary"></em></a></span></td>
+                  <td class="action-field">
+                    <span *ngIf="!isShow" nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}" class="mtop"><a><em
+                          class="bi bi-trash color-pencil-red"
+                          (click)="deleteContainer(container)"></em></a></span>
+                  </td>
+                 
+                </tr>
+              </tbody>
+            </table>
+            <div class="no-data-availble" *ngIf="containerList.length === 0">
+              {{'common.no_data' | translate}}
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <div class="wrap-form-field">
+        <div class="form-group wrap-form-action">
+          <button class="btn btn-outline-secondary btn-lg float-end" (click)="closePopup()">
+            Cancel
+          </button>
+          <button [disabled] ="this.selectedContainer.length === 0" class="btn btn-outline-primary btn-lg float-end" (click)="onSelectContainer()" type="submit">
+            Select
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+  </div>
+</ng-container>
+<!-- <ng-template #content1 let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+      </button>
+    </div>
+    <div class="modal-body mt-4 d-flex align-items-center">
+      <em class="bi bi-question-circle text-danger fs-2 text-center float-start me-2"> </em> <span
+        class=" text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary  btn-sm me-3" (click)="d('Cross click')">No</button>
+        <button type="button" class="btn btn-danger  btn-sm" (click)="c('yes')">Yes</button>
+      </div>
+    </div>
+  </div>
+</ng-template> -->
+<ng-container *ngIf="showUpdateContainer">
+     <div class="modal-content nz-allSelect">
+      <div class="modal-headers mt-2">
+        <h4 class="modal-title">Updates Container Status
+        </h4>
+       
+      </div>
+      <div class="modal-body">
+        <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+          <form class="row g-3 align-items-center" [formGroup]="addContainerForm1">
+  
+  
+            <div class="col-md-4  nz-select">
+              <label class="form-label">Container No<span class="text-danger">*</span></label>
+              <nz-select nzDisabled class="form-select" nzShowSearch nzAllowClear formControlName="containerNo"
+                [ngClass]="{'is-invalid': submitted1 && f.containerNo.errors}">
+                <nz-option *ngFor="let containerNo of listContainer" [nzLabel]="containerNo.containerNo"
+                  [nzValue]="containerNo.containermasterId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted1 && f.containerNo.errors" class="invalid-feedback">
+                <div *ngIf="f.containerNo.errors.required">Container No is required</div>
+              </div>
+            </div>
+            <div class="col-md-4  nz-select">
+              <label class="form-label">Activity <span class="text-danger">*</span></label>
+              <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="status"
+                (ngModelChange)="setValidation($event)" [ngClass]="{'is-invalid': submitted1 && f.status.errors}">
+                <nz-option *ngFor="let cust of containerStatusList" [nzLabel]="cust" [nzValue]="cust"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted1 && f.status.errors" class="invalid-feedback">
+                <div *ngIf="f.status.errors.required">Activity is required</div>
+              </div>
+            </div>
+  
+  
+            <div class="col-md-4 nz-select">
+              <label class="mb-0 p-0 form-label">Date</label>
+              <mat-form-field appearance="outline" class="custom-date-picker">
+               <div class="d-flex align-items-center  w-100">
+                <input matInput
+                [matDatepicker]="pickerEta1" formControlName="date" class="h-0"/>
+              <mat-datepicker-toggle matSuffix [for]="pickerEta1"></mat-datepicker-toggle>
+               </div>
+                <mat-datepicker #pickerEta1></mat-datepicker>
+              </mat-form-field>
+              <mat-error>
+                <div *ngIf=" submitted && f?.date?.errors?.required" class="set-error-msg">Date is required
+              </div>
+            </mat-error>
+            </div>
+            <div class="col-md-4  nz-select">
+              <label class="form-label">Customer Name<span *ngIf="isRequird" class="text-danger">*</span></label>
+              <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="customerName"
+                [ngClass]="{'is-invalid': submitted1 && f.customerName.errors}">
+                <nz-option *ngFor="let cust of customerList" [nzLabel]="cust.customerName"
+                  [nzValue]="cust.partymasterId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted1 && f.customerName.errors" class="invalid-feedback">
+                <div *ngIf="f.customerName.errors.required">Customer Name is required</div>
+              </div>
+            </div>
+            <div class="col-md-4 nz-select">
+              <label class="form-label"> Location <span class="text-danger">*</span></label>
+              <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="yard"
+                [ngClass]="{ 'is-invalid': submitted1 && f.yard.errors }">
+                <nz-option *ngFor="let yard of  sort(yardList ,'locationName')"
+                  [nzLabel]="yard.locationName" [nzValue]="yard.locationId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted1 && f.yard.errors" class="invalid-feedback">
+                <div *ngIf="f.yard.errors.required">Location is required</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label"> {{ "stolt.masters.ContainerMaster.Remarks" | translate }}</label>
+              <input type="text" class="form-control custom-input" maxlength="500" id=" " formControlName="remarks"
+                value="" />
+            </div>
+            <div class="form-group wrap-form-action mt-4">
+              <button class="btn1 btn-lg float-end" (click)="containerMasterCancel()" type="submit">
+                {{ "common.cancel" | translate }}
+              </button>
+  
+              <button (click)="containerMaster()" class="btn btn-outline-primary btn-lg float-end" type="submit">
+                {{ "common.update" | translate }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+ </ng-container>
+ 

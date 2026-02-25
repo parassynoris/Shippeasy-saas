@@ -1,0 +1,853 @@
+@import '../../../../../assets/styles/mixins/global.scss';
+
+.wrap-section {
+  margin-top: 20px;
+
+  .wrap-bank-details {
+    span {
+      font-size: 12px;
+      display: inline-block;
+
+      &.wrap-label {
+        margin-right: 25px;
+        width: 21%;
+      }
+    }
+  }
+}
+
+.wrap-bank-left {
+  padding: 12px 0;
+}
+
+.bi-three-dots {
+  margin-left: 15px;
+  cursor: pointer;
+}
+
+.wrap-percentage-area {
+  font-size: 12px;
+  padding: 12px 0;
+
+  input {
+    width: 100%;
+    border: 1px solid var(--theme-border-color);
+    padding: 4px 5px;
+  }
+
+  span {
+    display: inline-block;
+
+    &.per {
+      width: 8%;
+      margin: 0 12px;
+    }
+
+    &.total {
+      width: 45%;
+    }
+  }
+}
+
+.special-select {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--theme-border-color);
+  padding: 6px 1px;
+}
+
+.remark-section {
+  margin-top: 14px;
+
+  .form-label {
+    @include new-heading-12;
+  }
+}
+
+.footer-ui label {
+  margin-right: 10px;
+}
+
+.saveDraft {
+  margin-right: 25px;
+}
+
+.veselother h2 {
+  padding: 7px 15px !important;
+  box-shadow: none !important;
+  font-size: 14px !important;
+  color: var(--theme-black-320) !important;
+  background-color: var(--theme-light-bg) !important;
+}
+
+.main-c {
+  color: var(--theme-white-text-color) !important;
+  background: var(--theme-blue-background-color) !important;
+  margin-bottom: 0px;
+}
+
+.wrap-form-field {
+  margin-top: 23px;
+
+  .main-h {
+    font-size: 12px;
+    margin-bottom: 15px;
+    color: var(--link-text-color);
+  }
+}
+
+.footer-heading {
+  text-align: right;
+  padding-right: 10px;
+}
+
+.pay-prf1 {
+  margin: 0px 0px 0px 30px;
+  background-color: #ECEEF4;
+}
+
+.icon-x {
+  margin: 0px 0px 0px 5px;
+}
+
+h6 {
+  color: var(--link-text-color);
+}
+
+.headeing-txt {
+  color: var(--link-text-color);
+  font-size: 12px;
+}
+
+@media only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px) {
+  td:nth-of-type(1):before {
+    content: "Job No";
+  }
+
+  td:nth-of-type(2):before {
+    content: "Invoice No";
+  }
+
+  td:nth-of-type(3):before {
+    content: "Invoice Date";
+  }
+
+  td:nth-of-type(4):before {
+    content: "Due Date";
+  }
+
+  td:nth-of-type(5):before {
+    content: "Invoice to";
+  }
+
+  td:nth-of-type(6):before {
+    content: "Amount";
+  }
+
+  td:nth-of-type(7):before {
+    content: "Payment Amount";
+  }
+
+  td:nth-of-type(8):before {
+    content: "Action";
+  }
+
+  .footer-ui {
+    td:nth-of-type(1):before {
+      content: "Total Payment Amount";
+    }
+
+    .footer-heading {
+      text-align: left;
+      padding-right: 0px;
+    }
+  }
+}
+
+.wrap-form-field .custom-input {
+  border: 0;
+  outline: 0;
+  border-bottom: 1px solid var(--theme-border-bottom-color);
+  color: var(--theme-light-text-color);
+  font-size: 12px;
+  font-weight: normal;
+  padding: 6px 5px;
+  border-radius: 0;
+}
+
+.wrap-form-field h5 {
+  font-size: 12px;
+  color: var(--theme-light-text-color);
+  font-weight: 600;
+
+}
+
+.wrap-form-field.padding-space {
+
+  padding: 10px 20px;
+}
+
+.btn-sm {
+  border-radius: 50px;
+}
+
+.custom-select {
+  border-radius: 50px;
+  border-right: 0 !important;
+  border: 1px solid var(--theme-red-color);
+  font-size: 12px;
+}
+
+.input-group-text {
+  background-color: transparent;
+  border-radius: 50px;
+  color: #3b579d;
+  border: 1px solid var(--theme-red-color);
+}
+
+.modal-header {
+
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.modal-title {
+  color: #3b579d;
+}
+
+.btn-close {
+
+  color: #3b579d;
+}
+
+.modal-content {
+  padding: 10px 10px;
+  border: 0;
+}
+
+.modal-body {
+  padding: 0px;
+
+}
+
+.modal-header .btn-close {
+  padding: 0;
+  margin: 0;
+}
+
+.costtable table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.costtable th {
+  background-color: #f5f5f5
+}
+
+.costtable th,
+.costtable td {
+  padding: 8px;
+  text-align: left;
+  border: 1px solid #e0e0e0;
+}
+
+.costtable td.bnull {
+  border: 0px !important;
+  border-bottom: 1px solid #bbb !important;
+}
+
+.scroll {
+  height: 125px;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #ebebeb;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+  background-color:#a9a9a9 ;
+}
+
+table.vendorassi {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.vendorassi th {
+
+  border: 0;
+}
+
+.vendorassi th,
+.vendorassi td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #bbb;
+}
+
+select.form-select-sm {
+  font-size: 12px;
+  padding: 8px;
+  font-weight: normal !important;
+
+}
+
+@media only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px) {
+
+  .costtable table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+
+  .costtable table thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  .costtable table tr {
+    border: 1px solid var(--theme-gobally-border-color);
+    margin: 0 0 1rem 0;
+  }
+
+  .costtable table td {
+
+    border: none;
+    border-bottom: 1px solid #e0e0e0;
+    position: relative;
+    padding-left: 50%;
+  }
+
+  .costtable table td:before {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+  }
+
+  .costtable table .action-field {
+    text-align: left;
+  }
+
+  .costtable td:nth-of-type(1):before {
+    content: "Optional Charge";
+  }
+
+  .costtable td:nth-of-type(2):before {
+    content: "Charge Name";
+  }
+
+  .costtable td:nth-of-type(3):before {
+    content: "Vessel Unit";
+  }
+
+  .costtable td:nth-of-type(4):before {
+    content: "Unit";
+  }
+
+  .costtable td:nth-of-type(5):before {
+    content: "Zero";
+  }
+
+  .costtable td:nth-of-type(6):before {
+    content: "Currency";
+  }
+
+  .costtable td:nth-of-type(7):before {
+    content: "Exc.Rate";
+  }
+
+  .costtable td:nth-of-type(8):before {
+    content: "QTY";
+
+  }
+
+  .costtable td:nth-of-type(9):before {
+    content: "Rate Unit";
+
+  }
+
+  .costtable td:nth-of-type(10):before {
+    content: "AMT in FC";
+
+  }
+
+  .costtable td:nth-of-type(11):before {
+    content: "AMT in INR";
+
+  }
+
+  .costtable td:nth-of-type(12):before {
+    content: "GST";
+
+  }
+
+  .costtable td:nth-of-type(13):before {
+    content: "Action";
+  }
+
+}
+
+
+@media only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px) {
+
+
+  td:nth-of-type(1):before {
+    content: "Payment No";
+  }
+
+  td:nth-of-type(2):before {
+    content: "Payment Date";
+  }
+
+  td:nth-of-type(3):before {
+    content: "Payment Mode";
+  }
+
+  td:nth-of-type(4):before {
+    content: "Payment From";
+  }
+
+  td:nth-of-type(5):before {
+    content: "Payment Amount";
+  }
+
+  td:nth-of-type(6):before {
+    content: "Status";
+  }
+
+  td:nth-of-type(7):before {
+    content: "Action";
+  }
+}
+
+.ni {
+  color: var(--link-text-color);
+  padding: 0px 0px 0px 1325px;
+}
+
+.small-text {
+  color: black;
+  font-size: 12px;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  font-style: italic;
+  text-decoration: underline;
+  color: var(--theme-red-color);
+}
+
+
+h1 {
+  font-size: 12px;
+  line-height: 30px;
+  color: var(--link-text-color);
+}
+
+.label-radio-button-alignment {
+  display: flex;
+  align-items: center;
+
+  label {
+    font-size: 12px;
+    line-height: 18px;
+    color: var(--theme-black-400);
+  }
+
+  input[type="radio"] {
+    width: 15px;
+    height: 15px;
+  }
+
+  .radio-button-alignemnt {
+    display: flex;
+    align-items: center;
+    padding-left: 12px;
+
+    .radio-button-style:last-child {
+      padding: 0;
+    }
+
+    .radio-button-style {
+      display: flex;
+      padding-right: 16px;
+      align-items: center;
+
+      >label {
+        font-size: 12px;
+        line-height: 18px;
+        padding-left: 6px;
+        color: var(--theme-black-400);
+        display: block;
+      }
+    }
+  }
+
+}
+
+
+.custom-form-control {
+  >label {
+    font-size: 12px;
+    line-height: 18px;
+    color: var(--theme-black-400);
+    display: block;
+  }
+
+  input,
+  select {
+    border: none;
+    border-bottom: 1px solid var(--theme-border-bottom-color);
+    color: var(--theme-light-text-color);
+    font-size: 12px;
+    font-weight: normal;
+    padding: 0 15px;
+    height: 35px;
+    width: 100%;
+    background-color: transparent;
+
+    &:focus {
+      outline: none;
+      box-shadow: none;
+    }
+  }
+
+  ::placeholder {
+    font-size: 12px;
+    color: var(--theme-light-text-color);
+  }
+}
+
+.collection-type-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.collection-type-grid-bottom-alignment {
+  padding: 0 0 24px 0;
+}
+
+.receipt-input-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+
+  .custom-form-control {
+    label {
+      span {
+        padding-left: 8px;
+      }
+    }
+  }
+}
+
+.button-center-alignment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0 0 0;
+
+  button {
+    border-radius: 999px;
+    font-size: 12px;
+    min-width: 120px;
+  }
+
+  button:first-child {
+    margin-right: 8px;
+  }
+
+  button:last-child {
+    margin-left: 8px;
+  }
+}
+
+.accordion {
+  button {
+    padding: 7px 15px !important;
+    box-shadow: none !important;
+    font-size: 14px !important;
+    color: var(--theme-white-text-color) !important;
+    background: var(--theme-blue-background-color) !important;
+   
+
+  }
+}
+.accordion-header {
+ button{
+  width: 100% !important;
+ }
+}
+.button-center-alignment-custom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0 0 0;
+
+  button {
+    border-radius: 999px;
+    font-size: 16px !important;
+    font-weight: 400;
+    user-select: none;
+    line-height: 1.5;
+    min-width: 120px;
+    padding: 0.5rem 1rem;
+    height: 41.97px;
+
+  }
+
+  button:first-child {
+    margin-right: 8px;
+    background-color: transparent !important;
+    border: 1px solid #007BFF !important;
+    color: #007BFF!important;
+    transition: .3s ease-in-out;
+
+    &:hover {
+     background-color : var(--theme-red-color) !important;
+      color: var(--theme-white-text-color) !important;
+    }
+
+  }
+
+  button:last-child {
+    margin-left: 8px;
+    background-color: transparent !important;
+    border: 1px solid #6c757d !important;
+    color: #6c757d !important;
+    transition: .3s ease-in-out;
+
+    &:hover {
+      color: var(--theme-white-text-color) !important;
+      background-color: #6c757d !important;
+    }
+  }
+}
+
+.receipt-modal-all-content-alignment {
+  .print-button-center-alignment {
+    button {
+      min-width: 90px;
+      font-weight: 400;
+    }
+  }
+
+  .amount-text-style {
+    label {
+      font-size: 12px;
+      color: var(--theme-black-400);
+      line-height: 18px;
+    }
+  }
+
+  .remarks-content-alignment {
+    label {
+      font-size: 12px;
+      color: var(--theme-black-400);
+      line-height: 18px;
+      display: block;
+    }
+  }
+
+  .modal-sub-title-alignment {
+    padding: 20px 0 0 0;
+
+    h5 {
+      font-size: 12px;
+      line-height: 26px;
+      color: var(--theme-black-400);
+      margin: 0;
+      font-weight: 400;
+    }
+  }
+
+  .custom-modal-body-alignment {
+    .more-menu-alignment {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .data-grid {
+      display: grid;
+      padding: 30px 0 0 0;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+
+      div {
+        label {
+          font-size: 12px;
+          color: var(--theme-black-400);
+          line-height: 18px;
+          display: block;
+        }
+      }
+    }
+  }
+
+  .modal-title-style {
+    h3 {
+      font-size: 26px;
+      line-height: 32px;
+      color: var(--theme-black-400);
+      text-align: center;
+      margin: 0 0 16px 0;
+    }
+  }
+
+  .text-amount-all-content-alignment {
+    display: flex;
+    align-items: center;
+    padding: 0 0 16px 0;
+    border-bottom: 1px solid var(--theme-gobally-border-color);
+    justify-content: space-between;
+
+    div {
+      label {
+        font-size: 12px;
+        color: var(--theme-black-400);
+        line-height: 22px;
+        font-weight: 400;
+      }
+
+      span {
+        font-size: 12px;
+        line-height: 22px;
+        color: var(--theme-dark-black-text-color);
+      }
+    }
+  }
+}
+
+.recepit-col-two-grid {
+  display: grid;
+  padding: 24px 0 60px 0;
+  grid-template-columns: repeat(2, 1fr);
+
+  .recepit-col-two-grid-items {
+    padding: 0 20px;
+
+    .sub-title-alignment {
+      h5 {
+        font-size: 12px;
+        font-weight: 400;
+        color: var(--theme-black-400);
+        line-height: 20px;
+        margin: 16px 0;
+      }
+    }
+
+    .left-side-content-alignment {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      padding: 16px 0 0 0;
+
+      div {
+        label {
+          font-size: 12px;
+          color: var(--theme-black-400);
+          display: block;
+          line-height: 22px;
+          font-weight: 400;
+        }
+
+        span {
+          font-size: 12px;
+          text-transform: lowercase;
+          line-height: 20px;
+          color: var(--theme-dark-black-text-color);
+        }
+      }
+    }
+  }
+
+  .recepit-col-two-grid-items:nth-child(1) {
+    border-right: 1px solid var(--theme-gobally-border-color);
+  }
+}
+
+.wrap-table-design {
+  table {
+    thead {
+      tr {
+        th {
+          font-size: 12;
+          color: var(--theme-black-400);
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        td {
+          @include new-heading-12;
+          color: var(--theme-black-400);
+        }
+      }
+    }
+  }
+}
+
+.remark-input-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 24px;
+  gap: 24px;
+}
+
+
+
+.remark-input-grid-top-alignment {
+  padding: 40px 0 0 0;
+}
+
+.form-accordian {
+  h2 {
+    button {
+      padding: 7px 15px;
+      box-shadow: none;
+      font-size: 12px;
+      color: var(--theme-black-320) !important;
+  background-color: var(--theme-light-bg) !important;
+    }
+  }
+
+  .accordion-button::after {
+    filter: brightness(0) invert(1);
+  }
+
+  .accordion-item {
+    margin-bottom: 25px;
+    border: 0;
+
+    &:last-child {
+      margin-bottom: 0px;
+    }
+  }
+}

@@ -1,0 +1,167 @@
+<div class="gate-out-data-container">
+
+  <div class="card-body">
+    <form [formGroup]="gateOutForm" class="gate-out-form">
+
+      <div class="row mb-3">
+        <div class="col-md-4" *ngIf="isEditMode || isclone">
+          <div class="form-group">
+            <label for="gatePassNumber">Gate Out Pass No. <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="gatePassNumber" formControlName="gatePassNumber"
+              [readonly]="true" [class.is-invalid]="hasError('gatePassNumber')" readonly>
+            <div class="invalid-feedback" *ngIf="hasError('gatePassNumber')">
+              {{ getErrorMessage('gatePassNumber') }}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="whBeNumber">In-Bill of Entry <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="whBeNumber" formControlName="whBeNumber"
+              [class.is-invalid]="hasError('whBeNumber')" placeholder="Enter In-Bill of Entry Number">
+            <div class="invalid-feedback" *ngIf="hasError('whBeNumber')">
+              {{ getErrorMessage('whBeNumber') }}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="exBeNumber">Ex-Bill of Entry</label>
+            <input type="text" class="form-control" id="exBeNumber" formControlName="exBeNumber"
+              [class.is-invalid]="hasError('exBeNumber')" placeholder="Enter Ex-Bill of Entry Number">
+            <div class="invalid-feedback" *ngIf="hasError('exBeNumber')">
+              {{ getErrorMessage('exBeNumber') }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 2: CHA Name, Party Name, Vehicle No -->
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="chaName">CHA Name <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="chaName" formControlName="chaName"
+              [class.is-invalid]="hasError('chaName')" placeholder="Enter CHA Name">
+            <div class="invalid-feedback" *ngIf="hasError('chaName')">
+              {{ getErrorMessage('chaName') }}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="partyName">Party Name <span class="text-danger">*</span></label>
+            <nz-select class="w-100" formControlName="partyName" nzShowSearch nzAllowClear
+              [ngClass]="{ 'is-invalid': hasError('partyName') }" nzPlaceHolder="Select Party">
+              <nz-option *ngFor="let party of consigneeList" [nzLabel]="party.name" [nzValue]="party.name">
+              </nz-option>
+            </nz-select>
+            <div class="invalid-feedback" *ngIf="hasError('partyName')">
+              {{ getErrorMessage('partyName') }}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="vehicleNumber">Vehicle No. <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="vehicleNumber" formControlName="vehicleNumber"
+              [class.is-invalid]="hasError('vehicleNumber')" placeholder="Enter Vehicle Number">
+            <div class="invalid-feedback" *ngIf="hasError('vehicleNumber')">
+              {{ getErrorMessage('vehicleNumber') }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 3: Container No, Cargo Description -->
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="containerNumber">Container No. <span class="text-danger">*</span></label>
+            <nz-select class="w-100" formControlName="containerNumber" nzShowSearch nzAllowClear
+              (ngModelChange)="onContainerChange($event)" [ngClass]="{ 'is-invalid': hasError('containerNumber') }"
+              nzPlaceHolder="Select Container">
+              <nz-option *ngFor="let warehouse of containerList" [nzLabel]="warehouse.containerNo + 
+                         (warehouse.toppleContainerNo ? ' (' + warehouse.toppleContainerNo + ')' : '') + 
+                         (warehouse.remainingQty !== undefined ? ' - ' + warehouse.remainingQty + ' remaining' : '')"
+                [nzValue]="warehouse.containerNo">
+              </nz-option>
+            </nz-select>
+            <div class="invalid-feedback" *ngIf="hasError('containerNumber')">
+              {{ getErrorMessage('containerNumber') }}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="cargoDescription">Cargo Description <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="cargoDescription" formControlName="cargoDescription"
+              [class.is-invalid]="hasError('cargoDescription')" placeholder="Enter Cargo Description">
+            <div class="invalid-feedback" *ngIf="hasError('cargoDescription')">
+              {{ getErrorMessage('cargoDescription') }}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="quantity">Quantity <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" id="quantity" formControlName="quantity"
+              [class.is-invalid]="hasError('quantity')" placeholder="Enter Quantity" min="0">
+            <div class="invalid-feedback" *ngIf="hasError('quantity')">
+              {{ getErrorMessage('quantity') }}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-1">
+          <div class="form-group">
+            <label for="packageType">Package Type <span class="text-danger">*</span></label>
+            <nz-select class="nz-form-select nz-select-width"
+              style="border-bottom: none !important; width: 100% !important;" formControlName="unit" nzShowSearch
+              nzAllowClear [ngClass]="{ 'is-invalid': hasError('unit') }">
+              <nz-option *ngFor="let enquiryType of weighthData" [nzLabel]="enquiryType.uomShort"
+                [nzValue]="enquiryType.uomId"></nz-option>
+            </nz-select>
+            <div class="invalid-feedback" *ngIf="hasError('unit')">
+              {{ getErrorMessage('unit') }}
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="location">Location <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="location" formControlName="location"
+              [class.is-invalid]="hasError('location')" placeholder="Enter location">
+            <div class="invalid-feedback" *ngIf="hasError('location')">
+              {{ getErrorMessage('location') }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+  <div class="btn-onscreen wrap-form-action mb-3">
+    <button type="button" class="btn1 float-end" (click)="onSubmit()">
+      {{ (isEditMode && !isclone) ? 'Update' : 'Save' }}
+    </button>
+    <button type="button" class="btn btn-outline-primary float-end" (click)="printData()"
+      *ngIf="isEditMode && !isclone">
+      Print
+    </button>
+    <button type="button" class="btn btn-outline-primary float-end" (click)="onCancel()">
+      Cancel
+    </button>
+  </div>
+
+</div>

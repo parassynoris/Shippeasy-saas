@@ -1,0 +1,253 @@
+<div class="mat-table-with-gheading mt-3">
+  <div class="wrap-table-area" *ngIf="false">
+    <div class="row">
+
+      <div class="col-md-12">
+        <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2 ">
+          <div class="mt-2">
+            <span>
+              <a routerLink=""><em class="ti-export" style="margin-right: 15px"></em></a>
+              <a routerLink=""><em class="ti-printer"></em></a>
+            </span>
+          </div>
+          <div class="mt-2">
+            <span>
+              <h5>{{ fromSize }}-{{ count }} of {{ toalLength }}</h5>
+            </span>
+          </div>
+          <div class="mt-2">
+
+            <span class="prv" [class.disable-arrow-sign]="fromSize === 1" (click)="prev()"><em
+                class="typcn typcn-chevron-left"></em></span>
+            <span class="prv" [class.disable-arrow-sign]="count === toalLength" (click)="next()"><em
+                class="typcn typcn-chevron-right"></em></span>
+          </div>
+          <div class="mt-2">
+            <select class="form-select form-select-sm" (change)="filter($event)">
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+          <div class="mt-2">
+            <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="openPDF()">{{
+              'common.print' | translate }} {{
+                'common.list' | translate }}</a>
+          </div>
+          <div class="mt-2">
+            <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="exportAsExcelFile()">{{
+              'common.exportToExcel' | translate }}</a>
+          </div>
+          <div class="mt-2">
+            <a class="new-action" (click)="open('add', '')">{{
+              "smartagent.smartAgent.department.addDepartment" | translate
+              }}</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="table-responsive" id="htmlData">
+          <table aria-describedby="mytable" class="gfg">
+            <thead>
+              <tr class="field-name">
+                <th scope="col"class="text-center">Action</th>
+               <th scope="col" [appSort]="deptData" data-order="desc" data-name="deptName">
+                  {{ "smartagent.smartAgent.department.deptName" | translate
+                  }} <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                </th>
+                <th scope="col" [appSort]="deptData" data-order="desc" data-name="deptManager">
+                  {{ "smartagent.smartAgent.department.manager" | translate
+                  }} <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                </th>
+                <th scope="col" [appSort]="deptData" data-order="desc" data-name="deptEmail">
+                  {{ "smartagent.smartAgent.department.email" | translate }}
+                   <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                </th>
+                <th scope="col" [appSort]="deptData" data-order="desc" data-name="status">
+                  {{ "smartagent.smartAgent.department.status" | translate }}
+                   <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                </th>
+                <th scope="col"></th>
+              </tr>
+              <tr>
+                <th scope="col">
+                  <input type="text" class="form-control" id=""  />
+                </th>
+                <th scope="col">
+                  <input type="text" class="form-control" id="" [(ngModel)]="department" (keydown.enter)="search()" />
+                </th>
+                <th scope="col">
+                  <input type="text" class="form-control" id="" [(ngModel)]="manager" (keydown.enter)="search()" />
+                </th>
+                <th scope="col">
+                  <input type="text" class="form-control" id="" [(ngModel)]="email" (keydown.enter)="search()" />
+                </th>
+                <th scope="col">
+                  <select class="form-control" [(ngModel)]="status" (change)="search()">
+                    <option value="true">Active</option>
+                    <option value="false">In Active</option>
+                  </select>
+                </th>
+                <th scope="col" class="wrap-table-btn">
+                  <button type="button" class="bi bi-search btn btn-outline-primary btn-sm rounded-pill" (click)="search()">
+                  
+                  </button>
+                  <a  class="bi bi-arrow-clockwise btn btn-outline-primary btn-sm rounded-pill" (click)="clear()"></a>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let dept of deptData">
+                <td class="action-field">
+                  <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop"><a
+                      (click)="open('edit', dept)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                  </span>
+                  <span nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}"><a
+                    (click)="open('show',dept)"><em
+                        class="bi bi-eye globally-change-icon-color"></em></a></span>
+                  <span class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                      (change)="changeStatus(dept)" [checked]="dept?.status" />
+                    <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                  </span>
+                </td>
+                <td>{{ dept?.deptName }}</td>
+                <td>{{ dept?.deptManager }}</td>
+                <td>{{ dept?.deptEmail }}</td>
+                <td>{{ dept?.status ? "Active" : "In Active" }}</td>
+                
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="no-data-availble" *ngIf="deptData.length === 0">
+          {{'common.no_data' | translate}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-header-area">
+    <div>
+      <table-filters [TDP]="[false, false, true, true]" (filterInput)="applyFilter($event)"
+        (onClickExport)="export()">
+      </table-filters>
+    </div>
+    <div class="header-right" >  
+      <a (click)="open('add', '')"   class="max-con new-action  btn btn-outline-primary btn-sm rounded-pill"
+      > {{
+        "smartagent.smartAgent.department.addDepartment" | translate
+        }}</a>
+    </div>
+  </div>
+
+  <div class="table-card">
+  <div class="table-design example-container mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort class="" summary="agreement">
+    
+      <ng-container matColumnDef="#"  >
+        <th scope="col" mat-header-cell *matHeaderCellDef  >
+          # <em class="custom-tooltip" [attr.title]="'Toggle Filters'"  (click)="toggleFilters = !toggleFilters" class="bi bi-search"></em>
+        </th>
+        <td mat-cell *matCellDef="let element;let i = index">
+          {{ element?.id}}
+        </td>
+      </ng-container>
+ 
+      <ng-container matColumnDef="deptName"  >
+        <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+          Department 
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element?.deptName | titlecase}}
+        </td>
+      </ng-container> 
+      <ng-container matColumnDef="deptManager"  >
+        <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+          Department Head
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element?.deptManager | titlecase}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="deptEmail"  >
+        <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+          Email
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element?.deptEmail }}
+        </td>
+      </ng-container>
+
+      <!-- <ng-container matColumnDef="status"  >
+        <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+          Status
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element?.status ? "Active" : "In Active" }}
+        </td>
+      </ng-container> -->
+ 
+      <ng-container matColumnDef="action"  >
+        <th scope="col" id="action" class="charterersPdfHead" mat-header-cell   *matHeaderCellDef >
+          {{ 'Actions' }}
+        </th>
+        <td class="borderBottom" mat-cell *matCellDef="let element;let i=index" > 
+              <!-- <em class="bi bi-three-dots dots-color-change cursor-pointer wrap-batch1  border px-1 em-icon"> -->
+                <!-- <div class="">
+                  <div class=""> -->
+                  <div  class="wrap-inside icon-space" >
+                    <span  class="mtop">
+                      <a (click)="open('edit', element)"><em class="bi bi-pencil color-pencil-red"></em> </a>
+                    </span> 
+                    <span  class="mtop">
+                      <a (click)="open('show',element)"><em class="bi bi-eye globally-change-icon-color"></em> </a>
+                    </span> 
+                    <span class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                        (change)="changeStatus(element)" [checked]="element?.status" />
+                      <label class="form-check-label" for="flexSwitchCheckChecked">  </label>
+                    </span>
+               
+                  </div>
+                   <!-- </div>
+                </div> -->
+              <!-- </em>  -->
+        </td>
+      </ng-container>
+      <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index" [matColumnDef]="headersFilter">
+        <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+          <div  class="filters-container" [class.animate]="!toggleFilters"  > 
+            <!-- <em *ngIf="i == 0" class="custom-tooltip" [attr.title]="'Clear Filters'" (click)="clearFilters();toggleFilters = !toggleFilters" class="bi bi-x-circle"></em> -->
+            <div *ngIf="i > 0 && i < displayedColumns1.length - 1" appearance="outline">
+              <input class="form-control input-txt"  placeholder="Press 'Enter' to search" [(ngModel)]="filtersModel[i]" (keyup.enter)="searchColumns()" >
+            </div>
+            <em *ngIf="i == displayedColumns1.length - 1" class="custom-tooltip" [attr.title]="'Clear Filters'" (click)="clearFilters();toggleFilters = !toggleFilters" class="bi bi-x-circle"></em>
+          </div>
+        </th>
+      </ng-container>
+
+
+      <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-header-row class="no-default-height"  *matHeaderRowDef="displayedColumns1"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+          <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+          <span *ngIf="!loaderService?.isLoadingcircle && !dataSource?.data?.length">No data available</span>
+        </td>
+      </tr>
+    </table>
+   
+  </div>
+  <div [ngClass]="{'display-none' : dataSource.filteredData.length < 10}">
+    <mat-paginator [pageSizeOptions]="pagenation" showFirstLastButtons aria-label="Select page">
+    </mat-paginator>
+  </div>
+</div>
+</div>
+<ng-template #addcontacts let-modal>
+  <app-adddepartment></app-adddepartment>
+</ng-template>

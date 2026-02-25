@@ -1,0 +1,483 @@
+<ng-container *ngIf="currentUrl === 'purchase' || currentUrl === 'sale' || currentUrl === 'invoice'">
+
+  <div class="table-header-area">
+    <div>
+      <table-filters [TDP]="[false, false, true, true]" (filterInput)="applyFilter($event)" (onClickExport)="export()">
+      </table-filters>
+    </div>
+    <div class="header-right">
+
+      <a *ngIf="!isBatchInvoice" appAccessControl featureCode="['STFR01']" accessType="add"
+        title="{{currentUrl === 'sale' ? 'Add Sale' : 'Add Purchase'}}"
+        class="max-con new-action  btn btn-outline-primary btn-sm rounded-pill" (click)="onOpenInvoice()">{{currentUrl
+        === 'sale' ? 'Add Sale' : 'Add Purchase'}} </a>
+
+      <div *ngIf="isBatchInvoice" class="wrap-form-field  wrap-pagination  d-flex justify-content-end">
+        <div class="mb-2">
+          <select (change)="onOpenInvoice($event)">
+            <option disabled selected value="">Create Invoice</option>
+            <option value="buyerInvoice">Purchase Invoice</option>
+            <option value="sellerInvoice">Sale Invoice</option>
+          </select>
+
+        </div>
+        <i class="bi bi-info-circle" matTooltip="please select invoice" matTooltipClass="custom-tooltip"
+          style="padding-left: 4px; margin-bottom: 10px;"></i>
+      </div>
+
+
+    </div>
+  </div>
+
+  <div class="table-card">
+    <div class="table-design example-container mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource" matSort class="" summary="agreement">
+
+        <ng-container matColumnDef="#">
+          <th scope="col" mat-header-cell *matHeaderCellDef>
+            # <em class="custom-tooltip" [attr.title]="'Toggle Filters'" (click)="toggleFilters = !toggleFilters"
+              class="bi bi-search"></em>
+          </th>
+          <td mat-cell *matCellDef="let element;let i = index">
+            {{ element?.id}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="paymentId">
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+            Receipt Posting
+          </th>
+          <td mat-cell *matCellDef="let element" class=" text-center">
+            <span nz-tooltip nzTooltipTitle="Receipt Posting" class="mtop"><a>(<em class="bi bi-plus"
+                  (click)="onEditInvoice(element.paymentId,'posting')"></em>)</a>
+            </span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="billNo">
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+            Bill No.
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element?.billNo }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="invoiceNo">
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+            Invoice No.
+          </th>
+          <td class="text-end" mat-cell *matCellDef="let element" style="text-align: left !important;">
+            <a (click)="navigateToNewTab(element)"><b>{{ element?.invoiceNo }}</b> </a>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="paymentMode">
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+            Payment Type
+          </th>
+          <td class="text-end" mat-cell *matCellDef="let element" style="text-align: left !important;">
+            {{ element?.paymentMode }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="paymentreference_no">
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+            Payment Reference No
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element?.paymentreference_no }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="invoice_date">
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+            Date
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element?.invoice_date | date : 'dd-MM-yyyy'}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="billDate">
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+            Date
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element?.billDate | date : 'dd-MM-yyyy'}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="invoiceAmount">
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+            Amount
+          </th>
+          <td class="text-end" mat-cell *matCellDef="let element" style="text-align: left !important;">
+            {{ (element?.invoiceAmount || 0) | number : '1.2-2' | customCurrency: currentAgent?.currency?.currencyCode}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="balance">
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+            balance
+          </th>
+          <td class="text-end" mat-cell *matCellDef="let element" style="text-align: left !important;">
+            {{ (element?.balanceAmount || 0) | number : '1.2-2' | customCurrency: currentAgent?.currency?.currencyCode}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="invoiceStatus">
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+            Invoice Status
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span class="font-weight status-bar" [ngClass]="element?.invoiceStatus">
+              {{element?.invoiceStatus}}
+            </span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="paymentStatus">
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+            Payment Status
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span class="font-weight status-bar" [ngClass]="element?.paymentStatus">
+              {{element?.paymentStatus}}
+            </span>
+          </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="invoiceAmountPaid">
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+            Paid Amount
+          </th>
+          <td class="text-end" mat-cell *matCellDef="let element">
+            {{ (element?.invoiceAmountPaid || 0) | number : '1.2-2' | customCurrency:
+            currentAgent?.currency?.currencyCode}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="balanceAmount">
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+            Balance Amount
+          </th>
+          <td class="text-end" mat-cell *matCellDef="let element">
+            {{ (element?.balanceAmount || 0) | number : '1.2-2' | customCurrency: currentAgent?.currency?.currencyCode}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="remitance_bank">
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+            Remittance Bank
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element?.remitance_bank }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="beneficiary_bank">
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+            Beneficiary Bank
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element?.beneficiary_bank }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="invoiceFromName">
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+            Party
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element?.invoiceFromName }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="invoiceToName">
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+            Party
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element?.invoiceToName }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="invoiceData">
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+            Invoice No.
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span *ngFor="let data of element.invoiceData">
+              {{ data.invoiceNo}},
+            </span>
+          </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="batchNo">
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+            Job No.
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span *ngIf="element?.multiBatch"><span *ngFor="let d of element?.batchArray">{{d?.batchNo}}, </span></span>
+            <span *ngIf="!element?.multiBatch">{{ element?.batchNo }}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="mblName">
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+            MBL No.
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element?.mblName }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="containerNos">
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+            Container Nos
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element?.containers }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="remarks">
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+            Remarks
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element?.remarks }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="isPosting">
+          <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+            Status
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <span class="fw-bold" [ngClass]="element?.isPosting?'green':'red'">{{ element?.isPosting ? 'Posted' : 'In
+              Progress'}}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <th scope="col" id="action" class="charterersPdfHead" mat-header-cell *matHeaderCellDef>
+            {{ 'Actions' }}
+          </th>
+          <td class="borderBottom" mat-cell *matCellDef="let element">
+            <div class="wrap-inside icon-space">
+              <span nz-tooltip nzTooltipTitle="Approve"
+                *ngIf="element?.invoiceApprovalEnabled && element?.hasInvoiceApprovalAccess">
+                <a (click)="openApproveModal(contentApprove, element)">
+                  <em class="bi-icon-sz bi bi-check-circle text-success"></em>
+                </a>
+              </span>
+
+              <span nz-tooltip nzTooltipTitle="Reject"
+                *ngIf="element?.invoiceApprovalEnabled && element?.hasInvoiceApprovalAccess">
+                <a (click)="openRejectModal(contentReject, element)">
+                  <em class="bi-icon-sz bi bi-x-circle text-danger"></em>
+                </a>
+              </span>
+              <span nz-tooltip nzTooltipTitle="Edit" *ngIf="element?.paymentStatus == 'Unpaid'">
+                <a
+                  (click)="element?.invoiceStatus == 'Approved' ? openPOPUP(content2, element) : onEditInvoice(element, 'edit')">
+                  <em class="bi-icon-sz bi bi-pencil color-pencil-red"></em>
+                </a>
+              </span>
+
+              <span nz-tooltip nzTooltipTitle="View">
+                <a (click)="onEditInvoice(element, 'show')">
+                  <em class="bi-icon-sz bi bi-eye color-pencil-red"></em>
+                </a>
+              </span>
+              <span nz-tooltip nzTooltipTitle="Clone">
+                <a class="text-dark" (click)="onEditInvoice(element, 'clone')"><em class="bi bi-bookmarks"></em>
+                </a>
+              </span>
+
+              <span nz-tooltip nzTooltipTitle="Print" *ngIf="element?.type != 'buyerInvoice'">
+                <a (click)="printData(element.invoiceId)">
+                  <em class="bi-icon-sz bi bi-printer color-pencil-red"></em>
+                </a>
+              </span>
+
+              <span nz-tooltip nzTooltipTitle="Delete">
+                <a (click)="removeRow(content1, element.invoiceId)">
+                  <em class="bi-icon-sz bi bi-trash color-pencil-red"></em>
+                </a>
+              </span>
+              <span nz-tooltip nzTooltipTitle="History" nz-dropdown [nzDropdownMenu]="menu" nzTrigger="hover"
+                *ngIf="element?.invoiceApprovalEnabled && element?.hasInvoiceApprovalAccess"
+                (nzVisibleChange)="onHistoryHover(element)">
+                <a><em class="bi bi-clock-history text-primary bi-icon-sz"></em></a>
+              </span>
+              <nz-dropdown-menu #historyMenu="nzDropdownMenu">
+                <div class="history-dropdown" style="padding: 8px; width: 250px;">
+                  <div *ngFor="let item of historyList" class="dropdown-item">
+                    {{ item.createdBy }} - {{ item.action | titlecase }} - ( {{ item.updatedOn | date: 'short' }} )
+                  </div>
+                </div>
+              </nz-dropdown-menu>
+
+            </div>
+          </td>
+
+          <!-- <td class="borderBottom" mat-cell *matCellDef="let element">
+            <em class="bi bi-three-dots dots-color-change cursor-pointer wrap-batch1 border px-1 em-icon"
+              [matMenuTriggerFor]="menu" #menuTrigger="matMenuTrigger" [class]=" menuTrigger.menuOpen ? 'clicked' : ''">
+            </em>
+
+            <mat-menu #menu="matMenu" class="wrap-open">
+
+              <button mat-menu-item class="wrap-inside" appAccessControl featureCode="['STFR01']" accessType="update" 
+              *ngIf="element?.paymentStatus == 'Unpaid'" (click)="element?.invoiceStatus =='Approved'? openPOPUP(content2, element ) : onEditInvoice(element,'edit')">
+                <a   ><em class="bi bi-pencil color-pencil-red"></em> Edit</a>
+              </button>
+
+              <button  mat-menu-item class="wrap-inside" appAccessControl featureCode="['STFR01']" accessType="view" (click)="onEditInvoice(element,'show')">
+                <a ><em  class="bi bi-eye color-pencil-red"></em> View</a>
+              </button>
+
+              <button *ngIf="element?.invoiceStatus == 'Approved' && element?.type != 'buyerInvoice'"  mat-menu-item class="wrap-inside" appAccessControl featureCode="['STFR01']" accessType="view" (click)="printData(element.invoiceId)">
+                <a ><em  class="bi bi-printer color-pencil-red"></em> Print</a>
+              </button>
+
+              <button  mat-menu-item *ngIf="false" class="wrap-inside" appAccessControl featureCode="['STFR01']" accessType="delete" (click)="removeRow(content1, element.invoiceId)">
+                <a ><em class="bi bi-trash color-pencil-red"></em>  Delete</a>
+              </button>
+
+            </mat-menu>
+
+
+          </td> -->
+        </ng-container>
+
+
+        <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index" [matColumnDef]="headersFilter">
+          <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+            <div class="filters-container" [class.animate]="!toggleFilters">
+              <!-- <em *ngIf="i == 0" class="custom-tooltip" [attr.title]="'Clear Filters'" (click)="clearFilters();toggleFilters = !toggleFilters" class="bi bi-x-circle"></em> -->
+              <div *ngIf="i > 0 && i < displayedColumns1.length - 1" appearance="outline">
+                <input type="date" *ngIf="headersFilter == 'invoice_date_'+i" class="form-control input-txt"
+                  placeholder="Press 'Enter' to search" [(ngModel)]="filtersModel[i]" (change)="searchColumns()">
+                <input type="text" *ngIf="headersFilter != 'invoice_date_'+i" class="form-control input-txt"
+                  placeholder="Press 'Enter' to search" [(ngModel)]="filtersModel[i]" (keyup.enter)="searchColumns()">
+              </div>
+              <em *ngIf="i == displayedColumns1.length - 1" class="custom-tooltip" [attr.title]="'Clear Filters'"
+                (click)="clearFilters();toggleFilters = !toggleFilters" class="bi bi-x-circle"></em>
+            </div>
+          </th>
+        </ng-container>
+
+
+        <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-header-row class="no-default-height" *matHeaderRowDef="displayedColumns1"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+            <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+            <span *ngIf="!loaderService?.isLoadingcircle && !dataSource?.data?.length">No data available</span>
+          </td>
+        </tr>
+      </table>
+
+    </div>
+    <div [ngClass]="{'display-none' : toalLength < 20}">
+      <mat-paginator [length]="toalLength" [pageSize]="pageSize" [pageIndex]="pageNumber-1"
+        (page)="onPageChange($event)" [pageSizeOptions]="_gc.PAGINATOR_OPTIONS" showFirstLastButtons></mat-paginator>
+    </div>
+  </div>
+
+
+
+</ng-container>
+<ng-container *ngIf="currentUrl === 'add' || currentUrl === 'edit' || currentUrl === 'show'  || currentUrl === 'clone'">
+  <app-add-receipt-payment (CloseInvoiceSection)="onCloseNew()" [isType]="currentUrl" [isBatchInvoice]="isBatchInvoice"
+    [screen]="screenShow"></app-add-receipt-payment>
+</ng-container>
+
+<ng-template #content1 let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+      </button>
+    </div>
+    <div class="modal-body mt-4">
+      <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2"> </em> <span
+        class=" text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary  btn-sm me-3" (click)="d('Cross click')">No</button>
+        <button type="button" class="btn btn-danger  btn-sm" (click)="c('yes')">Yes</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #content2 let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+      </button>
+    </div>
+    <div class="modal-body mt-4">
+      <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2"> </em> <span
+        class=" text-dark fs-6"> {{ "The bill has already been approved Are you sure you want to edit it?" | translate
+        }}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary  btn-sm me-3" (click)="d('Cross click')">No</button>
+        <button type="button" class="btn btn-danger  btn-sm" (click)="c('yes')">Yes</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #contentApprove let-c="close" let-d="dismiss">
+  <div class="modal-content p-3">
+    <div class="modal-header">
+      <h5 class="modal-title">Approve Invoice</h5>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+
+    <div class="modal-body">
+      <div class="mb-3">
+        <label class="form-label">Remark (optional)</label>
+        <input type="text" class="form-control" [(ngModel)]="remark" placeholder="Enter remark (optional)" />
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary btn-sm" (click)="d('cancel')">Cancel</button>
+      <button type="button" class="btn btn-success btn-sm" (click)="submitAction('approve', c)">Approve</button>
+    </div>
+  </div>
+</ng-template>
+<ng-template #contentReject let-c="close" let-d="dismiss">
+  <div class="modal-content p-3">
+    <div class="modal-header">
+      <h5 class="modal-title">Reject Invoice</h5>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+
+    <div class="modal-body">
+      <div class="mb-3">
+        <label class="form-label">Remark <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" [(ngModel)]="remark" placeholder="Enter reason for rejection"
+          [ngClass]="{ 'is-invalid': showRemarkError && !remark.trim() }" />
+        <div *ngIf="showRemarkError && !remark.trim()" class="invalid-feedback">
+          Remark is required for rejection.
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary btn-sm" (click)="d('cancel')">Cancel</button>
+      <button type="button" class="btn btn-danger btn-sm" (click)="submitAction('reject', c)">Reject</button>
+    </div>
+  </div>
+</ng-template>
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <ul nz-menu>
+    <li *ngFor="let item of historyList" nz-menu-item>
+      <em [ngClass]="{
+        'bi bi-check-circle text-success': item.action === 'approve',
+        'bi bi-x-circle text-danger': item.action === 'reject'
+      }"></em>
+      <span class="ms-2">{{ item.createdBy }} - {{ item.action | titlecase }}</span>
+      <span class="text-muted d-block" style="font-size: 12px;">
+        {{ item.updatedOn | date: 'short' }}
+      </span>
+    </li>
+  </ul>
+</nz-dropdown-menu>

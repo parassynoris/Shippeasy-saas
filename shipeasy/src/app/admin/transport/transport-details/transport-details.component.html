@@ -1,0 +1,354 @@
+<div class="table-with-gheading">
+    <div class="wrapper">
+        <div class="container-fluid">
+            <div class="wrap-content">
+                <div class="row">
+                    <div class="col-sm-12 ">
+                        <div class="page-title-box">
+                            <div class="btn-group mt-2">
+                                <ol class="breadcrumb hide-phone p-0 m-0">
+                                    <!-- <li class="breadcrumb-item">{{ 'stolt.heading' | translate }}</li> -->
+                                    <li class="breadcrumb-item active">{{ 'RFQ' | translate }}</li>
+                                    <li class="breadcrumb-item active">Transport Details</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 modal-grid new-white-box-design mb-5 mt-2"> 
+                        <div class="text-end">
+                            <span class="status-bar1 {{enquiryDetails?.carrierStatus}}">{{
+                                enquiryDetails?.carrierStatus }}</span>
+                        </div>
+                        <div class="d-grid-4"  >
+                             
+                            <div>
+                                <div class="new-title">
+                                  <p>ROUTE DETAILS</p>
+                                </div>
+                                <div class="d-grid-2">
+                                  <span class="header">Enquiry No :</span>
+                                  <span class="text">{{enquiryDetails?.transportinquiryNo ||'-'}}
+                                  </span>
+                                </div>
+                                <div class="d-grid-2">
+                                  <span class="header">Freight Type :</span>
+                                  <span class="font">{{enquiryDetails?.basicDetails?.ShipmentTypeName ||'-'}}
+                                  </span>
+                                </div>
+                                <div class="d-grid-2">
+                                  <span class="header">Load Type :</span>
+                                  <span class="font">{{enquiryDetails?.basicDetails?.loadType ||'-'}}
+                                  </span>
+                                </div>
+                                <div class="d-grid-2">
+                                  <span class="header">Created On :</span>
+                                  <span class="text">{{enquiryDetails?.createdOn | date :'dd-MM-YYYY'  }}
+                                  </span>
+                                </div>
+                                <div class="d-grid-2">
+                                  <span class="header">Origin :</span>
+                                  <span class="text">{{enquiryDetails?.origin?.locationType === 'address' ?(enquiryDetails?.origin?.address || enquiryDetails?.origin?.addressId) : enquiryDetails?.origin?.locationName ||'-'}}
+                                  </span>
+                                </div>
+                                <div class="d-grid-2">
+                                  <span class="header">ETD :</span>
+                                  <span class="text">{{enquiryDetails?.origin?.etd | date : 'dd-MM-YYYY | HH:MM:SS'  }}
+                                  </span>
+                                </div> 
+                                <div class="d-grid-2">
+                                    <span class="header">Destination :</span>
+                                    <span class="text">{{enquiryDetails?.destination?.locationType === 'address' ?(enquiryDetails?.destination?.address || enquiryDetails?.destination?.addressId) : enquiryDetails?.destination?.locationName ||'-'}}
+                                    </span>
+                                  </div>
+                                <div class="d-grid-2">
+                                  <span class="header">ETA :</span>
+                                  <span class="text">{{enquiryDetails?.destination?.eta | date :'dd-MM-YYYY | HH:MM:SS' }}
+                                  </span>
+                                </div>
+                                
+                              </div>
+                            
+
+                              <div>
+                                <div class="new-title">
+                                  <p>CARGO DETAILS</p>
+                                </div>
+
+                                <div class="d-grid-2">
+                                  <span class="header">Cargo Ready Date :</span>
+                                  <span class="text">{{enquiryDetails?.productDetails?.cargoReadyDate | date
+                                    :
+                                    'dd-MM-yyyy'  }} </span>
+                                </div>
+              
+                                <div class="d-grid-2" *ngIf="enquiryDetails?.productDetails?.targetDeliveryDate">
+                                  <span class="header">Delivery Date :</span>
+                                  <span class="text">{{enquiryDetails?.productDetails?.targetDeliveryDate |
+                                    date :
+                                    'dd-MM-yyyy' || '-'}} </span>
+                                </div>
+
+                                <div class="d-grid-2" *ngIf="enquiryDetails?.productDetails?.biddingDueDate">
+                                  <span class="header">Bidding Due Date :</span>
+                                  <span class="text">{{enquiryDetails?.productDetails?.biddingDueDate |
+                                    date :
+                                    'dd-MM-yyyy' || '-'}} </span>
+                                </div>
+              
+                                <ng-container *ngFor="let cargo of enquiryDetails?.cargoDetail;let i=index">
+                                  <div class="">
+                                    <div class="">
+                                      <span class="header" >{{i+1}}.Name: </span>
+                                      <span class="text">{{cargo?.productName}}</span>
+                                    </div>                    
+                                    <div class="type">
+                                      <span class="header">Type :</span>
+                                      <span class="text">{{cargo?.commodityTypeName | uppercase}} </span>,
+                                      <span class="header">HS Code :</span>
+                                      <span class="text" *ngIf="cargo?.hsCode">{{cargo?.hsCode}} </span>
+                                    </div>
+                                    <div class="type">
+                                      <span class="header">Weight :</span>
+                                      <span class="text">{{cargo?.grossWeight || 0}} {{cargo?.unitName || 'KG' | uppercase}} </span>
+                                    </div>
+                                    <div class="type" *ngIf="cargo?.commodityTypeName == 'Refer'">
+                                      <span class="header" >Temperature :</span>
+                                      <span class="text" >({{cargo?.Range}} To {{cargo?.To}} ) {{cargo?.typeTemp}}</span>
+                                    </div>
+                                    <div class="type" *ngIf="cargo?.commodityTypeName == 'ODC'">
+                                      <span class="header" >Dimension :</span>
+                                      <span class="text" >({{cargo?.Wi}} * {{cargo?.li}}  * {{cargo?.hi}})  {{cargo?.di}}</span>
+                                    </div>
+                                    <div class="type" *ngIf="cargo?.commodityTypeName == 'HAZ'">
+                                      <span class="header" >UN No :</span>
+                                      <span class="text">{{cargo?.unNo}} </span>
+                                    </div>
+                                    <div class="type" *ngIf="cargo?.imcoClass">
+                                      <span class="header" >IMCO Class :</span>
+                                      <span class="text">{{cargo?.imcoClass}} </span>
+                                    </div>
+                                    <div>
+                                    </div>
+                                  </div>
+                                  <!-- <div class=""> -->
+                                    <!-- <span class="header">Commodity Weight <span
+                                        *ngIf="enquiryDetails?.cargoDetail?.length != 1">{{i+1}}</span> :</span>
+                                    <span class="text">{{cargo?.grossWeight || 0}} {{cargo?.unitName || 'KG' | uppercase}}</span> -->
+                                  <!-- </div> -->
+                                </ng-container>
+               
+                              </div>
+
+                              <div  >
+                                <div class="new-title">
+                                  <p>{{showPallet ? 'Loose Cargo Details' :  'LOAD DETAILS'}}</p>
+                                </div>
+                                <ng-container *ngIf="showContainer">
+                                  <div class="d-grid-2">
+                                    <span class="header">{{ typeOfWay }} :</span>
+                                    <span class="top">
+                                      <span *ngFor="let cargo of enquiryDetails?.containersDetails; let i = index">
+                                        <span *ngIf="cargo?.containerType">
+                                          {{ cargo?.containerType }} <i class="bi bi-x"></i> {{ cargo?.noOfContainer }}
+                                        </span>
+                                        <!-- <span *ngIf="cargo?.truckType">
+                                          {{ cargo?.truckType }} <i class="bi bi-x"></i> {{ cargo?.noOfContainer }}
+                                        </span> -->
+                                        <br />
+                                      </span>
+                                    </span>
+                                  </div>
+                                  <div class="d-grid-2">
+                                    <span class="header">Total Gross Weight :</span>
+                                    <span class="text">
+                                      <span>{{totalGrossWeight(enquiryDetails?.containersDetails)}} </span>
+                                      <span
+                                        *ngIf="enquiryDetails?.containersDetails?.length > 0">{{enquiryDetails?.containersDetails[0]?.unitName
+                                        |uppercase}}</span><br>
+                                    </span>
+                                  </div>
+                                </ng-container>
+                                <ng-container *ngIf="showPallet">
+                                  <div class="d-grid-3">
+                                    <table class="table table-bordered">
+                                      <thead>
+                                        <tr>
+                                          <th scope="col" class="white-space">Lot</th>
+                                          <th scope="col" class="white-space">Package Type</th>
+                                          <th scope="col" class="white-space">Quantity</th>
+                                          <th scope="col" class="white-space">Size (l x b x h) </th>
+                                          <th scope="col" class="white-space">Volume</th>
+                                          <th scope="col" class="white-space">Weight</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr *ngFor=" let cargo of enquiryDetails?.looseCargoDetails?.cargos; let i=index">
+                                          <td class="white-space">{{i+1}}</td>
+                                          <td class="white-space">{{cargo?.pkgname}}</td>
+                                          <td class="white-space">{{cargo?.units}}</td>
+                                          <td class="white-space">
+                                            <span *ngIf="cargo?.pkgname === 'Boxes/Crates'">({{cargo?.lengthb}} x {{cargo?.Weightb}}
+                                              x {{cargo?.heightb}}){{cargo?.DimensionUnit}}</span>
+                                            <span
+                                              *ngIf="cargo?.pkgname != 'Boxes/Crates' && cargo?.Pallettype === 'Pallets (non specified size)'">({{cargo?.lengthp}}
+                                              x {{cargo?.Weightp}} x {{cargo?.heightp}}){{cargo?.DimensionUnitp}}</span>
+                                            <span
+                                              *ngIf="cargo?.pkgname != 'Boxes/Crates' && cargo?.Pallettype != 'Pallets (non specified size)'">({{cargo?.Pallettype?.replaceAll("
+                                              mm", "")}} x {{cargo?.heightselected}}){{cargo?.selectedh}}</span>
+                                          </td>
+                                          <td class="white-space">
+                                            <span *ngIf="cargo?.pkgname === 'Boxes/Crates'">{{cargo?.volumeb| number:'1.2-2'}}</span>
+                                            <span
+                                              *ngIf="cargo?.pkgname != 'Boxes/Crates' && cargo?.Pallettype === 'Pallets (non specified size)'">{{cargo?.volumep | number:'1.2-2'}}</span>
+                                            <span
+                                              *ngIf="cargo?.pkgname != 'Boxes/Crates' && cargo?.Pallettype != 'Pallets (non specified size)'">{{cargo?.volumeselect | number:'1.2-2'}}</span>
+                                          </td>
+                                          <td class="white-space">
+                                            <span *ngIf="cargo?.pkgname === 'Boxes/Crates'">{{cargo?.Weightbox}}{{cargo?.Unit1}}</span>
+                                            <span
+                                              *ngIf="cargo?.pkgname != 'Boxes/Crates' && cargo?.Pallettype === 'Pallets (non specified size)'">{{cargo?.Weightps}}{{cargo?.Unit1p}}</span>
+                                            <span
+                                              *ngIf="cargo?.pkgname != 'Boxes/Crates' && cargo?.Pallettype != 'Pallets (non specified size)'">{{cargo?.Weightselected}}{{cargo?.selectedw}}</span>
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+              
+                                </ng-container>
+
+                                <div class="d-grid-2">
+                                  <span class="header">Pickup Address :</span>
+                                  <span class="text">{{enquiryDetails?.origin?.addressId}} </span>
+                                </div>
+                                <div class="d-grid-2">
+                                  <span class="header">Destination Address :</span>
+                                  <span class="text">{{enquiryDetails?.destination?.addressId}} </span>
+                                </div>
+               
+                              </div>
+
+                              <div>
+                                <div class="new-title">
+                                  <p>RATE DETAILS</p>
+                                </div>
+                                <div class="d-grid-2">
+                                  <span class="header">Rate :</span>
+                                  <span class="text"><b>{{enquiryDetails?.rate ||'-'}} {{enquiryDetails?.currency?.currencyName
+                                    ||''}}</b>
+                                  </span>
+                                </div>
+                                <div class="d-grid-2">
+                                  <span class="header">Remarks :</span>
+                                  <span class="text">{{enquiryDetails?.remark ||'-'}}
+                                  </span>
+                                </div>
+                              
+                                
+                              </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <div class="transport-route">
+                                <div class="route-step">
+                                  <div class="step-circle"><i class="bi bi-truck"></i></div>
+                                  <div class="step-label">{{enquiryDetails?.origin?.locationType === 'address' ? enquiryDetails?.origin?.address : enquiryDetails?.origin?.locationName ||'-'}}
+                                    <br><span class="lable-date">{{enquiryDetails?.origin?.etd | date :'dd-MM-YYYY | HH:MM:SS'}}</span></div>
+                                </div>
+                                <div class="route-line"></div>
+                                <ng-container *ngFor="let data of enquiryDetails?.breakPoint">
+                                    <div class="route-step">
+                                        <div class="step-circle"><i class="bi bi-truck"></i></div>
+                                        <div class="step-label">{{data?.locationName}} 
+                                            <br><span class="lable-date">{{enquiryDetails?.destination?.eta | date :'dd-MM-YYYY'}} / {{enquiryDetails?.destination?.eta | date :'dd-MM-YYYY'}}</span>
+                                        </div>
+                                      </div>
+                                      <div class="route-line"></div>
+                                </ng-container>
+                                <div class="route-step">
+                                  <div class="step-circle"><i class="bi bi-truck"></i></div>
+                                  <div class="step-label">{{enquiryDetails?.destination?.locationName ||'-'}}
+                                    <br><span class="lable-date">{{enquiryDetails?.destination?.eta | date :'dd-MM-YYYY | HH:MM:SS'}}</span>
+                                  </div>
+                                </div>
+                       
+                              </div>
+                        </div>
+
+                        <div class="text-center mt-4" *ngIf="currentLogin === 'transporter'">
+                          <button class="btn btn-outline-primary" (click)="back()">Back</button>
+                          <button class="btn btn-outline-primary" [disabled]="enquiryDetails?.carrierStatus !== 'Requested'"  (click)="Requotation(Requotations)">Submit Rate</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #Requotations let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h6>Submit Rate</h6>
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+  <div class="custom-modal wrap-form-field nz-allSelect">
+    <form #myForm="ngForm" (ngSubmit)="submit(myForm)" novalidate >
+    <div class="modal-body"> 
+       
+        <div class="row mb-4">
+            <div class="col-md-9">
+                <label class="form-label">Rate<span class="text-danger">*</span></label>
+                <input  id="rateInput" type="text" class="form-control custom-input" [(ngModel)]="rateValue" 
+                name="rateValue"
+                #rateInput="ngModel"
+                pattern="^[0-9]+(\.[0-9]{1,2})?$"
+                required>
+                <div *ngIf="rateInput.invalid && (rateInput.dirty || rateInput.touched)" class="text-danger" >
+                    <div *ngIf="rateInput.errors?.required">Rate value is required.</div>
+                    <div *ngIf="rateInput.errors?.pattern">Please enter a valid number (up to 2 decimal places).</div>
+                  </div>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Currency<span class="text-danger">*</span></label>
+              <nz-select   class="form-select"
+                  nzShowSearch nzAllowClear [(ngModel)]="currencyValue"  id="currencyInput"  #currencyInput="ngModel"  name="currencyValue" required>
+                  <nz-option *ngFor="let currency of   currencyList "
+                      [nzLabel]="currency.currencyShortName"
+                      [nzValue]="currency.currencyId"></nz-option>
+              </nz-select>
+
+              <div *ngIf="submitted && f.currency.errors" class="invalid-feedback">
+                  <div *ngIf="f.currency.errors.required">Currency is required</div>
+              </div>
+          </div>
+          </div>
+          <div class="row mb-4 gap-3">
+          <div class="col-md-12">
+            <label class="form-label">Remark</label>
+            <textarea id="isRemarks" name="remarkValue" rows="10" cols="50"  
+            [(ngModel)]="remarkValue" 
+            #isRemarks="ngModel"
+              class="form-control custom-input rounded-0" style="height: 65px;"
+              [ngClass]="{'is-invalid': submitted && f.comments.errors}"></textarea>
+            <div *ngIf="submitted && f.comments.errors" class="invalid-feedback">
+              <div *ngIf="f.comments.errors.required">Remark is required
+              </div>
+            </div>
+          </div>
+        </div>
+    
+ 
+      <!-- <div>
+        <p class="font-10">This is a one-time request for cost negotiation</p>
+      </div> -->
+    </div>
+    <div class="d-flex justify-content-center my-3 ">
+      <button class="btn btn-outline-primary"  type="submit" [disabled]="myForm.invalid">Submit</button>
+      <button type="button" class="btn btn-outline-primary" aria-label="Close"
+        (click)="d('Cross click')">Cancel</button>
+
+    </div>
+</form>
+  </div>
+</ng-template>

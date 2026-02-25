@@ -1,0 +1,428 @@
+<div class="modal-dialog   modal-lg custom-modal" role="document" *ngIf="getArray()?.length > 0">
+  <div class="modal-content">
+    <!-- <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <h4 class="modal-title font" id="myModalLabel2">Shipment Activity</h4>
+    </div> -->
+
+    <div class="modal-header">
+      <h5 class="modal-title" id="documentModalLabel"><b>{{type === 'Custom' ? 'Custom Activity' :'Shipment Activity'}}</b></h5>
+      <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" (click)="closeDialog()"></button>
+    </div>
+
+    <div class="title font font2 mx-3 my-1">Event & Milestones</div>
+    <div *ngFor='let i of getArray();let indexParent=index;'>
+      <div class="mx-3 my-2 d-flex align-items-center">
+        <img style="max-width: 16px;" src="../../../../assets/img/icons/ship-svgrepo-com.svg">&nbsp; <h2 class="modal-title font">{{i}}</h2>
+      </div>
+      <div class="modal-body mb-3 ">
+        <mat-accordion>
+          <mat-expansion-panel *ngFor='let item of groupedEvents[i];let j=index'>
+            <mat-expansion-panel-header [ngClass]="item.isUpdated ? 'blueColor' : null">
+              <mat-panel-title>
+                {{item?.eventName}}
+              </mat-panel-title>              
+            </mat-expansion-panel-header>
+            <div class="wrap-form-field">
+              <div class="flex">
+                <a class="edit-link" *ngIf="this.currentUrl !== 'show'"(click)="editdetails(i,j,'ActualDate')">
+                  Edit
+                </a>
+                <a class="edit-link" *ngIf="this.currentUrl == 'show'" (click)="editdetails(i,j,'ActualDate')">
+                  View
+                </a>
+              </div>
+              <div>
+                <div class="row">
+                  <ng-container *ngIf="item.isEdit">
+                    <label class="form-label">Event State</label>
+
+                    <div class="col-md-12">
+                      <div class="row">
+                        <div class="flex1">
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" [value]="'ActualDate'"
+                              [id]="'flexRadioDefault1'" (click)="selectEventState(i,j,'ActualDate')"
+                              [checked]="item.eventData.eventState === 'ActualDate'" />
+                            <label class="form-check-label" for="flexRadioDefault2">Actual Date </label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" [value]="'EstimatedDate'"
+                              [id]="'flexRadioDefault2'" (click)="selectEventState(i,j,'EstimatedDate')"
+                              [checked]="item.eventData.eventState === 'EstimatedDate'" />
+                            <label class="form-check-label" for="flexRadioDefault1"> Estimated Date </label>
+                          </div>
+                        </div>
+                        <!-- Default checked radio -->
+
+                        <ng-container *ngIf="item.eventData.eventState==='ActualDate' && item.eventTag === 'booking_confirmed' && isExport">
+                          <!-- <div class="col-md-6 no-border">
+                            <mat-form-field>
+                              <mat-label>Event Date & Time</mat-label>
+                              <input matInput [ngxMatDatetimePicker]="picker"
+                                (dateChange)="logInputBlur('bookingDate', $event, i, j, true)"
+                                [value]="item.eventData.bookingDate">
+                              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                              <ngx-mat-datetime-picker [color]="color" [touchUi]="touchUi"
+                                [enableMeridian]="enableMeridian" #picker>
+                              </ngx-mat-datetime-picker>
+                            </mat-form-field>
+                          </div> -->
+                          <div class="col-md-6 ">
+                              <!-- <nz-form-label>Event Date & Time</nz-form-label> -->
+                              <label class="mb-0 p-0 form-label">Event Date & Time</label>
+                              <nz-date-picker
+                              class="form-select custom-input"
+                              class="w-100" 
+                              style="width: 100%;"
+                                [(ngModel)]="item.eventData.bookingDate"
+                                (ngModelChange)="logInputBlur('bookingDate', $event, i, j, true)"
+                                [nzShowTime]="true"
+                                [nzFormat]="'dd/MM/yy HH:mm:ss'"
+                                [nzPlaceHolder]="'Select Date & Time'">
+                              </nz-date-picker>
+                          </div>
+                          <!-- <div class="col-md-6 no-border">
+                            <mat-form-field>
+                              <mat-label>Booking Validity</mat-label>
+                              <input matInput [ngxMatDatetimePicker]="bookingValidityDate"
+                                (dateChange)="logInputBlur('bookingValidityDate', $event, i, j, true)"
+                                [value]="item.eventData.bookingValidityDate">
+                              <mat-datepicker-toggle matSuffix [for]="bookingValidityDate"></mat-datepicker-toggle>
+                              <ngx-mat-datetime-picker [color]="color" [touchUi]="touchUi"
+                                [enableMeridian]="enableMeridian" #bookingValidityDate>
+                              </ngx-mat-datetime-picker>
+                            </mat-form-field>
+
+                          </div> -->
+
+                          <div class="col-md-6">
+                              <label class="mb-0 p-0 form-label">Booking Validity</label>
+                              <nz-date-picker
+                              class="form-select custom-input"
+                              class="w-100" 
+                              style="width: 100%;"
+                                [(ngModel)]="item.eventData.bookingValidityDate"
+                                (ngModelChange)="logInputBlur('bookingValidityDate', $event, i, j, true)"
+                                [nzShowTime]="true"
+                                [nzFormat]="'dd/MM/yy HH:mm:ss'"
+                                [nzPlaceHolder]="'Select Booking Validity Date & Time'">
+                              </nz-date-picker>
+                          </div>
+                          <!-- <div class="col-md-6 no-border">
+                            <mat-form-field>
+                              <mat-label>SI Cutoff</mat-label>
+                              <input matInput [ngxMatDatetimePicker]="siCutoff"
+                                (dateChange)="logInputBlur('siCutoff', $event, i, j, true)"
+                                [value]="item.eventData.siCutoff">
+                              <mat-datepicker-toggle matSuffix [for]="siCutoff"></mat-datepicker-toggle>
+                              <ngx-mat-datetime-picker [color]="color" [touchUi]="touchUi"
+                                [enableMeridian]="enableMeridian" #siCutoff>
+                              </ngx-mat-datetime-picker>
+                            </mat-form-field>
+
+                          </div> -->
+
+                          <div class="col-md-6">
+                              <label class="mb-0 p-0 form-label">SI Cutoff</label>
+                              <nz-date-picker
+                              class="form-select custom-input"
+                              class="w-100" 
+                              style="width: 100%;"
+                                [(ngModel)]="item.eventData.siCutoff"
+                                (ngModelChange)="logInputBlur('siCutoff', $event, i, j, true)"
+                                [nzShowTime]="true"
+                                [nzFormat]="'dd/MM/yy HH:mm:ss'"
+                                [nzPlaceHolder]="'Select SI Cutoff Date & Time'">
+                              </nz-date-picker>
+                          </div>
+                          
+                          <!-- <div class="col-md-6 no-border">
+                            <mat-form-field>
+                              <mat-label>Gate Cutoff</mat-label>
+                              <input matInput [ngxMatDatetimePicker]="gateCutoff"
+                                (dateChange)="logInputBlur('gateCutoff', $event, i, j, true)"
+                                [value]="item.eventData.gateCutoff">
+                              <mat-datepicker-toggle matSuffix [for]="gateCutoff"></mat-datepicker-toggle>
+                              <ngx-mat-datetime-picker [color]="color" [touchUi]="touchUi"
+                                [enableMeridian]="enableMeridian" #gateCutoff>
+                              </ngx-mat-datetime-picker>
+                            </mat-form-field>
+
+                          </div> -->
+
+                          <div class="col-md-6">
+                              <label class="mb-0 p-0 form-label">Gate Cutoff</label>
+                              <nz-date-picker
+                              class="form-select custom-input"
+                              class="w-100" 
+                              style="width: 100%;"
+                                [(ngModel)]="item.eventData.gateCutoff"
+                                (ngModelChange)="logInputBlur('gateCutoff', $event, i, j, true)"
+                                [nzShowTime]="true"
+                                [nzFormat]="'dd/MM/yy HH:mm:ss'"
+                                [nzPlaceHolder]="'Select Gate Cutoff Date & Time'">
+                              </nz-date-picker>
+                          </div>
+                          
+
+                          <!-- <div class="col-md-6 no-border">
+                            <mat-form-field>
+                              <mat-label>Doc Cutoff</mat-label>
+                              <input matInput [ngxMatDatetimePicker]="docCutoff"
+                                (dateChange)="logInputBlur('docCutoff', $event, i, j, true)"
+                                [value]="item.eventData.docCutoff">
+                              <mat-datepicker-toggle matSuffix [for]="docCutoff"></mat-datepicker-toggle>
+                              <ngx-mat-datetime-picker [color]="color" [touchUi]="touchUi"
+                                [enableMeridian]="enableMeridian" #docCutoff>
+                              </ngx-mat-datetime-picker>
+                            </mat-form-field>
+
+                          </div> -->
+
+                          <div class="col-md-6">
+                              <label class="mb-0 p-0 form-label">Doc Cutoff</label>
+                              <nz-date-picker
+                              class="form-select custom-input"
+                              class="w-100" 
+                              style="width: 100%;"
+                                [(ngModel)]="item.eventData.docCutoff"
+                                (ngModelChange)="logInputBlur('docCutoff', $event, i, j, true)"
+                                [nzShowTime]="true"
+                                [nzFormat]="'dd/MM/yy HH:mm:ss'"
+                                [nzPlaceHolder]="'Select Doc Cutoff Date & Time'">
+                              </nz-date-picker>
+                          </div>
+                          
+
+                          <div class="col-md-6">
+                            <mat-form-field>
+                            <mat-label > Remark</mat-label>
+                            <textarea  class="mt" matInput id="1" cols="35" rows="5"
+                              [value]="item.eventData.Remarks || null" (blur)="logInputBlur('Remarks', $event, i, j, false)"
+                              [ngClass]="{ 'is-invalid': submitted && f.siRemark.errors }"></textarea>
+                              </mat-form-field>
+                          </div>
+
+
+                        </ng-container>
+                        <ng-container *ngIf="item.eventData.eventState==='ActualDate' && indexParent === 0 && (j === 0 || j === 1) && isImport">
+                          <!-- <div class="col-md-6 no-border">
+                            <mat-form-field>
+                              <mat-label>Event Date & Time</mat-label>
+                              <input matInput [ngxMatDatetimePicker]="picker"
+                                (dateChange)="logInputBlur('bookingDate', $event, i, j, true)"
+                                [value]="item.eventData.bookingDate">
+                              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                              <ngx-mat-datetime-picker [color]="color" [touchUi]="touchUi"
+                                [enableMeridian]="enableMeridian" #picker>
+                              </ngx-mat-datetime-picker>
+                            </mat-form-field>
+
+                          </div> -->
+                          <div class="col-md-6">
+                            <label class="mb-0 p-0 form-label">Event Date & Time</label>
+                              <nz-date-picker
+                              class="form-select custom-input"
+                              class="w-100" 
+                              style="width: 100%;"
+                                [(ngModel)]="item.eventData.bookingDate"
+                                (ngModelChange)="logInputBlur('bookingDate', $event, i, j, true)"
+                                [nzShowTime]="true"
+                                [nzFormat]="'dd/MM/yy HH:mm:ss'"
+                                [nzPlaceHolder]="'Select Event Date & Time'">
+                              </nz-date-picker>
+                          </div>
+                          
+                          <div class="col-md-6">
+                            <div class="form-field-section">
+                              <label class="form-label">Upload Document</label>
+                              <input class="form-control custom-input" type="file" id="formFileMultiple" (change)="onFileSelected($event)"
+                                 formControlName="Doc" [ngClass]="{ 'is-invalid': submitted && f.Doc.errors }"><span>{{item.eventData.documentURL}}</span><span (click)="downloadFile(item?.eventData)"><i class="bi bi-download" style="padding-left: 10px;"></i></span>
+                                 <span (click)="documentPreview(item?.eventData)"><i class="bi bi-eye globally-change-icon-color" style="padding-left:8px;"></i></span>
+                              <div *ngIf="submitted && f.Doc.errors" class="invalid-feedback">
+                                <div *ngIf="fileTypeNotMatched">It is not PDF type
+                                </div>
+                              </div>
+                              <div *ngIf="!submitted && fileTypeNotMatched">Not submitted/div>
+                            </div>
+                          </div>
+                        </div>
+
+                          <div class="col-md-6"> 
+                              <mat-form-field>
+                                <mat-label > Remark</mat-label>
+                                <textarea class="mt" matInput id="1"   cols="35" rows="5"
+                                [value]="item.eventData.Remarks || null" (blur)="logInputBlur('Remarks', $event, i, j, false)"
+                                [ngClass]="{ 'is-invalid': submitted && f.siRemark.errors }"></textarea>
+                                  </mat-form-field>
+
+                          </div>
+
+
+                        </ng-container>
+
+                        <ng-container *ngIf="item.eventData.eventState==='ActualDate' && !(indexParent === 0 && (j === 0 || j === 1)) && isImport">
+                          <!-- <div class="col-md-6 no-border">
+                            <mat-form-field>
+                              <mat-label>Event Date & Time</mat-label>
+                              <input matInput [ngxMatDatetimePicker]="bookingDate"
+                                (dateChange)="logInputBlur('bookingDate', $event, i, j, true)"
+                                [value]="item.eventData.bookingDate">
+                              <mat-datepicker-toggle matSuffix [for]="bookingDate"></mat-datepicker-toggle>
+                              <ngx-mat-datetime-picker [color]="color" [touchUi]="touchUi"
+                                [enableMeridian]="enableMeridian" #bookingDate>
+                              </ngx-mat-datetime-picker>
+                            </mat-form-field>
+                          </div> -->
+                          <div class="col-md-6">
+                              <label class="mb-0 p-0 form-label">Event Date & Time</label>
+                              <nz-date-picker
+                              class="form-select custom-input"
+                              class="w-100" 
+                              style="width: 100%;"
+                                [(ngModel)]="item.eventData.bookingDate"
+                                (ngModelChange)="logInputBlur('bookingDate', $event, i, j, true)"
+                                [nzShowTime]="true"
+                                [nzFormat]="'dd/MM/yy HH:mm:ss'"
+                                [nzPlaceHolder]="'Select Event Date & Time'">
+                              </nz-date-picker>
+                          </div>
+                          
+                          <div class="col-md-6"> 
+                              <mat-form-field>
+                                <mat-label > Remark</mat-label>
+                                <textarea class="mt" matInput id="1" cols="35" rows="5"
+                                [value]="item.eventData.Remarks || null" (blur)="logInputBlur('Remarks', $event, i, j, false)"
+                                [ngClass]="{ 'is-invalid': submitted && f.siRemark.errors }"></textarea>
+                                  </mat-form-field>
+
+                          </div>
+                        </ng-container>
+                        <ng-container *ngIf="item.eventData.eventState==='ActualDate' && item.eventTag !== 'booking_confirmed' && isExport">
+                          <!-- <div class="col-md-6 no-border">
+                            <mat-form-field>
+                              <mat-label>Event Date & Time</mat-label>
+                              <input matInput [ngxMatDatetimePicker]="bookingDate"
+                                (dateChange)="logInputBlur('bookingDate', $event, i, j, true)"
+                                [value]="item.eventData.bookingDate">
+                              <mat-datepicker-toggle matSuffix [for]="bookingDate"></mat-datepicker-toggle>
+                              <ngx-mat-datetime-picker [color]="color" [touchUi]="touchUi"
+                                [enableMeridian]="enableMeridian" #bookingDate>
+                              </ngx-mat-datetime-picker>
+                            </mat-form-field>
+                          </div> -->
+                          <div class="col-md-6">
+                              <label class="mb-0 p-0 form-label">Event Date & Time</label>
+                              <nz-date-picker
+                              class="form-select custom-input"
+                              class="w-100" 
+                              style="width: 100%;"
+                                [(ngModel)]="item.eventData.bookingDate"
+                                (ngModelChange)="logInputBlur('bookingDate', $event, i, j, true)"
+                                [nzShowTime]="true"
+                                [nzFormat]="'dd/MM/yy HH:mm:ss'"
+                                [nzPlaceHolder]="'Select Event Date & Time'">
+                              </nz-date-picker>
+                          </div>
+                          
+                          <div class="col-md-6"> 
+                              <mat-form-field>
+                                <mat-label > Remark</mat-label>
+                                <textarea class="mt" matInput id="1" cols="35" rows="5"
+                                [value]="item.eventData.Remarks || null" (blur)="logInputBlur('Remarks', $event, i, j, false)"
+                                [ngClass]="{ 'is-invalid': submitted && f.siRemark.errors }"></textarea>
+                                  </mat-form-field>
+
+                          </div>
+                        </ng-container>
+
+                        <ng-container *ngIf="item.eventData.eventState ==='EstimatedDate'">
+                          <!-- <div class="col-md-6 no-border">
+                            <mat-form-field>
+                              <mat-label>Event Date & Time</mat-label>
+                              <input matInput [ngxMatDatetimePicker]="bookingDateEst"
+                                (dateChange)="logInputBlur('bookingDateEst', $event, i, j, true)"
+                                [value]="item.eventData.bookingDateEst">
+                              <mat-datepicker-toggle matSuffix [for]="bookingDateEst"></mat-datepicker-toggle>
+                              <ngx-mat-datetime-picker [color]="color" [touchUi]="touchUi"
+                                [enableMeridian]="enableMeridian" #bookingDateEst>
+                              </ngx-mat-datetime-picker>
+                            </mat-form-field>
+                          </div> -->
+                          <div class="col-md-6">
+                              <label class="mb-0 p-0 form-label">Event Date & Time</label>
+                              <nz-date-picker
+                              class="form-select custom-input"
+                              class="w-100" 
+                              style="width: 100%;"
+                                [(ngModel)]="item.eventData.bookingDateEst"
+                                (ngModelChange)="logInputBlur('bookingDateEst', $event, i, j, true)"
+                                [nzShowTime]="true"
+                                [nzFormat]="'dd/MM/yy HH:mm:ss'"
+                                [nzPlaceHolder]="'Select Estimated Event Date & Time'">
+                              </nz-date-picker>
+                          </div>
+                          
+                        </ng-container>
+
+                        <div class="col-md-6 no-border">
+                          <mat-checkbox class="example-margin"  [checked]="item.eventData.sentNotification" (change)="logCheckBlur('sentNotification', $event.checked, i, j)"  >Send Email Notification</mat-checkbox>
+                        </div>
+
+
+                        <div class="flex">
+                          <div>
+                            <button class="btn btn-outline-primary mx-1" *ngIf="this.currentUrl !== 'show' &&  item.isUpdated"  (click)="ResetEvent(i,j)">
+                              Reset
+                            </button>
+                          </div>
+
+                          <div>
+                            <button class="btn btn-outline-primary mx-1" *ngIf="this.currentUrl !== 'show'"  (click)="SaveEvent(i,j)">
+                              Save
+                            </button>
+                          </div>
+                          <div>
+                            <button   class="btn btn-outline-primary mx-1" (click)="editdetails(i,j,'ActualDate')" >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="!item.isEdit">
+                    <div  class="row" >
+                      <div class="col-12" >
+                        <label class="form-label">Estimated Date:-&nbsp;&nbsp;</label>
+                        <span class="event-value">{{item?.eventData?.bookingDateEst || null | date:'dd/MM/yy HH:mm:ss'}}</span>
+                      </div>
+                      <div class="col-12" >
+                        <label class="form-label">Actual Date:-&nbsp;&nbsp;</label>
+                        <span class="event-value">{{ (item?.eventData?.bookingDate || null) | date:'dd/MM/yy HH:mm:ss' }}</span>
+                      </div>
+                      <div class="col-12" >
+                        <label class="form-label">Last Updated By:-&nbsp;&nbsp;</label>
+                        <span class="event-value">{{item?.updatedBy || null}} {{(item?.updatedOn || null) | date:'dd/MM/yy HH:mm:ss'}}</span>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </div> <!-- Closing div for ngFor loop over getArray() -->
+    <div class="col-md-12  wrap-form-action mb-3" *ngIf="type !== 'Custom'">
+    <button [disabled]="!batchId"
+    (click)="downnloadEdi('milestone',batchId)"
+       class="btn btn-outline-primary  float-end ">Download EDI
+    </button>
+  </div>
+  </div> <!-- Closing div for modal-body -->
+</div>

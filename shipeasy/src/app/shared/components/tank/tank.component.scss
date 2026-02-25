@@ -1,0 +1,85 @@
+.without-space{ table{border-spacing: 0 8px;
+th{
+    white-space: inherit;color: #77797A;font-weight: 500;
+}
+}}
+
+.wrap-form-field{
+.form-label{
+  font-size: 12px;
+}
+.form-control{
+  padding: 6px 0;
+    border-radius: 0;
+}
+}
+.action-field{
+  .active{
+    i{
+      color: #0d6efd;
+    }
+  }
+}
+.wrap-form-action{
+  margin-top: 15px;
+}
+.hover-active{
+  cursor: pointer;
+}
+.freeze{position: sticky !important;left: 0;
+  overflow: auto;background-color: white;
+  }
+.freezes{position: sticky !important;left: 0;
+overflow: auto;background-color: white;border-right: 1px solid #e3e3e3;
+}
+@media only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px) {
+/*
+Label the data
+*/
+td:nth-of-type(1):before {
+  content: "Container No";
+}
+td:nth-of-type(2):before {
+  content: "Container Type";
+}
+td:nth-of-type(3):before {
+  content: "Container Weight";
+}
+td:nth-of-type(4):before {
+  content: "Corgo Type";
+}
+td:nth-of-type(5):before {
+  content: "BL No";
+}
+td:nth-of-type(6):before {
+  content: "Shipping Bill";
+}
+td:nth-of-type(7):before {
+  content: "DO";
+}
+td:nth-of-type(8):before {
+  content: "SOB";
+}
+td:nth-of-type(9):before {
+  content: "Bond";
+}
+td:nth-of-type(10):before {
+  content: "UN No";
+}
+td:nth-of-type(11):before {
+  content: "Status";
+}
+td:nth-of-type(12):before {
+  content: "Action";
+}
+.wrap-inner-table.wrap-form-field{
+  &::after {
+    top: -17px;
+    width: 23px;
+    height: 47px;
+    border-width: 16px 22px 10px 0;
+   
+}
+}
+}

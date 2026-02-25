@@ -1,0 +1,292 @@
+<div *ngIf="isEditing" class="table-with-gheading">
+  <div class="wrap-table-area">
+    <div class="row mb-5">
+      <form [formGroup]="newgrn">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-4 mb-2" *ngIf="grnNo !== ''">
+              <span class="simple-text">GRN Number : {{grnNo}}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 mb-2">
+              <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="wareHouse"
+                nzPlaceHolder="Select WareHouse" (ngModelChange)="setBinSelection($event)">
+                <nz-option *ngFor="let warehouse of warehouseList" [nzLabel]="warehouse.wareHouseName"
+                  [nzValue]="warehouse.warehouseId"></nz-option>
+              </nz-select>
+            </div>
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+
+              <div class="wrap-form-field  wrap-pagination  d-flex justify-content-end">
+
+                <div class="mb-2">
+                  <button class="btn btn-outline-primary accept-btn font-10  px-1 rounded" (click)="saveListing()">
+                    Back to GRN List
+                  </button>
+                </div>
+                <div class="mb-2" *ngIf="!isShow">
+                  <button class="max-con btn btn-outline-primary btn-sm rounded-pill" (click)="addGRN()">Add Item
+                  </button>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="table-charge">
+            <table aria-describedby="mytable" class="gfg">
+              <thead>
+                <tr class="field-name">
+                  <th scope="col" class="text-center">#</th>
+                  <th scope="col" class="text-center w-10">Package Type <span class="text-danger">*</span></th>
+                  <th scope="col" class="text-center">Qty <span class="text-danger">*</span></th>
+                  <th scope="col" class="text-center">Size (l*b*h) <span class="text-danger">*</span></th> 
+                  <th scope="col" class="text-center">Total Weight(KGS) <span class="text-danger">*</span></th>
+                  <!-- <th scope="col" class="text-center">Unit <span class="text-danger">*</span></th> -->
+                  <th scope="col" class="text-center">Volume (CBM)</th>
+                  <th scope="col" class="text-center">Bin Selection </th>
+                  <th scope="col" class="text-center">Ref</th>
+                  <th scope="col" class="text-center">Description</th>
+                  <th scope="col" class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody formArrayName="grn">
+                <tr class="collapse-ui" *ngFor="let row of getGRNControls(); let i = index" [formGroupName]="i">
+                  <td>{{ i + 1 }}</td>
+                  <td>
+                    <div class="w-100">
+                      <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="packageType" [ngClass]="{
+                          'is-invalid':
+                            submitted && row?.get('packageType')?.errors
+                        }">
+                         <nz-option *ngFor="let packageType of packageTypeList" [nzLabel]="packageType?.typeName"
+                         [nzValue]="packageType?.typeName"></nz-option>
+                        <!-- <nz-option nzLabel="Pallets" nzValue="Pallets"></nz-option>
+                        <nz-option nzLabel="Boxes/Crates" nzValue="Boxes/Crates"></nz-option> -->
+                      </nz-select>
+                      <div *ngIf="submitted && row?.get('packageType')?.errors" class="invalid-feedback">
+                        <div *ngIf="row?.get('packageType')?.errors.required">
+                          Package type is required
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <input formControlName="quantity" type="number" class="form-control custom-input"
+                      (input)="totalVolume($event, i)" style="width: 60px;" [ngClass]="{
+                        'is-invalid': submitted && row?.get('quantity')?.errors
+                      }" />
+                  </td>
+                  <td>
+                    <div class="d-flex gap-2">
+                      <span>
+                        <input formControlName="length" type="number" class="form-control custom-input"
+                          (input)="totalVolume($event, i)"
+                          [ngClass]="{'is-invalid': submitted && row?.get('length')?.errors}" />
+                      </span>
+
+                      <span>
+                        <input formControlName="width" type="number" class="form-control custom-input"
+                          (input)="totalVolume($event, i)"
+                          [ngClass]="{'is-invalid': submitted && row?.get('width')?.errors}" />
+                      </span>
+
+                      <span>
+                        <input formControlName="height" type="number" class="form-control custom-input"
+                          (input)="totalVolume($event, i)"
+                          [ngClass]="{'is-invalid': submitted && row?.get('height')?.errors}" />
+                      </span>
+
+                      <span>
+                        <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="unit"
+                          (ngModelChange)="totalVolume($event, i)" style="width: 70px;">
+                          <nz-option *ngFor="let length of lengthData" [nzLabel]="length.uomShort"
+                            [nzValue]="length.uomShort"></nz-option>
+                        </nz-select>
+                      </span>
+
+                    </div>
+                  </td>
+
+                 
+
+                  <td>
+                    <input formControlName="weight" type="number" class="form-control custom-input" [ngClass]="{
+                        'is-invalid': submitted && row?.get('weight')?.errors
+                      }" />
+                  </td>
+
+                  <!-- <td>
+                    <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="uniteName"
+                      style="width: 60px;">
+                      <nz-option *ngFor="let enquiryType of weighthData" [nzLabel]="enquiryType.uomShort"
+                        [nzValue]="enquiryType.uomShort"></nz-option>
+                    </nz-select>
+                  </td> -->
+                  <td>
+                    <input formControlName="volume" type="number" class="form-control custom-input" [ngClass]="{
+                        'is-invalid': submitted && row?.get('volume')?.errors
+                      }" />
+                  </td>
+                  <td>
+                    <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="binSelection">
+                      <nz-option *ngFor="let bin of binSelectionData" [nzLabel]="bin.binNumber"
+                        [nzValue]="bin.binNumber"></nz-option>
+                    </nz-select>
+                  </td>
+                  <td>
+                    <input formControlName="ref" type="text" class="form-control custom-input" [ngClass]="{
+                        'is-invalid': submitted && row?.get('ref')?.errors
+                      }" />
+                  </td>
+
+                  <td>
+                    <input formControlName="description" type="text" class="form-control custom-input" [ngClass]="{
+                        'is-invalid':
+                          submitted && row?.get('description')?.errors
+                      }" />
+                  </td>
+                  <td class="action-field">
+                    <span *ngIf="!isShow">
+                      <span nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}"
+                        (click)="deleteRow(content1, row, i)" class="mtop"><a><em
+                            class="bi bi-trash color-pencil-red"></em></a>
+                      </span>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="no-data-availble" *ngIf="getGRNControlsLength() === 0">
+            {{ "common.no_data" | translate }}
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-md-12 m-0">
+      <div class="form-group wrap-form-action btn-onscreen">
+        <button class="btn btn-outline-primary float-end" (click)="saveListing()">
+          Back
+        </button>
+        <button *ngIf="!isShow" class="btn btn-outline-primary float-end" type="button" (click)="saveGRN()">
+          {{ "common.save" | translate }}
+        </button>
+        <button *ngIf="enableButton" class="btn btn-outline-primary float-end" type="button" (click)="printData()">
+          Print GRN Copy
+        </button>
+        <button *ngIf="enableButton" class="btn btn-outline-primary float-end" type="button"
+          (click)="printPackageList()">
+          Print Package List
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!isEditing" class="table-with-gheading">
+  <div class="wrap-table-area wrap-form-field  ">
+    <div class="row">
+      <div class="col-md-12 mb-3">
+        <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2 ">
+
+          <!-- <div class="mt-2">
+            <a class="new-action" (click)="open('add', '','document')"><em class="bi bi-upload"></em>
+              {{ 'smartagent.portenquiry.document.uploadDocument' | translate }}</a>
+          </div> -->
+          <div class="header-right">
+          </div>
+          <div class="header-right">
+            <a (click)="editListing()" *ngIf="this.currentUrl !== 'show'"
+              class="max-con new-action  btn btn-outline-primary btn-sm rounded-pill">Add GRN</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="table-design">
+          <table aria-describedby="mytable" class="gfg">
+            <thead>
+              <tr class="field-name">
+                <th scope="col">GRN No.</th>
+                <th scope="col">GRN Date</th>
+                <th scope="col">WareHouse</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let doc of documentData;let i = index">
+
+                <td>{{doc?.grnNo}}</td>
+                <td class="text-end">{{doc?.createdOn | date : 'dd-MM-yyyy, hh:mm'}}</td>
+                <td>{{doc?.warehouseName}}</td>
+                <td class="action-field d-flex justify-content-center align-items-baseline">
+                  <span class="max-con new-action  btn btn-outline-primary btn-sm rounded-pill hover"
+                    (click)="printPackageList(doc)">Print Package List <em
+                      class="bi bi-printer color-pencil-red"></em></span>
+                  <span class="max-con new-action  btn btn-outline-primary btn-sm rounded-pill hover" nz-tooltip
+                    nzTooltipTitle="Print GRN Copy" (click)="printData(doc)">Print GRN Copy <em
+                      class="bi bi-printer color-pencil-red"></em></span>
+                  <span  class="mtop" nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}"><a >
+                      <em class="bi bi-pencil color-pencil-red" (click)="editListing(doc)" ></em></a>
+                  </span>
+                  <span class="mtop" nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}"><a>
+                      <em class="bi bi-trash color-pencil-red" (click)="onDelete(deletedata,doc)"></em></a>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class=" no-data-availble" *ngIf="documentData?.length === 0">
+            <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+            <span *ngIf="!loaderService?.isLoadingcircle && documentData?.length === 0">No data available</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #content1 let-c="close" let-d="dismiss">
+  <div class="custom-modal-md">
+    <button type="button" class="btn-close shadow-none position-absolute top-0 end-0 m-2" aria-label="Close"
+      (click)="d('Cross click')"></button>
+    <div class="modal-body mt-4 d-flex flex-column align-items-center justify-content-center text-center">
+      <h4 class="modal-title text-center mb-3">{{ "error.msg_delete" | translate }}</h4>
+      <span class="text-dark fs-8">This action cannot be undone.</span>
+    </div>
+    <div class="modal-footer d-flex justify-content-right">
+      <button type="button" class="custom-btn btn-sm" (click)="c('yes')">
+        {{ "common.yes" | translate }}
+      </button>
+      <button type="button" class="custom-btn btn-sm me-3" (click)="d('Cross click')">
+        {{ "common.no" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #deletedata let-c="close" let-d="dismiss">
+  <div class="custom-modal-md">
+    <button type="button" class="btn-close shadow-none position-absolute top-0 end-0 m-2" aria-label="Close"
+      (click)="d('Cross click')"></button>
+    <div class="modal-body mt-4 d-flex flex-column align-items-center justify-content-center text-center">
+      <h4 class="modal-title text-center mb-3">{{ "error.msg_delete" | translate }}</h4>
+      <span class="text-dark fs-8">This action cannot be undone.</span>
+    </div>
+    <div class="modal-footer d-flex justify-content-right">
+      <button type="button" class="custom-btn btn-sm" (click)="c('yes')">
+        {{ "common.yes" | translate }}
+      </button>
+      <button type="button" class="custom-btn btn-sm me-3" (click)="d('Cross click')">
+        {{ "common.no" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template> 

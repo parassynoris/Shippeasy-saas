@@ -1,0 +1,130 @@
+<div class="table-with-gheading">
+    <div class="wrap-content">
+       
+        <div class="row">
+            <div class="horz-bar mb-3">
+                <span>Vessel : {{vesseldata}} || </span>
+                <span>Voyage : {{voyageData}}</span>
+        
+            </div>
+            <div class="col-md-12 table-with-gheading">
+                <div class="horz-bar">Update Checklist </div>
+                <div class="table-responsive">
+                    <div class="wrap-table-area  wrap-table-design wrap-form-field"
+                        id="htmlData">
+                        <table aria-describedby="mytable">
+                            <thead>
+                                <tr class="field-name">
+                                    <th scope="col"></th>
+                                    <th scope="col">Master BL</th>
+                                    <th scope="col">POD</th>
+                                    <th scope="col">FPOD</th>
+                                    <th scope="col">Container Type</th>
+                                    <th scope="col">Container</th>
+                                    <th scope="col">Shipping Term</th>
+                                    <th scope="col">Consignee</th>
+                                    <th scope="col">Notify Party</th>
+                                    <th scope="col">Checked</th>
+                                    <th scope="col">Email Date</th>
+                                    <th scope="col">Remarks</th>
+                                </tr>
+                                <tr>
+                                    <th scope="col"> </th>
+                                    <th scope="col"> 
+                                        <input type="text" class="form-control" [(ngModel)]="blNo" 
+                                        [ngModelOptions]="{standalone: true}" (keydown.enter)="search()">
+                                    </th>
+                                   
+                                    <th scope="col">
+                                        <input type="text" class="form-control" [(ngModel)]="podName" 
+                                        [ngModelOptions]="{standalone: true}" (keydown.enter)="search()">
+                                    </th>
+                                    <th scope="col"><input type="text" class="form-control" [(ngModel)]="fpodName" 
+                                        [ngModelOptions]="{standalone: true}"(keydown.enter)="search()"
+                                        >
+                                    </th>
+                                    <th scope="col">
+                                        <input type="text" class="form-control" [(ngModel)]="containersType" 
+                                        [ngModelOptions]="{standalone: true}" (keydown.enter)="search()"> </th>
+                                        <th scope="col">
+                                            <input type="text" class="form-control" [(ngModel)]="containers" 
+                                            [ngModelOptions]="{standalone: true}" (keydown.enter)="search()"> </th>
+                                            <th scope="col"><input type="text" class="form-control" [(ngModel)]="shipmentterm" 
+                                                [ngModelOptions]="{standalone: true}"(keydown.enter)="search()"
+                                                >
+                                            </th>
+                                    <th scope="col"><input type="text" class="form-control" [(ngModel)]="consignee" 
+                                        [ngModelOptions]="{standalone: true}"(keydown.enter)="search()"
+                                        >
+                                    </th>
+                                  
+                                    <th scope="col"><input type="text" class="form-control" [(ngModel)]="notify" 
+                                        [ngModelOptions]="{standalone: true}"(keydown.enter)="search()"
+                                        >
+                                    </th>
+                                  
+                                    <th scope="col">
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear  
+                                        [(ngModel)]="check" (ngModelChange)="search()"> 
+                                        <nz-option nzLabel="Yes" checked nzValue="true"></nz-option>
+                                        <nz-option nzLabel="No" nzValue="false"></nz-option>
+                                      </nz-select>
+                                    </th>
+                                    <th scope="col"><input type="date" class="form-control" [(ngModel)]="emailDate" 
+                                        [ngModelOptions]="{standalone: true}" (change)="search()"
+                                        >
+                                    </th>
+                                    <th scope="col"><input type="text" class="form-control" [(ngModel)]="remarks" 
+                                        [ngModelOptions]="{standalone: true}" (keydown.enter)="search()"
+                                        >
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let bl of houseBlList;let i =index">
+                                    <td>{{i+1}}</td>
+                                    <td>{{bl?.blNumber}}</td>
+                                    <td>{{bl?.importPodName}}</td>
+                                    <td>{{bl?.importFpodName}}</td>
+                                    <td><span *ngFor="let ctr of bl?.containers">{{ctr?.containerType}},<br> </span></td>
+                                    <td><span *ngFor="let ctr of bl?.containers">{{ctr?.containerNumber}},<br> </span></td>
+                                    <td>{{bl?.shippingTerm}}</td>
+                                    <td>{{bl?.consigneeName}}</td>
+                                    <td>{{bl?.notify_party1Name}}</td>
+                                    <td>
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear  
+                                        [(ngModel)]="bl.emailSent"> 
+                                        <nz-option nzLabel="Yes" checked nzValue="true"></nz-option>
+                                        <nz-option nzLabel="No" nzValue="false"></nz-option>
+                                      </nz-select>
+                                    </td>
+                                    <td></td>
+                                    <td>{{bl?.remarks}} </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="no-data-availble mt-0" *ngIf="houseBlList.length === 0">
+                    {{'common.no_data' | translate}}
+                </div>
+            </div>
+        </div>
+        <div class="btn-onscreen my-3">
+            <div class="form-group wrap-form-action">
+                <button  class="btn btn-outline-primary  float-end " (click)="back()">
+                  Back
+                </button>
+              <button  class="btn btn-outline-primary  float-end " (click)="updateBl()">
+                Update Checklist
+              </button>
+              <button  class="btn btn-outline-primary float-end " (click)="PrintBL()">
+                Print
+              </button>
+              <button  class="btn btn-outline-primary  float-end ">
+                Send Email
+              </button>
+            </div>
+          </div>
+    </div>
+</div>

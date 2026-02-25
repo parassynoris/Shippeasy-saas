@@ -1,0 +1,73 @@
+<div class="modal-content nz-allSelect">
+  <div class="modal-header">
+    <h4 class="modal-title" *ngIf="!isEditMode">{{ 'smartagent.smartAgent.holiday.addHoliday' | translate }}</h4>
+    <h4 class="modal-title" *ngIf="isEditMode">{{ 'smartagent.smartAgent.holiday.editHoliday' | translate }}</h4>
+    <button type="button" class="btn-close shadow-none" (click)="onSave()" aria-label="Close">
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="wrap-form-field padding-space  modal-bottom-alignment-for-mobile-view">
+      <form [formGroup]="addHoliday" class="row g-3 align-items-center">
+        <div class="col-md-6">
+          <label for="Principal" class="form-label">{{ 'smartagent.smartAgent.holiday.holidayName' | translate }}<span
+              class="text-danger">*</span></label>
+          <input type="text" class="form-control custom-input" id="Principal " placeholder="Holiday Name" value="Independence Day" 
+            formControlName="HolidayName" [ngClass]="{ 'is-invalid': submitted && f.HolidayName.errors }" appCapitalizeFirst>
+          <div *ngIf="submitted && f.HolidayName.errors" class="invalid-feedback">
+            <div *ngIf="f.HolidayName.errors.required">{{ 'smartagent.smartAgent.holiday.holidayNameisrequired' |
+              translate }}</div>
+          </div>
+        </div>
+        <div class="col-md-6 nz-select">
+          <label for="Country" class="form-label">{{ 'smartagent.smartAgent.holiday.country' | translate }}<span class="text-danger">*</span></label>
+        
+
+          <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Country" formControlName="Country"  
+          [ngClass]="{'is-invalid': submitted && f.Country.errors}">
+
+          <nz-option *ngFor="let country of sort(countryList,'countryName')" [nzLabel]="country?.countryName"
+            [nzValue]="country?.countryId"></nz-option> 
+        </nz-select>
+          <div *ngIf="submitted && f.Country.errors" class="invalid-feedback">
+            <div *ngIf="f.Country.errors.required">{{ 'smartagent.smartAgent.AllformAddedit.countryisrequired' | translate }}</div>
+            </div>
+          </div>
+        <div class="col-md-6">
+          <label class="mb-0 p-0 form-label">{{ 'smartagent.smartAgent.holiday.date' | translate }}<span
+            class="text-danger">*</span></label>
+          <mat-form-field appearance="outline" class="custom-date-picker">
+           <div class="d-flex align-items-center  w-100">
+            <input matInput
+            [matDatepicker]="pickerEtay" formControlName="HolidayDate" class="h-0" placeholder="Holiday Date"/>
+          <mat-datepicker-toggle matSuffix [for]="pickerEtay"></mat-datepicker-toggle>
+           </div>
+            <mat-datepicker #pickerEtay></mat-datepicker>
+          </mat-form-field>
+          <mat-error>
+            <div  *ngIf="submitted && f?.HolidayDate?.errors?.required" class="set-error-msg">{{ 'smartagent.smartAgent.holiday.holidayDateIsRequired' |
+              translate }}</div>
+        </mat-error>
+        </div>
+        <div class="col-md-4 mobile-view-input-alignment">
+          <!-- <div class="taggle form-check form-switch">
+            <label class="form-check-label" for="flexSwitchCheckDefault">{{ "stolt.masters.uom.status" | translate }}</label>
+            <input class="form-check-input" formControlName="status" type="checkbox" id="flexSwitchCheckDefault">
+          </div>  -->
+        </div>
+        <div class="col-md-12 wrap-form-action">
+          <button class="btn1 float-end mt-3" (click)="close()" type="submit">
+            {{ "common.cancel" | translate }}
+          </button>
+          <button type="submit" (click)="SaveHoliday()" *ngIf="this.isType !== 'show'" class="btn btn-outline-primary float-end mt-3">
+            <ng-container *ngIf="!isEditMode">
+              {{ 'common.save' | translate }}
+            </ng-container>
+            <ng-container *ngIf="isEditMode">
+              {{ 'common.update' | translate }}
+            </ng-container>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

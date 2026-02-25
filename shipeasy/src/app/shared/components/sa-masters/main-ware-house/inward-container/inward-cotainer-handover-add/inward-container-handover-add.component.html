@@ -1,0 +1,118 @@
+<div [formGroup]="inwardContainerForm">
+  <!-- Row 1 -->
+  <div class="row mt-3">
+    <!-- Bill of Entry -->
+    <div class="col-md-3">
+      <label class="form-label">BILL OF ENTRY <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" formControlName="BillOfEntry"
+        [ngClass]="{ 'is-invalid': submitted && f.BillOfEntry.errors }"
+        placeholder="Bill Of Entry No" />
+      <div *ngIf="submitted && f.BillOfEntry.errors" class="invalid-feedback">
+        Bill Of Entry is required
+      </div>
+    </div>
+
+    <!-- Container Number -->
+    <div class="col-md-3">
+      <label class="form-label">Container Number <span class="text-danger">*</span></label>
+      <nz-select class="nz-form-select nz-select-width" style="width: 100% !important;" 
+        (ngModelChange)="onContainerType($event)" formControlName="containerNo"
+        nzShowSearch nzAllowClear [ngClass]="{ 'is-invalid': submitted && f.containerNo.errors }">
+        <nz-option *ngFor="let warehouse of containerList"
+        [nzLabel]="warehouse.containerNo + (warehouse.toppleContainerNo ? ' (' + warehouse.toppleContainerNo + ')' : '')"
+        [nzValue]="warehouse.containerNo">
+      </nz-option>
+      </nz-select>
+      <div *ngIf="submitted && f.containerNo.errors" class="invalid-feedback">
+        Container Number is required
+      </div>
+    </div>
+
+    <!-- Truck No -->
+    <div class="col-md-3">
+      <label class="form-label">Truck No <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" formControlName="truckNo"
+        [ngClass]="{ 'is-invalid': (submitted || f.truckNo.touched) && f.truckNo.errors }" placeholder="Truck No"
+        (input)="onTruckNoInput($event)" />
+      <div *ngIf="(submitted || f.truckNo.touched) && f.truckNo.errors" class="invalid-feedback d-block">
+        <span *ngIf="f.truckNo.errors['required']">Truck No is required</span>
+        <span *ngIf="f.truckNo.errors['pattern']">Only alphanumeric characters are allowed.</span>
+      </div>
+    </div>
+
+    <!-- Empty Location -->
+    <div class="col-md-3">
+      <label class="form-label">Empty Location <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" formControlName="emptyLocation"
+        [ngClass]="{ 'is-invalid': submitted && f.emptyLocation.errors }" placeholder="Empty Location" />
+      <div *ngIf="submitted && f.emptyLocation.errors" class="invalid-feedback">
+        Empty Location is required
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 2 -->
+  <div class="row mt-3">
+    <!-- Empty Gate Pass No -->
+    <div class="col-md-3">
+      <label class="form-label">Empty Gate Pass No <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" formControlName="emptyGatePassNo"
+        [ngClass]="{ 'is-invalid': submitted && f.emptyGatePassNo.errors }" placeholder="Empty Gate Pass No" />
+      <div *ngIf="submitted && f.emptyGatePassNo.errors" class="invalid-feedback">
+        Empty Gate Pass No is required
+      </div>
+    </div>
+
+    <!-- Empty Gate Pass Date Time -->
+    <div class="col-md-3">
+      <label class="form-label">Empty Gate Pass Date Time <span class="text-danger">*</span></label>
+      <nz-date-picker class="form-control custom-input" nzShowTime nzFormat="dd-MM-yyyy"
+        [ngClass]="{ 'is-invalid': submitted && f.emptyGatePassDateTime.errors }"
+        formControlName="emptyGatePassDateTime"></nz-date-picker>
+      <div *ngIf="submitted && f.emptyGatePassDateTime.errors" class="invalid-feedback">
+        Empty Gate Pass Date Time is required
+      </div>
+    </div>
+
+    <!-- Transporter Name -->
+    <div class="col-md-3">
+      <label class="form-label">Transporter Name <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" formControlName="transporterName"
+        [ngClass]="{ 'is-invalid': submitted && f.transporterName.errors }" placeholder="Transporter Name" />
+      <div *ngIf="submitted && f.transporterName.errors" class="invalid-feedback">
+        Transporter Name is required
+      </div>
+    </div>
+
+    <!-- Vehicle Size -->
+    <div class="col-md-3">
+      <label class="form-label">Vehicle Size <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" formControlName="vehicleSize"
+        [ngClass]="{ 'is-invalid': submitted && f.vehicleSize.errors }" placeholder="Vehicle Size" />
+      <div *ngIf="submitted && f.vehicleSize.errors" class="invalid-feedback">
+        Vehicle Size is required
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row mt-3">
+    <div class="col-md-3">
+      <label class="form-label">Remarks </label>
+      <input type="text" class="form-control" formControlName="remarks"
+        [ngClass]="{ 'is-invalid': submitted && f.remarks.errors }" placeholder="Remarks" />
+      <div *ngIf="submitted && f.remarks.errors" class="invalid-feedback">
+        Remarks is required
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group wrap-form-action btn-onscreen">
+    <button (click)="onSubmit()" class="btn btn-outline-primary btn-lg float-end" type="submit">
+      {{ getSubmitButtonText() }}
+    </button>
+    <button class="btn1 btn-lg float-end" type="submit" (click)="onCancel()">
+      Cancel
+    </button>
+  </div>
+</div>

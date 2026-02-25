@@ -1,0 +1,128 @@
+
+@import'../../../../../assets/styles/mixins/global.scss';
+
+.pointer-none{
+  pointer-events: none;
+}
+.form-control::placeholder {
+  color: rgb(204, 199, 199);
+}
+.wrap-add-btn.wrap-size {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 1385px;
+}
+.fplt{
+  margin-left: 1430px;
+}
+.form-select.is-invalid:not([multiple]):not([size]) {
+  background-repeat: no-repeat !important;
+}
+
+[class^="bi-"]::before,
+[class*=" bi-"]::before {
+
+  line-height: inherit !important;
+  vertical-align: -0.250em;
+
+}
+.form-accordian h2 button {
+  padding: 7px 15px !important;
+  width: 100% !important;
+  box-shadow: none !important;
+  font-size: 14px !important;
+  color: var(--theme-black-320) !important;
+  background-color: var(--theme-light-bg) !important;
+}
+
+.form-accordian .accordion-button::after {
+  filter: none !important;
+}
+
+.expand-all {
+  font-size: 12px;
+  border-color: var(--link-text-color);
+  color: var(--link-text-color);
+  border-radius: 20px;
+  margin: 0 5px;
+  background-color: white;
+  border: 0;
+}
+
+.form-accordian .accordion-item {
+  margin-bottom: 5px;
+  border: 0;
+
+ 
+
+  .form-label {
+    font-size: 12px;
+    color: #77797A;
+  }
+}
+
+.display-none {
+  display: none;
+}
+::ng-deep {
+
+  .cdk-overlay-container,
+  .cdk-overlay-pane {
+    z-index: 2000 !important;
+  }
+  
+
+}
+.border-top{
+  border-top: 1px solid;
+  padding: 10px;
+}
+
+.mrgn1{
+  margin-bottom: 10px;
+}
+.simple-text{
+  font-size: 18px;
+  color : var(--change-theme);
+}
+.margin-bottoms{
+  margin-bottom: 22px ;
+}
+.dsply{
+  display: flex;
+}
+::ng-deep {
+  .wrap-modal-autosearch {
+      nz-select {
+
+          input,
+          select {
+              padding: 0 0px !important;
+              border: 1px solid rgb(207 202 202) !important;
+          }
+      }
+
+      .nz-form-select.wrap-inline-select nz-select-top-control {
+          height: 32px !important;
+      }
+  }
+
+  .cdk-overlay-container,
+  .cdk-overlay-pane {
+      z-index: 2000 !important;
+  }
+}
+.new-action{
+  background: #e9e6e6;
+  border-radius: 2px;
+  padding: 6px;
+  margin-top: 17px;
+  .wrap-text, .wrap-btn{
+   width: 49%;
+   display: inline-block;
+   vertical-align: middle;
+  }
+  .wrap-btn{
+    text-align: right; 
+  }
+}

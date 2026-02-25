@@ -1,0 +1,1456 @@
+<div class="container">
+  <div class="date-and-button-content-alignment">
+    <div class="left-contnet">
+      <h3 class="heading--h3subheading yellow-text-color-style d-flex align-items-center mb-0 font-16"
+        style="white-space: nowrap">
+        <em class="bi bi-arrow-left-short color--black back-button" appBackButton ></em>
+
+        Inquiry
+        <span class="mx-2 color--black font-10">#{{ quoteData?.enquiryNo??quoteData?.agentadviceNo }}</span>
+      </h3>
+      <span class="color--black font-10">Created date: {{ quoteData?.createdOn | date : 'dd-MM-yyyy'
+        }}</span>
+      <!-- <span *ngIf="quoteData?.enquiryStatusCustomer === 'Awaiting Review'" class="color--black font-10">Expired on: {{
+        selectedPrice?.validTo | date : 'dd-MM-yyyy'
+        }}</span> -->
+
+      <span *ngIf="quoteData?.enquiryStatusCustomer === 'Inquiry Expired'" class="color--black font-10">Expired Date: {{
+        quoteData?.updatedOn | date : 'dd-MM-yyyy'
+        }}</span>
+
+    </div>
+    <div class="right-contnet">
+      <!-- <div>
+            <div class="text-center">
+              <button class="btn button-border-color" (click)="onQuotePrice()">
+                Quotation Update
+              </button>
+            </div>
+          </div> -->
+    </div>
+  </div>
+</div>
+
+<div class="container pb-5">
+  <div class="row mb-5">
+    <div class="col-lg-12 col-sm-12">
+      <div class="card border-radius--10 border--none custom-left-bar backgroundrmv">
+        <div class="wrap-top">
+
+          <div class="row">
+
+            <div class="col-12 d-flex justify-content-between">
+              <div class="">
+                <div
+                  *ngIf="quoteData?.enquiryStatusCustomer === 'quote-reject' || quoteData?.enquiryStatusCustomer === 'Rejected'"
+                  class="black-200-bg  d-flex align-items-center border-radius--5 d-flex justify-content-between px-4">
+                  <span class="color--set py-1">Reason for Rejection : </span>
+
+                  <div>
+                    <span class="px-1 color--set py-1">{{
+                      quoteData?.reason??quoteData?.remark
+                      }}</span>
+                  </div>
+                </div>
+              </div>
+              <span class="font-12   status-bar1   {{ quoteData?.enquiryStatusCustomer}}">{{
+                quoteData?.enquiryStatusCustomer }}</span>
+            </div>
+
+
+          </div>
+          <div class="border-radius--5 p-2 mt-4 black-200-bg d-flex justify-content-between px-4"
+            *ngIf="quoteData?.enquiryStatusCustomer === 'Accepted'">
+            <div class="d-flex align-items-center">
+              <span class="heading--label font-10">By : </span>
+
+              <span class="heading--label px-1 font-10">{{
+                quoteData?.updatedBy }}</span>
+            </div>
+            <div class="d-flex align-items-end">
+              <button class="btn btn-link font-10" (click)="goToBooking()">
+                View Booking
+              </button>
+            </div>
+          </div>
+
+          <div class="row"
+            *ngIf="quoteData?.enquiryStatusCustomer === 'Inquiry Expired' || quoteData?.enquiryStatusCustomer === 'Requotation Requested' || quoteData?.enquiryStatusCustomer === 'Awaiting Review'  || quoteData?.enquiryStatusCustomer === 'Requoted' || quoteData?.enquiryStatusCustomer === 'Accepted'">
+
+            <div class="border-radius--10 border--none">
+              <div class="row mt-3 align-items-center">
+                <div *ngFor="let i of priceRanges" class="col-lg-4 col-sm-12 col-xs-12 my-1"
+                  style="width: 300px !important;" [class.w-50]="priceRanges.length <= 2"
+                  [class.pointer-none]="i?.quoteStatus === 'Quotation Rejected'">
+                  <button class="card custome-card bd-5 p-2 py-3  cursor-pointer w-100"
+                    [class.active-card1]="i?.quoteStatus === 'Quotation Rejected'"
+                    [class]="selectedPrice === i ? 'active-card' : ''" (click)="selectQuote(i)">
+                    <span class="heading--labelbold text-capitalize color--black"> </span>
+                    <!-- <span class="text--subtext color--black">
+                          Transit time :
+                        </span> -->
+
+                    <span class="color--black text--subtitle  font-10 d-flex justify-content-center flex-column w-100">
+                      <span>Quotation-No : {{i?.quotationNo }} </span>
+                      <span class="heading--h6 color--black py-1" *ngIf="showCustomerCurr"> {{ i?.totalSell | number :
+                        '1.2-2' | customCurrency:
+                        commonFunction?.customerCurrency()}}</span>
+                      <span class="heading--h6 color--black py-1" *ngIf="!showCustomerCurr"> {{ i?.totalSell | number :
+                        '1.2-2' | customCurrency:
+                        commonFunction?.getAgentCur() }}</span>
+
+                      <span *ngIf="i?.quoteStatus == 'Quotation Expired'">Quotation Status : <span class="color--secondary">{{i?.quoteStatus }}</span>  </span>
+                      <span *ngIf="i?.quoteStatus !== 'Job Created'">Expiry Date : {{i?.validTo | date :
+                        'dd-MM-yyyy' }} </span>
+
+                    </span>
+                  </button>
+                </div>
+                <div class="col-lg-12" *ngIf="priceRanges.length <= 1">
+                  <div class="mt-3 align-items-baseline mob-data d-flex">
+                    <ng-container *ngIf="(quoteData?.enquiryStatusCustomer === 'Requoted' || quoteData?.enquiryStatusCustomer === 'Requotation Requested' || quoteData?.enquiryStatusCustomer === 'Awaiting Review') && selectedPrice?.quoteStatus != 'Quotation Rejected'
+                        && selectedPrice?.quoteStatus != 'Quotation Accepted' && selectedPrice?.quoteStatus !== 'Quotation Expired'">
+                      <div class="ml-1" *ngIf="quoteData?.enquiryStatusCustomer != 'Requotation Requested'">
+                        <!-- <button class="btn btn-primary accept-btn font-10  px-1 rounded" (click)="acceptAndCountinue()">
+                          Accept & Complete Booking
+                        </button> -->
+
+                        <!-- booking.component.html -->
+
+                        <button class="btn btn-primary accept-btn font-10 px-1 rounded" [disabled]="isButtonDisabled"
+                          (click)="acceptAndCountinue()">{{ selectedPrice?.quoteStatus === 'Requotation Accepted' ||
+                          selectedPrice?.quoteStatus === 'Quotation Accepted' ? 'Complete Booking' : 'Accept & Complete
+                          Booking' }}</button>
+
+                      </div>
+                      <div>
+                        <button
+                          *ngIf="quoteData?.enquiryStatusCustomer !== 'Requoted' && quoteData?.enquiryStatusCustomer !== 'Requotation Requested'"
+                          class="btn btn-primary accept-btn font-10  px-1 rounded ml-1"
+                          (click)="Requotation(Requotations)">
+                          Re-Negotiate
+                        </button>
+                      </div>
+                      <div>
+                        <div *ngIf="quoteData?.enquiryStatusCustomer != 'Requotation Requested'"
+                          class="my-3 heading--button color--secondary cursor-pointer font-10 ml-1"
+                          data-bs-toggle="modal" data-bs-target="#dont-accept-quote-modal">
+                          <button class="btn btn-outline-primary accept-btn font-10  px-1 rounded">
+                            Cancel Quotation
+                          </button>
+                        </div>
+                      </div>
+                    </ng-container>
+                    <!-- <div *ngIf="quoteData?.enquiryStatusCustomer === 'Awaiting Review' && selectedPrice?.quoteStatus != 'Quotation Rejected'
+                    && selectedPrice?.quoteStatus != 'Quotation Accepted'">
+                   
+                    </div> -->
+                    <div class="download-section">
+                      <label (click)="downloadDoc(selectedPrice,sendQuote)"
+                        class="heading--smalltitle font-11 color--secondary my-2"><em
+                          class="bi bi-download font-11"></em>
+                        Download Quotation</label>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+
+              <div *ngIf="priceRanges.length > 1">
+                <div class="d-flex mt-4 align-items-center mob-data">
+                  <ng-container *ngIf="quoteData?.enquiryStatusCustomer === 'Requoted' || quoteData?.enquiryStatusCustomer === 'Awaiting Review' && selectedPrice?.quoteStatus != 'Quotation Rejected' 
+                      && selectedPrice?.quoteStatus != 'Quotation Accepted' && selectedPrice?.quoteStatus !== 'Quotation Expired'">
+                    <div class="my-2">
+                      <!-- <button class="btn btn-primary accept-btn font-10  px-1 rounded" (click)="acceptAndCountinue()">
+                        Accept & Complete Booking<em nz-tooltip nzTooltipTitle="Once you accept any one quotation, other quotations will be automatically rejected"
+                        class="bi bi-info-circle text-white ml-2"></em>
+                      </button> -->
+                      <button class="btn btn-primary accept-btn font-10 px-1 rounded" (click)="acceptAndCountinue()">{{
+                        selectedPrice?.quoteStatus === 'Requotation Accepted' || selectedPrice?.quoteStatus ===
+                        'Quotation Accepted' ? 'Complete Booking' : 'Accept & Complete Booking' }}</button>
+                    </div>
+                    <div class="ml-2">
+                      <button
+                        *ngIf="quoteData?.enquiryStatusCustomer !== 'Requoted' && quoteData?.enquiryStatusCustomer !== 'Requotation Requested' && (quoteData?.enquiryStatusCustomer !== 'Requote submitted' || quoteData?.enquiryStatusCustomer !== 'Requote Submitted')"
+                        class="btn btn-primary accept-btn font-10  px-1 rounded" (click)="Requotation(Requotations)">
+                        Re-Negotiate<em nz-tooltip
+                          nzTooltipTitle="Once you request a requotation for any one quotation, other quotations will be automatically rejected"
+                          class="bi bi-info-circle text-white ml-1"></em>
+                      </button>
+                    </div>
+                    <div class="my-2"
+                      *ngIf="priceRanges?.length != 1 && quoteData?.enquiryStatusCustomer != 'Requotation Requested'">
+                      <div class="ml-2 heading--button color--secondary cursor-pointer font-10" data-bs-toggle="modal"
+                        data-bs-target="#dont-accept-quote-modal">
+                        <button class="btn btn-outline-primary accept-btn font-10  px-1 rounded">
+                          Cancel Quotation
+                        </button>
+                      </div>
+                    </div>
+
+                  </ng-container>
+
+                  <div class="download-section mt-2">
+                    <a (click)="downloadDoc(selectedPrice,sendQuote)"
+                      class="heading--smalltitle font-11 color--secondary"><em class="bi bi-download font-11"></em>
+                      Download Quotation</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+        </div>
+
+        <div class="" id="downloadBody">
+          <div class="mob-second-card p-4" [class.desk-second-card]="showMobilecss">
+            <button class="btn btn-primary-border active-btn" style="width: 100%" (click)="showMobilecss = true">
+              View Quotatation Details
+            </button>
+          </div>
+          <div class="wrap-second-top desk-second-card" [class.desk-second-card1]="showMobilecss">
+            <div class="row">
+              <div class="pt-3">
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="heading--button color--black text-transform-capital-style font-10 set-wrap">Shipment Details</span>
+                  <div class="line mx-3"></div>
+                  <a class="text-secondary" data-bs-toggle="collapse" href="#shipment" role="button"
+                    aria-expanded="true" aria-controls="collapseExample">
+                    <em class="bi bi-chevron-down small-icon"></em>
+                  </a>
+                </div>
+
+
+                <div class="collapse show" id="shipment">
+                  <div class="row justify-content-md-start justify-content-between">
+
+
+                    <div class="row pt-3">
+                      <div class="col-lg-12 col-md-12 heading--label color--black address-section font-10">
+                       <!-- <div>{{ quoteData?.routeDetails?.loadPlaceName }}</div>  -->
+                        <!-- <span
+                          *ngIf="quoteData?.routeDetails?.loadPlaceName">,</span> -->
+
+                        {{ quoteData?.routeDetails?.loadPortName }}<em
+                          class="bi bi-arrow-right-short mx-1 color--secondarylight"></em>
+                        <!-- <div> {{quoteData?.routeDetails?.locationName }}</div>  -->
+                         <!-- <span
+                          *ngIf="quoteData?.routeDetails?.locationName">,</span> -->
+                        {{quoteData?.routeDetails?.destPortName}}
+                      </div>
+                      <div class="col-lg-6 col-md-6 d-flex flex-column">
+                        <span class="text--smalltext color--black font-10"
+                        *ngIf="quoteData?.routeDetails?.loadPlaceName"><b>Origin Address/ICD :</b> {{quoteData?.routeDetails?.loadPlaceName}}</span>
+                        <span class="text--smalltext color--black font-10"
+                        *ngIf="quoteData?.routeDetails?.locationName"><b>Destination Address/ICD :</b> {{quoteData?.routeDetails?.locationName}}</span>
+                        <span class="text--smalltext color--black font-10"
+                          *ngIf="quoteData?.basicDetails?.ShipmentTypeName">Freight Type : {{
+                          quoteData?.basicDetails?.ShipmentTypeName
+                          }}</span>
+                          <span class="text--smalltext color--black font-10"
+                          *ngIf="quoteData?.basicDetails?.loadType">Load Type : {{
+                          quoteData?.basicDetails?.loadType
+                          }}</span>
+                        <span class="text--smalltext color--black font-10"
+                          *ngIf="quoteData?.basicDetails?.enquiryTypeName">Ocean
+                          :
+                          {{ quoteData?.basicDetails?.enquiryTypeName }}</span>
+
+                        <span class="text--smalltext color--black font-10" *ngIf="
+                            quoteData?.quoteService?.cfs_icd?.stuffling
+                              ?.at_cfs ||
+                            quoteData?.quoteService?.cfs_icd?.stuffling
+                              ?.at_factory
+                          ">Origin-Stuffing:
+                          {{
+                          quoteData?.quoteService?.cfs_icd?.stuffling?.at_cfs
+                          ? "At CFS/ICD"
+                          : quoteData?.quoteService?.cfs_icd?.stuffling
+                          ?.at_factory
+                          ? "At Factory"
+                          : ""
+                          }}
+                        </span>
+
+                        <span class="text--smalltext color--black font-10" *ngIf="
+                            quoteData?.quoteService?.cfs_icd?.destuffling
+                              ?.at_cfs ||
+                            quoteData?.quoteService?.cfs_icd?.destuffling
+                              ?.at_factory
+                          ">Destination-Destuffing:
+                          {{
+                          quoteData?.quoteService?.cfs_icd?.destuffling
+                          ?.at_cfs
+                          ? "At CFS/ICD"
+                          : quoteData?.quoteService?.cfs_icd?.destuffling
+                          ?.at_factory
+                          ? "At Factory"
+                          : ""
+                          }}
+                        </span>
+                        <span class="text--smalltext color--black font-10"  *ngIf="quoteData?.basicDetails?.loadType !== 'LCL' && quoteData?.basicDetails?.loadType !== 'Loose' && selectedPrice?.quotationNo">Quotation No : {{selectedPrice?.quotationNo}}
+                        </span>
+                        <span class="text--smalltext color--black font-10"
+                          *ngIf="quoteData?.enquiryStatusCustomer !== 'Requested'">Origin :
+                          {{
+                          quoteData?.enquiryStatusCustomer === "Awaiting Review"
+                          ? selectedPrice?.loadPortName
+                          : quoteData?.routeDetails?.loadPortName
+                          }}
+                          <span class="mx-2 badge badge-black-banner"
+                            *ngIf="quoteData?.enquiryStatusCustomer === 'Requested'">Preferred</span>
+                        </span>
+                        <span class="text--smalltext color--black font-10" *ngIf=" quoteData?.enquiryStatusCustomer !== 'Requested'
+                          ">Destination :
+                          {{
+                          quoteData?.enquiryStatusCustomer === "Awaiting Review" ||
+                          quoteData?.enquiryStatusCustomer === "Job Created"
+                          ? selectedPrice?.dischargePortName
+                          : quoteData?.routeDetails?.destPortName
+                          }}
+                          <span class="mx-2 badge badge-black-banner"
+                            *ngIf="quoteData?.enquiryStatusCustomer === 'Requested'">Preferred</span>
+                        </span>
+
+
+                        <!-- <span class="text--smalltext color--black font-10" *ngIf="
+                            quoteData?.customDetails?.customOrigin ||
+                            quoteData?.customDetails?.customDestination
+                          ">Customs Clearance :</span> -->
+                          <!-- {{
+                          quoteData?.customDetails?.customOrigin ||
+                          quoteData?.customDetails?.customDestination
+                          ? "Origin, Destination"
+                          : quoteData?.customDetails?.customDestination
+                          ? "Destination"
+                          : "Origin"
+                          }} -->
+                          <span *ngIf="quoteData?.basicDetails?.loadType !== 'LCL' && quoteData?.basicDetails?.loadType !== 'Loose' && quoteData?.customDetails?.customOriginLocationName">Customs Clearance Origin: {{quoteData?.customDetails?.customOriginLocationName}}</span>
+                          <span *ngIf="quoteData?.basicDetails?.loadType !== 'LCL' && quoteData?.basicDetails?.loadType !== 'Loose' && quoteData?.customDetails?.customDestinationLocationName">Customs Clearance Destination : {{quoteData?.customDetails?.customDestinationLocationName}}</span>
+                          
+                            <!-- <span *ngIf="priceRanges?.[0]?.flightNo" class="text--smalltext color--black font-10">Flight No: {{ priceRanges?.[0]?.flightNo }}</span> -->
+                            <!-- <span *ngIf="priceRanges?.[0]?.voyageNumber" class="text--smalltext color--black font-10">Voyage Number: {{ priceRanges?.[0]?.voyageNumber }}</span>
+                            <span *ngIf="priceRanges?.[0]?.vesselName" class="text--smalltext color--black font-10">Vessel Name: {{ priceRanges?.[0]?.vesselName }}</span> -->
+                            <span *ngIf="selectedPrice?.eta" class="text--smalltext color--black font-10">Estimated Time Of Arrival: {{ selectedPrice?.eta | date:'dd-MM-yyyy HH:mm:ss' }}</span>
+                            <span  *ngIf="selectedPrice?.etd"class="text--smalltext color--black font-10">Estimated Time Of Departure: {{ selectedPrice?.etd | date:'dd-MM-yyyy HH:mm:ss' }}</span>
+                            <span *ngIf="selectedPrice?.carrierDeliveryName" class="text--smalltext color--black font-10">Place Of Carrier Delivery: {{ selectedPrice?.carrierDeliveryName }}</span>
+                            <span *ngIf="priceRanges?.[0]?.carrierReceiptName"class="text--smalltext color--black font-10">Place Of Carrier Receipt: {{ priceRanges?.[0]?.carrierReceiptName }}</span>
+                          
+
+                      </div>
+                      <div class="col-lg-6 col-md-6 d-flex flex-column h-100">
+
+                        <span class="text--smalltext color--black font-10"
+                          *ngIf="quoteData?.basicDetails?.consigneeName">Shipper:
+                          {{ quoteData?.basicDetails?.shipperName}}</span>
+
+                        <span class="text--smalltext color--black font-10"
+                          *ngIf="quoteData?.basicDetails?.consigneeName">Consignee:
+                          {{ quoteData?.basicDetails?.consigneeName}}</span>
+
+
+                        <span class="text--smalltext color--black font-10" *ngIf="
+                            quoteData?.routeDetails?.loadPlaceName ||
+                            quoteData?.enquiryStatusCustomer !== 'Requested'
+                          ">CFS/ICD :
+                          {{quoteData?.routeDetails?.loadPlaceName}}
+                          <span class="mx-2 badge badge-black-banner"
+                            *ngIf="quoteData?.enquiryStatusCustomer === 'Requested'">Preferred</span>
+                        </span>
+
+                        <span class="text--smalltext color--black font-10"  *ngIf="quoteData?.basicDetails?.loadType !== 'LCL' && quoteData?.basicDetails?.loadType !== 'Loose' && (quoteData?.routeDetails?.shippingLineName || selectedPrice?.carrierName)">{{this.userActivities?.basicDetails?.ShipmentTypeName?.toLowerCase() === 'air'
+                          ? 'Airline'
+                          : this.userActivities?.basicDetails?.ShipmentTypeName?.toLowerCase() === 'ocean'
+                          ? 'Carrier'
+                          : isTransport
+                          ? 'Transporter'
+                          : 'Carrier'}} :
+                          {{quoteData?.enquiryStatusCustomer ==="Requested" ? quoteData?.routeDetails?.shippingLineName:
+                          selectedPrice?.carrierName}}
+                          <span class="mx-2 badge badge-black-banner" *ngIf="
+                              quoteData?.enquiryStatusCustomer === 'Requested' ||
+                              quoteData?.enquiryStatusCustomer ===
+                                'quote-validityexpired' ||
+                              quoteData?.enquiryStatusCustomer === 'quote-reject'
+
+                            ">Preferred</span></span>
+                            <span *ngIf="selectedPrice?.voyageNumber"  class="text--smalltext color--black font-10">Voyage Number: {{ selectedPrice?.voyageNumber }}</span>
+                            <span  *ngIf="selectedPrice?.vesselName" class="text--smalltext color--black font-10">Vessel Name: {{ selectedPrice.vesselName }}</span>
+                            <span *ngIf="priceRanges?.[0]?.flightNo" class="text--smalltext color--black font-10">Flight No: {{ priceRanges?.[0]?.flightNo }}</span>
+                        <span class="text--smalltext color--black font-10"
+                          *ngIf="quoteData?.basicDetails?.incoTermName">INCOTERM
+                          : {{
+                          quoteData?.basicDetails?.incoTermName }}</span>
+
+                        <!-- <span class="text--smalltext color--black font-10" *ngIf="quoteData?.freeDayRequired">Free Required
+                              Days:
+                              {{ quoteData?.freeDayRequired}}</span> -->
+
+                        <span class="text--smalltext color--black font-10"
+                          *ngIf="quoteData?.basicDetails?.billingBranch">Booking Office:
+                          {{ quoteData?.basicDetails?.billingBranch}}</span>
+
+                          <span class="text--smalltext color--black font-10"
+                           *ngIf="quoteData?.basicDetails?.ShipmentTypeName !== 'Land' 
+                            && quoteData?.basicDetails?.loadType !== 'LCL' 
+                            && quoteData?.basicDetails?.loadType !== 'Loose'
+                            && quoteData?.transportDetails?.preCarriage">
+                             Pre Carriage: {{ quoteData?.transportDetails?.preCarriage ? 'Yes' : 'No' }}
+                          </span>
+
+                         <span class="text--smalltext color--black font-10"
+                          *ngIf="quoteData?.basicDetails?.ShipmentTypeName !== 'Land' 
+                           && quoteData?.basicDetails?.loadType !== 'LCL' 
+                           && quoteData?.basicDetails?.loadType !== 'Loose'
+                           && quoteData?.transportDetails?.onCarriage">
+                           On Carriage: {{ quoteData?.transportDetails?.onCarriage ? 'Yes' : 'No' }}
+                         </span>
+
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-lg-6 mt-3">
+                        <div class="col-12 d-flex flex-column px-0">
+                          <span class="text--smalltext color--black font-10"
+                            *ngIf="quoteData?.productDetails?.cargoReadyDate">Cargo Ready:
+                            {{ quoteData?.productDetails?.cargoReadyDate | date: "dd-MM-yyyy"}}</span>
+                          <span class="text--smalltext color--black font-10"
+                            *ngIf="quoteData?.productDetails?.targetDeliveryDate">Handover
+                            date:
+                            {{
+                            quoteData?.productDetails?.targetDeliveryDate | date: "dd-MM-yyyy"
+                            }}</span>
+                        </div>
+
+                      </div>
+
+                      <div class="row col-lg-6 mt-3" *ngIf="quoteData?.basicDetails?.ShipmentTypeName !=='Land' &&
+                          quoteData?.enquiryStatusCustomer !== 'Requested' &&
+                          quoteData?.enquiryStatusCustomer !== 'quote-draft'">
+
+                        <div class="col-12 d-flex flex-column" *ngIf="quoteData?.basicDetails?.ShipmentTypeName !=='Air'">
+                          <span class="text--smalltext color--black font-10">Origin <em class="bi bi-dot fs-6"></em>
+                            Origin Carrier Free Days:
+                            {{selectedPrice?.originFreeDays}}
+                          </span>
+                        </div>
+
+                        <div class="col-12 d-flex flex-column" *ngIf="quoteData?.basicDetails?.ShipmentTypeName !=='Air'">
+                          <span class="text--smalltext color--black font-10">Destination <em
+                              class="bi bi-dot fs-6"></em>
+                              Destination Port Free Days:
+                              {{ selectedPrice?.destPortFreeDays }}
+                          </span>
+                        </div>
+
+                        <div class="col-12 d-flex flex-column" *ngIf="quoteData?.basicDetails?.ShipmentTypeName !=='Air'">
+                          <span class="text--smalltext color--black font-10">Destination <em
+                              class="bi bi-dot fs-6"></em>
+                              Destination Carrier Free Days:
+                              {{selectedPrice?.destFreeDays}}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <span
+                      *ngIf="quoteData?.customDetails?.originPickupAddress || quoteData?.customDetails?.destinationDeliveryAddress"
+                      class="heading--label color--black mt-3 d-flex align-items-center">Address</span>
+                    <div class="row pt-1">
+                      <div class="col-lg-6 col-md-6 d-flex flex-column"
+                        *ngIf="quoteData?.customDetails?.originPickupAddress">
+                        <div class="text--smalltext color--black w-100 font-10">
+                          Pickup : {{ quoteData?.customDetails?.originPickupAddress }}
+                        </div>
+                      </div>
+                      <div class="col-lg-6 col-md-6 d-flex flex-column h-100"
+                        *ngIf="quoteData?.customDetails?.destinationDeliveryAddress">
+                        <div class="text--smalltext color--black w-100 font-10">
+                          Delivery :
+                          {{ quoteData?.customDetails?.destinationDeliveryAddress}}.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>   
+              <div *ngIf="quoteData?.cargoDetail?.length > 0">
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                  <span class="heading--button color--black text-transform-capital-style font-10 text-uppercase"
+                    style="white-space: nowrap">
+                    cargo Details</span>
+                  <div class="line mx-3"></div>
+                  <a class="text-secondary" data-bs-toggle="collapse" href="#commodity" role="button"
+                    aria-expanded="false" aria-controls="collapseExample">
+                    <em class="bi bi-chevron-down small-icon"></em>
+                  </a>
+                </div>
+                
+                <div class="collapse show" id="commodity">
+                  <div class="row justify-content-md-start justify-content-between">
+
+
+                    <div class="row pt-3" >
+                      <!-- <div class="col-6"> -->
+                        <div class="row">
+                          <div  *ngFor="let cargo of quoteData?.cargoDetail;let i=index" class="col-6 col-md-6 d-flex flex-column">
+                           <div class="row p-2">
+                            
+                         <!-- <div class="col-11"> -->
+                          <div class="">
+                            <span class="header" *ngIf="enquiryDetails?.cargoDetail?.length != 1">{{i+1}}. </span>
+                            <span class="header">Name: </span>
+                            <span class="text">{{cargo?.productName}}</span>
+                          </div>
+                            <!-- <div class="">
+                              <span class="header">Name: </span>
+                              <span class="text">{{cargo?.productName}}</span>
+                            </div> -->
+                            <div class="type">
+                              <span class="header">Type : </span>
+                              <span class="text">{{cargo?.commodityTypeName | uppercase}} </span>,
+                              <span class="header">HS Code :</span>
+                              <span class="text" *ngIf="cargo?.hsCode">{{cargo?.hsCode}} </span>
+                            </div>
+                            <div class="type">
+                              <span class="header">Weight : </span>
+                              <span class="text">{{cargo?.grossWeight || 0}} {{cargo?.unitName || 'KG' | uppercase}} </span>
+                            </div>
+                            <div class="type" *ngIf="cargo?.commodityTypeName == 'Refer'">
+                              <span class="header" >Temperature : </span>
+                              <span class="text" >({{cargo?.Range}} To {{cargo?.To}}) {{cargo?.typeTemp}}</span>
+                            </div>
+                            <div class="type" *ngIf="cargo?.commodityTypeName == 'ODC'">
+                              <span class="header" >Dimension : </span>
+                              <span class="text" >({{cargo?.Wi}} * {{cargo?.li}}  * {{cargo?.hi}})  {{cargo?.di}}</span>
+                            </div>
+                            <div class="type" *ngIf="cargo?.commodityTypeName == 'HAZ'">
+                              <span class="header" >UN No : </span>
+                              <span class="text">{{cargo?.unNo}} </span>
+                            </div>
+                            <div class="type" *ngIf="cargo?.imcoClass">
+                              <span class="header" >IMCO Class : </span>
+                              <span class="text">{{cargo?.imcoClass}} </span>
+                            </div>
+                            <div>
+                            <!-- <div class="col-1 pr-0 widthforNumber">
+                              <span class="fw-bold">{{i+1}}.</span>
+                            </div>
+                              <div class="col-11 pl-0 mb-2">
+                                <span class="text--smalltext color--black font-10"> Commodity Type : {{
+                                  cargo?.commodityTypeName
+                                  }}</span>
+                                <span class="text--smalltext color--black font-10 ">{{ cargo?.quantity }}, 
+                                </span>
+                                <span class="text--smalltext color--black font-10 ">{{ cargo?.unNo }}, 
+                                </span>
+                                <span class="text--smalltext color--black font-10 ">{{ cargo?.productName | titlecase
+                                  }}
+                                  <em class="bi bi-dot fs-6"></em> {{cargo?.hsCode}} <em class="bi bi-dot fs-7">{{ cargo?.grossWeight }} </em>
+    
+                                  {{ cargo?.unitName }}
+                                </span>
+                                <br>
+                                <span class="semibold--label" *ngIf="cargo?.imcoClass">
+    
+                                  <span class="text--smalltext color--black font-10">
+                                    IMO Class : {{cargo?.imcoClass}}
+                                  </span>
+                                </span> -->
+                                <!-- <div *ngIf="cargo?.unNo">
+                                  <span class="text--smalltext color--black font-10">
+                                    UN Number: {{cargo?.unNo}}
+                                  </span>
+                                </div> -->
+                                <!-- <div *ngIf="cargo?.Range || cargo?.To || cargo?.typeTemp">
+                                  <span class="text--smalltext color--black font-10" *ngIf="cargo?.Range">
+                                    Temperature: ({{cargo?.Range}} To
+                                  </span>
+                                  <span class="text--smalltext color--black font-10" *ngIf="cargo?.To">
+                                    {{cargo?.To}} )
+                                  </span>
+                                  <span class="text--smalltext color--black font-10" *ngIf="cargo?.typeTemp">
+                                    {{cargo?.typeTemp}}
+                                  </span>
+                                </div>
+                                <div *ngIf="cargo?.Wi || cargo?.hi || cargo?.li || cargo?.di" >
+                                  <span class="text--smalltext color--black font-10" *ngIf="cargo?.Wi">
+                                    Dimension: ({{cargo?.Wi}} * 
+                                  </span>
+                                  <span class="text--smalltext color--black font-10" *ngIf="cargo?.hi">
+                                    {{cargo?.hi}} * 
+                                  </span>
+                                  <span class="text--smalltext color--black font-10" *ngIf="cargo?.li">
+                                    {{cargo?.li}})
+                                  </span>
+                                  <span class="text--smalltext color--black font-10" *ngIf="cargo?.di">
+                                    {{cargo?.di}}
+                                  </span>
+                                </div> -->
+                              </div>
+                           <!-- </div> -->
+                          </div>
+                          </div>
+                          <!-- <div class="col-12 col-md-12 pt-3 pt-md-0">
+                            <div class="d-flex flex-column justify-content-end h-100">
+                             
+                            </div>
+                          </div> -->
+                        </div>
+                      <!-- </div> -->
+                      <!-- <div class="col-6">
+                        <div> -->
+                          <!-- <span class="text--smalltext color--black font-10">Hazardous <em
+                              class="bi bi-dot fs-6"></em></span> -->
+                          
+                          <!-- <div *ngIf="quoteData?.cargoHazType?.msds?.id">
+                                <span class="text--smalltext color--black font-10">{{
+                                  quoteData?.cargoHazType?.msds?.id
+                                  ? "MSDS Document :"
+                                  : ""
+                                  }}
+                                  <a class="color--secondarylight"
+                                    (click)="onDownLoadDoc(quoteData?.cargoHazType?.msds?.id)">Download</a>
+                                </span>
+                              </div> -->
+                        <!-- </div>
+
+                      </div> -->
+                    </div>
+                  </div>
+                </div>
+                </div>
+                <div *ngIf="quoteData">
+                
+                  <div *ngIf="quoteData?.containersDetails?.length > 0; else looseCargo">
+                    <!-- Load Details Section -->
+                    <div class="pt-3">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <span class="heading--button color--black text-transform-capital-style font-10 text-uppercase" style="white-space: nowrap">Load Details</span>
+                        <div class="line mx-3"></div>
+                        <a class="text-secondary" data-bs-toggle="collapse" href="#loaddetails" role="button" aria-expanded="true" aria-controls="loaddetails">
+                          <em class="bi bi-chevron-down small-icon"></em>
+                        </a>
+                      </div>
+                      <div class="collapse show" id="loaddetails">
+                        <div class="row justify-content-md-start justify-content-between">
+                         
+                          <div class="row" *ngFor="let container of quoteData?.containersDetails">
+                            <div class="col-lg-6 col-md-6 d-flex flex-column h-100">
+                              <span class="text--smalltext color--black font-10" >Load : {{ container?.containerType || container?.truckType }} * {{container?.noOfContainer}}</span>
+                              <span class="text--smalltext color--black font-10" *ngIf="container?.grossWeightContainer || container?.unitName">
+                                Total Gross Weight: {{ container?.grossWeightContainer }} {{ container?.unitName }}
+                            </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <ng-template #looseCargo>
+                    <!-- Loose Cargo Details Section -->
+                    <div class="pt-3" *ngIf="quoteData.looseCargoDetails?.cargos?.length > 0">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <span class="heading--button color--black text-transform-capital-style font-10 text-uppercase" style="white-space: nowrap">Loose Cargo Details</span>
+                        <div class="line mx-3"></div>
+                        <a class="text-secondary" data-bs-toggle="collapse" href="#loosecargodetails" role="button" aria-expanded="true" aria-controls="loosecargodetails">
+                          <em class="bi bi-chevron-down small-icon"></em>
+                        </a>
+                      </div>
+                      <div class="collapse show" id="loosecargodetails">
+                        <div class="row justify-content-md-start justify-content-between">
+                          <div class="row pt-3">
+                            <div class="col-lg-6 col-md-6 d-flex flex-column h-100">
+                              <table class="table table-bordered">
+                                <thead>
+                                  <tr>
+                                    <th scope="col" class="white-space">Lot</th>
+                                    <th scope="col" class="white-space">Package Type</th>
+                                    <th scope="col" class="white-space">Quantity</th>
+                                    <th scope="col" class="white-space">Size (l x b x h) </th>
+                                    <th scope="col" class="white-space">Volume</th>
+                                    <th scope="col" class="white-space">Weight</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor=" let cargo of  quoteData.looseCargoDetails?.cargos; let i=index">
+                                    <td class="white-space">{{i+1}}</td>
+                                    <td class="white-space">{{cargo?.pkgname}}</td>
+                                    <td class="white-space">{{cargo?.units}}</td>
+                                        <td class="white-space">   ({{cargo?.lengthp}} x {{cargo?.Weightp}} x {{cargo?.heightselected}}){{cargo?.selectedh}}  </td>
+
+                                        <td class="white-space">
+                                          {{cargo?.volumeselect  | number:'1.2-2'}} CBM
+                                        </td>
+                                        <td class="white-space">
+                                          {{cargo?.Weightselected}}{{cargo?.selectedw}}
+                                        </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
+                </div>  
+                <div *ngIf="quoteData?.cargoDetail?.length > 0">
+
+                <div class="pt-3"  *ngIf="batchDetail?.enquiryDetails?.basicDetails?.ShipmentTypeName === 'land'">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="heading--button color--black text-transform-capital-style font-10 text-uppercase"
+                    style="white-space: nowrap">Value Added Services</span>
+                    <div class="line mx-3"></div>
+                    <a class="text-secondary" data-bs-toggle="collapse" href="#valueaddedservices" role="button"
+                      aria-expanded="true" aria-controls="collapseExample">
+                      <em class="bi bi-chevron-down small-icon"></em>
+                    </a>
+                  </div>
+  
+  
+                  <div class="collapse show" id="valueaddedservices">
+                    <div class="row justify-content-md-start justify-content-between">
+  
+  
+                      <div class="row pt-3">
+                        <div class="col-lg-6 col-md-6 d-flex flex-column h-100">
+                         <span class="text">
+                            <span *ngIf="quoteData?.insurance?.cargo">Cargo Insurance ,</span>
+                            <span *ngIf="quoteData?.insurance?.emptyContainer">Empty Container Insurance ,</span>
+                            <span *ngIf="quoteData?.insurance?.cargo">Fumigation ,</span>
+                            <span *ngIf="quoteData?.insurance?.cargo">Palletization ,</span>
+                            <span *ngIf="quoteData?.insurance?.warehousing">Warehousing </span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                <div class="collapse show" id="commodity">
+                  <div class="row justify-content-md-start justify-content-between">
+
+
+                    <div class="row pt-3">
+                      <div class="col-6">
+
+                      </div>
+                      <div class="col-6">
+                        <div *ngIf="quoteData?.otherDocument?.length > 0">
+                          <span class="text--smalltext color--black font-10">Other Documents <em
+                              class="bi bi-dot fs-6"></em></span>
+
+                          <div *ngFor="let document of quoteData?.otherDocument">
+                            <span class="text--smalltext color--black font-10">{{
+                              document?.name
+                              ? document?.name
+                              : "Other Document"
+                              }}
+                              <a class="color--secondarylight"
+                                (click)="onDownLoadDoc(document.id,sendQuote)">Download</a>
+                            </span>
+                          </div>
+                        </div>
+
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="showContainer">
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                  <span class="heading--button color--black text-transform-capital-style font-10"
+                    style="white-space: nowrap">{{typeOfWay}}</span>
+                  <div class="line mx-3"></div>
+                  <a class="text-secondary" data-bs-toggle="collapse" href="#container" role="button"
+                    aria-expanded="false" aria-controls="collapseExample">
+                    <em class="bi bi-chevron-down small-icon"></em>
+                  </a>
+                </div>
+
+                <div class="collapse show" id="container">
+                  <div class="row justify-content-md-start justify-content-between" *ngFor="
+                      let container of quoteData?.containersDetails;
+                      let j = index
+                    ">
+                    <div class="row pt-3">
+                      <div class="col-12 col-md-6 d-flex flex-column">
+                        <span class="text--smalltext color--black font-10">
+                          {{ container?.containerType || container?.truckType }}
+                          <em class="bi bi-dot fs-6"></em>
+                          {{ container?.noOfContainer }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="showPallet">
+                <div class="d-flex justify-content-between align-items-center mt-4"
+                  *ngIf="quoteData?.looseCargoDetails?.cargos?.length > 0">
+                  <span class="heading--button color--black text-transform-capital-style font-10"
+                    style="white-space: nowrap">Pallet</span>
+                  <div class="line mx-3"></div>
+                  <a class="text-secondary" data-bs-toggle="collapse" href="#pallet" role="button" aria-expanded="false"
+                    aria-controls="collapseExample">
+                    <em class="bi bi-chevron-down small-icon"></em>
+                  </a>
+                </div>
+
+                <div class="collapse show" id="pallet">
+                  <div class="row justify-content-md-start justify-content-between" *ngFor="
+                      let container of quoteData?.looseCargoDetails?.cargos;
+                      let j = index
+                    ">
+                    <div class="row pt-3">
+                      <div class="col-12 col-md-6 d-flex flex-column">
+                        <span class="text--smalltext color--black font-10">
+                          {{ container?.Pallettype }}
+                          <em class="bi bi-dot fs-6"></em>
+                          {{ container?.units }}
+                        </span>
+
+                        <span class="text--smalltext color--black font-10">
+                          Height
+                          <em class="bi bi-dot fs-6"></em>
+                          {{ container?.heightselected }}
+                        </span>
+
+                        <span class="text--smalltext color--black font-10">Volume
+                          <em class="bi bi-dot fs-6"></em>{{ container?.volumeselect }}
+
+                          {{ container?.volumeps }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="" *ngIf="quoteData?.enquiryStatusCustomer == 'Requested'">
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                  <span class="heading--button color--black text-transform-capital-style font-10 text-uppercase"
+                    style="white-space: nowrap">PRICING</span>
+
+                  <div class="line mx-3"></div>
+                  <a class="text-secondary" data-bs-toggle="collapse" href="#priceBreakDown" role="button"
+                    aria-expanded="false" aria-controls="collapseExample">
+                    <em class="bi bi-chevron-down small-icon"></em>
+                  </a>
+                </div>
+
+                <div class="create-custom-switch-design">
+                  <p>
+                    <label class="toggleSwitch" (change)="showCustomerCurr = !showCustomerCurr">
+                      <input type="checkbox" [value]="showCustomerCurr" />
+                      <span>
+                        <span>{{commonFunction?.getAgentCur()}}</span>
+                        <span>{{commonFunction?.customerCurrency()}}</span>
+                      </span>
+                      <a></a>
+                    </label>
+                  </p>
+                </div>
+                <div class="collapse show" id="priceBreakDown">
+                  <div class="row justify-content-md-start justify-content-between">
+
+                    <div class="row pt-3">
+
+                      <div class="col-lg-12 col-md-6 d-flex flex-column" *ngFor="let key  of quoteData?.charges">
+                        <span class="heading--h6 color--black d-flex align-items-center my-3 font-10">Container Type -
+                          {{key?.conatiner }}
+                        </span>
+                        <div class="d-flex justify-content-between align-items-center pb-2"
+                          *ngFor="let item of key?.rates">
+                          <span class="heading--label color--black d-flex align-items-center font-10"
+                            style="white-space: nowrap">{{ item?.name }}</span>
+                          <!-- <div class="line self-line mx-3"></div> -->
+                          <span class="heading--label color--black d-flex align-items-center font-10"
+                            *ngIf="showCustomerCurr">{{
+                            item?.price
+                            | number : '1.2-2' | customCurrency : commonFunction?.customerCurrency()
+                            }}</span>
+
+                          <span class="heading--label color--black d-flex align-items-center font-10"
+                            *ngIf="!showCustomerCurr">{{
+                            item?.price
+                            | number : '1.2-2' | customCurrency: commonFunction?.getAgentCur()
+                            }}</span>
+
+
+                        </div>
+                      </div>
+
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div *ngIf="quoteData?.enquiryStatusCustomer === 'Requested'">
+                <div class="pb-4">
+                  <div class="d-flex justify-content-between align-items-center mt-4">
+                    <span class="heading--button color--black text-transform-capital-style font-10 text-uppercase"
+                      style="white-space: nowrap">Estimated Price</span>
+
+
+                  </div>
+                  <div class="collapse show" id="estimation">
+                    <div class="row justify-content-md-start justify-content-between">
+                      <div class="row pt-3">
+                        <div class="col-md-12 d-flex   justify-content-between">
+
+                          <span class="heading--h3 font-10">Total -</span>
+
+
+                          <span class="heading--h3 font-10" *ngIf="showCustomerCurr"> {{
+                            ( quoteData?.estimate?.maxPrice || 0)
+                            | number : '1.2-2' | customCurrency : commonFunction?.customerCurrency()
+                            }}</span>
+                          <span class="heading--h3 font-10" *ngIf="!showCustomerCurr">
+                            {{
+                            ( quoteData?.estimate?.maxPrice || 0)
+                            | number : '1.2-2' | customCurrency : commonFunction?.getAgentCur()
+                            }}
+                          </span>
+
+                        </div>
+                        <div class="col-12 col-md-6 d-flex flex-column">
+
+                          <span class="text--smalltext color--black mt-4 color--black" *ngIf="
+                              quoteData?.estimate?.minPrice;
+                              else other
+                            ">
+                            Disclaimer: This price is an estimation based
+                            on the ongoing market trends.
+                          </span>
+                          <ng-template #other>
+                            <span class="text--smalltext color--black mt-4 color--black">
+                              Disclaimer: Estimated price for the
+                              selection is not available.
+                            </span>
+                          </ng-template>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="" *ngIf="quoteData?.enquiryStatusCustomer !== 'Requested'">
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                  <span class="heading--button color--black text-transform-capital-style font-10 text-uppercase"
+                    style="white-space: nowrap">Price Breakdown</span>
+
+                  <div class="line mx-3"></div>
+                  <a class="text-secondary" data-bs-toggle="collapse" href="#priceBreakDown" role="button"
+                    aria-expanded="false" aria-controls="collapseExample">
+                    <em class="bi bi-chevron-down small-icon"></em>
+                  </a>
+                </div>
+
+
+                <div class="create-custom-switch-design">
+                  <p>
+                    <label class="toggleSwitch" (change)="showCustomerCurr = !showCustomerCurr">
+                      <input type="checkbox" [value]="showCustomerCurr" />
+                      <span>
+                        <span>{{commonFunction?.getAgentCur()}}</span>
+                        <span>{{commonFunction?.customerCurrency()}}</span>
+                      </span>
+                      <a></a>
+                    </label>
+                  </p>
+                </div>
+                <div class="collapse show" id="priceBreakDown">
+                  <div class="row justify-content-md-start justify-content-between">
+
+                    <div class="row pt-3">
+                      <div class="col-lg-12 col-md-6 d-flex flex-column" *ngFor="let charge of chargeItems">
+                        <div class="d-flex justify-content-between align-items-center pb-2"
+                          *ngIf="this.selectedPrice?.quotationId == charge?.quotationId">
+                          <span class="heading--label color--black d-flex align-items-center font-10"
+                            style="white-space: nowrap">{{ charge?.costItemName }}</span>
+                          <!-- <div class="line self-line mx-3"></div> -->
+                          <span class="heading--label color--black d-flex align-items-center font-10"
+                            *ngIf="showCustomerCurr">{{
+                            charge?.selEstimates?.taxableAmount
+                            | number : '1.2-2' | customCurrency : commonFunction?.customerCurrency()
+                            }}</span>
+
+                          <span class="heading--label color--black d-flex align-items-center font-10"
+                            *ngIf="!showCustomerCurr">{{
+                            charge?.selEstimates?.taxableAmount
+                            | number : '1.2-2' | customCurrency: commonFunction?.getAgentCur()
+                            }}</span>
+
+
+                        </div>
+
+                      </div>
+
+
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+              <ng-template *ngIf="quoteData?.enquiryStatusCustomer === 'Awaiting Review'">
+              </ng-template>
+            </div>
+            
+          </div>
+          <div class="wrap-third-top" *ngIf="quoteData?.enquiryStatusCustomer !== 'Requested'">
+
+            <div class="row justify-content-md-start justify-content-between">
+              <div class="row">
+                <div class="col-12 col-md-6 d-flex flex-column">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="text--subtitle color--black font-10" style="white-space: nowrap; ">Subtotal</span>
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-6 d-flex flex-column">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="heading--label color--black font-10" style="white-space: nowrap">Shipment</span>
+                    <!-- <div class="line self-line mx-3"></div> -->
+
+                    <span class="heading--label color--black font-10" *ngIf="showCustomerCurr">{{
+                      returnTotal() | number : '1.2-2' | customCurrency : commonFunction?.customerCurrency() }}</span>
+                    <span class="heading--label color--black font-10" *ngIf="!showCustomerCurr">{{
+                      returnTotal() | number : '1.2-2' | customCurrency : commonFunction?.getAgentCur() }}</span>
+
+                  </div>
+
+                  <div class="d-flex justify-content-between align-items-center mt-2">
+                    <span class="text--label color--black font-10" style="white-space: nowrap">Tax</span>
+                    <!-- <div class="line self-line mx-3"></div> -->
+
+                    <span class="text--label color--black font-10" *ngIf="showCustomerCurr">{{
+                      rturnGst() | number : '1.2-2' | customCurrency : commonFunction?.customerCurrency() }}</span>
+
+                    <span class="text--label color--black font-10" *ngIf="!showCustomerCurr">{{
+                      rturnGst() | number : '1.2-2' | customCurrency : commonFunction?.getAgentCur() }}</span>
+
+                  </div>
+
+
+
+                  <div class="d-flex justify-content-between align-items-center mt-2" *ngIf="false">
+                    <span class="text--label color--black font-10" style="white-space: nowrap">SGST</span>
+                    <!-- <div class="line self-line mx-3"></div> -->
+
+                    <span class="text--label color--black font-10" *ngIf="showCustomerCurr">{{
+                      rturnGst() / 2 | number : '1.2-2' | customCurrency : commonFunction?.customerCurrency() }}</span>
+
+                    <span class="text--label color--black font-10" *ngIf="!showCustomerCurr">{{
+                      rturnGst() / 2 | number : '1.2-2' | customCurrency : commonFunction?.getAgentCur() }}</span>
+
+
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-2" *ngIf="false">
+                    <span class="text--label color--black font-10" style="white-space: nowrap">CGST</span>
+                    <!-- <div class="line self-line mx-3"></div> -->
+
+                    <span class="text--label color--black font-10" *ngIf="showCustomerCurr">{{
+                      rturnGst() / 2 | number : '1.2-2' | customCurrency : commonFunction?.customerCurrency() }}</span>
+
+                    <span class="text--label color--black font-10" *ngIf="!showCustomerCurr">{{
+                      rturnGst() / 2 | number : '1.2-2' | customCurrency : commonFunction?.getAgentCur() }}</span>
+
+                  </div>
+
+
+                </div>
+              </div>
+
+              <div class="row mt-4">
+                <div class="col d-flex flex-column">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="heading--h6 color--black font-10" style="white-space: nowrap">
+                      Total</span>
+                  </div>
+                </div>
+                <div class="col d-flex flex-column">
+                  <div class="d-flex justify-content-end align-items-center" *ngIf="showCustomerCurr">
+                    <span class="heading--h3 color--black font-10">{{ selectedPrice?.totalSell
+                      | number : '1.2-2' | customCurrency : commonFunction?.customerCurrency() }}</span>
+                  </div>
+
+                  <div class="d-flex justify-content-end align-items-center" *ngIf="!showCustomerCurr">
+                    <span class="text--footer color--black font-10">
+                      {{
+                      selectedPrice?.totalSell
+                      | number : '1.2-2' | customCurrency : commonFunction?.getAgentCur() }}</span>
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+
+            <!-- <div class="heading--label color--secondary mt-4"
+                  *ngIf="(!quoteData?.isForeigner) && (quoteData?.enquiryStatusCustomer == 'Awaiting Review' || quoteData?.enquiryStatusCustomer == 'quote-reject' || quoteData?.enquiryStatusCustomer == 'quote-validityexpired' || quoteData?.enquiryStatus  == 'Job Created') ">
+
+                  <B>Note :</B> INR 500 Per Teus will apply as a discount on online payment on this Quotation.
+                </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <ng-template #sendQuote let-c="close" let-d="dismiss">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <span> </span>
+        <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+        </button>
+      </div>
+
+      <div class="modal-body ">
+        <div style="border: 1px solid #e0e0e0;">
+          <iframe id="pdfViewer" width="100%" height="500px"></iframe>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>
+
+
+
+
+<div class="modal fade" id="use-this-quote-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bd-5">
+      <div class="modal-body p-4">
+        <div class="d-flex justify-content-end">
+          <button type="button" class="btn-close col-12 text-end" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <h4 class="modal-title text-center fs-4 fw-bold" id="exampleModalLabel">
+          Start a New Quotatation
+        </h4>
+        <h5 class="text-secondary fs-6 text-center fw-bold">
+          Based on Quotation #{{ enquiryId }}
+        </h5>
+
+        <p class="mt-4 text-secondary fs-6 fw-light text-center">
+          Starting a new Quotation based on the information of your previous
+          Quotation #{{ enquiryId }}
+        </p>
+
+        <div class="row d-flex mb-4">
+          <div class="col justify-content-end d-flex">
+            <button type="button" class="btn1" data-bs-dismiss="modal">
+              Cancel
+            </button>
+          </div>
+          <div class="col">
+            <button type="button" class="btn btn-primary">Okay!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="dont-accept-quote-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+  aria-hidden="false">
+  <div class="modal-dialog modal-dialog-centered modal-area">
+    <div class="modal-content border-0">
+      <div class="modal-header border-0 pt-4 pb-3">
+        <div class="heading--h3 color--black font-18" id="exampleModalLabel">
+          <span class="font-10">Quotation #{{ selectedPrice?.quotationNo }}</span>
+        </div>
+      </div>
+      <div class="modal-body pt-0">
+        <p class="text--footer color--black font-10">
+          Thank you for your response. We’re sad to hear that you’re unsatisfied
+          with the current Quotation. Please let us know how we can better match
+          your expectation.
+        </p>
+        <div class="mt-4">
+          <div class="wrap-area-field p-0">
+            <div class="text--subtext color--secondary font-w-600 mb-2">
+              Your Remarks
+            </div>
+            <textarea type="" class="form-control w-100 p-1"
+              placeholder="Please let us know your feedback on this Quotation." aria-describedby="basic-addon1"
+              (input)="setQuoteRemarks($event)"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="custome-modal-footer pb-3">
+        <div class="d-flex justify-content-end align-items-center">
+
+          <div>
+            <button type="button" class="btn btn-primary font-10 py-1" [disabled]="this.quoteRemarks?.length === 0"
+              data-bs-dismiss="modal" (click)="submitRemarks()">
+              Submit Remark
+            </button>
+          </div>
+          <div>
+            <a>
+              <button class="btn btn-outline-primary accept-btn font-10  px-1 rounded" data-bs-dismiss="modal">
+                Back to Quotation
+              </button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="special-service-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+  aria-hidden="false">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content bd-5">
+      <div class="modal-body p-4">
+        <div class="d-flex justify-content-end">
+          <button type="button" class="btn-close col-12 text-end" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <h4 class="modal-title text-center fs-4 fw-bold" id="exampleModalLabel">
+          Add Special Service
+        </h4>
+
+        <div class="mt-2">
+          <div class="card bd-5">
+            <div class="card-header">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="flexRadioDefault" id="flexRadioDefault1" />
+                <label class="form-check-label fw-bold px-1" for="flexRadioDefault1">
+                  Warehousing
+                </label>
+                <em class="bi bi-question-circle fs-6"></em>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col border-end">
+                  <div class="card p-3 py-2 bd-5 my-3">
+                    <div class="d-flex justify-content-between pt-1">
+                      <span class="form-check-label fw-bold px-1">
+                        Location
+                      </span>
+                      <em class="bi bi-search fs-6"></em>
+                    </div>
+
+                    <div class="mt-1">
+                      <input type="email" class="form-control border-0 px-1"
+                        placeholder="Enter City where you require service" />
+                    </div>
+                  </div>
+
+                  <div class="card p-3 py-2 bd-5 my-3">
+                    <div class="d-flex justify-content-between pt-1">
+                      <span class="form-check-label fw-bold px-1">
+                        Time period for warehousing
+                      </span>
+                    </div>
+
+                    <div class="mt-1">
+                      <input type="email" class="form-control border-0 px-1" placeholder="Enter number of days" />
+                    </div>
+                  </div>
+
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" />
+                    <label class="form-check-label fw-bold px-2" for="flexRadioDefault1">
+                      I need bonded Warehouses
+                    </label>
+                    <em class="bi bi-question-circle fs-6"></em>
+                  </div>
+
+                  <div class="card p-3 py-2 bd-5 my-3">
+                    <div class="d-flex justify-content-between pt-1">
+                      <span class="form-check-label fw-bold px-1">
+                        others
+                      </span>
+                    </div>
+
+                    <div class="mt-1">
+                      <textarea type="email" class="form-control border-0 px-1"
+                        placeholder="Please include any other details we should know about"></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col">
+                  <h6 class="text-secondary fw-bold my-3">
+                    Our Available Options
+                  </h6>
+
+                  <div class="card p-3 py-2 bd-5 my-3">
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" />
+                      <label class="form-check-label fw-bold px-2" for="flexRadioDefault1">
+                        Name of warehouse
+                      </label>
+                    </div>
+                    <hr class="my-2" />
+                    <span class="fs-6 fw-light">8819 Chanakyapuri, New Delhi 110121, India</span>
+                  </div>
+
+                  <div class="card p-3 py-2 bd-5 my-3">
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" />
+                      <label class="form-check-label fw-bold px-2" for="flexRadioDefault1">
+                        Name of warehouse
+                      </label>
+                    </div>
+                    <hr class="my-2" />
+                    <span class="fs-6 fw-light">8819 Chanakyapuri, New Delhi 110121, India</span>
+                  </div>
+
+                  <div class="card p-3 py-2 bd-5 my-3">
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" />
+                      <label class="form-check-label fw-bold px-2" for="flexRadioDefault1">
+                        Name of warehouse
+                      </label>
+                    </div>
+                    <hr class="my-2" />
+                    <span class="fs-6 fw-light">8819 Chanakyapuri, New Delhi 110121, India</span>
+                  </div>
+
+                  <div class="card p-3 py-2 bd-5 my-3">
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" />
+                      <label class="form-check-label fw-bold px-2" for="flexRadioDefault1">
+                        Name of warehouse
+                      </label>
+                    </div>
+                    <hr class="my-2" />
+                    <span class="fs-6 fw-light">8819 Chanakyapuri, New Delhi 110121, India</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-3">
+          <div class="card bd-5">
+            <div class="card-header">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="flexRadioDefault" id="flexRadioDefault1" />
+                <label class="form-check-label fw-bold px-1" for="flexRadioDefault1">
+                  Cargo Insurance
+                </label>
+                <em class="bi bi-question-circle fs-6"></em>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col border-end">
+                  <div class="input-group my-2">
+                    <span class="input-group-text" id="basic-addon1">Cargo Invoice value</span>
+                    <input type="tel" class="form-control border-start-0" maxlength="10" placeholder="Enter a value" />
+                  </div>
+
+                  <div class="input-group my-2">
+                    <span class="input-group-text" id="basic-addon1">Desired Deductible</span>
+                    <input type="tel" class="form-control border-start-0" maxlength="10" placeholder="Enter a value" />
+                  </div>
+                </div>
+
+                <div class="col">
+                  <h6 class="text-secondary fw-bold my-3">
+                    Our Available Options
+                  </h6>
+
+                  <div class="card p-3 py-2 bd-5 my-3">
+                    <div class="d-flex justify-content-between">
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" />
+                        <label class="form-check-label fw-bold px-2" for="flexRadioDefault1">
+                          Insurance Company Name
+                        </label>
+                      </div>
+                      <span class="fs-6">₹123,45</span>
+                    </div>
+                    <hr class="my-2" />
+                    <span class="fs-6 fw-light">Insurance coverage details eripuit signiferumque sea, vel
+                      ad muciuse eripuit signiferumque sea</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="input-group mb-3 my-4">
+            <span class="input-group-text inp-text" id="basic-addon1">Service Required on</span>
+            <input type="date" class="form-control bd-5 p-2" aria-label="Text input with dropdown button"
+              placeholder="Select " style="border-left: none" />
+          </div>
+        </div>
+
+        <div class="row d-flex mb-4 mt-4">
+          <div class="col justify-content-end d-flex">
+            <button type="button" class="btn1" data-bs-dismiss="modal">
+              Cancel Request
+            </button>
+          </div>
+          <div class="col">
+            <button type="button" class="btn btn-primary">
+              Submit Request
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<ng-template #Requotations let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h6> Renegotiation of Quotation </h6>
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+  <div class="custom-modal wrap-form-field">
+    <div class="modal-body">
+      <form [formGroup]="Requotationdetails">
+        <div class="row mb-4">
+          <div class="col-md-7">
+            <label class="form-label">Comment<span class="text-danger">*</span></label>
+            <textarea id="isRemarks" name="isRemarks" rows="10" cols="50" formControlName="comments"
+              class="form-control custom-input rounded-0" style="height: 65px; width: 720px;"
+              [ngClass]="{'is-invalid': submitted && f.comments.errors}"></textarea>
+            <div *ngIf="submitted && f.comments.errors" class="invalid-feedback">
+              <div *ngIf="f.comments.errors.required">Remark is required
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </form>
+      <div>
+        <p class="font-10" style="color: #007BFF;">This is a one-time request for cost negotiation</p>
+      </div>
+    </div>
+    <div class="d-flex  mb-3 pl-3">
+      <button type="button" class="btn btn-primary ml-1 font-10" (click)="Requotationssubmit()">Submit</button>
+      <button type="button" class="btn btn-primary-outline" aria-label="Close"
+        (click)="d('Cross click')">Cancel</button>
+
+    </div>
+  </div>
+</ng-template>

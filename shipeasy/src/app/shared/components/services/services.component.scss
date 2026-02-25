@@ -1,0 +1,20 @@
+.width16{
+    width: 16%;
+}
+.width14{
+    width: 14%;
+}
+.width10{
+    width: 10%;
+}
+.width5{
+    width: 5%;
+}
+.width3{
+    width: 3%;
+}
+.invalid-feedback.wrap-notification{
+    display: block !important;
+    color: var(--theme-red-color);
+    font-size: 12px;
+}

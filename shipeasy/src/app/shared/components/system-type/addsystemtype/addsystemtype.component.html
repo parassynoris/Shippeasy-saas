@@ -1,0 +1,137 @@
+<div class="modal-content nz-allSelect">
+  <div class="modal-header">
+    <h4 class="modal-title" *ngIf="!this.systemIdToUpdate">
+      {{ "stolt.masters.system_type.add_systemtype" | translate }}
+    </h4>
+    <h4 class="modal-title" *ngIf="this.systemIdToUpdate">
+      {{ "stolt.masters.system_type.edit_systemtype" | translate }}
+    </h4>
+    <button type="button" class="btn-close shadow-none" (click)="onSave()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="addSystemTypeForm" class="row g-3">
+      <div class="col-md-6">
+        <label for="typeName" class="form-label">{{ "stolt.masters.system_type.typeName" | translate
+          }}<span class="text-danger">*</span></label>
+        <input type="text" formControlName="typeName" class="form-control shadow-none" id="typeName " placeholder="Type Name"
+          [ngClass]="{ 'is-invalid': submitted && f.typeName.errors }" />
+        <div *ngIf="submitted && f.typeName.errors" class="invalid-feedback">
+          <div *ngIf="f.typeName.errors.required">
+            {{ "stolt.masters.system_type.typeName" | translate }}
+            {{ "common.isRequired" | translate }}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 nz-select">
+        <label for="typeCategory" class="form-label">{{ "stolt.masters.system_type.typeCategory" | translate
+          }}<span class="text-danger">*</span>
+        </label>
+        
+        <nz-select [nzDisabled]="isPopup" class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Type Category" formControlName="typeCategory"
+          [ngClass]="{'is-invalid': submitted && f.typeCategory.errors}">
+          <nz-option *ngFor="let data of categoryData" [nzLabel]="data" [nzValue]="data"></nz-option>
+        </nz-select>
+        <div *ngIf="submitted && f.typeCategory.errors" class="invalid-feedback">
+          <div *ngIf="f.typeCategory.errors.required">
+            {{ "stolt.masters.system_type.typeCategory" | translate }}
+            {{ "common.isRequired" | translate }}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label for="typeDescription " class="form-label">
+          {{ "stolt.masters.system_type.typeDescription" | translate
+          }}
+        </label>
+        <input type="text" formControlName="typeDescription" class="form-control shadow-none" id="typeDescription "
+          placeholder="Description" value="" [ngClass]="{ 'is-invalid': submitted && f.typeDescription.errors }" />
+        <div *ngIf="submitted && f.typeDescription.errors" class="invalid-feedback">
+          <div *ngIf="f.typeDescription.errors.required">
+            {{ "stolt.masters.system_type.typeDescription" | translate }}
+            {{ "common.isRequired" | translate }}
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-6 nz-select">
+        <label for="typeDescription " class="form-label">{{ "stolt.masters.system_type.referencetype" | translate
+          }}
+        </label>
+        <input type="text" class="form-control shadow-none" formControlName="typeRef" value="" placeholder="Reference Type" [ngClass]="{
+          'is-invalid': submitted && f.typeRef.errors
+        }" />
+        <!-- <nz-select class="form-select " nzShowSearch nzAllowClear nzPlaceHolder="" formControlName="typeRef"
+          [ngClass]="{'is-invalid': submitted && f.typeRef.errors}">
+          <nz-option *ngFor="let data of processPointList" [nzLabel]="data?.typeName" [nzValue]="data?.systemtypeId"></nz-option>
+        </nz-select> -->
+        <div *ngIf="submitted && f.typeRef.errors" class="invalid-feedback">
+          <div *ngIf="f.typeRef.errors.required">
+            {{ "stolt.masters.system_type.referencetype" | translate
+            }}
+            {{ "common.isRequired" | translate }}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label for="typeDescription " class="form-label">{{ "stolt.masters.system_type.referencecode" | translate
+          }}
+        </label>
+        <input type="text" class="form-control shadow-none" formControlName="typeRefId" value="" placeholder="Reference Code" [ngClass]="{
+            'is-invalid': submitted && f.typeRefId.errors
+          }" />
+        <div *ngIf="submitted && f.typeRefId.errors" class="invalid-feedback">
+          <div *ngIf="f.typeRefId.errors.required">
+            {{ "stolt.masters.system_type.referencecode" | translate }}
+            {{ "common.isRequired" | translate }}
+          </div>
+        </div>
+      </div>
+      <!-- <div class="col-md-6 ">
+        <label for="typeDescription " class="form-label">{{ "stolt.masters.system_type.parenttype" | translate }}
+        </label>
+        <input type="text" class="form-control shadow-none" formControlName="typeParentType" value="" />
+      </div> -->
+
+      <!-- <div class="col-md-6 nz-select">
+        <label for="typeDescription " class="form-label">
+          {{ "stolt.masters.system_type.module" | translate
+          }}<span class="text-danger">*</span>
+        </label>
+      
+        <nz-select class="form-select nz-select" nzShowSearch nzAllowClear nzPlaceHolder="" formControlName="module"
+          [ngClass]="{'is-invalid': submitted && f.module.errors}">
+          <nz-option *ngFor="let data of moduleData" [nzLabel]="data.name" [nzValue]="data.value"></nz-option>
+        </nz-select>
+        <div *ngIf="submitted && f.module.errors" class="invalid-feedback">
+          <div *ngIf="f.module.errors.required">
+            {{ "stolt.masters.system_type.module" | translate }}
+            {{ "common.isRequired" | translate }}
+          </div>
+        </div>
+      </div> -->
+
+      <div class="col-md-4 mobile-view-input-alignment">
+        <div class="taggle form-check form-switch">
+          <label class="form-check-label" for="flexSwitchCheckDefault">{{ "stolt.masters.uom.status" | translate
+            }}</label>
+          <input class="form-check-input mx-2" formControlName="status" type="checkbox" id="flexSwitchCheckDefault">
+        </div>
+      </div>
+
+
+      <div class="col-md-12">
+        <button type="submit" (click)="onSave()" class="btn1 float-end mt-3">
+          {{ "common.cancel" | translate }}
+        </button>
+        <button *ngIf="!this.systemIdToUpdate" type="submit" (click)="systemType()"
+          class="btn btn-outline-primary float-end mt-3">
+          {{ "common.save" | translate }}
+        </button>
+        <button *ngIf="this.systemIdToUpdate" type="submit" (click)="systemType()"
+          class="btn btn-outline-primary float-end mt-3">
+          {{ "common.update" | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

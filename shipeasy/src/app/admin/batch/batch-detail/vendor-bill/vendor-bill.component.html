@@ -1,0 +1,56 @@
+<ng-container *ngIf="currentUrl === 'vendor-bill'">
+  <div class="wrap-table-area">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="float-clear-mobile-view d-flex flex-column flex-sm-row gap-3 float-start search-section">
+          <div class="input-group custom-input">
+            <input type="text" class="form-control" placeholder="Search" aria-label="Search">
+          </div>
+        </div>
+        <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2 ">
+          <div class="mt-2">
+            <a class="new-action" (click)="onOpenNew()"><em class="bi bi-printer"></em> New Bill</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="table-responsive">
+          <table aria-describedby="mytable" class="gfg">
+            <thead>
+              <tr class="field-name">
+                <th scope="col">Bill No</th>
+                <th scope="col">Bill Date</th>
+                <th scope="col">Bill Due Date</th>
+                <th scope="col">Vendor Name</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Status</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let bill of vendorBillData">
+                <td>{{bill.bill_no}}</td>
+                <td>{{bill.date}}</td>
+                <td>{{bill.due_date}}</td>
+                <td>{{bill.vendor_name}}</td>
+                <td>{{bill.amount}}</td>
+                <td>{{bill.status}}</td>
+                <td class="action-field">
+                  <span class="mtop"><a (click)="onOpenEdit(bill.id)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                  </span>
+                  <span class="mtop"><a><em class="bi bi-envelope-fill"></em></a>
+                  </span>
+                  <span class="mtop"><a><em class="typcn typcn-trash"></em></a>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<ng-container *ngIf="currentUrl === 'add' || currentUrl === 'edit'">
+  <app-new-vendor-bill (CloseBillSection)="onBillAction($event)"></app-new-vendor-bill>
+</ng-container>

@@ -1,0 +1,342 @@
+@import '../../../../assets/styles/mixins/global.scss';
+.header-right {
+  display: flex;
+  justify-content: flex-end; 
+  gap: 5px; 
+  padding-top: 10px;
+}
+
+.max-con.new-action {
+  margin-right: 10px; 
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.custom-table th, .custom-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.custom-table th {
+  background-color: #f2f2f2;
+  color: #333;
+  font-weight: bold;
+}
+
+.custom-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.custom-table tr:hover {
+  background-color: #ddd;
+}
+
+.custom-table th, .custom-table td div {
+  padding: 4px;
+}
+
+
+
+.send-email-btn {
+    height: 32px; 
+    width: 100%; 
+    border: 1px solid #007BFF !important;
+    font-size: 12px;
+    background-color: white; 
+    color: #007BFF; 
+    font-weight: bold; 
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.send-email-btn:hover {
+    background-color: #007BFF;
+    color: white;
+}
+
+.email-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+    
+  .email-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 900px; 
+    height: 500px; 
+    max-height: 80%; 
+    overflow-y: auto; 
+    z-index: 1000;
+    border-radius: 8px; 
+    padding: 20px; 
+  
+    .popup-content {
+      position: relative;
+  
+      .btn-close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+      }
+    }
+  }
+ 
+  .custom-input {
+    outline: 0;
+    border-radius: 5px;
+    border: 1px solid #e0e0e0;
+    padding: 5px;
+    font-size: 12px;
+    color: var(--theme-light-text-color);
+    font-size: 12px;
+    font-weight: normal;
+    height: 32px;
+   
+  }
+
+  .custom-input1 {
+    outline: 0;
+    border-radius: 5px;
+    border: 1px solid #e0e0e0;
+    padding: 5px;
+    font-size: 12px;
+    color: var(--theme-light-text-color);
+    font-size: 12px;
+    font-weight: normal;
+    height: 32px;
+   
+  }
+  
+  .download-icon {
+    padding-left: 8px;
+    color: #bbb3b3;
+}
+
+  
+  ::ng-deep {
+
+  .cdk-overlay-container,
+  .cdk-overlay-pane {
+    z-index: 2000 !important;
+  }
+
+
+}
+
+.mat-drawer-container {
+   background-color: #fff;  
+}
+mat-drawer{
+  width: 70%;
+}
+.mr-top{
+  padding-top: 150px;
+}
+ 
+.menuright {
+  position: fixed;
+  right: 0;
+  top: 40%;
+  width: 10px;
+  margin: -2.5em 0 0 0;
+  z-index: 5;
+  background: var(--theme-white-background-color);
+  color: var(--link-text-color);
+  font-weight: bold;
+  text-align: left;
+  padding: 10px 30px 10px 0px;
+  box-shadow: var(--theme-shadow);
+  border-radius: 10px 0 0px 10px;
+  li {
+    width: 30px;
+    border-bottom: 1px solid var(--theme-border-color-light);
+    list-style: none;
+    padding: 0px 0 0px 3px;
+    &:last-child {
+      border-bottom: 0;
+    }
+    i,em{
+      font-size: 12px;
+    }
+  }
+}
+
+
+:host::ng-deep .modal-backdrop {
+  --bs-modal-zindex: 1040 !important; 
+  z-index: 1040 !important;
+}
+:host::ng-deep .modal {
+  --bs-modal-zindex: 1040 !important; 
+  z-index: 1040 !important;
+}
+:host::ng-deep .modal-content {
+  z-index: 1040 !important; 
+  --bs-modal-zindex: 1040 !important;
+}
+::ng-deep .custom-modal-class {
+  z-index: 1050 !important; /* Higher than default modal */
+}
+  :host ::ng-deep mat-drawer {
+  --bs-modal-zindex: 1051 !important;
+  z-index: 1051 !important; 
+  position: fixed !important; 
+  top: 0;
+  right: 0;
+  width: 70%; 
+  background: #fff;
+}
+  :host ::ng-deep .mat-drawer-container {
+  --bs-modal-zindex: 1051 !important;
+  z-index: 1051 !important; 
+  position: fixed !important; 
+  top: 0;
+  right: 0;
+  width: 70%; 
+  background: #fff;
+}
+
+
+:host ::ng-deep{
+  .mat-form-field-appearance-outline .mat-form-field-infix {
+      padding: 0em 0;
+      height: 34px;
+  }
+
+  .mat-chip-list-wrapper input.mat-input-element, .mat-chip-list-wrapper .mat-standard-chip {
+      margin: 2px; 
+      font-size: 10px;
+  }
+
+  .mat-standard-chip.mat-chip-with-trailing-icon {
+      padding-top: 0px;
+      padding-bottom: 0px;
+      padding-right: 7px;
+      padding-left: 7px;
+  }
+
+  .mat-standard-chip .mat-chip-remove.mat-icon, .mat-standard-chip .mat-chip-remove .mat-icon {
+      width: 14px;
+      height: 14px;
+      font-size: 14px;
+  }
+  .mat-standard-chip {
+      transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+      display: inline-flex ;
+      padding: 7px 12px;
+      border-radius: 16px;
+      align-items: center;
+      cursor: default;
+      min-height: 20px;
+      height: 1px;
+  }
+  .mat-chip-list-wrapper input.mat-input-element, .mat-chip-list-wrapper .mat-standard-chip {
+      margin: 0px;
+      height: 17px !important; 
+  }
+  .mat-form-field-wrapper {
+      padding-bottom: 0;
+  }
+}
+
+
+.table-responsive {
+  table {
+    border-collapse: collapse;
+    width: -webkit-fill-available;
+  }
+
+  margin-top: 15px;
+
+  tbody,
+  td,
+  tfoot,
+  th,
+  thead,
+  tr {
+    border-color: inherit;
+    border-style: solid;
+    border-width: 0;
+    border: 1px solid #ced4da !important;
+    padding: 7px;
+    color: var(--theme-black-320) !important;
+    background-color: var(--theme-light-bg) !important;
+  }
+
+  a {
+    color: #181824;
+    text-decoration: none;
+    background-color: transparent;
+    outline: 0;
+    cursor: pointer;
+    transition: color .3s;
+    -webkit-text-decoration-skip: objects;
+    em{
+      font-size: 12px;
+      padding: 3px;
+    }
+  }
+}
+
+/* Use ::ng-deep to override Angular Material styles within view encapsulation */
+::ng-deep .custom-autocomplete {
+    font-size: 0.8rem !important;
+    max-height: 200px !important;
+}
+
+/* Optionally, further adjust each option's padding and min-height */
+::ng-deep .custom-autocomplete .mat-option {
+    font-size: 0.8rem !important;
+    min-height: 30px !important;
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+}
+
+::ng-deep .mat-chip-list input[formControlName="CC"] {
+    height: 10px !important;
+}
+.white-space-br {
+  width: 160px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  display: block;
+  // height: 41px !important;
+  line-height: unset !important;
+
+}
+
+.white-space-br:hover {
+  white-space: normal !important;
+  word-break: break-word;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 24ch;
+}
+.download-tab{ 
+  position: relative;
+  padding: 5px;
+  background-color: #d3d3d3; 
+  top: 7px;
+  border-radius: 4px;
+}

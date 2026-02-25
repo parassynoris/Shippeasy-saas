@@ -1,0 +1,79 @@
+{
+  "common": {
+    "list": "Lister",
+    "add": "Ajouter",
+    "edit": "Éditer",
+    "search_btn": "Rechercher",
+    "splitch_batch": "Split Job",
+    "clear": "Dégager",
+    "save": "sauvegarder",
+    "cancel": "Annuler",
+    "next": "Suivant",
+    "export": "Exportation",
+    "import": "Importer",
+    "delete": "Supprimer"
+  },
+  "header": {
+    "notification": {
+      "title": "Notification",
+      "btn": "Voir tout"
+    },
+    "searchPlaceholder": "Rechercher",
+    "menuOptions": {
+      "menu1": "Mon profil",
+      "menu2": "Changer le mot de passe",
+      "menu3": "Aider",
+      "menu4": "Se déconnecter"
+    }
+  },
+  "stolt": {
+    "heading": "FIER",
+    "enquiry": {
+      "heading": "Enquête",
+      "new": {
+        "basic_details": "Détails de base",
+        "unique_ref": "Unique Réf. Non.",
+        "agentAdvice": "Date de l'avis de l'agent",
+        "noOfContainer": "Nombre de conteneurs",
+        "enquiryNo": "Numéro de demande",
+        "enquiryDate": "Date de demande",
+        "enquiryType": "Type de demande",
+        "bookingParty": "Soirée de réservation",
+        "opsCordinator": "OPS/Coordonnateur",
+        "salesPerson": "Vendeur ",
+        "forwordedCha": "Forbes / Thé",
+        "TankType": "Type de réservoir",
+        "shippingTerm ": "Terme d'expédition",
+        "INCOTerm": "Termes INCO",
+        "enquiryValidFrom": "Demande Valable Du",
+        "enquiryValidTo": "Demande valable jusqu'au",
+        "marinePolluted": "Marine polluée",
+        "stcQuatation": "Devis SHIPEASY Non",
+        "corgoType": "Type de cargaison",
+        "shipper": "Expéditeur",
+        "consignee": "Destinataire",
+        "notifyParty": "Notifier la partie",
+        "invoicingParty": "Facturation",
+        "moveNo": "Déplacer n°",
+        "product": "Produit",
+        "productId": "Identifiant du produit",
+        "technicalName": "Nom technique",
+        "imcoClass": "Classe IMCO",
+        "unNo": "Un pas",
+        "freightPayableAt": "Transport à payer à",
+        "contract": "Contracter"
+      }
+    },
+    "finance": {
+      "heading": ""
+    }
+  },
+  "financeTab": {
+    "invoice": "Facturer",
+    "payment": "Paiement",
+    "bills": "Factures",
+    "credit": "Crédit",
+    "debit": "Débit",
+    "pl": "P & L"
+  }
+}

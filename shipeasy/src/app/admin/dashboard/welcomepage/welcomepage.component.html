@@ -1,0 +1,27 @@
+<section class="wrap-content  width">
+  <div class="text-end">
+    <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="closeSection()">
+      <i class="bi bi-x"></i>
+    </button>
+
+  </div>
+
+  <div class="order-track items-left overflow-y-scroll" *ngIf="profileData.length > 0; else noData">
+    <div class="order-track-step" *ngFor="let step of profileData;let i=index">
+      <div class="order-track-status" >
+        <span class="order-track-status-dot" [ngClass]="{ 'completed': step.isCompleted }"></span>
+        <span *ngIf="i !== profileData.length-1" class="order-track-status-line" [ngClass]="{ 'completed': step.isCompleted }"></span>
+      </div>
+      <div class="order-track-text">
+        <p class="order-track-text-stat edit-link" [ngClass]="{ 'completed-text': step.isCompleted }"
+          (click)="navigateTo(step.name)">
+          {{ step.name | titlecase }} 
+        </p>
+      </div>
+    </div>
+  </div>
+  <ng-template #noData>
+    <p>No profile completeness data available.</p>
+  </ng-template>
+
+</section>

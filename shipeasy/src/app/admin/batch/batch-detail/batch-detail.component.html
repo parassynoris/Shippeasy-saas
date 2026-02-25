@@ -1,0 +1,2263 @@
+<div class="mat-table-with-gheading">
+  <div class="wrapper">
+    <div class="container-fluid">
+      <div class="wrap-content">
+        <div class="row">
+          <div class="col-sm-12" style="margin-bottom: 43px;">
+            <div class="wrap-sticky">
+
+              <div class="page-title-box mt-2">
+                <ol class="breadcrumb ">
+                  <li *ngIf="currentLogin !== 'transporter'" class="breadcrumb-item active">Edit {{isExport ? 'Export' :
+                    isImport ? 'Import' : 'Transport'}} Job</li>
+                  <li *ngIf="currentLogin === 'transporter'" class="breadcrumb-item active">Edit Transport Job</li>
+                  <li *ngIf="holdControl === 'details'" class="breadcrumb-item active color-red">Details</li>
+                  <li *ngIf="holdControl !== 'details' && holdControl !== 'bl'"
+                    class="breadcrumb-item active color-red capitlize"> {{
+                    holdControl }}</li>
+                  <li *ngIf="holdControl === 'bl'" class="breadcrumb-item active color-red">Bill Of Lading</li>
+                </ol>
+              </div>
+
+
+              <div>
+                <div class="wrap-form-field my-2">
+                  <div class="">
+                    <div class="">
+                      <div class="all-new-box-alignment" style="
+                      display: flex;
+                      flex-wrap: wrap;
+                      gap: 8px;
+                  ">
+                        <div class="" *ngIf="false">
+                          <label class="form-label">{{ 'stolt.batch.new.BatchNumber' | translate }}</label>
+                          <select [(ngModel)]="batchNumber" disabled class="form-select custom-input"
+                            [ngClass]="{'is-invalid': submitted && EnquiryId === undefined}">
+                            <option [value]="batchNumber">
+                              {{batchNumber}}
+                          </select>
+                          <div *ngIf="submitted && EnquiryId === undefined" class="invalid-feedback">
+                            <div *ngIf="submitted && EnquiryId === undefined">{{ 'stolt.batch.new.BatchNumber' |
+                              translate
+                              }} is
+                              required</div>
+                          </div>
+                        </div>
+
+
+                        <ng-container *ngIf="currentLogin === 'transporter'">
+                          <div class="box-design ml-2">
+                            <label class="form-label">RFQ No.</label>
+                            <div class="input-group date" id="datepicker">
+                              {{batchDetail?.transportinquiryNo ||'-'}}
+                            </div>
+                          </div>
+                        </ng-container>
+                        <div 
+                        class="box-design ml-2" 
+                        [ngClass]="{ 'scanned-highlight': batchDetail?.isScanned }"
+                        [matTooltip]="batchDetail?.isScanned ? 'This shipment was gone in Scan' : ''"
+                      >
+                        <label class="form-label">Job No.</label>
+                        <div class="input-group date" id="datepicker">
+                          {{ batchDetail?.batchNo || '-' }}
+                        </div>
+                      </div>
+                        <ng-container *ngIf="currentLogin !== 'transporter' ">
+                          <div *ngIf="!batchDetail?.quickJob && !this.isImport" class="box-design"
+                            style="color: var(--change-theme) !important; cursor: pointer;">
+                            <label class="form-label">Inquiry No</label>
+                            <div class="input-group date">
+                              <a (click)="navigateToNewTab(batchDetail)">
+                                {{ batchDetail?.enquiryDetails?.enquiryNo || '-' }}
+                              </a>&nbsp;
+
+                              <i class="bi bi-box-arrow-up-right" (click)="navigateToNewTab2(batchDetail)"></i>
+                            </div>
+                          </div>
+                          <div *ngIf="!batchDetail?.quickJob && this.isImport" class="box-design"
+                            style="color: var(--change-theme) !important; cursor: pointer;">
+                            <label class="form-label">Inquiry No</label>
+                            <div class="input-group date">
+                              <a (click)="navigateToNewTab4(batchDetail)">
+                                {{ batchDetail?.enquiryDetails?.agentadviceNo || '-' }}
+                              </a>
+                              &nbsp;
+                              <i class="bi bi-box-arrow-up-right" (click)="navigateToNewTab3(batchDetail)"></i>
+                            </div>
+                          </div>
+                          <div *ngIf="!batchDetail?.quickJob" class="box-design">
+                            <label class="form-label">Quotation No.</label>
+                            <div class="input-group date" id="num">
+                              {{ batchDetail?.quotationNo ||'-'}}
+                            </div>
+                          </div>
+                        </ng-container>
+
+                        <div class="box-design">
+                          <label class="form-label">Booking Status</label>
+                          <div class="input-group date" id="num">
+                            <div class="d-flex align-items-center {{batchDetail?.statusOfBatch}}"
+                              style="border: none !important; background: none !important;">
+                              <span class="status-bar {{batchDetail?.statusOfBatch}} p-0"
+                                style="border: none !important; background: none !important;">{{batchDetail?.statusOfBatch
+                                || '-'}}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="box-design" style="background:#FFD9D9;">
+                          <label class="form-label">Due Date</label>
+                          <div class="input-group date" id="num">
+                            <div class="d-flex align-items-center {{batchDetail?.milestoneEstiDate}}"
+                              style="border: none !important; background: none !important;">
+                              <span class="status-bar {{batchDetail?.milestoneEstiDate}} p-0"
+                                style="border: none !important; background: none !important;">{{ batchDetail?.milestoneEstiDate | date:'dd-MM-yyyy' || '-' }}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="box-design">
+                          <label class="form-label">Freight Type</label>
+                          <div class="input-group date" id="num">
+                            <div class="d-flex align-items-center "
+                              style="border: none !important; background: none !important;">
+                              <span
+                                class="status-bar {{batchDetail?.enquiryDetails?.basicDetails?.ShipmentTypeName}} p-0"
+                                style="border: none !important; background: none !important;">{{batchDetail?.enquiryDetails?.basicDetails?.ShipmentTypeName
+                                || '-'}}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="box-design">
+                          <label class="form-label">Load Type</label>
+                          <div class="input-group date" id="num">
+                            <div class="d-flex align-items-center "
+                              style="border: none !important; background: none !important;">
+                              <span
+                                class="status-bar {{batchDetail?.enquiryDetails?.basicDetails?.ShipmentTypeName}} p-0"
+                                style="border: none !important; background: none !important;">{{batchDetail?.enquiryDetails?.basicDetails?.loadType
+                                || '-'}}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="box-design">
+                          <label class="form-label">{{ 'stolt.batch.new.BookingDate' | translate }}</label>
+                          <div class="input-group date" id="datepicker">
+                            {{ batchDetail?.createdOn ? (batchDetail.createdOn | date:'dd-MM-yyyy') : '-' }}
+                          </div>
+                        </div>
+
+                        <div class="box-design"
+                          *ngIf="batchDetail?.enquiryDetails?.basicDetails?.ShipmentTypeName === 'Ocean'">
+                          <label class="form-label">{{ (isExport || isImport) ? 'Shipping Line' : 'Transpoter '
+                            }}</label>
+                          <div class="input-group date">
+                            {{ batchDetail?.quotationDetails?.carrierShortName ||
+                            batchDetail?.quotationDetails?.carrierName ||'-'}}
+
+                          </div>
+                        </div>
+
+                        <div class="box-design"
+                          *ngIf="batchDetail?.enquiryDetails?.basicDetails?.ShipmentTypeName === 'Ocean'">
+                          <label class="form-label">{{ (isExport || isImport) ? 'Vessel'
+                            : 'Transpoter '}} / Voyage No <img src="../../../../assets/img/track-vessel.svg" nz-tooltip
+                              nzTooltipTitle="Track Vessel" (click)="onenMap(vesselTrack)" class="ml-1 cursor-pointer"
+                              width="16px" height="16px" alt=""></label>
+                          <div class="input-group date">
+                            {{ batchDetail?.quotationDetails?.vesselName ||'-'}} / {{batchDetail?.quotationDetails?.voyageNumber ||'-'}}
+                          </div>
+                        </div>
+
+
+                        <div class="box-design"
+                          *ngIf="batchDetail?.enquiryDetails?.basicDetails?.ShipmentTypeName === 'Air'">
+                          <label class="form-label">Airline</label>
+                          <div class="input-group date">
+                            {{ batchDetail?.quotationDetails?.carrierShortName ||
+                            batchDetail?.quotationDetails?.carrierName ||'-'}}
+
+                          </div>
+                        </div>
+
+                        <div class="box-design">
+                          <label class="form-label">Container</label><br>
+                          <div class="input-group date">
+                            <span *ngFor="let cargo of batchDetail?.enquiryDetails?.containersDetails; let i = index">
+                              {{ cargo?.noOfContainer }} <i class="bi bi-x"></i> {{ cargo?.containerType }}
+                              <span *ngIf="i < (batchDetail?.enquiryDetails?.containersDetails?.length - 1)">, </span>
+                            </span>
+                          </div>
+                        </div>  
+
+                        <div class="box-design" *ngIf="batchDetail?.enquiryDetails?.basicDetails?.ShipmentTypeName === 'Ocean'" nz-tooltip
+                          [nzTooltipTitle]="
+                                                  batchDetail?.routeDetails?.atd ? 'ATD' : 
+                                                  batchDetail?.routeDetails?.etd ? 'ETD' : '-'
+                                                " [ngStyle]="{
+                                                  'background-color': batchDetail?.routeDetails?.atd ? '#EEF7EE' : ''
+                                                }">
+                          <label class="form-label">
+                            POL
+                            <ng-container *ngIf="batchDetail?.routeDetails?.atd || batchDetail?.routeDetails?.etd">
+                              (
+                              <span>
+                                {{
+                                (batchDetail?.routeDetails?.atd || batchDetail?.routeDetails?.etd)
+                                | date: 'dd-MM-yyyy'
+                                }}
+                              </span>
+                              )
+                            </ng-container>
+                          </label>
+                          <br />
+                        
+                          <div class="input-group date">
+                            <span style="text-transform: uppercase;">
+                              {{ (batchDetail?.enquiryDetails?.routeDetails?.loadPortName  || '-') | uppercase }}
+                            </span>
+                          </div>
+                        </div>
+                   
+                        
+                        <div class="box-design" *ngIf="batchDetail?.enquiryDetails?.basicDetails?.ShipmentTypeName === 'Ocean'" nz-tooltip
+                          [nzTooltipTitle]="
+                                                                        batchDetail?.routeDetails?.ata ? 'ATA' : 
+                                                                        batchDetail?.routeDetails?.eta ? 'ETA' : '-'
+                                                                      " [ngStyle]="{
+                                                                        'background-color': batchDetail?.routeDetails?.ata ? '#EEF7EE' : ''
+                                                                      }">
+                          <label class="form-label">POD <ng-container *ngIf="batchDetail?.routeDetails?.ata || batchDetail?.routeDetails?.eta">
+                              (
+                              <span>
+                                {{
+                                (batchDetail?.routeDetails?.ata || batchDetail?.routeDetails?.eta)
+                                | date: 'dd-MM-yyyy'
+                                }}
+                              </span>
+                              )
+                            </ng-container></label><br>
+                        
+                          <div class="input-group date">
+                            <span>
+                              {{ (batchDetail?.enquiryDetails?.routeDetails?.destPortName || '-') | uppercase }}
+                            </span>
+                            
+                          </div>
+                        </div>
+
+                        <div style="max-width: 10%;" class="box-design" *ngIf="batchDetail?.enquiryDetails?.basicDetails?.ShipmentTypeName === 'Ocean'" nz-tooltip
+                              [nzTooltipTitle]=" (batchDetail?.enquiryDetails?.routeDetails?.locationName || '-') + ' / ' + (batchDetail?.routeDetails?.final_ATA ? 'ATA' :
+                              batchDetail?.routeDetails?.final_ETA ? 'ETA' : '-') "
+                              [ngStyle]="{ 'background-color': batchDetail?.routeDetails?.final_ATA ? '#EEF7EE' : ''}">
+                        
+                          <label class="form-label">
+                            Destination
+                            <ng-container *ngIf="batchDetail?.routeDetails?.final_ATA || batchDetail?.routeDetails?.final_ETA">
+                              (
+                              <span>
+                                {{ (batchDetail?.routeDetails?.final_ATA || batchDetail?.routeDetails?.final_ETA) | date: 'dd-MM-yyyy' }}
+                              </span>
+                              )
+                            </ng-container>
+                          </label>
+                          <br>
+                        
+                          <div class="input-group date">
+                            <span class="location-text">
+                              {{ (batchDetail?.enquiryDetails?.routeDetails?.locationName   || '-') | uppercase }}
+                        
+                            </span>
+                          </div>
+                        </div>
+
+
+                        <!-- <div class="box-design" *ngIf="batchDetail?.enquiryDetails?.basicDetails?.ShipmentTypeName === 'Ocean' && batchDetail?.enquiryDetails?.routeDetails?.locationName">
+                          <label class="form-label">Destination</label>
+                          <div class="input-group date">
+                            {{ batchDetail?.enquiryDetails?.routeDetails?.locationName || '-'}}
+                          </div>
+                        </div> -->
+                      
+                        
+                        <div class="box-design" *ngIf="isTransport">
+                          <label class="form-label">Transporter</label>
+                          <div class="input-group date">
+                            {{ batchDetail?.quotationDetails?.carrierShortName ||
+                            batchDetail?.quotationDetails?.carrierName ||'-'}}
+                          </div>
+                        </div>
+
+                        <ng-container *ngIf="currentLogin !== 'transporter'">
+                          <div class="">
+                            <div class="broadcast-container">
+                              <i class="bi bi-broadcast-pin broadcast-icon" data-toggle="modal"
+                                data-target="#myModal2"></i>
+                            </div>
+                            <div>
+                              <ng-container>
+                                &nbsp;&nbsp;<div class="image-container">
+                                  <img src="../../../../assets/img/reminder-svgrepo-com.svg"
+                                    (click)="openDialog1(reminder1)" />
+                                </div>
+                                <i class="bi bi-info-circle mx-1" matTooltip="Reminder" matTooltipClass="custom-tooltip"
+                                  style="padding-left: 4px; margin-bottom: 2px;"></i>
+                              </ng-container>
+                            </div>
+                            <!-- <div>
+                               <ng-container>
+                                &nbsp;&nbsp;<i class="bi bi-broadcast-pin" data-toggle="modal"
+                                  style="font-weight: 900 !important;font-size: 15px; color: var(--change-theme) !important; gap: 2px;"
+                                  data-target="#myModal2"></i> -->
+                            <!-- <i class="bi bi-info-circle mx-1" matTooltip="Booking Milestone" matTooltipClass="custom-tooltip" style="padding-left: 4px; margin-bottom: 2px;"></i> -->
+                            <!-- <img src="../../../../assets/img/milestone.svg" matTooltip="Booking Milestone"
+                                  matTooltipClass="custom-tooltip" class="mx-1 speace">
+                              </ng-container>
+                            </div> -->
+                          </div>
+                          <!-- <div class="box-design1" appAccessControl featureCode="['STBTRD']" accessType="add">
+                            <div>
+                              <ng-container>
+                                &nbsp;&nbsp;<div class="image-container">
+                                  <img src="../../../../assets/img/reminder-svgrepo-com.svg"
+                                    (click)="openDialog1(reminder1)" />
+                                </div>
+                                <i class="bi bi-info-circle mx-1" matTooltip="Reminder" matTooltipClass="custom-tooltip"
+                                  style="padding-left: 4px; margin-bottom: 2px;"></i>
+                              </ng-container>
+                            </div>
+                          </div> -->
+                        </ng-container>
+
+
+
+
+
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+              <div class="tab-design-change">
+                <div class="wrap-bar">
+                  <div class="custome-tab">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                      <li class="nav-item" role="presentation" *ngFor="let tab of tabs">
+                        <button *ngIf="!( (tab.name === 'Shipping Bill' || tab.name === 'Bill Of Entry') && (batchDetail?.enquiryDetails?.basicDetails?.ShipmentTypeName  === 'air' || 
+                            batchDetail?.enquiryDetails?.basicDetails?.ShipmentTypeName  === 'Air'
+                          ))" class="nav-link" [class.active]="holdControl === tab.key" id="{{ tab.id }}"
+                          data-bs-toggle="tab" data-bs-target="#{{ tab.control }}" type="button" role="tab"
+                          aria-controls="{{ tab.control }}" aria-selected="true" (click)="onTab(tab)">
+
+                          <ng-container *ngIf="(isExport || isTransport)">
+                            {{ tab.name=== 'IGM/CFS' ? 'EGM/CFS' : tab.name }}
+                          </ng-container>
+
+                          <ng-container *ngIf="isImport">
+                            {{ tab.name === 'SOB' ? 'Discharge Date' : tab.name }}
+                          </ng-container>
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-content" id="myTabContent">
+              <div *ngIf="holdControl === 'details'" [class.active]="holdControl === 'details'"
+                class="tab-pane fade show" id="details" role="tabpanel" aria-labelledby="details-tab">
+                <div class="wrap-form-field padding-space  modal-bottom-alignment-for-mobile-view">
+                  <div class="row mb-5 ">
+                    <!-- <div class="col-md-12 mb-2">
+                      <div class="text-end"
+                        *ngIf="batchDetail?.statusOfBatch == 'Job Created' && isExport && !(currentLogin === 'transporter')">
+                        <button (click)="editBatchToggel = !editBatchToggel"
+                          class="max-con new-action  btn btn-outline-primary  ">{{editBatchToggel ? 'Back' : "Edit Job"}}</button>
+                      </div>
+                      <div class="text-end"
+                        *ngIf="(shipment === 'ocean' || shipment === 'air')">
+                        <button (click)="editBatchToggel = !editBatchToggel"
+                          class="max-con new-action  btn btn-outline-primary  ">{{editBatchToggel ? 'Back' : "Edit Job"}}</button>
+                      </div>
+                    </div> -->
+                    <div class="col-md-12 mb-2">
+                      <div class="text-end"> 
+                     
+                        <button class="btn btn-outline-primary btn-lg" (click)="bookingConfirmation()">
+                          Send Booking
+                        </button>
+                        
+                        <button
+                          *ngIf="(batchDetail?.statusOfBatch === 'Job Created' && isExport && currentLogin !== 'transporter') || (shipment === 'ocean' || shipment === 'air')"
+                          (click)="editBatchToggel = !editBatchToggel"
+                          class="max-con new-action btn btn-outline-primary">
+                          {{ editBatchToggel ? 'Back' : 'Edit Job' }}
+                        </button>
+                       
+
+                      </div>
+                    </div>
+
+                    <div *ngIf="batchDetail?.statusOfBatch == 'Job Cancelled'">
+                      <div class="d-flex justify-content-center text-center mb-4">
+                        <div>
+                          <label for="cancelReason" class="set-font">Customer Reason for Cancel</label>
+                          <textarea id="cancelReason" class="form-control mt-2 no-scrollbar" rows="4" cols="100"
+                            readonly>{{ batchDetail?.rejectRemarks }}</textarea>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div *ngIf="editBatchToggel">
+                      <app-add-batch (updateBatch)="updateToggle($event)"
+                        (getMilestone)="getMilestone()"></app-add-batch>
+                    </div>
+
+                    <div *ngIf="!editBatchToggel" class="col-md-12">
+                      <ng-container *ngIf="currentLogin !== 'transporter'">
+
+
+                        <div class=" modal-grid new-white-box-design">
+                          <div class="d-grid-4">
+                            <div>
+                              <div class="new-title">
+                                <p>BASIC DETAILS</p>
+                              </div>
+
+
+                              <div class="d-grid-2">
+                                <span class="header">Shipper :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.basicDetails?.shipperName || '-'}}
+                                </span>
+                              </div>
+                              <div class="d-grid-2"
+                                *ngIf="isImport && batchDetail?.enquiryDetails?.basicDetails?.agentName">
+                                <span class="header">Agent :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.basicDetails?.agentName ||
+                                  '-'}} </span>
+                              </div>
+
+                              <div class="d-grid-2"
+                                *ngIf="isImport && batchDetail?.enquiryDetails?.basicDetails?.billingBranch">
+                                <span class="header">Billing Branch :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.basicDetails?.billingBranch || '-'}}
+                                </span>
+                              </div>
+                              <div class="d-grid-2" *ngIf="batchDetail?.enquiryDetails?.basicDetails?.ShipmentTypeName">
+                                <span class="header">Freight Type :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.basicDetails?.ShipmentTypeName ||'-'}}
+                                </span>
+                              </div>
+                              <div class="d-grid-2">
+                                <span class="header">Load Type :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.basicDetails?.loadType ||'-'}}
+                                </span>
+                              </div>
+                              <div class="d-grid-2" *ngIf="batchDetail?.enquiryDetails?.basicDetails?.enquiryTypeName">
+                                <span class="header">Trade type :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.basicDetails?.enquiryTypeName||'-'}}
+                                </span>
+                              </div>
+                              <div class="d-grid-2" *ngIf="batchDetail?.enquiryDetails?.basicDetails?.bookingPartyName">
+                                <span class="header">Booking Party :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.basicDetails?.bookingPartyName||'-'}}
+                                </span>
+                              </div>
+                              <div class="d-grid-2" *ngIf="batchDetail?.enquiryDetails?.basicDetails?.forwarderName">
+                                <span class="header">Forwarder:</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.basicDetails?.forwarderName||'-'}}
+                                </span>
+                              </div>
+                              <div class="d-grid-2" *ngIf="(isExport || isTransport)">
+                                <span class="header">Invoice Party :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.basicDetails?.invoicingPartyName
+                                  ||'-'}}
+                                </span>
+                              </div>
+                              <div class="d-grid-2" *ngIf="batchDetail?.enquiryDetails?.basicDetails?.consigneeName">
+                                <span class="header">Consignee :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.basicDetails?.consigneeName ||'-'}}
+                                </span>
+                              </div>
+                              <div class="d-grid-2" *ngIf="(isExport || isTransport)">
+                                <span class="header">Sales Person :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.basicDetails?.salesPersonId || '-'}}
+                                </span>
+                              </div>
+                              <div class="d-grid-2"
+                                *ngIf="isImport && batchDetail?.enquiryDetails?.basicDetails?.userBranchName">
+                                <span class="header">Booked By Branch :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.basicDetails?.userBranchName || '-'}}
+                                </span>
+                              </div>
+                              <!-- <div class="d-grid-2" *ngIf="(isExport || isTransport)">
+                                <span class="header">Operational Coordinator :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.basicDetails?.opsCoordinatorId ||
+                                  '-'}}
+                                </span>
+                              </div> -->
+                              <div class="d-grid-2" *ngIf="(isExport || isTransport)">
+                                <span class="header">Created by :</span>
+                                <span class="text">{{batchDetail?.createdBy}} </span>
+                              </div>
+                              <div class="d-grid-2">
+                                <span class="header">Created at :</span>
+                                <span class="text">{{batchDetail?.createdOn | date : 'dd-MM-yyyy' ||
+                                  '-'}}
+                                </span>
+                              </div>
+
+                              <div class="d-grid-2"
+                                *ngIf="batchDetail?.remarks && batchDetail?.statusOfBatch != 'Job Cancelled'">
+                                <span class="blue-label">Remark :</span>
+                                <span class=" blue-label">{{batchDetail?.remarks ||
+                                  '-'}}
+                                </span>
+                              </div>
+                            </div>
+
+
+                            <div>
+                              <div class="new-title">
+                                <p>ROUTE DETAILS</p>
+                              </div>
+                              <div class="d-grid-3" *ngIf="(isExport || isTransport || isImport)">
+                                <table class="table table-bordered">
+                                  <thead>
+                                    <tr>
+                                      <th scope="col" class="white-space">Location</th>
+                                      <th scope="col" class="white-space">Transit</th>
+                                      <th scope="col" class="white-space">{{activeFrightAir ? 'Airline' : isTransport ?
+                                        'Transporter ': 'Carrier'}}</th>
+                                      <th scope="col" class="white-space">ETA</th>
+                                      <th scope="col" class="white-space">ETD</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody class="tab-reactive">
+                                    <span class="border-left"> </span>
+                                    <span class="location-icon"><i class="bi bi-geo-alt-fill"></i></span>
+
+                                    <tr *ngFor=" let cargo of originRouteList">
+                                      <td class="whiteSpace">{{cargo?.locationName || cargo?.addressId}}</td>
+                                      <td class="white-space">{{cargo?.transit || 'Land'}}</td>
+                                      <td class="white-space" *ngIf="!isTransport">{{cargo?.carrierName}}</td>
+                                      <td class="white-space" *ngIf="isTransport">
+                                        {{batchDetail?.quotationDetails?.carrierName}}</td>
+                                      <td class="white-space">{{ cargo?.eta | date:'dd-MM-yyyy HH:mm:ss' }}</td>
+                                      <td class="white-space">{{ cargo?.etd | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+                                    </tr>
+                                    <ng-container *ngIf="shipment === 'ocean' || shipment === 'air'">
+                                      <tr>
+                                        <td class="whiteSpace">
+                                          {{batchDetail?.enquiryDetails?.routeDetails?.loadPortName}}</td>
+                                        <td class="white-space">Ocean</td>
+                                        <td class="white-space">
+                                          {{batchDetail?.enquiryDetails?.routeDetails?.shippingLineShortName}}</td>
+                                        <td class="white-space">
+                                          {{
+                                          batchDetail?.enquiryDetails?.transportDetails?.origin[batchDetail?.enquiryDetails?.transportDetails?.origin?.length
+                                          - 1]?.eta | date: 'dd-MM-yyyy HH:mm:ss' }}
+                                        </td>
+
+                                        <td class="white-space">{{batchDetail?.routeDetails?.etd | date
+                                          : 'dd-MM-YYYY HH:mm:ss'}}</td>
+
+                                      </tr>
+                                      <tr *ngIf="destinationRouteList?.length == 0">
+                                        <td class="whiteSpace">
+                                          {{batchDetail?.enquiryDetails?.routeDetails?.destPortName}}</td>
+                                        <td class="white-space"></td>
+                                        <td class="white-space"></td>
+                                        <td class="white-space">
+                                          {{batchDetail?.routeDetails?.eta | date : 'dd-MM-YYYY,HH:mm:ss'}}
+                                        </td>
+                                        <td class="white-space"></td>
+
+                                      </tr>
+
+                                      <tr *ngFor=" let cargo of destinationRouteList;let i=index;">
+                                        <td class="whiteSpace">{{cargo?.locationName || cargo?.addressId}}</td>
+                                        <td class="white-space">{{cargo?.transit}}</td>
+                                        <td class="white-space">{{cargo?.carrierName}}</td>
+                                        <td class="white-space"> {{ i == 0
+                                          ? (batchDetail?.enquiryDetails?.routeDetails?.eta | date: 'dd-MM-yyyy HH:mm:ss'): (cargo?.eta | date: 'dd-MM-yyyy HH:mm:ss')}}</td>
+                                        <td class="white-space">{{cargo?.etd | date : 'dd-MM-YYYY HH:mm:ss'}}</td>
+
+                                      </tr>
+                                    </ng-container>
+                                    <span class="location-icon1"><i class="bi bi-geo-alt-fill"></i></span>
+
+                                  </tbody>
+                                </table>
+
+                              </div>
+
+                              <div class="d-grid-2" *ngIf="isTransport">
+                                <span class="header">Origin Address:</span>
+                                <span
+                                  class="text">{{batchDetail?.enquiryDetails?.transportDetails?.origin[0]?.addressId}} ,
+                                  {{batchDetail?.enquiryDetails?.transportDetails?.origin[0]?.address}} </span>
+                              </div>
+                              <div class="d-grid-2" *ngIf="isTransport">
+                                <span class="header">Destination Address:</span>
+                                <span
+                                  class="text">{{batchDetail?.enquiryDetails?.transportDetails?.origin[1]?.addressId}} ,
+                                  {{batchDetail?.enquiryDetails?.transportDetails?.origin[1]?.address}}</span>
+                              </div>
+
+                              <div class="d-grid-2"
+                                *ngIf="isImport && batchDetail?.enquiryDetails?.routeDetails?.loadPlaceName">
+                                <span class="header">Origin :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.routeDetails?.loadPlaceName || '-'}}
+                                </span>
+                              </div>
+                              <div class="d-grid-2"
+                                *ngIf="isImport && batchDetail?.enquiryDetails?.routeDetails?.loadPortName">
+                                <span class="header">{{activeFrightAir? 'Airport':'Port'}} of Loading :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.routeDetails?.loadPortName}} </span>
+                              </div>
+                              <div class="d-grid-2" *ngIf="isImport && batchDetail?.enquiryDetails?.routeDetails?.etd">
+                                <span class="header">ETD :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.routeDetails?.etd | date :
+                                  'dd-MM-yyyy,HH:mm' || '-'}} </span>
+                              </div>
+                              <div class="d-grid-2" *ngIf="isImport && batchDetail?.quotationDetails?.vesselName">
+                                <span class="header">Vessel :</span>
+                                <span class="text">{{batchDetail?.quotationDetails?.vesselName || '-'}}
+                                </span>
+                              </div>
+                              <div class="d-grid-2"
+                                *ngIf="isImport && batchDetail?.enquiryDetails?.routeDetails?.voyageNumber">
+                                <span class="header">Voyage :</span>
+                                <span class="text"> {{batchDetail?.enquiryDetails?.routeDetails?.voyageNumber || '-'}}
+                                </span>
+                              </div>
+                              <div class="d-grid-2"
+                                *ngIf="isImport && batchDetail?.enquiryDetails?.routeDetails?.destPortName">
+                                <span class="header">{{activeFrightAir? 'Airport':'Port'}} of Discharge :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.routeDetails?.destPortName}} </span>
+                              </div>
+                              <div class="d-grid-2"
+                                *ngIf="isImport && batchDetail?.enquiryDetails?.routeDetails?.locationName">
+                                <span class="header">Destination :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.routeDetails?.locationName || '-'}}
+                                </span>
+                              </div>
+                              <div class="d-grid-2" *ngIf="isImport && batchDetail?.enquiryDetails?.routeDetails?.eta">
+                                <span class="header">ETA :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.routeDetails?.eta | date :
+                                  'dd-MM-yyyy,HH:mm' || '-'}} </span>
+                              </div>
+
+                              <div class="d-grid-2"
+                                *ngIf="isImport && batchDetail?.enquiryDetails?.routeDetails?.shippingLineName">
+                                <span class="header">{{activeFrightAir ? 'Airline' : isTransport ? 'Transporter ':
+                                  'Carrier'}} :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.routeDetails?.shippingLineName ||'-'}}
+                                </span>
+                              </div>
+                              <div class="d-grid-2"
+                                *ngIf="isImport && batchDetail?.enquiryDetails?.backupShippingLineName">
+                                <span class="header"> {{activeFrightAir ? 'Backup Airline' : isTransport ? 'Transporter': 'Backup Carrier' }} :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.backupShippingLineName ||'-'}} </span>
+                              </div>
+                              <div class="d-grid-2" *ngIf="batchDetail?.enquiryDetails?.basicDetails?.incoTermName">
+                                <span class="header">INCO Terms :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.basicDetails?.incoTermName ||'-'}}
+                                </span>
+                              </div>
+                              <div class="d-grid-2" *ngIf="batchDetail?.enquiryDetails?.basicDetails?.shippingTermName">
+                                <span class="header">Shipping Term :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.basicDetails?.shippingTermName ||'-'}}
+                                </span>
+                              </div>
+
+                              <div class="d-grid-2" *ngIf="enquiryDetails?.basicDetails?.shippingTermName">
+                                <span class="header">Shipping Term :</span>
+                                <span class="text">{{enquiryDetails?.basicDetails?.shippingTermName ||'-'}}
+                                </span>
+                              </div>
+                            </div>
+
+
+
+                            <div *ngIf="isImport">
+                              <div class="new-title">
+                                <p>CARGO DETAILS</p>
+                              </div>
+                              <ng-container *ngFor="let cargo of batchDetail?.enquiryDetails?.cargoDetail;let i=index">
+                                <div class="">
+                                  <div class="">
+                                    <span class="header" *ngIf="enquiryDetails?.cargoDetail?.length != 1">{{i+1}}.Name:
+                                    </span>
+                                    <span class="text">{{cargo?.productName}}</span>
+                                  </div>
+                                  <div class="type">
+                                    <span class="header">Type :</span>
+                                    <span class="text">{{cargo?.commodityTypeName | uppercase}} </span>,
+                                    <span class="header">HS Code :</span>
+                                    <span class="text" *ngIf="cargo?.hsCode">{{cargo?.hsCode}} </span>
+                                  </div>
+                                  <div class="type">
+                                    <span class="header">Weight :</span>
+                                    <span class="text">{{cargo?.grossWeight || 0}} {{cargo?.unitName || 'KG' |
+                                      uppercase}} </span>
+                                  </div>
+                                  <div class="type" *ngIf="cargo?.commodityTypeName == 'Refer'">
+                                    <span class="header">Temperature :</span>
+                                    <span class="text">({{cargo?.Range}} To {{cargo?.To}} ) {{cargo?.typeTemp}}</span>
+                                  </div>
+                                  <div class="type" *ngIf="cargo?.commodityTypeName == 'ODC'">
+                                    <span class="header">Dimension:</span>
+                                    <span class="text">({{cargo?.Wi}} * {{cargo?.li}} * {{cargo?.hi}})
+                                      {{cargo?.di}}</span>
+                                  </div>
+                                  <div class="type" *ngIf="cargo?.commodityTypeName == 'HAZ'">
+                                    <span class="header">UN No :</span>
+                                    <span class="text">{{cargo?.unNo}} </span>
+                                  </div>
+                                  <div class="type" *ngIf="cargo?.imcoClass">
+                                    <span class="header">IMCO Class :</span>
+                                    <span class="text">{{cargo?.imcoClass}} </span>
+                                  </div>
+                                  <div>
+                                  </div>
+                                </div>
+                              </ng-container>
+
+
+                              <!-- <div class="d-grid-2"
+                                *ngIf="batchDetail?.enquiryDetails?.productDetails?.commodityDescription">
+                                <span class="header">Commodity Description :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.productDetails?.commodityDescription
+                                  }} </span>
+                              </div> -->
+
+                              <!-- <div class="d-grid-2">
+                                <span class="header">Container :</span>
+                                <span class="text"><span
+                                    *ngFor="let cargo of batchDetail?.enquiryDetails?.containersDetails;let i=index">
+                                    <span>{{cargo?.containerType}}<i class="bi bi-x"></i>{{cargo?.noOfContainer}}
+                                    </span><br>
+                                  </span> </span>
+                              </div>
+                              <div class="d-grid-2">
+                                <span class="header">Total Gross Weight :</span>
+                                <span class="text">
+                                  <span>{{totalGrossWeight(batchDetail?.enquiryDetails?.containersDetails)}} </span>
+                                  <span
+                                    *ngIf="batchDetail?.enquiryDetails?.containersDetails?.length > 0">{{batchDetail?.enquiryDetails?.containersDetails[0]?.unitName
+                                    |uppercase}}</span><br>
+                                </span>
+                              </div> -->
+
+                              <div *ngIf="isImport" class="mt-3">
+                                <div class="new-title">
+                                  <p
+                                    *ngIf="batchDetail?.enquiryDetails?.detentionDetails?.destinationCarrierFD || batchDetail?.enquiryDetails?.detentionDetails?.destinationPortFD || batchDetail?.enquiryDetails?.detentionDetails?.originCarrierFD || batchDetail?.enquiryDetails?.detentionDetails?.lastFDDateCarrier || batchDetail?.enquiryDetails?.detentionDetails?.lastFDDateEmptyReturn || batchDetail?.enquiryDetails?.detentionDetails?.lastFDDatePOD || batchDetail?.enquiryDetails?.detentionDetails?.lastFDDatePOCD">
+                                    DETENTION DETAILS</p>
+                                </div>
+
+                                <div class="d-grid-2"
+                                  *ngIf="batchDetail?.enquiryDetails?.detentionDetails?.destinationCarrierFD">
+                                  <span class="header">Destination Carrier Free Days :</span>
+                                  <span
+                                    class="text">{{batchDetail?.enquiryDetails?.detentionDetails?.destinationCarrierFD
+                                    || '-'}}
+                                  </span>
+                                </div>
+                                <div class="d-grid-2"
+                                  *ngIf="batchDetail?.enquiryDetails?.detentionDetails?.destinationPortFD">
+                                  <span class="header">Destination Port Free Days :</span>
+                                  <span class="text">{{batchDetail?.enquiryDetails?.detentionDetails?.destinationPortFD
+                                    || '-'}}
+                                  </span>
+                                </div>
+
+                                <div class="d-grid-2"
+                                  *ngIf="batchDetail?.enquiryDetails?.detentionDetails?.originCarrierFD">
+                                  <span class="header">Origin Carrier Free Days:</span>
+                                  <span class="text">{{batchDetail?.enquiryDetails?.detentionDetails?.originCarrierFD||
+                                    '-'}}
+                                  </span>
+                                </div>
+
+                                <div class="d-grid-2"
+                                  *ngIf="batchDetail?.enquiryDetails?.detentionDetails?.lastFDDateCarrier">
+                                  <span class="header">Last free date at Carrier:</span>
+                                  <span class="text">{{batchDetail?.enquiryDetails?.detentionDetails?.lastFDDateCarrier
+                                    | date : 'dd-MM-yyyy' || '-'}}
+                                  </span>
+                                </div>
+
+                                <div class="d-grid-2"
+                                  *ngIf="batchDetail?.enquiryDetails?.detentionDetails?.lastFDDateEmptyReturn">
+                                  <span class="header">Last free date at Empty return :</span>
+                                  <span
+                                    class="text">{{batchDetail?.enquiryDetails?.detentionDetails?.lastFDDateEmptyReturn
+                                    | date : 'dd-MM-yyyy' || '-'}}
+                                  </span>
+                                </div>
+
+                                <div class="d-grid-2"
+                                  *ngIf="batchDetail?.enquiryDetails?.detentionDetails?.lastFDDatePOCD">
+                                  <span class="header">Last free date at POCD :</span>
+                                  <span class="text">{{batchDetail?.enquiryDetails?.detentionDetails?.lastFDDatePOCD |
+                                    date : 'dd-MM-yyyy' || '-'}}
+                                  </span>
+                                </div>
+
+                                <div class="d-grid-2"
+                                  *ngIf="batchDetail?.enquiryDetails?.detentionDetails?.lastFDDatePOD">
+                                  <span class="header">Last free date at POD :</span>
+                                  <span class="text">{{batchDetail?.enquiryDetails?.detentionDetails?.lastFDDatePOD |
+                                    date : 'dd-MM-yyyy' || '-'}}
+                                  </span>
+                                </div>
+
+
+                              </div>
+
+                            </div>
+
+                            <div *ngIf="(isExport || isTransport)">
+                              <div class="new-title">
+                                <div class="row">
+                                  <div class="col d-flex  align-items-baseline">
+                                    <p>CARGO DETAILS </p>
+                                  </div>
+                                  <div class="col-3">
+
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="d-grid-2" *ngIf="batchDetail?.enquiryDetails?.productDetails?.cargoReadyDate">
+                                <span class="header">Cargo Ready Date :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.productDetails?.cargoReadyDate | date
+                                  :
+                                  'dd-MM-yyyy' || '-'}} </span>
+                              </div>
+
+                              <div class="d-grid-2"
+                                *ngIf="batchDetail?.enquiryDetails?.productDetails?.targetDeliveryDate">
+                                <span class="header">Delivery Date :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.productDetails?.targetDeliveryDate |
+                                  date :
+                                  'dd-MM-yyyy' || '-'}} </span>
+                              </div>
+
+                              <div class="d-grid-2" *ngIf="batchDetail?.enquiryDetails?.routeDetails?.freightTermsName">
+                                <span class="header">Freight Terms :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.routeDetails?.freightTermsName ||'-'}}
+                                </span>
+                              </div>
+
+                              <!-- <div class="d-grid-2"
+                                *ngFor="let cargo of batchDetail?.enquiryDetails?.cargoDetail;let i=index">
+                                <span class="header">Commodity {{i+1}} :</span>
+                                <span class="text">{{cargo?.commodityTypeName | uppercase}} | {{cargo?.productName}} |
+                                  {{cargo?.hsCode}}
+                                  <span *ngIf="cargo?.commodityTypeName === 'haz'">| {{cargo?.imcoClass}} </span>
+                                  <span *ngIf="cargo?.commodityTypeName === 'haz'">| {{cargo?.unNo}} </span> </span>
+                              </div> -->
+
+
+                              <ng-container *ngFor="let cargo of batchDetail?.enquiryDetails?.cargoDetail;let i=index">
+                                <div class="">
+                                  <span class="header" *ngIf="enquiryDetails?.cargoDetail?.length != 1">{{i+1}}.Name:
+                                  </span>
+                                  <span class="text">{{cargo?.productName}}</span>
+                                </div>
+                                <div class="type">
+                                  <span class="header">Type :</span>
+                                  <span class="text">{{cargo?.commodityTypeName | uppercase}} </span>,
+                                  <span class="header">HS Code :</span>
+                                  <span class="text" *ngIf="cargo?.hsCode">{{cargo?.hsCode}} </span>
+                                </div>
+                                <div class="type">
+                                  <span class="header">Weight :</span>
+                                  <span class="text">{{cargo?.grossWeight || 0}} {{cargo?.unitName || 'KG' | uppercase}}
+                                  </span>
+                                </div>
+                                <div class="type" *ngIf="cargo?.commodityTypeName == 'Refer'">
+                                  <span class="header">Temperature :</span>
+                                  <span class="text">({{cargo?.Range}} To {{cargo?.To}} ) {{cargo?.typeTemp}}</span>
+                                </div>
+                                <div class="type" *ngIf="cargo?.commodityTypeName == 'ODC'">
+                                  <span class="header">Dimension :</span>
+                                  <span class="text">({{cargo?.Wi}} * {{cargo?.li}} * {{cargo?.hi}})
+                                    {{cargo?.di}}</span>
+                                </div>
+                                <div class="type" *ngIf="cargo?.commodityTypeName == 'HAZ'">
+                                  <span class="header">UN No :</span>
+                                  <span class="text">{{cargo?.unNo}} </span>
+                                </div>
+                                <div class="type" *ngIf="cargo?.imcoClass">
+                                  <span class="header">IMCO Class :</span>
+                                  <span class="text">{{cargo?.imcoClass}} </span>
+                                </div>
+                                <div>
+                                </div>
+                                <!-- <div class="d-grid-2"> -->
+                                <!-- <span class="header">Commodity <span
+                                      *ngIf="batchDetail?.enquiryDetails?.cargoDetail?.length != 1">{{i+1}}</span>
+                                    :</span>
+                                  <span class="text">{{cargo?.commodityTypeName | uppercase}} | {{cargo?.productName}} |
+                                    {{cargo?.hsCode}}
+                                    <span *ngIf="cargo?.commodityTypeName == 'haz'">| {{cargo?.imcoClass}} </span>
+                                    <span *ngIf="cargo?.commodityTypeName == 'haz'">| {{cargo?.unNo}} </span>
+                                    <span *ngIf="cargo?.commodityTypeName == 'Refer'">|Temperature:({{cargo?.Range}}
+                                    </span>
+                                    <span *ngIf="cargo?.commodityTypeName == 'Refer'">To {{cargo?.To}}) </span>
+                                    <span *ngIf="cargo?.commodityTypeName == 'Refer'">{{cargo?.typeTemp}} </span>
+                                    <span *ngIf="cargo?.commodityTypeName == 'ODC'">| Dimension :({{cargo?.Wi}} </span>
+                                    <span *ngIf="cargo?.commodityTypeName == 'ODC'">* {{cargo?.hi}} </span>
+                                    <span *ngIf="cargo?.commodityTypeName == 'ODC'">*{{cargo?.li}}) </span>
+                                    <span *ngIf="cargo?.commodityTypeName == 'ODC'">{{cargo?.di}} |</span>
+                                  </span> -->
+                                <!-- </div> -->
+                                <!-- <div class="d-grid-2">
+                                  <span class="header">Commodity Weight <span
+                                      *ngIf="batchDetail?.enquiryDetails?.cargoDetail?.length != 1">{{i+1}}</span>
+                                    :</span>
+                                  <span class="text">{{cargo?.grossWeight || 0}} {{cargo?.unitName | uppercase}}</span>
+                                </div> -->
+                              </ng-container>
+
+                            </div>
+
+                            <div>
+                              <div class="new-title">
+                                <p>MILESTONE DETAILS</p>
+                              </div>
+
+                              <div class="d-grid-3">
+                                <table class="table table-bordered">
+                                  <thead>
+                                    <tr>
+                                      <th scope="col" class="white-space">Milestone</th>
+                                      <th scope="col" class="white-space">Actual Date</th>
+                                      <th scope="col" class="white-space">Updated By</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody class="tab-reactive">
+                                    <span *ngIf="milestoneList.length > 0" class="border-left"> </span>
+                                    <span *ngIf="milestoneList.length > 0" class="location-icon"><i
+                                        class="bi bi-geo-alt-fill"></i></span>
+                                    <tr *ngFor=" let mile of milestoneList">
+                                      <td class="white-space">{{mile?.eventName }}</td>
+                                      <td class="white-space">{{(mile?.eventData?.bookingDate ||
+                                        mile?.eventData?.bookingDateEst) | date : 'dd/MM/yyyy, h:mm a' }}</td>
+                                      <td class="white-space">{{mile?.updatedBy }}</td>
+                                    </tr>
+                                    <span *ngIf="milestoneList.length > 0" class="location-icon1"><i
+                                        class="bi bi-geo-alt-fill green"></i></span>
+                                  </tbody>
+                                </table>
+
+                              </div>
+
+                            </div>
+
+
+                            <div *ngIf="(isExport || isTransport || isImport)">
+                              <div class="new-title">
+                                <p>{{showContainer ? 'LOAD DETAILS' : 'Loose Cargo Details'}}</p>
+                              </div>
+                              <ng-container *ngIf="showContainer">
+                                <div class="d-grid-2">
+                                  <span class="header">{{typeOfWay}} :</span>
+                                  <span class="text">
+                                    <span
+                                      *ngFor="let cargo of batchDetail?.enquiryDetails?.containersDetails; let i = index">
+                                      <span *ngIf="cargo?.loadType !== 'FTL'">
+                                        {{cargo?.containerType}} {{cargo?.truckType}} <i class="bi bi-x"></i>
+                                        {{cargo?.noOfContainer}}
+                                      </span>
+                                      <span *ngIf="cargo?.loadType === 'FTL'">
+                                        {{cargo?.truckType}} <i class="bi bi-x"></i> {{cargo?.noOfContainer}}
+                                      </span>
+                                      <br>
+                                    </span>
+                                  </span>
+
+                                </div>
+                                <div class="d-grid-2">
+                                  <span class="header">Total Gross Weight :</span>
+                                  <span class="text">
+                                    <span>{{totalGrossWeight(batchDetail?.enquiryDetails?.containersDetails)}} </span>
+                                    <span
+                                      *ngIf="batchDetail?.enquiryDetails?.containersDetails?.length > 0">{{batchDetail?.enquiryDetails?.containersDetails[0]?.unitName
+                                      |uppercase}}</span><br>
+                                  </span>
+                                </div>
+                              </ng-container>
+                              <ng-container *ngIf="showPallet">
+                                <div class="d-grid-3">
+                                  <table class="table table-bordered">
+                                    <thead>
+                                      <tr>
+                                        <th scope="col" class="white-space">Lot</th>
+                                        <th scope="col" class="white-space">Package Type</th>
+                                        <!-- <th scope="col" class="white-space">Pallets Type</th> -->
+                                        <th scope="col" class="white-space">Quantity</th>
+                                        <th scope="col" class="white-space">Size (l x b x h) </th>
+                                        <th scope="col" class="white-space">Volume</th>
+                                        <th scope="col" class="white-space">Weight</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr
+                                        *ngFor=" let cargo of batchDetail?.enquiryDetails?.looseCargoDetails?.cargos; let i=index">
+                                        <td class="white-space">{{i+1}}</td>
+                                        <td class="white-space">{{cargo?.pkgname}}</td>
+                                        <!-- <td class="white-space">{{cargo?.Pallettype}}</td> -->
+                                        <td class="white-space">{{cargo?.units}}</td>
+                                        <td class="white-space"> ({{cargo?.lengthp}} x {{cargo?.Weightp}} x
+                                          {{cargo?.heightselected}}){{cargo?.selectedh}} </td>
+
+                                        <td class="white-space">
+                                          {{cargo?.volumeselect | number:'1.2-2'}} CBM
+                                        </td>
+                                        <td class="white-space">
+                                          {{cargo?.Weightselected}}{{cargo?.selectedw}}
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+
+                              </ng-container>
+
+                              <div class="d-grid-2" *ngIf="batchDetail?.enquiryDetails?.customDetails?.customOrigin">
+                                <span class="header">Origin Custom Clearance :</span>
+                                <span class="text">
+                                  <span>{{batchDetail?.enquiryDetails?.customDetails?.customOriginLocationName}}</span>
+                                </span>
+                              </div>
+
+                              <div class="d-grid-2"
+                                *ngIf="batchDetail?.enquiryDetails?.customDetails?.customDestinationLocationName">
+                                <span class="header">Destination Custom Clearance:</span>
+                                <span class="text">
+                                  {{batchDetail?.enquiryDetails?.customDetails?.customDestinationLocationName}}
+                                </span>
+                              </div>
+                              <div class="d-grid-2" *ngIf="!isTransport">
+                                <span class="header"
+                                  *ngIf="batchDetail?.enquiryDetails?.insurance?.cargo || batchDetail?.enquiryDetails?.insurance?.emptyContainer || batchDetail?.enquiryDetails?.insurance?.warehousing">Value
+                                  Added Services :</span>
+                                <span class="text">
+                                  <span *ngIf="batchDetail?.enquiryDetails?.insurance?.cargo">Cargo Insurance ,</span>
+                                  <span *ngIf="batchDetail?.enquiryDetails?.insurance?.emptyContainer">Empty Container
+                                    Insurance ,</span>
+                                  <span *ngIf="batchDetail?.enquiryDetails?.insurance?.cargo">Fumigation ,</span>
+                                  <span *ngIf="batchDetail?.enquiryDetails?.insurance?.cargo">Palletization ,</span>
+                                  <span *ngIf="batchDetail?.enquiryDetails?.insurance?.warehousing">Warehousing </span>
+                                </span>
+                              </div>
+                            </div>
+                            <div *ngIf="isImport">
+                              <div class="new-title">
+                                <p>CREATION DETAILS</p>
+                              </div>
+
+                              <div class="d-grid-2">
+                                <span class="header">Created by :</span>
+                                <span class="text">{{batchDetail?.createdBy || '-'}}
+                                </span>
+                              </div>
+                              <div class="d-grid-2">
+                                <span class="header">Created at :</span>
+                                <span class="text">{{batchDetail?.createdOn | date : 'dd-MM-yyyy' || '-'}}
+                                </span>
+                              </div>
+                              <div class="d-grid-2">
+                                <span class="header">Job Date :</span>
+                                <span class="text">{{batchDetail?.createdOn | date : 'dd-MM-yyyy' || '-'}}
+                                </span>
+                              </div>
+
+                              <div class="d-grid-2" *ngIf="batchDetail?.enquiryDetails?.basicDetails?.salePerson">
+                                <span class="header"> Sales Person :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.basicDetails?.salePerson || '-'}}
+                                </span>
+                              </div>
+
+                              <div class="d-grid-2">
+                                <span class="header">Remarks :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.remarks || '-'}}
+                                </span>
+                              </div>
+
+                              <div class="d-grid-2" *ngIf="batchDetail?.enquiryDetails?.agentadviceNo">
+                                <span class="header">Inquiry No. :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.agentadviceNo || '-'}}
+                                </span>
+                              </div>
+
+                            </div>
+                            <div *ngIf="isImport">
+                              <div class="new-title">
+                                <p>BOOKING INVOLVED</p>
+                              </div>
+                              <div class="d-grid-2">
+                                <span class="header">{{activeFrightAir ? 'Airline' : isTransport ? 'Transporter ':
+                                  'Carrier'}} :</span>
+                                <span class="text">{{batchDetail?.quotationDetails?.carrierName}}
+                                </span>
+                              </div>
+                              <div class="d-grid-2" *ngIf="batchDetail?.enquiryDetails?.bookingValidityDate">
+                                <span class="header">Booking Validity :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.bookingValidityDate | date :
+                                  'dd-MM-yyyy' || '-'}} </span>
+                              </div>
+
+                              <div *ngIf="isImport" class="mt-3">
+                                <div class="new-title">
+                                  <p>INVOICE DETAILS</p>
+                                </div>
+                                <div *ngFor="let invoice of batchDetail?.enquiryDetails?.invoicesDetails; let i = index"
+                                  class="mt-2">
+                                  <div class="d-grid-2" *ngIf="invoice?.invoiceNo">
+                                    <span class="header"><span class="fw-bold">{{i + 1}}.</span>Invoice No.:</span>
+                                    <span class="text">{{invoice?.invoiceNo || '-'}}</span>
+                                  </div>
+                                  <div class="d-grid-2" *ngIf="invoice?.invoiceDate">
+                                    <span class="header ml-2"> Invoice Date:</span>
+                                    <span class="text">{{invoice?.invoiceDate | date : 'dd-MM-yyyy' || '-'}}</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+                      </ng-container>
+
+                      <ng-container *ngIf="currentLogin === 'transporter'">
+                        <div class="modal-grid new-white-box-design">
+                          <div class="d-grid-4">
+                            <div>
+                              <div class="new-title">
+                                <p>ROUTE DETAILS</p>
+                              </div>
+                              <div class="d-grid-3" *ngIf="(isExport || isTransport ||isImport)">
+                                <table class="table table-bordered">
+                                  <thead>
+                                    <tr>
+                                      <th scope="col" class="white-space">Location</th>
+                                      <th scope="col" class="white-space">Transit</th>
+                                      <th scope="col" class="white-space">{{
+                                        enquiryDetails?.basicDetails?.ShipmentTypeName === 'Air' ? 'Airline' :
+                                        isTransport ? 'Transporter ': 'Carrier'}}</th>
+                                      <th scope="col" class="white-space">ETA</th>
+                                      <th scope="col" class="white-space">ETD</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody class="tab-reactive">
+                                    <span class="border-left">
+                                    </span>
+                                    <span class="location-icon"><i class="bi bi-geo-alt-fill"></i></span>
+
+                                    <tr *ngFor=" let cargo of originRouteList">
+                                      <td class="white-space">{{cargo?.locationName || cargo?.addressId}}</td>
+                                      <td class="white-space">{{cargo?.transit || 'Land'}}</td>
+                                      <td class="white-space" *ngIf="!isTransport">{{cargo?.carrierName}}</td>
+                                      <td class="white-space" *ngIf="isTransport"><span
+                                          *ngFor="let data of cargo?.carrierList">{{data?.name}}, </span></td>
+                                      <td class="white-space">{{cargo?.eta | date : 'dd-MM-yyyy HH:mm:ss'}}</td>
+                                      <td class="white-space">{{cargo?.etd | date : 'dd-MM-YYYY HH:mm:ss'}}</td>
+                                    </tr>
+                                    <ng-container *ngIf="shipment === 'ocean' || shipment === 'air'">
+                                      <tr>
+                                        <td class="white-space">{{enquiryDetails?.routeDetails?.loadPortName}}</td>
+                                        <td class="white-space">{{enquiryDetails?.basicDetails?.ShipmentTypeName ||'-'}}
+                                        </td>
+                                        <td class="white-space">{{enquiryDetails?.routeDetails?.shippingLineShortName}}
+                                        </td>
+                                        <td class="white-space">
+                                          {{enquiryDetails?.transportDetails?.origin[enquiryDetails?.transportDetails?.origin?.length
+                                          -1]?.eta | date : 'dd-MM-YYYY HH:mm:ss'}}</td>
+
+                                        <td class="white-space">{{enquiryDetails?.routeDetails?.etd | date : 'dd-MM-YYYY HH:mm:ss'}}</td>
+
+                                      </tr>
+                                      <tr *ngIf="destinationRouteList?.length == 0">
+                                        <td class="white-space">{{enquiryDetails?.routeDetails?.destPortName}}</td>
+                                        <td class="white-space"></td>
+                                        <td class="white-space">
+                                          {{enquiryDetails?.routeDetails?.eta | date : 'dd-MM-YYYY HH:mm:ss'}}</td>
+                                        <td class="white-space"></td>
+                                        <td class="white-space"></td>
+
+                                      </tr>
+                                      <tr *ngFor=" let cargo of destinationRouteList;let i=index;">
+                                        <td class="white-space">{{cargo?.locationName || cargo?.addressId}}</td>
+                                        <td class="white-space">{{cargo?.transit}}</td>
+                                        <td class="white-space" *ngIf="!isTransport">{{cargo?.carrierName}}</td>
+                                        <td class="white-space" *ngIf="isTransport"><span
+                                            *ngFor="let data of cargo?.carrierList">{{data?.name}}, </span></td>
+                                        <td class="white-space"> {{ i === 0
+                                          ? (enquiryDetails?.routeDetails?.eta | date: 'dd-MM-yyyy HH:mm:ss')
+                                          : (cargo?.eta | date: 'dd-MM-yyyy HH:mm:ss')
+                                          }}</td>
+
+                                        <td class="white-space">{{cargo?.etd | date : 'dd-MM-YYYY HH:mm:ss'}}</td>
+
+                                      </tr>
+                                    </ng-container>
+
+                                    <span class="location-icon1"><i class="bi bi-geo-alt-fill"></i></span>
+
+                                  </tbody>
+                                </table>
+                              </div>
+                              <ng-container *ngIf="currentLogin === 'transporter'">
+                                <div class="d-grid-2">
+                                  <span class="header">RFQ No :</span>
+                                  <span class="text">{{batchDetail?.transportinquiryNo ||'-'}}
+                                  </span>
+                                </div>
+                              </ng-container>
+                              <div class="d-grid-2">
+                                <span class="header">Job No :</span>
+                                <span class="text">{{batchDetail?.batchNo ||'-'}}
+                                </span>
+                              </div>
+                              <ng-container *ngIf="currentLogin !== 'transporter'">
+
+                                <div class="d-grid-2">
+                                  <span class="header">Enquiry No :</span>
+                                  <span class="text">{{batchDetail?.enquiryDetails?.enquiryNo ||'-'}}
+                                  </span>
+                                </div>
+                              </ng-container>
+
+
+                              <div class="d-grid-2">
+                                <span class="header">Created On :</span>
+                                <span class="text">{{batchDetail?.createdOn | date :'dd-MM-YYYY' ||'-'}}
+                                </span>
+                              </div>
+
+                              <div class="d-grid-2">
+                                <span class="header">Origin :</span>
+                                <span class="text">{{batchDetail?.quotationDetails?.loadPortName || '-'}} </span>
+                              </div>
+
+                              <div class="d-grid-2">
+                                <span class="header">ETD :</span>
+                                <span class="text">{{batchDetail?.quotationDetails?.etd | date : 'dd-MM-YYYY,HH:mm'
+                                  ||'-'}}
+                                </span>
+                              </div>
+                              <div class="d-grid-2">
+                                <span class="header">Destination :</span>
+                                <span class="text">{{batchDetail?.quotationDetails?.dischargePortName || '-'}} </span>
+                              </div>
+                              <div class="d-grid-2">
+                                <span class="header">ETA :</span>
+                                <span class="text">{{batchDetail?.quotationDetails?.eta | date :'dd-MM-YYYY,HH:mm'
+                                  ||'-'}}
+                                </span>
+                              </div>
+
+                            </div>
+
+
+                            <div>
+                              <div class="new-title">
+                                <p>CARGO DETAILS</p>
+                              </div>
+
+                              <div class="d-grid-2">
+                                <span class="header">Cargo Ready Date :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.productDetails?.cargoReadyDate | date
+                                  :
+                                  'dd-MM-yyyy' || '-'}} </span>
+                              </div>
+
+                              <div class="d-grid-2"
+                                *ngIf="batchDetail?.enquiryDetails?.productDetails?.targetDeliveryDate">
+                                <span class="header">Delivery Date :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.productDetails?.targetDeliveryDate |
+                                  date :
+                                  'dd-MM-yyyy' || '-'}} </span>
+                              </div>
+
+                              <div class="d-grid-2" *ngIf="batchDetail?.enquiryDetails?.productDetails?.biddingDueDate">
+                                <span class="header">Bidding Due Date :</span>
+                                <span class="text">{{batchDetail?.enquiryDetails?.productDetails?.biddingDueDate |
+                                  date :
+                                  'dd-MM-yyyy' || '-'}} </span>
+                              </div>
+
+                              <ng-container *ngFor="let cargo of batchDetail?.enquiryDetails?.cargoDetail;let i=index">
+                                <div class="d-grid-2">
+                                  <span class="header">Commodity <span
+                                      *ngIf="batchDetail?.enquiryDetails?.cargoDetail?.length != 1">{{i+1}}</span>
+                                    :</span>
+                                  <span class="text">{{cargo?.commodityTypeName | uppercase}} | {{cargo?.productName}} |
+                                    {{cargo?.hsCode}}
+                                    <span *ngIf="cargo?.commodityTypeName == 'haz'">| {{cargo?.imcoClass}} </span>
+                                    <span *ngIf="cargo?.commodityTypeName == 'haz'">| {{cargo?.unNo}} </span>
+                                    <span *ngIf="cargo?.commodityTypeName == 'Refer'">|Temperature: ({{cargo?.Range}}
+                                    </span>
+                                    <span *ngIf="cargo?.commodityTypeName == 'Refer'">To {{cargo?.To}}) </span>
+                                    <span *ngIf="cargo?.commodityTypeName == 'Refer'">{{cargo?.typeTemp}} </span>
+                                    <span *ngIf="cargo?.commodityTypeName == 'ODC'">| Dimension:({{cargo?.Wi}} </span>
+                                    <span *ngIf="cargo?.commodityTypeName == 'ODC'">* {{cargo?.hi}} </span>
+                                    <span *ngIf="cargo?.commodityTypeName == 'ODC'">*{{cargo?.li}}) </span>
+                                    <span *ngIf="cargo?.commodityTypeName == 'ODC'">{{cargo?.di}} |</span>
+                                  </span>
+                                </div>
+                                <div class="d-grid-2">
+                                  <span class="header">Commodity Weight <span
+                                      *ngIf="batchDetail?.enquiryDetails?.cargoDetail?.length != 1">{{i+1}}</span>
+                                    :</span>
+                                  <span class="text">{{cargo?.grossWeight || 0}} {{cargo?.unitName | uppercase}}</span>
+                                </div>
+                              </ng-container>
+
+                            </div>
+
+                            <div>
+                              <div class="new-title">
+                                <p>{{showPallet ? 'Loose Cargo Details' : 'LOAD DETAILS'}}</p>
+                              </div>
+                              <ng-container *ngIf="showContainer">
+                                <div class="d-grid-2">
+                                  <span class="header">{{typeOfWay}} :</span>
+                                  <span class="text"><span
+                                      *ngFor="let cargo of batchDetail?.enquiryDetails?.containersDetails;let i=index">
+                                      <span>{{cargo?.containerType}}<i class="bi bi-x"></i>{{cargo?.noOfContainer}}
+                                      </span><br>
+                                    </span> </span>
+                                </div>
+                                <div class="d-grid-2">
+                                  <span class="header">Total Gross Weight :</span>
+                                  <span class="text">
+                                    <span>{{totalGrossWeight(batchDetail?.enquiryDetails?.containersDetails)}} </span>
+                                    <span
+                                      *ngIf="batchDetail?.enquiryDetails?.containersDetails?.length > 0">{{batchDetail?.enquiryDetails?.containersDetails[0]?.unitName
+                                      |uppercase}}</span><br>
+                                  </span>
+                                </div>
+                              </ng-container>
+                              <ng-container *ngIf="showPallet">
+                                <div class="d-grid-3">
+                                  <table class="table table-bordered">
+                                    <thead>
+                                      <tr>
+                                        <th scope="col" class="white-space">Lot</th>
+                                        <th scope="col" class="white-space">Package Type</th>
+                                        <th scope="col" class="white-space">Quantity</th>
+                                        <th scope="col" class="white-space">Size (l x b x h) </th>
+                                        <th scope="col" class="white-space">Volume</th>
+                                        <th scope="col" class="white-space">Weight</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr
+                                        *ngFor=" let cargo of batchDetail?.enquiryDetails?.looseCargoDetails?.cargos; let i=index">
+                                        <td class="white-space">{{i+1}}</td>
+                                        <td class="white-space">{{cargo?.pkgname}}</td>
+                                        <td class="white-space">{{cargo?.units}}</td>
+                                        <td class="white-space">
+                                          <span *ngIf="cargo?.pkgname === 'Boxes/Crates'">({{cargo?.lengthb}} x
+                                            {{cargo?.Weightb}}
+                                            x {{cargo?.heightb}}){{cargo?.DimensionUnit}}</span>
+                                          <span
+                                            *ngIf="cargo?.pkgname != 'Boxes/Crates' && cargo?.Pallettype === 'Pallets (non specified size)'">({{cargo?.lengthp}}
+                                            x {{cargo?.Weightp}} x {{cargo?.heightp}}){{cargo?.DimensionUnitp}}</span>
+                                          <span
+                                            *ngIf="cargo?.pkgname != 'Boxes/Crates' && cargo?.Pallettype != 'Pallets (non specified size)'">({{cargo?.Pallettype?.replaceAll("
+                                            mm", "")}} x {{cargo?.heightselected}}){{cargo?.selectedh}}</span>
+                                        </td>
+                                        <td class="white-space">
+                                          <span *ngIf="cargo?.pkgname === 'Boxes/Crates'">{{cargo?.volumeb|
+                                            number:'1.2-2'}}</span>
+                                          <span
+                                            *ngIf="cargo?.pkgname != 'Boxes/Crates' && cargo?.Pallettype === 'Pallets (non specified size)'">{{cargo?.volumep
+                                            | number:'1.2-2'}}</span>
+                                          <span
+                                            *ngIf="cargo?.pkgname != 'Boxes/Crates' && cargo?.Pallettype != 'Pallets (non specified size)'">{{cargo?.volumeselect
+                                            | number:'1.2-2'}}</span>
+                                        </td>
+                                        <td class="white-space">
+                                          <span
+                                            *ngIf="cargo?.pkgname === 'Boxes/Crates'">{{cargo?.Weightbox}}{{cargo?.Unit1}}</span>
+                                          <span
+                                            *ngIf="cargo?.pkgname != 'Boxes/Crates' && cargo?.Pallettype === 'Pallets (non specified size)'">{{cargo?.Weightps}}{{cargo?.Unit1p}}</span>
+                                          <span
+                                            *ngIf="cargo?.pkgname != 'Boxes/Crates' && cargo?.Pallettype != 'Pallets (non specified size)'">{{cargo?.Weightselected}}{{cargo?.selectedw}}</span>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+
+                              </ng-container>
+
+                            </div>
+
+                            <div>
+                              <div class="new-title">
+                                <p>RATE DETAILS</p>
+                              </div>
+                              <div class="d-grid-2">
+                                <span class="header">Rate :</span>
+                                <span class="text"><b>{{biddingList?.rate ||'-'}} {{biddingList?.currency?.currencyName
+                                    ||''}}</b>
+                                </span>
+                              </div>
+                              <div class="d-grid-2">
+                                <span class="header">Remarks :</span>
+                                <span class="text">{{biddingList?.remark ||'-'}}
+                                </span>
+                              </div>
+
+
+                            </div>
+                          </div>
+                        </div>
+                      </ng-container>
+
+                      <div class="spacer"></div>
+                      <ng-container *ngIf="(isExport || isTransport || isImport)">
+                        <div class="">
+                          <div class="modal-grid new-white-box-design">
+                            <div class="new-title">
+                              <p>QUOTATION DETAILS</p>
+                            </div>
+                            <div class="d-grid-4">
+
+                              <div>
+                                <!-- <div class="title">QUOTATION DETAILS</div> -->
+                                <div class="d-grid-2" *ngIf="false">
+                                  <span class="header">Booking Validity :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.validTo | date:'dd-MM-yyyy,HH:mm'
+                                    ||
+                                    '-'}}
+                                    <span *ngIf="getDaysDifference(batchDetail?.quotationDetails?.validTo) === 0"
+                                      class="blue-label">
+                                      ( Today )
+                                    </span>
+                                    <span *ngIf="getDaysDifference(batchDetail?.quotationDetails?.validTo) > 0"
+                                      class="green-label">
+                                      ( {{'In ' + getDaysDifference(batchDetail?.quotationDetails?.validTo) + ' Days'}}
+                                      )
+                                    </span>
+                                    <span *ngIf="getDaysDifference(batchDetail?.quotationDetails?.validTo) < 0"
+                                      class="red-label">
+                                      ( {{getDaysDifference(batchDetail?.quotationDetails?.validTo) + 'days ago'}} )
+                                    </span>
+                                  </span>
+                                </div>
+                                <div class="d-grid-2">
+                                  <span class="header">Trade Type :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.enquiryTypeName || '-'}}</span>
+                                </div>
+                                <div class="d-grid-2">
+                                  <span class="header">Valid From :</span>
+                                  <span class="text">{{ batchDetail?.quotationDetails?.validFrom ?
+                                    (batchDetail.quotationDetails.validFrom | date: 'MMM d, y') : '-' }}</span>
+                                </div>
+                                <div class="d-grid-2">
+                                  <span class="header">Valid To :</span>
+                                  <span class="text">{{ batchDetail?.quotationDetails?.validTo ?
+                                    (batchDetail.quotationDetails.validTo | date: 'MMM d, y') : '-' }}</span>
+                                </div>
+                                <div class="d-grid-2">
+                                  <span class="header">Shipper :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.shipperName || '-'}}</span>
+                                </div>
+                                <!-- <div class="d-grid-2" *ngIf="carrierName ==='Ocean'">
+                                  <span class="header">Ocean Vessel :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.vesselName || '-'}}</span>
+                                </div> -->
+                                <!-- <div class="d-grid-2" *ngIf="batchDetail?.quotationDetails?.carrierName">
+                                  <span class="header">{{activeFrightAir ? 'Airline' : isTransport ? 'Transporter ':
+                                    'Carrier'}} :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.carrierName || '-'}} </span>
+                                </div>
+                                <div class="d-grid-2" *ngIf="batchDetail?.quotationDetails?.voyageNumber">
+                                  <span class="header">Voyage No :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.voyageNumber || '-'}}
+                                  </span>
+                                </div>
+                                <div class="d-grid-2" *ngIf="batchDetail?.quotationDetails?.vesselName">
+                                  <span class="header">Vessel Name :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.vesselName || '-'}}
+                                  </span>
+                                </div>
+                                <div class="d-grid-2" *ngIf="batchDetail?.quotationDetails?.carrierDeliveryName">
+                                  <span class="header">Place of Carrier Delivery :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.carrierDeliveryName || '-'}}
+                                  </span>
+                                </div>
+                                <div class="d-grid-2" *ngIf="batchDetail?.quotationDetails?.flightNo">
+                                  <span class="header">Flight No :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.flightNo || '-'}}
+                                  </span>
+                                </div> -->
+
+                              </div>
+
+
+                              <div>
+                                <div class="d-grid-2">
+                                  <span class="header">Branch :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.branchName || '-'}}
+                                  </span>
+                                </div>
+                                <div class="d-grid-2">
+                                  <span class="header">
+                                    {{activeFrightAir ? 'Airline' : isTransport ? 'Transporter ':
+                                    'Carrier'}} :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.carrierName ||'-'}} </span>
+                                </div>
+                                <div class="d-grid-2" *ngIf="batchDetail?.quotationDetails?.vesselName">
+                                  <span class="header">
+                                    Vessel Name :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.vesselName ||
+                                    '-'}} </span>
+                                </div>
+                                <div class="d-grid-2" *ngIf="batchDetail?.quotationDetails?.voyageNumber">
+                                  <span class="header">
+                                    Voyage No :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.voyageNumber ||'-'}} </span>
+                                </div>
+                                <div class="d-grid-2" *ngIf="batchDetail?.quotationDetails?.flightNo">
+                                  <span class="header">
+
+                                    Flight No:</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.flightNo ||'-'}} </span>
+                                </div>
+                              </div>
+
+                              <div>
+                                <div class="d-grid-2">
+                                  <span class="header">Place Of Carrier Receipt :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.carrierDeliveryName ||'-'}}
+                                  </span>
+                                </div>
+                                <div class="d-grid-2">
+                                  <!-- <span class="header"> {{activeFrightAir ? 'Airport' : 'Port'}} of Loading :</span> -->
+                                  <span class="header">Origin :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.loadPortName ||'-'}} </span>
+                                </div>
+                                <div class="d-grid-2">
+                                  <span class="header">
+                                    ETD :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.etd | date:'dd-MM-yyyy,HH:mm' ||
+                                    '-'}} </span>
+                                </div>
+                                <div class="d-grid-2">
+                                  <!-- <span class="header">  {{activeFrightAir ? 'Airport' : 'Port'}} of  Destination :</span> -->
+                                  <span class="header">Destination :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.dischargePortName ||'-'}} </span>
+                                </div>
+                                <div class="d-grid-2">
+                                  <span class="header">
+                                    ETA :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.eta | date:'dd-MM-yyyy,HH:mm' ||
+                                    '-'}} </span>
+                                </div>
+                                <!-- <div class="title">CREATION DETAILS</div> -->
+                                <!-- <div class="d-grid-2" *ngIf="batchDetail?.quotationDetails?.currencyShortName">
+                                  <span class="header">Local Currency :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.currencyShortName ||'-'}} </span>
+                                </div>
+                                <div class="d-grid-2" *ngIf="batchDetail?.quotationDetails?.exRate">
+                                  <span class="header">Exchange Rate :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.exRate || '-'}} </span>
+                                </div>
+                                <div class="d-grid-2" *ngIf="batchDetail?.quotationDetails?.loadPortName">
+                                  <span class="header">Port of Loading :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.loadPortName || '-'}} </span>
+                                </div>
+                                <div class="d-grid-2" *ngIf="batchDetail?.quotationDetails?.dischargePortName">
+                                  <span class="header">Port of Discharge :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.dischargePortName || '-'}} </span>
+                                </div>
+                                <div class="d-grid-2"
+                                  *ngIf="currentLogin !== 'transporter' && batchDetail?.quotationDetails?.originFreeDays">
+                                  <span class="header">Origin Carrier Free Days :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.originFreeDays || '-'}} </span>
+                                </div> -->
+
+                              </div>
+                              <div>
+                                <div class="d-grid-2">
+                                  <span class="header">Place Of Carrier Delivery :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.carrierDeliveryName || '-'}}
+                                  </span>
+                                </div>
+                                <div class="d-grid-2"
+                                  *ngIf="currentLogin !== 'transporter' && batchDetail?.quotationDetails?.originFreeDays">
+                                  <span class="header">Origin Carrier Free Days :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.originFreeDays || '-'}} </span>
+                                </div>
+                                <div class="d-grid-2" *ngIf="batchDetail?.quotationDetails?.destPortFreeDays">
+                                  <span class="header">Destination Port Free Days :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.destPortFreeDays || '-'}}</span>
+                                </div>
+                                <div class="d-grid-2"
+                                  *ngIf="currentLogin !== 'transporter' && batchDetail?.quotationDetails?.destFreeDays">
+                                  <span class="header">Destination Carrier Free Days :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.destFreeDays || '-'}} </span>
+                                </div>
+                                <div class="d-grid-2">
+                                  <span class="header">Local Currency :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.currencyShortName || '-'}} </span>
+                                </div>
+                                <div class="d-grid-2">
+                                  <span class="header">Remarks :</span>
+                                  <span class="text">{{batchDetail?.quotationDetails?.remarks || '-'}} </span>
+                                </div>
+                              </div>
+
+
+                            </div>
+                          </div>
+                        </div>
+                      </ng-container>
+
+                      <ng-container *ngIf="currentLogin !== 'transporter'">
+                        <div class="status-all-details-alignment">
+                          <div class="wrap-form-field modal-grid-status">
+                            <div class="new-title">
+                              <p>STATUSES</p>
+                            </div>
+                            <div class="new-flex-alignment">
+                              <div class="items-box ">
+                                <div class="">
+                                  <span class="header">Overall</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                  <span
+                                    class="text status-bar {{batchDetail?.statusOfBatch}} other-text">{{batchDetail?.statusOfBatch
+                                    || '-'}}</span>&nbsp;<span class="text">
+                                    <!-- <i class="bi bi-broadcast-pin" data-toggle="modal" data-target="#myModal2"></i> -->
+                                  </span>
+                                </div>
+                              </div>
+                              <div class="items-box">
+                                <div class="row">
+                                  <div class="col">
+                                    <span class="header">{{activeFrightAir ? "AWB" : "MBL"}}#</span>
+                                  </div>
+                                  <div class="col-3">
+                                  </div>
+                                </div>
+                                <div class=" align-items-center flex-wrap">
+                                  <ng-container *ngFor="let bl of blDataList">
+                                    <ng-container *ngIf="bl.blType === 'MBL' ">
+                                      <span
+                                      class="text status-bar {{ (bl.MBLStatus || 'pending')?.toLowerCase() === 'pending' ? 'pending' : 'green' }}"
+                                      matTooltip="MBL No: {{ bl.blNumber }}"
+                                    >
+                                      {{ bl.MBLStatus || 'Pending' }}
+                                    </span>&nbsp;
+                                    </ng-container>
+                                  </ng-container>
+
+                                    
+                                    
+
+
+                                  <!-- <em
+                                    class="bi bi-three-dots dots-color-change cursor-pointer wrap-batch1 border mx-2 px-1 em-icon"
+                                    [matMenuTriggerFor]="menu" #menuTrigger="matMenuTrigger"
+                                    [class]=" menuTrigger.menuOpen ? 'clicked' : ''">
+                                  </em> -->
+                                  <!-- <mat-menu #menu="matMenu" class="wrap-open">
+                                    <button mat-menu-item class="wrap-inside" *ngFor="let data of blMasterStatus"
+                                      (click)="updateBatchData('MBL',data?.typeName)">
+                                      <a class="text-dark">{{data?.typeName}}</a>
+                                    </button>
+                                  </mat-menu> -->
+
+                                  <!-- <em *ngIf="false"
+                                    class="bi bi-three-dots dots-color-change cursor-pointer wrap-batch1 border mx-2 px-1 em-icon"
+                                    [matMenuTriggerFor]="menu" #menuTrigger="matMenuTrigger"
+                                    [class]=" menuTrigger.menuOpen ? 'clicked' : ''">
+                                  </em>
+                                  <mat-menu *ngIf="false" #menu="matMenu" class="wrap-open">
+                                    <button mat-menu-item class="wrap-inside" *ngIf="!blData?.siFiledDate"
+                                      (click)="addMBL(MBL,'SI Filed')">
+                                      <a class="text-dark"><em class="bi bi-calendar-event color-pencil-red"></em> SI
+                                        Filed</a>
+                                    </button>
+                                    <button mat-menu-item class="wrap-inside" *ngIf="!blData?.firstDraftReceivedDate"
+                                      (click)="addMBL(MBL,'First Draft Received')">
+                                      <a class="text-dark"><em class="bi bi-calendar-event color-pencil-red"></em> First
+                                        Draft Received From Carrier</a>
+                                    </button>
+                                    <button mat-menu-item class="wrap-inside" *ngIf="!blData?.firstDraftApprovedDate"
+                                      (click)="addMBL(MBL,'First Draft Approved')">
+                                      <a class="text-dark"><em class="bi bi-calendar-event color-pencil-red"></em> First
+                                        Draft Approved by Customer</a>
+                                    </button>
+                                    <button mat-menu-item class="wrap-inside" *ngIf="!blData?.blAuditedDate"
+                                      (click)="addMBL(MBL,'BL Audited')">
+                                      <a class="text-dark"><em class="bi bi-calendar-event color-pencil-red"></em> BL
+                                        Audited</a>
+                                    </button>
+                                    <button mat-menu-item class="wrap-inside" *ngIf="!blData?.blReleaseDate"
+                                      (click)="addMBL(MBL,'Release MBL')">
+                                      <a class="text-dark"><em class="bi bi-calendar-event color-pencil-red"></em>
+                                        Release MBL</a>
+                                    </button>
+                                    <button mat-menu-item class="wrap-inside" *ngIf="checkblShow()"
+                                      routerLink="/batch/list/add/{{id}}/bl/{{blData.blId}}/edit">
+                                      <a class="text-dark"><em class="bi bi-pencil color-pencil-red"></em> Edit MBL</a>
+                                    </button>
+                                    <button mat-menu-item class="wrap-inside">
+                                      <a class="text-dark"><em class="bi bi-exclamation-circle color-pencil-red"></em>
+                                        Send Pre-Alert</a>
+                                    </button>
+                                  </mat-menu> -->
+
+
+                                </div>
+                              </div>
+                              <div class="items-box">
+                                <div class="row">
+                                  <div class="col">
+                                    <span class="header">{{activeFrightAir ? "HAWB" : "HBL"}}#</span>
+                                  </div>
+                                  <div class="col-3">
+                                  </div>
+                                </div>
+                                <div class=" align-items-center">
+                                  <!-- <span
+                                    class="text status-bar {{batchDetail?.HBLStatus?.toLowerCase() === 'pending' ? 'pending' :'green'}}">{{batchDetail?.HBLStatus
+                                    ||
+                                    'Pending Creation'}}</span> &nbsp; -->
+                                  
+                                      <ng-container *ngFor="let bl of blDataList">
+                                        <ng-container *ngIf="bl.blType === 'HBL' ">
+                                          <span
+                                          class="text status-bar {{ (bl.HBLStatus || 'pending')?.toLowerCase() === 'pending' ? 'pending' : 'green' }}"
+                                          matTooltip="HBL No: {{ bl.blNumber }}"
+                                        >
+                                          {{ bl.HBLStatus || 'Pending' }}
+                                        </span>&nbsp;
+                                        </ng-container>
+                                      </ng-container>
+
+                                  
+
+                                  <!-- <em
+                                    class="bi bi-three-dots dots-color-change cursor-pointer wrap-batch1 border mx-2 px-1 em-icon"
+                                    [matMenuTriggerFor]="menu1" #menuTrigger="matMenuTrigger"
+                                    [class]=" menuTrigger.menuOpen ? 'clicked' : ''">
+                                  </em> -->
+                                  <!-- <mat-menu #menu1="matMenu" class="wrap-open">
+                                    <button mat-menu-item class="wrap-inside" *ngFor="let data of blMasterStatus"
+                                      (click)="updateBatchData('HBL',data?.typeName)">
+                                      <a class="text-dark">{{data?.typeName}}</a>
+                                    </button>
+                                  </mat-menu> -->
+
+                                </div>
+                              </div>
+                              <!-- <div class="col vertical-line"> 
+                                <div class="">
+                                  <span class="header">Container</span>
+                                  <span class="text"></span>
+                                </div> 
+                              </div> -->
+                              <div class="items-box">
+                                <div class="row">
+                                  <div class="col">
+                                    <span class="header">Finance</span>
+                                  </div>
+                                  <div class="col-3">
+                                  </div>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                  <span
+                                    class="text status-bar {{(financeStatus && invoicePaymetStatus) ? 'Completed' : 'Pending'}}">{{(financeStatus
+                                    && invoicePaymetStatus)
+                                    ? 'Completed' : 'Pending'}}</span>&nbsp;<span class="text"> </span>
+                                </div>
+                              </div>
+                              <div class="items-box">
+                                <div class="row">
+                                  <div class="col">
+                                    <span class="header">Credit</span>
+                                  </div>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                  <span
+                                    class="text status-bar {{creditStatus && financeStatus ? 'Completed' : 'Pending'}}">{{creditStatus
+                                    && financeStatus ? 'Completed' : 'Pending'}}</span>&nbsp;<span class="text"></span>
+                                </div>
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+                      </ng-container>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="holdControl === 'Container'" [class.active]="holdControl === 'Container'"
+                class="tab-pane fade show" id="Container" role="tabpanel" aria-labelledby="Container-tab">
+                <app-tanks></app-tanks>
+              </div>
+              <div *ngIf="holdControl === 'route'" [class.active]="holdControl === 'route'" class="tab-pane fade show"
+                id="route" role="tabpanel" aria-labelledby="route-tab">
+                <app-route (getBatchById)="getBatchById()"></app-route>
+              </div>
+
+              <div *ngIf="holdControl === 'destination' && (isExport || isTransport)"
+                [class.active]="holdControl === 'destination'" class="tab-pane fade show" id="destination"
+                role="tabpanel" aria-labelledby="destination-tab">
+                <app-destination></app-destination>
+              </div>
+
+              <div *ngIf="holdControl === 'grn' " [class.active]="holdControl === 'grn'" class="tab-pane fade show"
+                id="destination" role="tabpanel" aria-labelledby="destination-tab">
+                <app-grn></app-grn>
+              </div>
+
+
+              <div *ngIf="holdControl === 'charges'" [class.active]="holdControl === 'charges'"
+                class="tab-pane fade show" id="charges" role="tabpanel" aria-labelledby="charges-tab">
+                <app-charges [isAddNewSection]="true" [OATab]="false"></app-charges>
+
+              </div>
+
+              <div *ngIf="holdControl === 'lorryReceipt'" [class.active]="holdControl === 'lorryReceipt'"
+                class="tab-pane fade show" id="lorryReceipt" role="tabpanel" aria-labelledby="lorryReceipt-tab">
+                <app-lorray-table [isAddNewSection]="true" [OATab]="false"></app-lorray-table>
+
+              </div>
+
+              <div *ngIf="holdControl === 'bl'" [class.active]="holdControl === 'bl'" class="tab-pane fade show" id="bl"
+                role="tabpanel" aria-labelledby="bl-tab">
+                <app-stolt-bl [isExportImport]="isExportImport" [batchDetail]="batchDetail"
+                (getblDataOfBtahcDetails)="getblData();getBatchById()"></app-stolt-bl>
+              </div>
+
+              <div *ngIf="holdControl === 'principle-bill'" [class.active]="holdControl === 'principle-bill'"
+                class="tab-pane fade show" id="principle-bill" role="tabpanel" aria-labelledby="principle-bill-tab">
+                <app-principle-bill [isFinanceInvoice]="false" [isparent]="'batch'"></app-principle-bill>
+              </div>
+              <div *ngIf="holdControl === 'invoice'" [class.active]="holdControl === 'invoice'"
+                class="tab-pane fade show" id="invoice" role="tabpanel" aria-labelledby="invoice-tab">
+                <app-receipt-payment [isBatchInvoice]="true"></app-receipt-payment>
+              </div>
+              <div *ngIf="holdControl === 'email'" [class.active]="holdControl === 'email'" class="tab-pane fade show"
+                id="email" role="tabpanel" aria-labelledby="email-tab">
+                <app-email-tab [batchId]="id"></app-email-tab>
+              </div>
+              <div *ngIf="holdControl === 'document'" [class.active]="holdControl === 'document'"
+                class="tab-pane fade show" id="document" role="tabpanel" aria-labelledby="document-tab">
+                <app-document [batch]="true" [batchDetail]="batchDetail"></app-document>
+              </div>
+              <div *ngIf="holdControl === 'batch-close'" [class.active]="holdControl === 'batch-close'"
+                class="tab-pane fade show" id="batch-close" role="tabpanel" aria-labelledby="batch-close-tab">
+
+                <app-batch-close [isTypePage]="'batch'"></app-batch-close>
+              </div>
+              <div *ngIf="holdControl === 'Remarks'" [class.active]="holdControl === 'Remarks'"
+                class="tab-pane fade show" id="Remarks" role="tabpanel" aria-labelledby="Remarks-tab">
+                <app-discussion [EnquiryId]="EnquiryId"></app-discussion>
+              </div>
+              <div *ngIf="holdControl === 'check-list'" [class.active]="holdControl === 'check-list'"
+                class="tab-pane fade show" id="check-list" role="tabpanel" aria-labelledby="check-list-tab">
+                <app-check-list></app-check-list>
+              </div>
+              <div *ngIf="holdControl === 'shipping-instruction' && (isExport || isTransport)"
+                [class.active]="holdControl === 'shipping-instruction'" class="tab-pane fade show" id="check-list"
+                role="tabpanel" aria-labelledby="shipping-instruction">
+                <app-si (getBatchById)="getBatchById()" [batchDetail]="batchDetail"></app-si>
+              </div>
+              <div *ngIf="holdControl === 'shipped-onboard'" [class.active]="holdControl === 'shipped-onboard'"
+                class="tab-pane fade show" id="check-list" role="tabpanel" aria-labelledby="shipped-onboard">
+                <app-shipped-onboard></app-shipped-onboard>
+              </div>
+              <div *ngIf="holdControl === 'ops-additional'" [class.active]="holdControl === 'ops-additional'"
+                class="tab-pane fade show" id="check-list" role="tabpanel" aria-labelledby="ops-additional">
+                <app-charges [OATab]="true"></app-charges>
+              </div>
+              <div *ngIf="holdControl === 'custom' && !this.isTransport" [class.active]="holdControl === 'custom'"
+                class="tab-pane fade show" id="check-list" role="tabpanel" aria-labelledby="custom">
+                <app-customs></app-customs>
+              </div>
+              <div *ngIf="(isExport || isTransport) && holdControl === 'shipping-bill'"
+                [class.active]="holdControl === 'shipping-bill'" class="tab-pane fade show" id="shipping-bill"
+                role="tabpanel" aria-labelledby="shipping-bill-tab">
+                <app-shipping-bill></app-shipping-bill>
+              </div>
+              <div *ngIf="isImport && holdControl === 'bill-entry'" [class.active]="holdControl === 'bill-entry'"
+                class="tab-pane fade show" id="check-list" role="tabpanel" aria-labelledby="custom">
+                <app-bill-of-entry></app-bill-of-entry>
+              </div>
+
+              <div *ngIf="holdControl === 'driver'" [class.active]="holdControl === 'driver'" class="tab-pane fade show"
+                id="check-list" role="tabpanel" aria-labelledby="custom">
+                <app-driver-vehicle-details></app-driver-vehicle-details>
+              </div>
+              <div *ngIf="holdControl === 'milestone'" [class.active]="holdControl === 'milestone'"
+                class="tab-pane fade show" id="check-list" role="tabpanel" aria-labelledby="custom">
+                <app-transport-milestone></app-transport-milestone>
+              </div>
+
+              <div *ngIf="holdControl === 'cfs-email'" [class.active]="holdControl === 'cfs-email'"
+                class="tab-pane fade show" id="check-list" role="tabpanel" aria-labelledby="custom">
+                <app-cfs-email></app-cfs-email>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+        <!-- <ul class="menuright">
+          <li><a><em class="mdi mdi-folder-upload "></em></a></li>
+          <li><a (click)="calculator()"><em class="mdi mdi-calculator"></em></a></li>
+          <li><a><em class="mdi mdi-comment-text "></em></a></li>
+        </ul> -->
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal right fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2"
+  *ngIf="batchDetail?.batchId">
+  <app-milestone [batchId]="batchDetail?.batchId" [type]="'Booking'"
+    (batchStatusUpdate)="updateBatchStatus()"></app-milestone>
+</div>
+
+<ng-template #MBL let-modal>
+  <div class="modal-content px-0">
+
+    <div class="modal-header">
+      <h4 class="modal-title d-flex align-items-center"> Mark MBL as {{mblEventStatus}} </h4>
+      <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
+    </div>
+
+    <div class="modal-body mt-1">
+      <div class="wrap-form-field">
+        <div class="row">
+          <div class="col-md-12">
+            BL Number : {{blData?.blNumber}}
+          </div>
+          <div class="col-md-12">
+            <label class="form-label">{{mblEventStatus}} Date<span class="text-danger">*</span></label>
+            <!-- <mat-form-field appearance="outline" class="custom-date-picker">
+                <div class="d-flex align-items-center  w-100">
+                  <input matInput [ngxMatDatetimePicker]="pickerMBL"  
+                    placeholder=" Date" [min]="todayDate" [(ngModel)]="mblDate">
+                  <mat-datepicker-toggle matSuffix [for]="pickerMBL"></mat-datepicker-toggle>
+                  <ngx-mat-datetime-picker [color]="color" [touchUi]="touchUi" [enableMeridian]="enableMeridian"
+                    #pickerMBL>
+                  </ngx-mat-datetime-picker>
+                </div>
+              </mat-form-field>
+              <mat-error>
+                <div *ngIf="false" class="set-error-msg">{{mblEventStatus}} Date
+                  is required
+                </div>
+              </mat-error>  -->
+
+            <nz-date-picker class="form-select custom-input" nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss"
+              [(ngModel)]="mblDate"></nz-date-picker>
+            <!-- <div *ngIf="submitted && row?.get('eta')?.errors" class="invalid-feedback">
+              <div *ngIf=" submitted && row?.get('eta')?.errors.required" class="set-error-msg">{{mblEventStatus}} is
+                required
+            </div>
+            </div> -->
+          </div>
+          <div class="col-md-12 my-3">
+            <div class="text-center">
+              <button type="button" class="btn btn-outline-primary" data-dismiss="modal" aria-label="Close"
+                (click)="cancel()">Cancel</button>
+              <button type="button" [disabled]="!mblDate" class="btn btn-outline-primary"
+                (click)="saveMBL()">{{'Save'}}</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div> <!-- Closing div for modal-body -->
+
+</ng-template>
+
+
+<ng-template #reminder1 let-modal>
+  <div class="modal-content">
+
+    <div class="modal-header">
+      <h4 class="modal-title d-flex align-items-center">
+        Reminder / Follow-Up <span class="status-bar1 {{editReminder?.reminderStatus}} mx-2"
+          *ngIf="editReminder?.reminderStatus">{{editReminder?.reminderStatus | uppercase}}</span>
+      </h4>
+      <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
+    </div>
+
+    <div class="modal-body mt-3">
+      <div class="wrap-form-field">
+        <form [formGroup]="reminderForm" class="row g-3 align-items-center">
+          <div class="row">
+            <div class="col-md-6">
+              <label class="form-label">Reminder Type <span class="text-danger">*</span></label>
+
+              <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="reminderType"
+                [ngClass]="{'is-invalid': submitted1 && f1.reminderType.errors}">
+                <nz-option *ngFor="let value of ['Job','Cargo','MBL','HBL','Finance','Credit']" [nzLabel]="value"
+                  [nzValue]="value"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted1 && f1.reminderType.errors" class="invalid-feedback">
+                <div *ngIf="f1.reminderType.errors.required">
+                  Reminder Type is Required
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Description<span class="text-danger">*</span></label>
+              <textarea id="isRemarks" name="isRemarks" rows="5" cols="50" formControlName="description"
+                [ngClass]="{'is-invalid': submitted1 && f1.description.errors}"
+                class="form-control custom-input rounded-0"></textarea>
+              <div *ngIf="submitted1 && f1.description.errors" class="invalid-feedback">
+                <div *ngIf="f1.description.errors.required">
+                  Description is Required
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mt-3">
+              <label class="form-label">Time/Hours<span class="text-danger">*</span></label>
+
+              <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="reminderTime"
+                (ngModelChange)="setValidatore()" [ngClass]="{'is-invalid': submitted1 && f1.reminderTime.errors}">
+                <nz-option
+                  *ngFor="let value of ['After 6 Hours','After 12 Hours','After 24 Hours','After 48 Hours','After 72 Hours','Custom Date']"
+                  [nzLabel]="value" [nzValue]="value"></nz-option>
+              </nz-select>
+
+              <div *ngIf="submitted1 && f1.reminderTime.errors" class="invalid-feedback">
+                <div *ngIf="f1.reminderTime.errors.required">
+                  Time/Hours is Required
+                </div>
+              </div>
+
+            </div>
+
+            <div class="col-md-6 mt-3" *ngIf="reminderForm?.value.reminderTime === 'Custom Date'">
+              <label class="form-label">Custom Date<span class="text-danger">*</span></label>
+              <nz-date-picker nzShowTime class="form-select custom-input" nzFormat="dd-MM-yyyy HH:mm:ss"
+                formControlName="customDate" [nzDisabledDate]="disabledDate" [nzDisabledTime]="disabledTime"
+                [ngClass]="{'is-invalid': submitted1 && f1?.customDate?.errors?.required,'is-invalids': submitted1 && f1?.customDate?.errors?.required}"
+                style="width: 100%;">
+              </nz-date-picker>
+              <ng-container *ngIf="submitted1 && f1?.customDate?.errors?.required">
+                <div class="set-error-msg">
+                  Custom Date
+                  is required
+                </div>
+              </ng-container>
+            </div>
+
+            <div class="col-md-6 mt-3">
+              <label class="form-label">Users</label>
+              <ng-multiselect-dropdown [settings]="dropdownSettings" [data]="userList" [placeholder]="'Select Users'"
+                formControlName="userList">
+              </ng-multiselect-dropdown>
+
+              <div *ngIf="submitted1 && f1.reminderTime.errors" class="invalid-feedback">
+                <div *ngIf="f1.reminderTime.errors.required">
+                  Time/Hours is Required
+                </div>
+              </div>
+
+            </div>
+
+
+
+
+            <div class="col-md-6" *ngIf="false">
+              <label class="form-label px-2 my-2">Reminder Status </label>
+              <input type="checkbox" formControlName="isActive">
+            </div>
+
+            <div class="col-md-12 my-3">
+              <div class="text-center">
+                <button type="button" class="btn btn-outline-primary" data-dismiss="modal" aria-label="Close"
+                  (click)="cancel()">Cancel</button>
+                <button type="button" class="btn btn-outline-primary" (click)="save(true)">{{ editReminder ? 'Update' :
+                  'Save'}}</button>
+              </div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+    <div class="mat-table-with-gheading">
+      <div class="wrapper">
+        <div class="container-fluid">
+          <div class="pt-2">
+            <div class="wrap-mat-table-area">
+              <div class="table-header-area pt-2">
+                <div style="width: 100%;">
+                  <table-filters [TDP]="[false, false, false, true]" (filterInput)="applyFilter1($event)">
+                  </table-filters>
+                </div>
+              </div>
+              <div class="table-card">
+                <div class="table-design TBL-DESIGN example-container mat-elevation-z8">
+                  <table mat-table [dataSource]="dataSource" matSort class="full-width-table" summary="agreement">
+                    <ng-container matColumnDef="#">
+                      <th class="bg-th" scope="col" mat-header-cell *matHeaderCellDef
+                        style="width: 3%;background-color: #ded3d3ba !important; border:  1px solid grey !important;">
+                        #
+                      </th>
+                      <td mat-cell *matCellDef="let element; let i = index">
+                        {{ i + 1 }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="reminderType">
+                      <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header
+                        style="width: 10%;background-color: #ded3d3ba !important; border:  1px solid grey !important;">
+                        Reminder Type
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element?.reminderType }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="createdOn">
+                      <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header
+                        style="width: 10%;background-color: #ded3d3ba !important; border:  1px solid grey !important;">
+                        Created At
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element?.createdOn | date : 'dd-MM-YYYY HH:mm:ss'}}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="reminderTime">
+                      <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header
+                        style="width: 10%;background-color: #ded3d3ba !important; border:  1px solid grey !important;">
+                        Reminder Time
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element?.reminderTime === 'Custom Date' ? (element.customDate | date : 'dd-MM-YYYY HH:mm:ss')
+                        :
+                        element?.reminderTime }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="description">
+                      <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header
+                        style="width: 10%;background-color: #ded3d3ba !important; border:  1px solid grey !important;">
+                        Description
+                      </th>
+                      <td mat-cell *matCellDef="let element" class="overflow-tooltip" [title]="element?.description">
+                        {{ element?.description }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="isActive">
+                      <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header
+                        style="width: 10%; background-color: #ded3d3ba !important; border:  1px solid grey !important;">
+                        Status
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element?.reminderStatus }}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="status">
+                      <th scope="col" id="action" class="charterersPdfHead bg-th" mat-header-cell *matHeaderCellDef
+                        style="width: 6%;background-color: #ded3d3ba !important; border:  1px solid grey !important;">
+                        Action
+                      </th>
+                      <td class="borderBottom" mat-cell *matCellDef="let element; let i = index">
+                        <div class="d-flex align-items-center">
+                          <span class="mx-1"></span>
+                          <div class="form-check form-switch d-flex align-items-center">
+                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                              (change)="changeStatus(element, i)" [checked]="element?.status"
+                              [disabled]="element?.reminderStatus === 'Completed'" />
+                            <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                          </div>
+                          <a class="mx-1" (click)="onDelete(deletedata, element)" appAccessControl
+                            accessType="delete"><i class="bi bi-trash color-pencil-red"></i></a>
+                        </div>
+                      </td>
+                    </ng-container>
+                    <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index"
+                      [matColumnDef]="headersFilter">
+                      <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+                        <div class="filters-container" [class.animate]="!toggleFilters">
+                          <em *ngIf="i > 0 && i < displayedColumns1.length - 5" class="custom-tooltip"
+                            [attr.title]="'Clear Filters'" (click)="clearFilters();toggleFilters = !toggleFilters"
+                            class="bi bi-x-circle"></em>
+                          <div *ngIf="i > 1 && i < displayedColumns1.length - 0" appearance="outline">
+                            <input class="form-control input-txt" placeholder="Press 'Enter' to search"
+                              [(ngModel)]="filtersModel[i]" (keyup.enter)="searchColumns()">
+                          </div>
+
+                        </div>
+                      </th>
+                    </ng-container>
+
+                    <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-header-row class="no-default-height" *matHeaderRowDef="displayedColumns2 "></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                    <tr class="mat-row" *matNoDataRow>
+                      <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+                        <span>No data available</span>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div> <!-- Closing div for modal-body -->
+
+</ng-template>
+<ng-template #deletedata let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body mt-4 d-flex align-items-center">
+      <em class="bi bi-question-circle text-danger fs-2 text-center float-start me-2"> </em> <span
+        class=" text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+          {{ "common.no" | translate }}
+        </button>
+        <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+          {{ "common.yes" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #vesselTrack let-modal>
+  <app-vessel-map [mmsiNo]="mmsiNo" [vesselName]="vesselName"></app-vessel-map>
+</ng-template>

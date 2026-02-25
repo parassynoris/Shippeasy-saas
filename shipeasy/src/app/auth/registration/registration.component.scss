@@ -1,0 +1,202 @@
+.input-group {
+  display: grid;
+  grid-template-columns: 1fr 75%;
+  .col {
+    padding-right: 0px !important;
+    padding-left: 0px !important;
+  }
+}
+
+ 
+
+
+/////////////////////NEW CSSS
+.login-container {
+
+  // // background-color: #f7f9fc;
+  // // display: flex; 
+  // // align-items: center; 
+  // align-content: center;
+  // overflow: overlay;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+
+  .outer-box {
+    background-color: white;
+    display: grid;
+    grid-template-columns: 1fr 50%;
+    gap: 24px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    border-radius: 8px;
+
+    .login-box {
+
+      padding-right: 2rem;
+      // max-width: 400px; 
+      border-radius: 8px;
+      text-align: center;
+
+
+      h2 {
+        margin-bottom: 0.5rem;
+        font-size: 24px;
+        font-weight: 600;
+        text-align: start;
+        color: #007BFF;
+      }
+
+      p {
+        // margin-bottom: 1.5rem;
+        font-size: 14px;
+        color: #666;
+      }
+
+      .full-width {
+        width: 100% !important;
+        margin-bottom: 1rem;
+      }
+
+      .forgot-password {
+        text-align: right;
+        margin-bottom: 1.0rem;
+
+        a {
+          color: #007BFF;
+          text-decoration: none;
+        }
+      }
+
+      .alternative-login {
+        // margin-top: 2rem;
+
+        p {
+          margin-bottom: 1rem;
+          font-size: 14px;
+          color: #666;
+        }
+
+        button {
+          margin-right: 0.5rem;
+        }
+      }
+
+      .sign-up {
+        margin-top: 1rem;
+
+        p {
+          font-size: 14px;
+          color: #666;
+
+          a {
+            color: #007BFF;
+            text-decoration: none;
+          }
+        }
+      }
+    }
+
+    .image-container {
+      border-radius: 10px;
+      // background: linear-gradient(180deg, #ffc9c6  50%, #a32c26  100%); 
+      background: #007BFF03;
+      padding: 30px; 
+      border: 1px solid #007BFF0a;
+      .logo-alignment {
+        display: flex; 
+      justify-content: center;
+      img{
+        height: 30px;
+      }
+      }
+      .feature-card{ 
+        padding: 40px 0;
+        .service{ 
+          display: grid;
+          grid-template-columns: 1fr 90%;
+          gap: 24px;
+          padding: 30px 0;
+          border-bottom: 1px solid #007BFF26;
+          img{
+            height: 30px;
+          }
+          .img-div{
+            padding: 5px 0;
+          }
+          .header{
+            color: #007BFF;
+            font-size: 16px;
+            text-transform: capitalize;
+          }
+          .text{
+            text-transform: capitalize;
+          }
+        }
+      }
+    }
+  }
+
+  .footer {
+    .center-text {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+
+      a {
+        color: #007BFF;
+
+        &:hover { 
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  .bg-color {
+    background-color: #007BFF;
+    color: white;
+  }
+
+  .cus-form {
+    padding: 0 0 15px 0;
+
+    label {
+      font-size: 12px;
+      line-height: 20px;
+      display: block;
+      color: #323232;
+      font-weight: 500;
+      text-align: start;
+    }
+
+    ::placeholder {
+      color: #9c9fa6;
+      font-size: 12px;
+      line-height: 20px;
+      font-weight: 400;
+
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid var(--theme-border-color-light);
+      height: 40px;
+      padding: 0 16px;
+      font-size: 12px;
+      border-radius: 4px;
+      line-height: 20px;
+      color: #222;
+      font-weight: 500;
+      background-color: transparent;
+      transition: .3s ease-in-out;
+
+      &:focus {
+        outline: none;
+        border: 1px solid var(--change-theme);
+      }
+    }
+  }
+
+}

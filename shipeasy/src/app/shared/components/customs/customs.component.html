@@ -1,0 +1,805 @@
+<div class="mat-table-with-gheading">
+    <div class="wrapper">
+        <div class="">
+            <div class="">
+                <div class="wrap-mat-table-area">
+                    <div class="table-header-area pt-3">
+                        <div>
+                            <table-filters [TDP]="[false, false, true, true]" (filterInput)="applyFilter($event)"
+                                (onClickExport)="exportAsExcelFile()">
+                            </table-filters>
+                        </div>
+                        <div class="header-right">
+                            <a title="Add Customs Details" 
+                                class="max-con new-action  btn btn-outline-primary btn-sm rounded-pill"
+                                (click)="onenMap(vesselTrack)">Create</a>
+                        </div>
+                    </div>
+
+                    <div class="table-card">
+                        <div class="table-design example-container mat-elevation-z8">
+                            <table mat-table [dataSource]="dataSource" matSort class="" summary="agreement">
+
+                                <ng-container matColumnDef="#">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef>
+                                        # <em class="custom-tooltip" [attr.title]="'Toggle Filters'"
+                                            (click)="toggleFilters = !toggleFilters" class="bi bi-search"></em>
+                                    </th>
+                                    <td mat-cell *matCellDef="let element;let i = index">
+                                        {{ element?.id}}
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="customNo">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        Document
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            {{ element?.customNo }}
+                                            <span class="d-flex align-items-center" style="width: 40px; position: relative;">
+                                                <a (click)="opendocuupload(element)" type="button" class="p-0 m-0" data-toggle="modal" data-target="#myModal2Doc">
+                                                    <i class="bi bi-paperclip fs-6" style="margin-right: 4px;"></i>
+                                                </a>
+                                                <i class="bi bi-broadcast-pin fs-6" data-toggle="modal" data-target="#myModal4" 
+                                                   (click)="customIdRow = element?.customId" style="margin-left: 2px;"></i>
+                                            </span>                                            
+                                        </div>                                        
+                                    </td>
+                                </ng-container>                                
+
+                                <ng-container matColumnDef="countryName">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        CHA
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{ element?.countryName }}
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="customDate">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        Custom Document Date
+                                    </th>
+                                    <td class="text-start" mat-cell *matCellDef="let element">
+                                        {{ element?.customDate | date :'dd-MM-YYYY' }}
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="locationName">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        Custom clearance Location
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{ element?.locationName }}
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="GrossWeight">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        Gross Weight (KG)
+                                    </th>
+                                    <td class="text-start" mat-cell *matCellDef="let element">
+                                        {{ element?.GrossWeight }}
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="DutyAmount">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        Duty Amount
+                                    </th>
+                                    <td class="text-start" mat-cell *matCellDef="let element">
+                                        {{ element?.DutyAmount }} <span *ngIf="element?.DutyAmount">{{ element?.currencyName }}</span>
+                                    </td>
+                                </ng-container>                                
+                                <ng-container matColumnDef="currentQueue">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        Current Queue
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{ element?.currentQueue }}
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="Comment">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        Comment
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{ element?.Comment }}
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="StatusUpdate">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        Status Update
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <span style="color: #025cac; font-weight: bold; font-size: 12px;">{{ element?.customStatus }}</span>
+                                    </td>
+                                </ng-container>                                
+
+                                <ng-container matColumnDef="LastAction">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        Last Action
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <div>{{ element?.customStatus }}</div>
+                                         <div>{{element?.updatedOn | date : 'dd-MM-YYYY, h:mm a'}}</div>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="action">
+                                    <th scope="col" id="action" class="charterersPdfHead" mat-header-cell
+                                        *matHeaderCellDef>
+                                        {{ 'Actions' }}
+                                    </th>
+                                    <td class="borderBottom text-center" mat-cell *matCellDef="let element">
+
+                                        <em class="bi bi-three-dots dots-color-change cursor-pointer wrap-batch1 border px-1 em-icon"
+                                            [matMenuTriggerFor]="menu" #menuTrigger="matMenuTrigger"
+                                            [class]=" menuTrigger.menuOpen ? 'clicked' : ''">
+                                        </em>
+                                        <mat-menu #menu="matMenu" class="wrap-open">
+                                            <button mat-menu-item class="wrap-inside text-start" appAccessControl
+                                                featureCode="['STM0116']" accessType="update" data-toggle="modal"
+                                                data-target="#myModal0" (click)="sendToCha(element?.customId,'Docs Sent to CHA')">
+                                                <a class="text-dark"><em
+                                                        class="bi bi-journal-bookmark-fill color-pencil-red"></em> Doc
+                                                    Send to CHA </a>
+                                            </button>
+                                            <button mat-menu-item class="wrap-inside text-start" appAccessControl
+                                                featureCode="['STM0116']" accessType="update" data-toggle="modal"
+                                                data-target="#myModal0"
+                                                (click)="sendToCha(element?.customId,'Checklist Created/Receieved')">
+                                                <a class="text-dark"><em
+                                                        class="bi bi-journal-bookmark-fill color-pencil-red"></em>
+                                                        Checklist Created/Receieved </a>
+                                            </button>
+                                            <button mat-menu-item class="wrap-inside text-start" appAccessControl
+                                                featureCode="['STM0116']" accessType="update" data-toggle="modal"
+                                                data-target="#myModal0"
+                                                (click)="sendToCha(element?.customId,'Checklist Shared with Customer')">
+                                                <a class="text-dark"><em
+                                                        class="bi bi-journal-bookmark-fill color-pencil-red"></em>
+                                                    Checklist Shared with Customer </a>
+                                            </button>
+                                            <button mat-menu-item class="wrap-inside text-start" appAccessControl
+                                                featureCode="['STM0116']" accessType="update" data-toggle="modal"
+                                                data-target="#myModal0" (click)="sendToCha(element?.customId,'Checklist Approved')">
+                                                <a class="text-dark"><em
+                                                        class="bi bi-journal-bookmark-fill color-pencil-red"></em>
+                                                    Checklist Approved </a>
+                                            </button>
+                                            <button mat-menu-item class="wrap-inside text-start" appAccessControl
+                                                featureCode="['STM0116']" accessType="update" data-toggle="modal"
+                                                data-target="#myModal0" (click)="sendToCha(element?.customId,'Shipping Bill Filled')">
+                                                <a class="text-dark"><em
+                                                        class="bi bi-journal-bookmark-fill color-pencil-red"></em>
+                                                    Shipping Bill Filled </a>
+                                            </button>
+                                            <hr>
+                                            <button mat-menu-item class="wrap-inside text-start" appAccessControl
+                                                featureCode="['STM0116']" accessType="update"  >
+                                                <a class="text-dark" (click)="onenMap(vesselTrack,element)"><em
+                                                        class="bi bi-pencil color-pencil-red"></em> Edit Custom Details
+                                                </a>
+                                            </button>
+                                            <button mat-menu-item class="wrap-inside text-start" appAccessControl
+                                                featureCode="['STM0116']" accessType="update">
+                                                <a class="text-dark" (click)="onDelete(deletedata,element)"><em
+                                                        class="bi bi-trash color-pencil-red"></em> Delete Custom
+                                                    Details</a>
+                                            </button>
+                                        </mat-menu>
+
+                                    </td>
+                                </ng-container>
+
+                                <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index"
+                                    [matColumnDef]="headersFilter">
+                                    <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+                                        <div class="filters-container" [class.animate]="!toggleFilters">
+                                            <div *ngIf="i > 0 && i < displayedColumns1.length - 1" appearance="outline">
+                                                <input class="form-control input-txt"
+                                                    placeholder="Press 'Enter' to search" [(ngModel)]="filtersModel[i]"
+                                                    (keyup.enter)="searchColumns()">
+                                            </div>
+                                            <em *ngIf="i == displayedColumns1.length - 1" class="custom-tooltip"
+                                                [attr.title]="'Clear Filters'"
+                                                (click)="clearFilters();toggleFilters = !toggleFilters"
+                                                class="bi bi-x-circle"></em>
+                                        </div>
+                                    </th>
+                                </ng-container>
+
+
+                                <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-header-row class="no-default-height" *matHeaderRowDef="displayedColumns1"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                                <tr class="mat-row" *matNoDataRow>
+                                    <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+                                        <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+                                        <span *ngIf="!loaderService?.isLoadingcircle && !dataSource?.data?.length">No
+                                            data available</span>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+                        <div [ngClass]="{'display-none' : dataSource.filteredData.length < 10}">
+                            <mat-paginator [pageSizeOptions]="pagenation" showFirstLastButtons aria-label="Select page">
+                            </mat-paginator>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #deletedata let-c="close" let-d="dismiss">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+        </div>
+        <div class="modal-body mt-4 d-flex align-items-center">
+            <em class="bi bi-question-circle text-danger fs-2 text-center float-start me-2"> </em> <span
+                class=" text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+        </div>
+        <div class="modal-footer">
+            <div class="text-center">
+                <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+                    {{ "common.no" | translate }}
+                </button>
+                <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+                    {{ "common.yes" | translate }}
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #vesselTrack let-modal>
+    <div class="custom-modal wrap-form-field">
+            <div class="custom-modal wrap-form-field">
+                <div class="modal-header">
+                    <h5 class="modal-title font-size" id="modal-basic-title">{{CurrentCustomId ? 'Edit' : 'Add'}}
+                        {{isExport ?
+                        'Export' : 'Import'}} Custom Details</h5>
+                    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            </button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="createCustom">
+                        <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+                            <div class="row g-3 mt-3 scroll align-items-center">
+                                <div class="col-md-6">
+                                    <div class="form-field-section">
+                                        <label class="form-label">{{isExport ? 'Export' : 'Import'}} Customs
+                                            Number</label>
+                                        <input type="text" formControlName="customNo" class="form-control custom-input rounded-0" placeholder="Customs Number"
+                                            [ngClass]="{'is-invalid': submitted && f1.customNo.errors}" min="0" max="99999999" step="1"
+                                            oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 50);" maxlength="50" />
+                                        <div *ngIf="submitted && f1.customNo.errors" class="invalid-feedback">
+                                            <div *ngIf="f1.customNo.errors.required">
+                                                This fiead is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-field-section">
+                                        <label class="mb-0 p-0 form-label">{{isExport ? 'Export' : 'Import'}} Custom
+                                            Date</label>
+                                        <mat-form-field appearance="outline" class="custom-date-picker">
+                                            <div class="d-flex align-items-center  w-100">
+                                                <input matInput [matDatepicker]="pickerEtay"
+                                                    formControlName="customDate" class="h-0" [min]="minDate"
+                                                    placeholder="Custom Date" />
+                                                <mat-datepicker-toggle matSuffix
+                                                    [for]="pickerEtay"></mat-datepicker-toggle>
+                                            </div>
+                                            <mat-datepicker #pickerEtay></mat-datepicker>
+                                        </mat-form-field>
+                                        <mat-error>
+                                            <div *ngIf="submitted && f1?.customDate?.errors?.required"
+                                                class="set-error-msg">
+                                                This fiead is required
+                                            </div>
+                                        </mat-error>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-field-section">
+                                        <label class="form-label">Custom Clearance Country</label>
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear
+                                            formControlName="customCountry" nzPlaceHolder="Clearance Country">
+                                            <nz-option *ngFor="let country of countryData"
+                                                [nzLabel]="country?.countryName"
+                                                [nzValue]="country?.countryId"></nz-option>
+                                        </nz-select>
+                                        <div *ngIf="submitted && f1.customCountry.errors" class="invalid-feedback">
+                                            <div *ngIf="f1.customCountry.errors.required">
+                                                This fiead is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Custom Clearance Location</label>
+                                    <nz-select class="nz-form-select nz-select-width"
+                                        style="border-bottom: none !important;" nzShowSearch nzAllowClear
+                                        formControlName="clearanceLocation" nzPlaceHolder="Clearance Location">
+                                        <nz-option *ngFor="let place of supplyListData" [nzLabel]="place?.locationName"
+                                            [nzValue]="place?.locationId"></nz-option>
+                                    </nz-select>
+                                    <div *ngIf="submitted && f1.clearanceLocation.errors" class="invalid-feedback">
+                                        <div *ngIf="f1.clearanceLocation.errors.required">
+                                            This fiead is required
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-field-section">
+                                        <label class="form-label">Current Queue</label>
+                                        <input type="text" class="form-control custom-input rounded-0"
+                                            formControlName="currentQueue" placeholder="Current Queue"
+                                            [ngClass]="{'is-invalid': submitted && f1.currentQueue.errors}" />
+                                        <div *ngIf="submitted && f1.currentQueue.errors" class="invalid-feedback">
+                                            <div *ngIf="f1.currentQueue.errors.required">
+                                                This fiead is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label">Bill Of Entry Type</label><br>
+                                    <nz-select class="nz-form-select nz-select-width"
+                                        style="border-bottom: none !important; width: 60% !important;" nzShowSearch
+                                        nzAllowClear formControlName="entryType" nzPlaceHolder="Bill Type">
+                                        <nz-option *ngFor="let place of entryType" [nzLabel]="place?.typeName"
+                                            [nzValue]="place?.systemtypeId"></nz-option>
+                                    </nz-select>
+                                    <div *ngIf="submitted && f1.entryType.errors" class="invalid-feedback">
+                                        <div *ngIf="f1.entryType.errors.required">
+                                            This fiead is required
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Currency</label>
+                                    <nz-select class="nz-form-select nz-select-width"
+                                        style="border-bottom: none !important;" nzShowSearch nzAllowClear
+                                        formControlName="currency" nzPlaceHolder="Currency">
+                                        <nz-option *ngFor="let currency of currencyList"
+                                            [nzLabel]="currency?.currencyShortName"
+                                            [nzValue]="currency?.currencyId"></nz-option>
+                                    </nz-select>
+                                    <div *ngIf="submitted && f1.currency.errors" class="invalid-feedback">
+                                        <div *ngIf="f1.currency.errors.required">
+                                            This fiead is required
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-field-section">
+                                        <label class="form-label">Exchange Rate</label>
+                                        <input type="text" formControlName="exchangeRate"
+                                            class="form-control custom-input rounded-0" placeholder="Exchange Rate"
+                                            [ngClass]="{'is-invalid': submitted && f1.exchangeRate.errors}" />
+                                        <div *ngIf="submitted && f1.exchangeRate.errors" class="invalid-feedback">
+                                            <div *ngIf="f1.exchangeRate.errors.required">
+                                                This fiead is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Filing Type</label>
+                                    <nz-select class="nz-form-select nz-select-width"
+                                        style="border-bottom: none !important;" nzShowSearch nzAllowClear
+                                        formControlName="fillingType" nzPlaceHolder="Filling Type">
+                                        <nz-option *ngFor="let place of fillingType" [nzLabel]="place?.typeName"
+                                            [nzValue]="place?.systemtypeId"></nz-option>
+                                    </nz-select>
+                                    <div *ngIf="submitted && f1.fillingType.errors" class="invalid-feedback">
+                                        <div *ngIf="f1.fillingType.errors.required">
+                                             Filing Type is required
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-field-section">
+                                        <label class="form-label">Cargo Value</label>
+                                        <input type="text" class="form-control custom-input rounded-0"
+                                            formControlName="cargoValue" placeholder="Cargo Value"
+                                            [ngClass]="{'is-invalid': submitted && f1.cargoValue.errors}" />
+                                        <div *ngIf="submitted && f1.cargoValue.errors" class="invalid-feedback">
+                                            <div *ngIf="f1.cargoValue.errors.required">
+                                                This fiead is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-field-section">
+                                        <label class="form-label">Freight Value</label>
+                                        <input type="text" class="form-control custom-input rounded-0"
+                                            formControlName="freightValue" placeholder="Freight Value"
+                                            [ngClass]="{'is-invalid': submitted && f1.freightValue.errors}" />
+                                        <div *ngIf="submitted && f1.freightValue.errors" class="invalid-feedback">
+                                            <div *ngIf="f1.freightValue.errors.required">
+                                                This fiead is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-field-section">
+                                        <label class="form-label">Insurance Value</label>
+                                        <input type="text" class="form-control custom-input rounded-0"
+                                            formControlName="InsuranceValue" placeholder="Insurance Value"
+                                            [ngClass]="{'is-invalid': submitted && f1.InsuranceValue.errors}" />
+                                        <div *ngIf="submitted && f1.InsuranceValue.errors" class="invalid-feedback">
+                                            <div *ngIf="f1.InsuranceValue.errors.required">
+                                                This fiead is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-field-section">
+                                        <label class="form-label">Cargo Gross Weight (KG)</label>
+                                        <input type="text" class="form-control custom-input rounded-0"
+                                            formControlName="GrossWeight" placeholder="Gross Weight"
+                                            [ngClass]="{'is-invalid': submitted && f1.GrossWeight.errors}" />
+                                        <div *ngIf="submitted && f1.GrossWeight.errors" class="invalid-feedback">
+                                            <div *ngIf="f1.GrossWeight.errors.required">
+                                                This fiead is required cvm,./zx
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-field-section">
+                                        <label class="form-label">Cargo Net Weight (KG)</label>
+                                        <input type="text" class="form-control custom-input rounded-0"
+                                            formControlName="NetWeight" placeholder="Net Weight"
+                                            [ngClass]="{'is-invalid': submitted && f1.NetWeight.errors}" />
+                                        <div *ngIf="submitted && f1.NetWeight.errors" class="invalid-feedback">
+                                            <div *ngIf="f1.NetWeight.errors.required">
+                                                This fiead is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-field-section">
+                                        <label class="form-label">Cargo Volume</label>
+                                        <input type="text" class="form-control custom-input rounded-0"
+                                            formControlName="CargoVolume" placeholder="Cargo Volume"
+                                            [ngClass]="{'is-invalid': submitted && f1.CargoVolume.errors}" />
+                                        <div *ngIf="submitted && f1.CargoVolume.errors" class="invalid-feedback">
+                                            <div *ngIf="f1.CargoVolume.errors.required">
+                                                This fiead is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-field-section">
+                                        <label class="form-label">Invoice Value</label>
+                                        <input type="text" class="form-control custom-input rounded-0"
+                                            formControlName="InvoiceValue" placeholder="Invoice Value"
+                                            [ngClass]="{'is-invalid': submitted && f1.InvoiceValue.errors}" />
+                                        <div *ngIf="submitted && f1.InvoiceValue.errors" class="invalid-feedback">
+                                            <div *ngIf="f1.InvoiceValue.errors.required">
+                                                This fiead is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-field-section">
+                                        <label class="form-label">FOB Value</label>
+                                        <input type="number" class="form-control custom-input rounded-0"
+                                            formControlName="FOBValue" placeholder="FOB Value"
+                                            [ngClass]="{'is-invalid': submitted && f1.FOBValue.errors}" />
+                                        <div *ngIf="submitted && f1.FOBValue.errors" class="invalid-feedback">
+                                            <div *ngIf="f1.FOBValue.errors.required">
+                                                This fiead is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-field-section">
+                                        <label class="form-label">CIF Value</label>
+                                        <input type="text" class="form-control custom-input rounded-0"
+                                            formControlName="CIFValue" placeholder="CIF Value" />
+                                        <div *ngIf="submitted && f1.CIFValue.errors" class="invalid-feedback">
+                                            <div *ngIf="f1.CIFValue.errors.required">
+                                                This fiead is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-field-section">
+                                        <label class="form-label">Duty Payment By</label>
+                                        <nz-select class="nz-form-select nz-select-width"
+                                            style="border-bottom: none !important;" nzDisabled nzShowSearch nzAllowClear
+                                            formControlName="PaymentBy" nzPlaceHolder="Payment By">
+                                            <nz-option *ngFor="let customer of partyMasterNameList"
+                                                [nzLabel]="customer?.name"
+                                                [nzValue]="customer?.partymasterId"></nz-option>
+                                            <nz-option *ngIf="showDefault" nzLabel="SHIPEASY"
+                                                nzValue="SHIPEASY"></nz-option>
+                                        </nz-select>
+                                        <div *ngIf="submitted && f1.PaymentBy.errors" class="invalid-feedback">
+                                            <div *ngIf="f1.PaymentBy.errors.required">
+                                                This fiead is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-field-section">
+                                        <label class="form-label">Duty Amount</label>
+                                        <input type="text" class="form-control custom-input rounded-0"
+                                            formControlName="DutyAmount" placeholder="Duty Amount" />
+                                        <div *ngIf="submitted && f1.DutyAmount.errors" class="invalid-feedback">
+                                            <div *ngIf="f1.DutyAmount.errors.required">
+                                                This fiead is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-field-section">
+                                        <label class="mb-0 p-0 form-label"> {{"smartagent.smartAgent.AllformAddedit.startDate" |translate}} <span class="text-danger">*</span></label>
+                                        <mat-form-field appearance="outline" class="custom-date-picker">
+                                            <div class="d-flex align-items-center  w-100">
+                                                <input matInput [matDatepicker]="pickerEtas"
+                                                    formControlName="DateToDuty" class="h-0" [min]="minDate"
+                                                    placeholder="Start Date" />
+                                                <mat-datepicker-toggle matSuffix
+                                                    [for]="pickerEtas"></mat-datepicker-toggle>
+                                            </div>
+                                            <mat-datepicker #pickerEtas></mat-datepicker>
+                                        </mat-form-field>
+                                        <mat-error>
+                                            <div *ngIf="submitted && f1?.DateToDuty?.errors?.required"
+                                                class="set-error-msg">
+                                                This field is required
+                                            </div>
+                                        </mat-error>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="taggle form-check form-switch d-flex align-items-center">
+                                        <input type="checkbox" id="Dutyfree1" name="Dutyfree1" value="Dutyfree1"
+                                            formControlName="Dutyfree">
+                                        <label for="Dutyfree1" class="pl-1 mb-0"> Duty Free</label><br>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-field-section">
+                                        <label class="form-label">Assessable Value</label>
+                                        <input type="text" class="form-control custom-input rounded-0"
+                                            formControlName="AssessableValue" placeholder="Assessable Value" />
+                                        <div *ngIf="submitted && f1.AssessableValue.errors" class="invalid-feedback">
+                                            <div *ngIf="f1.AssessableValue.errors.required">
+                                                This fiead is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-field-section">
+                                        <label class="form-label">Stamp Duty</label>
+                                        <input type="text" class="form-control custom-input rounded-0"
+                                            formControlName="StampDuty" placeholder="Stamp Duty" />
+                                        <div *ngIf="submitted && f1.StampDuty.errors" class="invalid-feedback">
+                                            <div *ngIf="f1.StampDuty.errors.required">
+                                                This fiead is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 wrap-form-action pb-4 mt-4">
+                                    <div class="form-group wrap-form-action">
+                                        <button class="btn1 btn-lg float-end"  (click)="closeModal()" type="submit">
+                                            {{ "common.cancel" | translate }}
+                                        </button>
+                                        <button *ngIf="this.currentUrl !== 'show'"
+                                            class="btn btn-outline-primary btn-lg float-end"
+                                            style="padding: 4px 19px !important;" (click)="ngOnSave()" type="submit">
+                                            <ng-container *ngIf="!this.CurrentCustomId; else commoditymst">
+                                                {{ 'common.save' | translate }}
+                                            </ng-container>
+                                            <ng-template #commoditymst>
+                                                {{ 'common.update' | translate }}
+                                            </ng-template>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
+
+<div class="modal right fade" id="myModal2Doc" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title font" id="myModalLabel2"></h4>
+            </div>
+            <div class="title font font2">Upload Document</div>
+            <div class="modal-body">
+                <form [formGroup]="docForm">
+                    <div class="upload-btn-wrapper">
+                        <div class="btns">Click or drag files to upload
+                            <input class="form-control custom-input" type="file" id="formFileMultiple"
+                                (change)="onFileSelected($event)" formControlName="Doc"
+                                [ngClass]="{ 'is-invalid': submitted && f1?.Doc?.errors }">
+                        </div>
+                        <div *ngIf=this.doc?.name class="text-center">{{this.doc?.name}}
+                        </div>
+                    </div>
+                    <button *ngIf=this.doc?.name class="btn btn-outline-primary btn-lg float-end"
+                        data-bs-dismiss="modal" [disabled]="type ==='document'?  checkDocUploaded() : docForm.invalid"
+                        type="submit" (click)="uploadDocument()">Upload Document
+                    </button>
+                </form>
+                <div class="mt-5">
+                    <div *ngFor="let doc of customeDocument" class="mt-2">
+                        <div class="d-flex justify-content-between align-items-baseline w-100">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-file-earmark-break" style="color: #007BFF; font-weight: bold; margin-right: 8px;"></i>
+                                <div>
+                                    <span>{{doc?.documentURL}}</span> <br>
+                                    <span>{{doc?.updatedOn | date :'M/d/yy, h:mm a' | uppercase}} By {{doc?.createdBy | lowercase}}</span>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <span class="mtop" nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}">
+                                    <a><em class="bi bi-eye globally-change-icon-color pl-2" (click)="documentPreview(doc)"></em></a>
+                                </span>
+                                <span>
+                                    <i (click)="downloadFile(doc)" class="bi bi-download pl-2"></i>
+                                </span>
+                                <span class="docTab" *ngIf="doc?.documentURL">
+                                    <a (click)="deleteFile(doc)">
+                                        <i class="bi bi-trash color-pencil-red pl-2"></i>
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                        <hr *ngIf="!last" class="my-3" style="border-color: #514040;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal right fade" id="myModal0" tabindex="-1" role="dialog" aria-labelledby="myModalLabel0"  #myModal>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title font" id="myModalLabel0">{{popUptext}}</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="addForm">
+                    <div class="row">
+                        <div class="col-md-12 ">
+                            <div class="col-md-6 my-2">
+                                <label class="mb-0 p-0 form-label">Event State</label>
+                            </div>
+                            <div class="row ml-3 my-2">
+                                <div class="col-md-4 chk">
+                                    <input type="radio" id="date" value="ActualDate" formControlName="eventType" />
+                                    <label class="form-label mx-2">Actual Date </label>
+                                </div>
+                                <div class="col-md-4 chk">
+                                    <input type="radio" id="date" value="EstimatedDate" formControlName="eventType" />
+                                    <label class="form-label mx-2">Estimated Date</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 my-2">
+                                <label class="mb-0 p-0 form-label">Event Date & Time</label>
+                                <nz-date-picker nzShowTime class="form-select custom-input"
+                                    nzFormat="dd-MM-yyyy HH:mm:ss" formControlName="eventDate"  
+                                    class="w-100" style="width: 100%;">
+                                </nz-date-picker>
+                            </div>
+                            <div class="col-md-12 my-2" *ngIf="popUptext !== 'Checklist Shared with Customer' && popUptext !== 'Shipping Bill Filled'">
+                                <div class="upload-btn-wrapper">
+                                    <div class="btns">Click or drag files to upload
+                                        <input class="form-control custom-input" type="file" id="formFileMultiple"
+                                            (change)="onFileSelected1($event)" formControlName="Doc"
+                                            [ngClass]="{ 'is-invalid': submitted && f2?.Doc?.errors }">
+                                    </div>
+                                    <div *ngIf="this.doc1?.name || f2.documentURL.value" class="text-center">{{this.doc1?.name || f2.documentURL.value}}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 my-2">
+                                <label class="mb-0 p-0 form-label">Remarks</label>
+                                <input class="form-control custom-input" formControlName="remark" type="textarea">
+                            </div>
+
+                            <!-- <div class="col-md-12 d-flex align-items-center my-2">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="flexSwitchCheckChecked" formControlName="notification">
+                                    <label class="form-check-label" for="flexSwitchCheckChecked">Send Notification</label>
+                                </div>
+                            </div> -->
+
+                                          
+                                <div class="col-md-12 d-flex align-items-center my-2">
+                                    <input formControlName="notification" id="flexSwitchCheckChecked" type="checkbox">
+                                    <label class="form-label ml-1"  for="flexSwitchCheckChecked"> Send Notification </label>
+                                </div>
+
+                            <hr>
+                            <div class="col-md-12 my-2 text-end">
+                                <div class="d-flex justify-content-end">
+                                    <button class="btn btn-outline-primary"  data-dismiss="modal" aria-label="Close">Cancel </button>
+                                    <button class="btn btn-outline-primary"   (click)="updateCustom()">Submit</button>
+                                </div> 
+                            </div> 
+                        </div>
+                    </div>
+
+                </form>
+                <div class="mt-5">
+                    <!-- <div *ngFor="let doc of customeDocument" class="mt-2">
+                        <div class="d-flex align-items-baseline w-100">
+                            <div> <span> {{doc?.documentURL}}</span> <br> <span>{{doc?.updatedOn | date :'M/d/yy, h:mm a
+                                    ' | lowercase}} By {{doc?.createdBy | lowercase}}</span></div>
+                            <div>
+                                <span class="mtop" nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}"><a>
+                                        <em class="bi bi-eye globally-change-icon-color pl-2"
+                                            (click)="documentPreview(doc)"></em></a>
+                                </span>
+                                <span><i (click)="downloadFile(doc)" class="bi bi-download pl-2"></i></span>
+                                <span class="docTab" *ngIf="doc?.documentURL"><a (click)="deleteFile(doc)"><i
+                                            class="bi bi-trash color-pencil-red pl-2"></i></a></span>
+                            </div>
+                        </div>
+
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-container *ngIf="customIdRow">
+    <div class="modal right fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel4" #myModal1 >
+        <app-milestone [batchId]="customIdRow" [type]="'Custom'"
+          (batchStatusUpdate)="updateBatchStatus($event)" (closeModal1)="closeModal1()"></app-milestone>
+      </div>
+</ng-container>

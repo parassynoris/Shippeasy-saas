@@ -1,0 +1,40 @@
+
+.wrap-form-field{
+  margin-top: 23px;
+  .main-h{
+    font-size: 12px;
+    margin-bottom: 15px;
+    color: var(--link-text-color);
+  }
+}
+.wrap-table-area{
+  border-top: 1px solid #e1e0e0;
+    margin-top: 47px;
+}
+@media only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px) {
+/*
+Label the data
+*/
+td:nth-of-type(1):before {
+  content: "Mark & NOS Container / Seals";
+}
+td:nth-of-type(2):before {
+  content: "No/Kind Of Package";
+}
+td:nth-of-type(3):before {
+  content: "Gross Weight Corgo";
+}
+td:nth-of-type(4):before {
+  content: "Tare";
+}
+td:nth-of-type(5):before {
+  content: "Messurement";
+}
+td:nth-of-type(6):before {
+  content: "Description";
+}
+td:nth-of-type(7):before {
+  content: "Action";
+}
+}

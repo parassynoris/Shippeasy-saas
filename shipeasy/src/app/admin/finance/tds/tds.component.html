@@ -1,0 +1,250 @@
+<div class="table-header-area" style="display: flow-root;">
+  <div class="col-md-3 pt-2">
+    <label class="form-label">Customer</label>
+    <nz-select class="form-select" nzShowSearch nzAllowClear [(ngModel)]="customer" (ngModelChange)="onGenerateReport()"
+      [ngClass]="{'is-invalid': submitted && f1.typeCategory.errors}" nzPlaceHolder="Customer">
+      <nz-option *ngFor="let data of customerList" [nzLabel]="data.name" [nzValue]="data.partymasterId"></nz-option>
+    </nz-select>
+  </div>
+
+  <div class="col-md-12 pb-2">
+    <button class="btn btn-outline-primary float-end" (click)="exportToExcel(dataSource.data)">
+      Export To Excel
+    </button>
+
+    <button class="btn btn-outline-primary float-end" (click)="openPDF()">
+      Export To PDF
+    </button>
+  </div>
+
+  <div class="col-md-3 pt-2">
+    <label class="form-label">
+     Date Range
+    </label>
+    <nz-range-picker style="height: 30px;"  class="form-select custom-input" nzFormat="dd-MM-yyyy" [(ngModel)]="date" (ngModelChange)="onGenerateReport()"
+      name="date" [nzDisabledDate]="disableFutureDates">
+    </nz-range-picker>
+  </div>
+  <div class="d-flex">
+  <div class="col-md-3 ">
+    <label class="form-label">
+      Total Credit Amount
+    </label>
+    <input type="text" class="form-control custom-input" [(ngModel)]="totalCredit" readonly>
+  </div>
+  
+  <div class="col-md-3 ">
+    <label class="form-label">
+      Total Debit Amount
+    </label>
+    <input type="text" class="form-control custom-input" [(ngModel)]="totalDebit" readonly>
+  </div>
+  
+  <div class="col-md-3 ">
+    <label class="form-label">
+      TDS Balance
+    </label>
+    <input type="text" class="form-control custom-input" [(ngModel)]="tdsBalance" readonly>
+  </div>
+
+    <div class="col-md-3 d-flex align-items-end mb-1">
+      <nz-select class="form-select" nzShowSearch nzAllowClear (ngModelChange)="openModal($event,Addtds)"
+        nzPlaceHolder="Deposit/Withdrawal" [(ngModel)]="selectBankTransfer">
+        <nz-option nzDisabled nzLabel="Deposit/Withdrawal" nzValue=""></nz-option>
+        <nz-option nzLabel="TDS Bank to Cash Transfer" nzValue="tdstocash"></nz-option>
+        <nz-option nzLabel="TDS Bank to Bank Transfer" nzValue="tdstobank"></nz-option>
+      </nz-select>
+  </div>
+</div>
+</div>
+
+<ng-template #Addtds let-modal>
+  <div class="modal-content nz-allSelect">
+    <div class="modal-headers mt-2">
+      <h4 class="modal-title">
+        <ng-container>
+          Bank To Bank Transfer
+        </ng-container>
+      </h4>
+      <button type="button" class="btn-close shadow-none float-end" (click)="cancel()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <div class="wrap-form-field padding-space">
+        <form class="row g-2" [formGroup]="addtdsform">
+
+          <div class="col-md-6">
+            <label for="" class="form-label">From<span class="text-danger">*</span></label>
+            <nz-select nzDisabled class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="From"
+              formControlName="from" [ngClass]="{ 'is-invalid': submitted1 && f1.from.errors }">
+              <nz-option nzLabel="TDS Bank" nzValue="TDS Bank"></nz-option>
+            </nz-select>
+            <div *ngIf="submitted1 && f1.from.errors" class="invalid-feedback">
+              <div *ngIf="f1.from.errors.required">
+                This field is required.
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="" class="form-label">TO<span class="text-danger">*</span></label>
+            <nz-select [nzDisabled]="selectBankTransfer == 'banktocash'" class="form-select" nzShowSearch nzAllowClear
+              nzPlaceHolder="TO" formControlName="to" [ngClass]="{ 'is-invalid': submitted1 && f1.to.errors }">
+              <nz-option nzLabel="Cash" nzValue="Cash"></nz-option>
+              <nz-option *ngFor="let data of  bankList" [nzLabel]="data.bankName" [nzValue]="data.bankId"></nz-option>
+            </nz-select>
+            <div *ngIf="submitted1 && f1.to.errors" class="invalid-feedback">
+              <div *ngIf="f1.to.errors.required">
+                This field is required.
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Amount<span class="text-danger">*</span></label>
+            <input class="form-control custom-input" type="number" formControlName="amount" placeholder="Enter Amount"
+              [ngClass]="{ 'is-invalid': submitted1 && f1.amount.errors }" />
+            <div *ngIf="submitted1 && f1.amount.errors" class="invalid-feedback">
+              <div *ngIf="f1.amount.errors.required">
+                This field is required.
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Date<span class="text-danger">*</span></label>
+            <mat-form-field appearance="outline" class="custom-date-picker">
+              <input matInput [matDatepicker]="datePicker" formControlName="date" placeholder="Select Date" />
+              <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+              <mat-datepicker #datePicker></mat-datepicker>
+            </mat-form-field>
+            <mat-error>
+              <div class="set-error-msg" *ngIf="submitted1 && f1?.date?.errors?.required">Date is required</div>
+            </mat-error>
+          </div>
+
+          <!-- <div class="col-md-12">
+              <div class="upload-btn-wrapper">
+                <div class="btns">Click or drag files to upload Document
+                  <input class="form-control custom-input" type="file" id=""
+                    (change)="onFileSelected($event)">
+                </div>
+              </div>
+          </div> -->
+
+          <div class="form-group wrap-form-action mt-4">
+            <button class="btn1 btn-lg float-end" (click)="transferBankAmount()" type="button">
+              {{ "common.save" | translate }}
+            </button>
+
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+<div class="table-card">
+  <div class="table-design example-container mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort class="" summary="agreement">
+
+      <ng-container matColumnDef="#">
+        <th scope="col" mat-header-cell *matHeaderCellDef>
+          #
+        </th>
+        <td mat-cell *matCellDef="let element;let i = index">
+          {{element?.id}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="transactionId">
+        <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+          Transaction Id
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element?.transactionId }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="createdOn">
+        <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+          Date
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element?.createdOn | date:'dd/MM/yyyy hh:mm a' }} 
+        </td>
+      </ng-container>      
+      <ng-container matColumnDef="partyName">
+        <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+          Party Name </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element?.partyName }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="tdsAmount">
+        <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header class="text-end">
+          TDS Amount
+        </th>
+        <td mat-cell *matCellDef="let element" style="text-align: end !important;">
+          {{ (element?.tdsAmount || 0)  | number : '1.2-2' | customCurrency: currentAgent?.currency?.currencyCode}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="tdsType">
+        <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+          Amount Type
+        </th>
+        <td mat-cell *matCellDef="let element" [ngClass]="{
+          'red-text': element?.tdsType === 'Debit',
+          'green-text': element?.tdsType === 'Credit'
+          }">
+          {{ element?.tdsType }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="invoiceData.invoiceNo">
+        <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+          Invoice No.
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.invoiceData?.[0]?.invoiceNo }}</td>
+      </ng-container>
+      
+      
+      <ng-container matColumnDef="transactionType">
+        <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+          Transaction Type
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element?.transactionType }}
+        </td>
+      </ng-container>
+      
+      <ng-container matColumnDef="netAmount">
+        <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header class="text-end">
+          Amount IN/OUT
+        </th>
+        <td mat-cell *matCellDef="let element" [ngClass]="{
+          'red-text': element?.tdsType === 'Debit',
+          'green-text': element?.tdsType === 'Credit'
+          }">
+          <i *ngIf="element?.tdsType === 'Debit'" class="bi bi-dash"></i>
+          <i *ngIf="element?.tdsType === 'Credit'" class="bi bi-plus"></i>
+          {{ (element?.netAmount || 0)  | number : '1.2-2' | customCurrency: currentAgent?.currency?.currencyCode }}
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+          <span *ngIf="loaderService?.getloadingcircle()">{{_gc?.LOADER_TEXT}}</span>
+          <span *ngIf="!loaderService?.getloadingcircle() && !dataSource?.data?.length">No data
+            available</span>
+        </td>
+      </tr>
+    </table>
+
+  </div>
+  <div [ngClass]="{'display-none' : dataSource.filteredData.length < 10}">
+    <mat-paginator [pageSizeOptions]="pagenation" showFirstLastButtons aria-label="Select page">
+    </mat-paginator>
+  </div>
+</div>

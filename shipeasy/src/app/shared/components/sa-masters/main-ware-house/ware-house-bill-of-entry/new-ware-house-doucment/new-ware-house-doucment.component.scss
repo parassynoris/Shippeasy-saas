@@ -1,0 +1,75 @@
+@import '../../../../../../../assets/styles/mixins/global.scss';
+ 
+
+.table-responsive {
+  table {
+    border-collapse: collapse;
+    width: -webkit-fill-available;
+  }
+
+  margin-top: 15px;
+
+  tbody,
+  td,
+  tfoot,
+  th,
+  thead,
+  tr {
+    border-color: inherit;
+    border-style: solid;
+    border-width: 0;
+    border: 1px solid #ced4da !important;
+    padding: 7px;
+    color: var(--theme-black-320) !important;
+    background-color: var(--theme-light-bg) !important;
+  }
+
+  a {
+    color: #181824;
+    text-decoration: none;
+    background-color: transparent;
+    outline: 0;
+    cursor: pointer;
+    transition: color .3s;
+    -webkit-text-decoration-skip: objects;
+    em{
+      font-size: 12px;
+      padding: 3px;
+    }
+  }
+}
+
+::ng-deep {
+
+  .cdk-overlay-container,
+  .cdk-overlay-pane {
+    z-index: 2000 !important;
+  }
+}
+
+@media only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px) {
+  td:nth-of-type(1):before {
+    content: "Document Name";
+  }
+
+  td:nth-of-type(2):before {
+    content: "Document Type";
+  }
+
+  td:nth-of-type(3):before {
+    content: "Date Uploaded";
+  }
+
+  td:nth-of-type(4):before {
+    content: "Action";
+  }
+}
+::ng-deep {
+
+  .cdk-overlay-container,
+  .cdk-overlay-pane {
+    z-index: 2000 !important;
+  }
+ 
+}

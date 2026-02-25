@@ -1,0 +1,104 @@
+<div class="table-with-gheading">
+  <div class="wrap-table-area wrap-form-field  ">
+    <div class="row">
+      <div class="col-md-12 mb-3">
+        <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2">
+          <!-- Uncommented and modified buttons with additional conditions -->
+          <div class="mt-2" *ngIf="!isShow && buttonDisabled">
+            <a class="new-action" (click)="mail('add', '', 'document')">
+              <em class="bi bi-upload"></em> Share Document
+            </a>
+          </div>
+          
+          <div class="header-right" *ngIf="buttonDisabled && currentLogin !== 'transporter'">
+            <a (click)="open('add', '', 'document')" class="max-con new-action btn btn-outline-primary btn-sm rounded-pill">
+              Upload Document
+            </a>
+          </div>
+          <div class="header-right" *ngIf="buttonDisabled && currentLogin === 'transporter'">
+            <a (click)="uploadfile()" class="max-con new-action btn btn-outline-primary btn-sm rounded-pill">
+              Upload Document
+            </a>
+          </div>
+          
+          <div class="header-right" *ngIf="!isShow && buttonDisabled && currentLogin !== 'transporter'">
+            <a (click)="open('add', '', 'buyer')" class="max-con new-action btn btn-outline-primary btn-sm rounded-pill">
+              Upload Buyer Document
+            </a>
+          </div>
+        </div>
+        
+      </div>
+      <div class="col-md-12">
+        <div class="table-design mb-5">
+          <table aria-describedby="mytable" class="gfg">
+            <thead>
+              <tr class="field-name"> 
+                <th class="w-25" scope="col">{{ 'smartagent.portenquiry.document.documentType' | translate }}</th>
+                <th scope="col">{{ 'smartagent.portenquiry.document.documentName' | translate }}</th>
+                <th scope="col">{{ 'smartagent.portenquiry.document.date' | translate }}</th>
+                <th scope="col">{{ 'smartagent.portenquiry.document.lastUpdatedby' | translate }}</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let doc of documentData;let i = index">
+               
+                <td>{{doc?.documentType}}</td>
+                <td>{{doc?.documentName}}</td>
+                <td>{{doc?.updatedOn | date : 'dd-MM-yyyy'}}</td>
+                <td>{{doc?.updatedBy}}</td>
+                <td class="action-field">
+                  <span class="mtop" nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}"><a >
+                      <em class="bi bi-eye globally-change-icon-color" (click)="documentPreview(doc)"></em></a>
+                  </span>
+                  <span class="mtop" nz-tooltip nzTooltipTitle="{{ 'common.download' | translate }}"><a
+                      >
+                      <em class="bi bi-download" (click)="downloadFile(doc)"></em></a>
+                  </span>
+                  <span *ngIf="!isShow && buttonDisabled && doc?.documentType!=='MSDS'" class="mtop" nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}"><a >
+                      <em class="bi bi-trash color-pencil-red" (click)="removeRow(doc,content1,i)"></em></a>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class=" no-data-availble" *ngIf="documentData?.length === 0">
+            {{'common.no_data' | translate}}
+          </div>
+        </div>
+       
+      </div>
+    </div>
+    <div class="form-group wrap-form-action btn-onscreen" *ngIf="batch">
+      <button class="btn1 float-end " type="submit" (click)="onClose()">
+        {{ 'common.cancel' | translate }}
+      </button>
+    
+    </div>
+  </div>
+  </div>
+  
+  
+  
+  
+  <ng-template #content1 let-c="close" let-d="dismiss">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+      </div>
+      <div class="modal-body mt-4">
+        <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2"> </em> <span
+          class=" text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+      </div>
+      <div class="modal-footer">
+        <div class="text-center">
+          <button type="button" class="btn btn-secondary  btn-sm me-3" (click)="d('Cross click')">No</button>
+          <button type="button" class="btn btn-danger  btn-sm" (click)="c('yes')">Yes</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <app-dummy></app-dummy>
+    </div>
+  </ng-template>

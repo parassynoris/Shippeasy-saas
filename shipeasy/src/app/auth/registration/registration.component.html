@@ -1,0 +1,263 @@
+<div class="login-container">
+    <div></div>
+    <div class="container outer-box my-5">
+        <div class="login-box ">
+            <h2>Sign Up</h2>
+            <p class="text-start">Make your booking experience excellent.</p>
+            <form [formGroup]="smartAgentForm">
+                <div class="row g-3 text-start mb-3">
+                    <div class="col-md-12">
+                        <label for="Vendor" class="form-label">Company Name<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control custom-input" formControlName="smartAgent" id="Vendor "
+                            placeholder="Company Name" [ngClass]="{ 'is-invalid': submitted && f.smartAgent.errors }" />
+                        <div *ngIf="submitted && f.smartAgent.errors" class="invalid-feedback">
+                            <div *ngIf="f.smartAgent.errors.required">
+                                Company Name is required
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="Vendor" class="form-label">First Name<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control custom-input" formControlName="firstName" id="Vendor "
+                            placeholder="First Name" [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" />
+                        <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
+                            <div *ngIf="f.firstName.errors.required">
+                                First Name is required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="Vendor" class="form-label">Last Name<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control custom-input" formControlName="lastName" id="Vendor "
+                            placeholder="Last Name" [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" />
+                        <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
+                            <div *ngIf="f.lastName.errors.required">
+                                Last Name is required
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="Country" class="form-label">{{ "Country" |
+                            translate
+                            }}<span class="text-danger">*</span></label>
+                        <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear
+                            nzPlaceHolder="Country" formControlName="country"
+                            [ngClass]="{'is-invalid': submitted && f.country.errors}" (ngModelChange)="getStateList()">
+                            <nz-option *ngFor="let country of countryList" [nzLabel]="country?.countryName"
+                                [nzValue]="country?.countryId"></nz-option>
+                        </nz-select>
+
+                        <div *ngIf="submitted && f.country.errors" class="invalid-feedback">
+                            <div *ngIf="f.country.errors.required">
+                                {{
+                                "Country is required"
+                                | translate
+                                }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="State" class="form-label">{{ "State" |
+                            translate
+                            }}<span class="text-danger">*</span></label>
+
+                        <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear
+                            nzPlaceHolder="State" formControlName="state" (ngModelChange)="getCityList()"
+                            [ngClass]="{'is-invalid': submitted && f.state.errors}">
+                            <nz-option *ngFor="let state of stateList" [nzLabel]="state?.typeDescription"
+                                [nzValue]="state?.stateId"></nz-option>
+                        </nz-select>
+                        <div *ngIf="submitted && f.state.errors" class="invalid-feedback">
+                            <div *ngIf="f.state.errors.required">
+                                {{
+                                "State is required"
+                                | translate
+                                }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="City" class="form-label">{{ 'City' |
+                            translate }} </label>
+                        <!-- <input type="text" class="form-control custom-input" formControlName="city" id="Vendor "
+                    placeholder="City Name" [ngClass]="{ 'is-invalid': submitted && f.city.errors }" />  -->
+
+                        <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear
+                            nzPlaceHolder="City" formControlName="city"
+                            [ngClass]="{'is-invalid': submitted && f.city.errors}">
+                            <nz-option *ngFor="let city of cityList" [nzLabel]="city?.cityName"
+                                [nzValue]="city?.cityId"></nz-option>
+                        </nz-select>
+                        <div *ngIf="submitted && f.city.errors" class="invalid-feedback">
+                            <div *ngIf="f.city.errors.required">
+                                {{
+                                "City is required"
+                                | translate
+                                }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="Primaryphone" class="form-label">{{
+                            "Phone No."
+                            | translate
+                            }}<span class="text-danger">*</span></label>
+                        <div class="input-group ">
+                            <div class="col">
+                                <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear
+                                    formControlName="primaryCountryCode"
+                                    [ngClass]="{'is-invalid': submitted && f.primaryCountryCode.errors}">
+                                    <nz-option *ngFor="let callingCode of callingCodeList"
+                                        [nzLabel]="callingCode?.countryPhoneCode"
+                                        [nzValue]="callingCode?.countryPhoneCode"></nz-option>
+                                </nz-select>
+                                <div *ngIf="submitted && f.primaryCountryCode.errors" class="invalid-feedback"
+                                    style="position: absolute">
+                                    <div *ngIf="f.primaryCountryCode.errors.required">
+                                        {{
+                                        "Code is required"
+                                        | translate
+                                        }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col border-start">
+                                <input type="number" maxlength="11" [ngClass]="{
+                        'is-invalid': submitted && f.primaryNo.errors}"  placeholder="Primary Phone No"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    class="form-control custom-input" formControlName="primaryNo" value="" />
+                                <div *ngIf="submitted && f.primaryNo.errors" class="invalid-feedback"
+                                    style="position: absolute">
+                                    <div *ngIf="f.primaryNo.errors.required">
+                                        {{
+                                        "Phone No. is required"
+                                        | translate
+                                        }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label for="Primaryemailid" class="form-label">{{
+                            "Email"
+                            | translate
+                            }}<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control custom-input" formControlName="primaryEmailId"
+                            id="Primaryemailid" placeholder="Primary Email Id"
+                            [ngClass]="{ 'is-invalid': submitted && f.primaryEmailId.errors }" />
+                        <div *ngIf="submitted && f.primaryEmailId.errors" class="invalid-feedback">
+                            <div *ngIf="f.primaryEmailId.errors.required">
+                                {{
+                                "Email is required"
+                                | translate
+                                }}
+                            </div>
+                            <div *ngIf="f.primaryEmailId.errors.pattern">
+                                {{ "error.err_valid_email" | translate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="localCurrency" class="form-label">{{
+                            "Local Currency"
+                            | translate
+                            }} <span class="text-danger">*</span></label>
+                        <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear
+                            nzPlaceHolder="Local Currency" formControlName="currency"
+                            [ngClass]="{'is-invalid': submitted && f.currency.errors}">
+                            <nz-option *ngFor="let currency of currencyList" [nzLabel]="currency?.currencyShortName"
+                                [nzValue]="currency?.currencyId"></nz-option>
+                        </nz-select>
+
+
+                        <div *ngIf="submitted && f.currency.errors" class="invalid-feedback">
+                            <div *ngIf="f.currency.errors.required">
+                                {{
+                                "Local Currency"
+                                | translate
+                                }} is required
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="row mt-4">
+                    <div class="text-center">
+                        <button class="btn btn-outline-primary-save" (click)="onSave()">Register Now</button>
+                        <button class="btn btn-outline-primary" (click)="backk()">Sign In</button>
+                    </div>
+                </div> -->
+
+                <button mat-raised-button  class="full-width bg-color" type="submit" (click)="onSave()">Create Account</button>
+                <!-- <div class="alternative-login">
+                  <p>Or continue with</p>
+                  <button mat-raised-button (click)="signInWithGoogle()" ><img class="height-14" src="../../../assets/img/icons/google.png"/> Google</button>
+                  <button mat-raised-button (click)="signInWithMicrosoft()"><img class="height-14" src="../../../assets/img/icons/officeIcon.png"/> Micro Office</button>
+                </div> -->
+
+                <div class="sign-up">
+                  <p >Already have an account?<a (click)="backk()"> Sign In</a></p>
+                </div>
+
+            </form>
+        </div>
+        <div class="image-container">
+            <div class="logo-alignment">
+              <img src="assets/img/shippeasy-new-logo.png"/>
+            </div>
+            <div class="feature-card">
+              <div class="service">
+                <div class="img-div">
+                  <img src="assets/img/icons/tracking.png"/>
+                </div>
+                <div> 
+                  <div class="header">Track and Trace</div>
+                  <div class="text"> Real-Time Tracking in all modes online</div>
+                </div>
+              </div>
+              <div class="service">
+                <div class="img-div">
+                  <img src="assets/img/icons/database-file.png"/>
+                </div>
+                <div>
+                  <div class="header">Smart Documentation</div>
+                  <div class="text">Eliminate endless back-and-forth emails</div>
+                </div>
+              </div>
+              <div class="service">
+                <div class="img-div">
+                  <img src="assets/img/icons/filling-form.png"/>
+                </div>
+                <div>
+                  <div class="header">IGM / EGM Manifestation Automation</div>
+                  <div class="text">Tired of entering BL data into system</div>
+                </div>
+              </div>
+              <div class="service">
+                <div class="img-div">
+                  <img src="assets/img/icons/engineering.png"/>
+                </div>
+                <div>
+                  <div class="header">EDI Integration</div>
+                  <div class="text">Paper based document replaced by electronic fromat</div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+    <div class="footer pb-3">
+        <div class="center-text">
+          <a (click)="onOpenContact()">Contact us & Feedback</a>
+          <a (click)="onOpenHelp()">Help</a>
+          <a (click)="onOpenSupport()">Privacy</a>
+        </div>
+      </div>
+</div>

@@ -1,0 +1,181 @@
+<ng-container *ngIf="currentUrl === 'credit'">
+
+
+  <div class="table-header-area">
+    <div>
+      <table-filters [TDP]="[false, false, true, true]" (filterInput)="applyFilter($event)"
+        (onClickExport)="export()">
+      </table-filters>
+    </div>
+    <div class="header-right"  >
+
+      <a appAccessControl featureCode="['STFC01']" accessType="add"   class="max-con new-action  btn btn-outline-primary btn-sm rounded-pill"
+      (click)="onOpenCredit()">Add New Credit</a>
+    </div>
+  </div>
+
+  <div class="table-card">
+  <div class="table-design example-container mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort class="" summary="agreement">
+    
+      <ng-container matColumnDef="#"  >
+        <th scope="col" mat-header-cell *matHeaderCellDef  >
+          # <em class="custom-tooltip" [attr.title]="'Toggle Filters'"  (click)="toggleFilters = !toggleFilters" class="bi bi-search"></em>
+        </th>
+        <td mat-cell *matCellDef="let element;let i = index">
+          {{ element?.id}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="creditNoteNo"  >
+        <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+          Credit Note No.
+        </th>
+        <td class="text-end" mat-cell *matCellDef="let element">
+          <a (click)="navigateToNewTab(element)">{{ element?.creditNoteNo }}</a> 
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="batchNo"  >
+        <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+          Job No.
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element?.batchNo }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="invoiceNumber"  >
+        <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+         Invoice No.
+        </th>
+        <td class="text-end" mat-cell *matCellDef="let element">
+          {{ element?.invoiceNumber }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="creditDate"  >
+        <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+          Credit Date
+        </th>
+        <td class="text-end" mat-cell *matCellDef="let element">
+          {{ element?.creditDate | date :'dd-MM-yyyy'}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="creditToName"  >
+        <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+          Credit To Name
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element?.creditToName  }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="amountReceived"  >
+        <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+          Amount Received
+        </th>
+        <td class="text-end" mat-cell *matCellDef="let element">
+          {{ (element?.amountReceived  || 0) | number : '1.2-2'| customCurrency: currentAgent?.currency?.currencyCode }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="invoiceTaxAmount"  >
+        <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+           Tax Amount
+        </th>
+        <td class="text-end" mat-cell *matCellDef="let element">
+          {{ element?.invoiceTaxAmount  | number : '1.2-2'| customCurrency: currentAgent?.currency?.currencyCode }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="invoiceAmount"  >
+        <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+           Invoice Amount
+        </th>
+        <td class="text-end" mat-cell *matCellDef="let element">
+          {{ element?.invoiceAmount  | number : '1.2-2'| customCurrency: currentAgent?.currency?.currencyCode }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="action"  >
+        <th scope="col" id="action" class="charterersPdfHead" mat-header-cell   *matHeaderCellDef >
+          {{ 'Actions' }}
+        </th>
+        <td class="borderBottom" mat-cell *matCellDef="let element" >
+          <!-- <div class="table-action">
+    </div> --> 
+            
+              <em class="bi bi-three-dots dots-color-change cursor-pointer wrap-batch1  border px-1 em-icon">
+                <div class="wrap-open">
+                  <div class="wrap-2">
+                  <div class="wrap-inside" appAccessControl featureCode="['STFC01']" accessType="update">
+                    <span  class="mtop">
+                      <a (click)="onEditCredit(element.creditdebitnoteId)"><em class="bi bi-pencil color-pencil-red"></em> Edit</a>
+                    </span>
+                  </div>
+                  <div class="wrap-inside"appAccessControl featureCode="['STFC01']" accessType="view">
+                    <span  ><a (click)="onEditCredit(element.creditdebitnoteId,'show')"><em class="bi bi-eye globally-change-icon-color"></em> View</a></span>
+                  </div>
+                  </div>
+                   
+                </div>
+              </em> 
+        </td>
+      </ng-container>
+      <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index" [matColumnDef]="headersFilter">
+        <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+          <div  class="filters-container" [class.animate]="!toggleFilters"  > 
+            <!-- <em *ngIf="i == 0" class="custom-tooltip" [attr.title]="'Clear Filters'" (click)="clearFilters();toggleFilters = !toggleFilters" class="bi bi-x-circle"></em> -->
+            <div *ngIf="i > 0 && i < displayedColumns1.length - 1" appearance="outline">
+              <input type="date" *ngIf="headersFilter == 'creditDate_'+i" class="form-control input-txt"  placeholder="Press 'Enter' to search" [(ngModel)]="filtersModel[i]" (change)="searchColumns()" >
+               
+              <input type="text" *ngIf="headersFilter != 'creditDate_'+i && headersFilter != 'invoiceDueDate_'+i" class="form-control input-txt"  placeholder="Press 'Enter' to search" [(ngModel)]="filtersModel[i]" (keyup.enter)="searchColumns()" >
+                      </div>
+            <em *ngIf="i == displayedColumns1.length - 1" class="custom-tooltip" [attr.title]="'Clear Filters'" (click)="clearFilters();toggleFilters = !toggleFilters" class="bi bi-x-circle"></em>
+          </div>
+        </th>
+      </ng-container>
+
+
+      <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-header-row class="no-default-height"  *matHeaderRowDef="displayedColumns1"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+          <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+          <span *ngIf="!loaderService?.isLoadingcircle && !dataSource?.data?.length">No data available</span>
+        </td>
+      </tr>
+    </table>
+   
+  </div>
+  <div [ngClass]="{'display-none' : toalLength < 20}">
+    <mat-paginator [length]="toalLength" [pageSize]="pageSize" [pageIndex]="pageNumber-1"
+      (page)="onPageChange($event)"  [pageSizeOptions]="_gc.PAGINATOR_OPTIONS" showFirstLastButtons></mat-paginator>
+  </div>
+</div>
+</ng-container>
+<ng-container *ngIf="currentUrl === 'add' || currentUrl === 'edit' || currentUrl === 'show'">
+  <app-new-credit (onCloseCreditSection)="onCloseNew()" [isType]="currentUrl"></app-new-credit>
+</ng-container>
+
+<ng-template #deleteInvoice let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body mt-4">
+      <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2">
+      </em>
+      <span class="text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+          {{ "common.no" | translate }}
+        </button>
+        <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+          {{ "common.yes" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>

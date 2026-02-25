@@ -1,0 +1,35 @@
+
+.table-design { 
+  min-height: calc(100vh - 300px);
+  max-height: calc(100vh - 300px);
+}
+.ni{
+  color: var(--link-text-color);
+  padding: 0px 0px 0px 1325px;
+}
+
+th{
+  text-transform: capitalize;
+}
+
+.tableFixHead td:nth-child(2),
+.tableFixHead th:nth-child(2) {
+  position: sticky;
+  left: 106px;
+  z-index: 1;
+  background-color: white;
+}
+.tableFixHead td:nth-child(3),
+.tableFixHead th:nth-child(3){
+  position: sticky;
+  left: 200px;
+  z-index: 1 !important;
+  background-color: white;
+}
+.green{
+  color: #19ad68;
+}
+
+.red{
+  color: #007BFF;
+}

@@ -1,0 +1,51 @@
+<div class="wrap-table-area">
+
+
+
+  <div class="wrap-another-form">
+    <div class="row">
+
+      <div class="col-md-12">
+        <form class="row g-3" [formGroup]="pdacostItemForm">
+          <div class="col-md-4">
+            <label class="form-label">{{ 'stolt.masters.pda_template.pda_cost_item.add_cost_items.process_type' | translate }} <span class="text-danger">*</span></label>
+            <input type="text" class="form-control custom-input" placeholder="Cost" value="{{ 'stolt.masters.pda_template.pda_cost_item.add_cost_items.activity_name_value' | translate }}"
+            formControlName="processType">
+
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">TemplateType<span class="text-danger">*</span></label>
+            <input type="text" class="form-control custom-input" placeholder="Cost" value="{{ 'stolt.masters.pda_template.pda_cost_item.add_cost_items.activity_name_value' | translate }}"
+            formControlName="templateType">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">{{ 'stolt.masters.pda_template.pda_cost_item.add_cost_items.cost_head' | translate }}</label>
+            <input type="text" class="form-control custom-input" placeholder="Cost" value="{{ 'stolt.masters.pda_template.pda_cost_item.add_cost_items.cost_head_value' | translate }}"
+            formControlName="chargeHead">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">{{ 'stolt.masters.pda_template.pda_cost_item.add_cost_items.description' | translate }}</label>
+            <input type="text" class="form-control custom-input" placeholder="Price" value="{{ 'stolt.masters.pda_template.pda_cost_item.add_cost_items.description_value' | translate }}"
+            formControlName="description">
+
+          </div>
+
+          <div class="col-md-12 mb-2">
+            <div class="form-group wrap-form-action float-end">
+
+
+                <button class="btn btn-outline-primary btn-lg m-2"  type="submit"  (click)="pdaCostItemMasters()">
+                  {{ 'stolt.masters.pda_template.pda_cost_item.add_cost_items.add' | translate }}
+                </button>
+
+
+              </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+    </div>
+  </div>

@@ -1,0 +1,468 @@
+<div class="mat-table-with-gheading" >
+  <div class="wrapper">
+    <div class="container-fluid">
+      <div class="wrap-content">
+        <div class="row">
+          <div class="page-title-box">
+            <ol class="breadcrumb ">
+              <li class="breadcrumb-item">
+                {{ "smartagent.heading" | translate }}
+              </li>
+              <li class="breadcrumb-item active color-red">IGM</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="wrap-mat-table-area">
+              <div class="table-header-area">
+                <div>
+                  <table-filters [TDP]="[false, false, true, true]" (filterInput)="applyFilter($event)"
+                    (onClickExport)=" exportToExcel()">
+                  </table-filters>
+                </div>
+                <!-- <div class="mt-2 cursor-pointer">
+                  <span style="display: none;"><input class="form-control custom-input" type="file"
+                      id="formFileMultiple" style="visibility:hidden" (change)="onFileSelected($event)"></span>
+                </div> -->
+                <div class="d-flex justify-content-end">
+                  <div class="mt-2">
+                    <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="openPDF()">{{
+                      'common.print' | translate }} {{
+                        'common.list' | translate }}</a>
+                  </div>
+                  <div class="mt-2 cursor-pointer header-right" accessControl featureCode="['SAI01']" accessType="add">
+                    <a class="max-con new-action  btn btn-outline-primary btn-sm rounded-pill" (click)="open()">{{
+                      "smartagent.job.list.igm.addRow" | translate
+                      }}</a>
+                  </div> 
+                </div>           
+            </div>
+          <div class="table-card">
+            <div class="table-design example-container mat-elevation-z8">
+              <table mat-table [dataSource]="dataSource" matSort class="" summary="agreement">
+                <ng-container matColumnDef="#">
+                  <th scope="col" mat-header-cell *matHeaderCellDef>
+                    # <em class="custom-tooltip" [attr.title]="'Toggle Filters'"  (click)="toggleFilters = !toggleFilters" class="bi bi-search"></em>
+                  </th>
+                  <td mat-cell *matCellDef="let element;let i = index">
+                    {{ element?.id}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="igm_no">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    IGM No
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <a>{{ element?.igm_no }}</a>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="custom_agent_code">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Custom Agent Code
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <a>{{ element?.custom_agent_code }}</a>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="portName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Port
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <a>{{ element?.portName }}</a>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="vesselName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Vessel
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <a>{{ element?.vesselName }}</a>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="voyage">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Voyage
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <a>{{ element?.voyage }}</a>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                  <th scope="col" mat-header-cell *matHeaderCellDef>
+                    status
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="d-flex">
+                      <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop boot-icon">
+                        <a appAccessControl featureCode="['STM0116']" accessType="update"
+                          (click)="open(element)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                      </span>
+                      <span style="margin-left: 10px;"></span>
+                      <span nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}" >
+                        <a appAccessControl featureCode="['STM011']" accessType="view"
+                            (click)="open(element,'show')"><em
+                                class="bi bi-eye globally-change-icon-color"></em></a></span>
+                                <span nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}" class="mtop">
+                                  <a (click)="onDelete(deletedata,element)" appAccessControl featureCode="['STM0116']"
+                                    accessType="delete"><i class="bi bi-trash color-pencil-red"></i></a>
+                                </span>
+                    </div>
+                  </td>
+                </ng-container>
+                <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index" [matColumnDef]="headersFilter">
+                  <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+                    <div  class="filters-container" [class.animate]="!toggleFilters"  > 
+                      <div *ngIf="i > 0 && i < displayedColumns1.length - 1" appearance="outline">
+                         <input type="date" *ngIf="headersFilter == 'createdOn_'+i" class="form-control input-txt"  placeholder="Press 'Enter' to search" [(ngModel)]="filtersModel[i]" (change)="searchColumns()" >
+                        <input type="text" *ngIf="headersFilter != 'createdOn_'+i" class="form-control input-txt"  placeholder="Press 'Enter' to search" [(ngModel)]="filtersModel[i]" (keyup.enter)="searchColumns()" >
+   
+                      </div>
+                      <em *ngIf="i == displayedColumns1.length - 1" class="custom-tooltip" [attr.title]="'Clear Filters'" (click)="clearFilters();toggleFilters = !toggleFilters" class="bi bi-x-circle"></em>
+                    </div>
+                  </th>
+                </ng-container>
+                  <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-header-row class="no-default-height"  *matHeaderRowDef="displayedColumns1"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                  <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+                      <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+                      <span *ngIf="!loaderService?.isLoadingcircle && !dataSource?.data?.length">No data available</span>
+                    </td>
+                  </tr>
+                  <!-- in future use -->
+                  
+                  <!-- <ng-template
+                    ngFor
+                    let-container
+                    [ngForOf]="costItemData"
+                  >
+
+                    <tr *ngIf="container.id == isShow">
+                      <td colspan="8">
+                        <div
+                          class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view"
+                        >
+                          <div class="row">
+                            <div class="col-md-12">
+                              <form>
+                                <div class="row">
+                                  <div class="col-md-1">
+                                    <label class="form-label">{{
+                                      "smartagent.job.list.igm.containerNo"
+                                        | translate
+                                    }}</label>
+                                    <input
+                                      type="text"
+                                      class="form-control custom-input border-bottom"
+                                      placeholder=""
+                                      value=""
+                                    />
+                                  </div>
+                                  <div class="col-md-2">
+                                    <label class="form-label">{{
+                                      "smartagent.job.list.igm.containerType"
+                                        | translate
+                                    }}</label>
+                                    <select
+                                      class="form-select custom-input border-0 border-bottom"
+                                    >
+                                      <option></option>
+                                      <option></option>
+                                    </select>
+                                  </div>
+                                  <div class="col-md-2">
+                                    <label class="form-label">{{
+                                      "smartagent.job.list.igm.containerWeight"
+                                        | translate
+                                    }}</label>
+                                    <select
+                                      class="form-select custom-input border-0 border-bottom"
+                                    >
+                                      <option></option>
+                                      <option></option>
+                                    </select>
+                                  </div>
+                                  <div class="col-md-2">
+                                    <label class="form-label">{{
+                                      "smartagent.job.list.igm.cargoType"
+                                        | translate
+                                    }}</label>
+                                    <select
+                                      class="form-select custom-input border-0 border-bottom"
+                                    >
+                                      <option></option>
+                                      <option></option>
+                                    </select>
+                                  </div>
+                                  <div class="col-md-2">
+                                    <label class="form-label">{{
+                                      "smartagent.job.list.igm.itemNo"
+                                        | translate
+                                    }}</label>
+                                    <select
+                                      class="form-select custom-input border-0 border-bottom"
+                                    >
+                                      <option></option>
+                                      <option></option>
+                                    </select>
+                                  </div>
+                                  <div class="col-md-1">
+                                    <label class="form-label">{{
+                                      "smartagent.job.list.igm.cfs"
+                                        | translate
+                                    }}</label>
+                                    <select
+                                      class="form-select custom-input border-0 border-bottom"
+                                    >
+                                      <option></option>
+                                      <option></option>
+                                    </select>
+                                  </div>
+                                  <div class="col-md-1">
+                                    <label class="form-label">{{
+                                      "smartagent.job.list.igm.sqNO"
+                                        | translate
+                                    }}</label>
+                                    <input
+                                      type="number"
+                                      class="form-control custom-input"
+                                      placeholder=""
+                                      value=""
+                                    />
+                                  </div>
+
+                                  <div
+                                    class="wrap-form-field col-md-1"
+                                  >
+                                    <div
+                                      class="form-group wrap-form-action"
+                                    >
+                                      <button
+                                        class="btn text-primary btn-lg float-end"
+                                        type="submit"
+                                      >
+                                        {{
+                                          "smartagent.job.list.igm.addNewTank"
+                                            | translate
+                                        }}
+                                      </button>
+                                      <div class="float-end mt-2">
+                                        <span
+                                          nz-tooltip
+                                          nzTooltipTitle="{{
+                                            'common.delete'
+                                              | translate
+                                          }}"
+                                          ><em
+                                            class="bi bi-trash color-pencil-red text-muted"
+                                          ></em>
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-md-1">
+                                    <input
+                                      type="text"
+                                      class="form-control custom-input"
+                                      placeholder=""
+                                      value=""
+                                    />
+                                  </div>
+                                  <div class="col-md-2">
+                                    <select
+                                      class="form-select custom-input border-0 border-bottom"
+                                    >
+                                      <option></option>
+                                      <option></option>
+                                    </select>
+                                  </div>
+                                  <div class="col-md-2">
+                                    <select
+                                      class="form-select custom-input border-0 border-bottom"
+                                    >
+                                      <option></option>
+                                      <option></option>
+                                    </select>
+                                  </div>
+                                  <div class="col-md-2">
+                                    <select
+                                      class="form-select custom-input border-0 border-bottom"
+                                    >
+                                      <option></option>
+                                      <option></option>
+                                    </select>
+                                  </div>
+                                  <div class="col-md-2">
+                                    <select
+                                      class="form-select custom-input border-0 border-bottom"
+                                    >
+                                      <option></option>
+                                      <option></option>
+                                    </select>
+                                  </div>
+                                  <div class="col-md-1">
+                                    <select
+                                      class="form-select custom-input border-0 border-bottom"
+                                    >
+                                      <option></option>
+                                      <option></option>
+                                    </select>
+                                  </div>
+                                  <div class="col-md-1">
+                                    <input
+                                      type="number"
+                                      class="form-control custom-input"
+                                      placeholder=""
+                                      value=""
+                                    />
+                                  </div>
+
+                                  <div
+                                    class="wrap-form-field col-md-1"
+                                  >
+                                    <div
+                                      class="form-group wrap-form-action"
+                                    >
+                                      <div class="float-end mt-3">
+                                        <span
+                                          nz-tooltip
+                                          nzTooltipTitle="{{
+                                            'common.delete'
+                                              | translate
+                                          }}"
+                                        >
+                                          <em
+                                            class="bi bi-trash color-pencil-red text-muted"
+                                          ></em>
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-md-1">
+                                    <input
+                                      type="text"
+                                      class="form-control custom-input"
+                                      placeholder=""
+                                      value=""
+                                    />
+                                  </div>
+                                  <div class="col-md-2">
+                                    <select
+                                      class="form-select custom-input border-0 border-bottom"
+                                    >
+                                      <option></option>
+                                      <option></option>
+                                    </select>
+                                  </div>
+                                  <div class="col-md-2">
+                                    <select
+                                      class="form-select custom-input border-0 border-bottom"
+                                    >
+                                      <option></option>
+                                      <option></option>
+                                    </select>
+                                  </div>
+                                  <div class="col-md-2">
+                                    <select
+                                      class="form-select custom-input border-0 border-bottom"
+                                    >
+                                      <option></option>
+                                      <option></option>
+                                    </select>
+                                  </div>
+                                  <div class="col-md-2">
+                                    <select
+                                      class="form-select custom-input border-0 border-bottom"
+                                    >
+                                      <option></option>
+                                      <option></option>
+                                    </select>
+                                  </div>
+                                  <div class="col-md-1">
+                                    <select
+                                      class="form-select custom-input border-0 border-bottom"
+                                    >
+                                      <option></option>
+                                      <option></option>
+                                    </select>
+                                  </div>
+                                  <div class="col-md-1">
+                                    <input
+                                      type="number"
+                                      class="form-control custom-input"
+                                      placeholder=""
+                                      value=""
+                                    />
+                                  </div>
+
+                                  <div
+                                    class="wrap-form-field col-md-1"
+                                  >
+                                    <div
+                                      class="form-group wrap-form-action"
+                                    >
+                                      <div class="float-end mt-3">
+                                        <span
+                                          nz-tooltip
+                                          nzTooltipTitle="{{
+                                            'common.delete'
+                                              | translate
+                                          }}"
+                                        >
+                                          <em
+                                            class="bi bi-trash color-pencil-red text-muted"
+                                          ></em>
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-template> -->
+               
+              </table>
+
+            </div>
+            <div [ngClass]="{'display-none' : dataSource.filteredData.length < 20}">
+              <mat-paginator [pageSizeOptions]="pagenation" showFirstLastButtons aria-label="Select page">
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #deletedata let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body mt-4 d-flex align-items-center">
+      <em class="bi bi-question-circle text-danger fs-2 text-center float-start me-2"> </em> <span
+        class=" text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+          {{ "common.no" | translate }}
+        </button>
+        <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+          {{ "common.yes" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>

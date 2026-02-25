@@ -1,0 +1,65 @@
+@import '../../../../assets/styles/mixins/global.scss';
+
+
+
+.master-flow-body-content-alignment {
+    overflow: overlay;
+    padding: 5px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px !important;
+    background-color: white  !important;
+   
+
+    a {
+        display: block !important;
+        border: 1px solid #007BFF !important;
+        padding: 5px  !important;
+        font-size: 12px  !important;
+        color: var(--theme-black-400) !important;
+        cursor: pointer  !important;
+        border-radius: 4px  !important;
+        transition: .3s ease-in-out  !important;
+        &:hover {
+            color: white !important;
+            background-color: #007BFF  !important;
+            transition: .3s ease-in-out  !important;
+        }
+    }
+}
+.display-none{
+    display: none;
+}
+
+.accordion-body {
+    border: 1px solid #007BFF !important;
+}
+
+.form-accordian h2 button {
+    padding: 7px 15px !important;
+    box-shadow: none !important;
+    font-size: 14px !important;
+    color: var(--theme-black-320) !important;
+  background-color: var(--theme-light-bg) !important;
+  }
+  
+  .form-accordian .accordion-button::after {
+    filter: none !important;
+  }
+  
+  .form-accordian .accordion-item {
+    margin-bottom: 25px;
+    border: 0;
+  }
+  
+  .form-accordian .accordion-item:last-child {
+    margin-bottom: 0px;
+  }
+  .accordion-item  {
+    button {
+      width: 100% !important;
+      display: flex;
+      align-items: center;
+      @include new-heading-14;
+    }
+  }

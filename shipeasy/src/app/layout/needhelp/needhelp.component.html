@@ -1,0 +1,191 @@
+
+
+  <div class="container-fluid">
+    <div class="d-flex justify-content-end">
+      <a class="color--secondary close-action mt-1" (click)="onCloseModal()"><em class="bi bi-x set-icons"></em></a>
+    </div>
+    <div>
+      <mat-tab-group>
+        <mat-tab label="Browse Help Center">
+          <div>
+            <app-faq></app-faq>
+          </div>
+        </mat-tab>
+        <mat-tab label="Contact Us">
+          <div class="mt-5">
+            <h6>What do you need help with?</h6>
+            <p class="text-muted">Please select the most accurate topic</p>
+          </div>
+          <div class="accordion form-accordian" id="accordionPanelsStayOpenExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="datails">
+                <button class="accordion-button" [class.collapsed]="!isInquiryPanelOpen" type="button" (click)="togglePanel('inquiry')" aria-expanded="isInquiryPanelOpen" aria-controls="panelsDetails">
+                  <div>
+                    <label class="d-flex mb-0">
+                      <span class="fw-bold"> Inquiry </span>
+                    </label>
+                  </div>
+                </button>
+              </h2>
+              <div id="panelsDetails" [class.show]="isInquiryPanelOpen" class="accordion-collapse collapse show" aria-labelledby="datails" data-bs-parent="#accordionPanelsStayOpenExample">
+                <div class="accordion-body">
+                  <form [formGroup]="EmailForm">
+                    <div class="col-md-12 mb-3">
+                      <label class="form-label">Tell us more about your request</label>
+                      <textarea id="message" name="message" rows="10" cols="50" formControlName="message" class="form-control custom-input rounded-0" style="height: 65px;" [ngClass]="{'is-invalid': submittedInquiry && f.message.errors}"></textarea>
+                      <div *ngIf="submittedInquiry && f.message.errors" class="invalid-feedback">
+                        <div *ngIf="f.message.errors.required">message is required</div>
+                      </div>
+                    </div>
+                    <div class="col-md-12 mt-3">
+                      <div class="form-field-section">
+                        <input type="file" class="form-control custom-input rounded-0" id="EmailForm"    (change)="selectFile($event,'EmailForm','Inquiry')"  />
+                      </div>
+                    </div>
+                    <div class="col-md-12 mt-3">
+                      <div class="form-field-section">
+                        <label class="form-label">Please enter the email address where we can reach you with an answer.</label>
+                        <input type="email" class="form-control custom-input rounded-0" formControlName="Email" placeholder="Email Address" [ngClass]="{'is-invalid': submittedInquiry && f.Email.errors}" />
+                        <div *ngIf="submittedInquiry && f.Email.errors" class="invalid-feedback">
+                          <div *ngIf="f.Email.errors.required">This field is required</div>
+                          <div *ngIf="f.Email.errors.email">Invalid email address</div>
+                        </div>
+                      </div>
+                    </div>  
+                    <div class="col-md-12 mt-3">
+                      <div class="form-field-section">
+                        <label class="form-label">Please Enter Your name</label>
+                        <input type="text" class="form-control custom-input rounded-0" formControlName="name" placeholder="Name" [ngClass]="{'is-invalid': submittedInquiry && f.name.errors}" />
+                        <div *ngIf="submittedInquiry && f.name.errors" class="invalid-feedback">
+                          <div *ngIf="f.name.errors.required">This field is required</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-3 mt-3 sendset">
+                      <div class="d-flex justify-content-end">
+                        <button class="btn btn-outline-primary btn-lg float-end" (click)="send('Inquiry')">Send Your Request</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+  
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="datails4">
+                <button class="accordion-button" [class.collapsed]="!isBookingPanelOpen" type="button" (click)="togglePanel('booking')" aria-expanded="isBookingPanelOpen" aria-controls="panelsDetails4">
+                  <div>
+                    <label class="d-flex mb-0">
+                      <span class="fw-bold"> Booking </span>
+                    </label>
+                  </div>
+                </button>
+              </h2>
+              <div id="panelsDetails4" [class.show]="isBookingPanelOpen" class="accordion-collapse collapse show" aria-labelledby="datails4" data-bs-parent="#accordionPanelsStayOpenExample">
+                <div class="">
+                  <div class="accordion-body">
+                    <form [formGroup]="bookingForm">
+                      <div class="col-md-12 mb-3">
+                        <label class="form-label">Tell us more about your request</label>
+                        <textarea id="message" name="message" rows="10" cols="50" formControlName="message" class="form-control custom-input rounded-0" style="height: 65px;" [ngClass]="{'is-invalid': submittedBooking && f2.message.errors}"></textarea>
+                        <div *ngIf="submittedBooking && f2.message.errors" class="invalid-feedback">
+                          <div *ngIf="f2.message.errors.required">message is required</div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 mt-3">
+                        <div class="form-field-section">
+                          <input type="file" class="form-control custom-input rounded-0" id="bookingForm"   (change)="selectFile($event,'bookingForm','Booking')"  />
+                        </div>
+                      </div>
+                      <div class="col-md-12 mt-3">
+                        <div class="form-field-section">
+                          <label class="form-label">Please enter the email address where we can reach you with an answer.</label>
+                          <input type="email" class="form-control custom-input rounded-0" formControlName="Email" placeholder="Email Address" [ngClass]="{'is-invalid': submittedBooking && f2.Email.errors}" />
+                          <div *ngIf="submittedBooking && f2.Email.errors" class="invalid-feedback">
+                            <div *ngIf="f2.Email.errors.required">This field is required</div>
+                            <div *ngIf="f2.Email.errors.email">Invalid email address</div>
+                          </div>
+                        </div>
+                      </div>
+                     
+                     
+                      <div class="col-md-12 mt-3">
+                        <div class="form-field-section">
+                          <label class="form-label">Please Enter Your name</label>
+                          <input type="text" class="form-control custom-input rounded-0" formControlName="name" placeholder="Name" [ngClass]="{'is-invalid': submittedBooking && f2.name.errors}" />
+                          <div *ngIf="submittedBooking && f2.name.errors" class="invalid-feedback">
+                            <div *ngIf="f2.name.errors.required">This field is required</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-3 mt-3 sendset">
+                        <div class="d-flex justify-content-end">
+                          <button class="btn btn-outline-primary btn-lg float-end" (click)="send('Booking')">Send Your Request</button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="datails6">
+                <button class="accordion-button" [class.collapsed]="!isInvoicePanelOpen" type="button" (click)="togglePanel('invoice')" aria-expanded="isInvoicePanelOpen" aria-controls="panelsDetails6">
+                  <div>
+                    <label class="d-flex mb-0">
+                      <span class="fw-bold"> Invoice </span>
+                    </label>
+                  </div>
+                </button>
+              </h2>
+              <div id="panelsDetails6" [class.show]="isInvoicePanelOpen" class="accordion-collapse collapse show" aria-labelledby="datails6" data-bs-parent="#accordionPanelsStayOpenExample">
+                <div class="accordion-body">
+                  <form [formGroup]="EmailForms">
+                    <div class="col-md-12 mb-3">
+                      <label class="form-label">Tell us more about your request</label>
+                      <textarea id="message" name="message" rows="10" cols="50" formControlName="message" class="form-control custom-input rounded-0" style="height: 65px;" [ngClass]="{'is-invalid': submitted && f1.message.errors}"></textarea>
+                      <div *ngIf="submitted && f1.message.errors" class="invalid-feedback">
+                        <div *ngIf="f1.message.errors.required">message is required</div>
+                      </div>
+                    </div>
+                    <div class="col-md-12 mt-3">
+                      <div class="form-field-section">
+                        <input type="file" class="form-control custom-input rounded-0"  id="EmailForms" (change)="selectFile($event,'EmailForms','Invoice')"  />
+                      </div>
+                    </div>
+                    <div class="col-md-12 mt-3">
+                      <div class="form-field-section">
+                        <label class="form-label">Please enter the email address where we can reach you with an answer.</label>
+                        <input type="email" class="form-control custom-input rounded-0" formControlName="Email" placeholder="Email Address" [ngClass]="{'is-invalid': submitted && f1.Email.errors}" />
+                        <div *ngIf="submitted && f1.Email.errors" class="invalid-feedback">
+                          <div *ngIf="f1.Email.errors.required">This field is required</div>
+                          <div *ngIf="f1.Email.errors.email">Invalid email address</div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="col-md-12 mt-3">
+                      <div class="form-field-section">
+                        <label class="form-label">Please enter your name</label>
+                        <input type="text" class="form-control custom-input rounded-0" formControlName="name" placeholder="Name" [ngClass]="{'is-invalid': submitted && f1.name.errors}" />
+                        <div *ngIf="submitted && f1.name.errors" class="invalid-feedback">
+                          <div *ngIf="f1.name.errors.required">This field is required</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-3 mt-3 sendset">
+                      <div class="d-flex justify-content-end">
+                        <button class="btn btn-outline-primary btn-lg float-end" (click)="send('Invoice')">Send Your Request</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+  

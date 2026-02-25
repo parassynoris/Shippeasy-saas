@@ -1,0 +1,93 @@
+<div class="wrap-table-area">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2">
+            <div class="mt-2">
+                <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="openPDF()">{{
+                  'common.print' | translate }} {{
+                    'common.list' | translate }}</a>
+              </div>
+            </div>
+            <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2">
+                <div class="mt-2">
+                    <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="exportAsExcelFile()">{{ 'common.exportToExcel' | translate }}</a>
+                </div>
+              </div>
+            <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2 ">
+                <div class="mt-2">
+                    <span>
+                        <h5>{{ fromSize }}-{{ count }} of {{ toalLength }}</h5>
+                    </span>
+                </div>
+                <div class="mt-2">
+              <span class="prv" [class.disable-arrow-sign]="fromSize === 1" (click)="prev()"><em
+                  class="typcn typcn-chevron-left"></em></span>
+              <span class="prv" [class.disable-arrow-sign]="count === toalLength" (click)="next()"><em
+                  class="typcn typcn-chevron-right"></em></span>
+            </div>
+                <div class="mt-2"><select class="form-select form-select-sm " (change)="filter($event)">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                    </select></div>
+            </div>
+            <div class="float-clear-mobile-view d-flex flex-column flex-sm-row gap-3 float-start search-section">
+                <div class="input-group custom-input">
+                    <input type="text" class="form-control" placeholder="Search" aria-label="Search">
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-12">
+            <div class="table-responsive" id="htmlData">
+                <table aria-describedby="mytable" class="gfg">
+                    <thead>
+                        <tr class="field-name">
+                            <th scope="col">{{ 'smartagent.job.list.chacklist.status' | translate }}</th>
+                            <th scope="col">{{ 'smartagent.job.list.chacklist.name' | translate }}</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let template of templateList">
+                            <td class="action-field">
+                                   <span nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}" class="mtop">
+                                    <a appAccessControl featureCode="['STM018']" accessType="delete"
+                                    (click)="delete(deletesystemType,template?.costtemplateId)"><em class="typcn typcn-trash"></em></a>
+                                </span>
+                                <span class="form-check form-switch">
+                                    <input appAccessControl featureCode="['STM018']" accessType="update"
+                                    class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"  (change)="changeStatus(template,$event)" [checked]="template.status" />
+                                    <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                                  </span>
+                            </td>
+                            <td>{{template.costTemplateName}}</td>
+                           
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #deletesystemType let-c="close" let-d="dismiss">
+    <div class="modal-content">
+      <div class="modal-header">
+  
+        <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+  
+        </button>
+      </div>
+      <div class="modal-body mt-4">
+        <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2"> </em> <span
+          class=" text-dark fs-6">{{"error.msg_delete" | translate}}</span>
+      </div>
+      <div class="modal-footer">
+        <div class="text-center">
+          <button type="button" class="btn btn-secondary  btn-sm me-3" (click)="d('Cross click')">{{"common.no" |
+            translate}}</button>
+          <button type="button" class="btn btn-danger  btn-sm" (click)="c('yes')">{{"common.yes" | translate}}</button>
+        </div>
+      </div>
+    </div>
+  </ng-template>

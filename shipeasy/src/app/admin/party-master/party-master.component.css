@@ -1,0 +1,134 @@
+
+@media only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px) {
+  /* Force table to not be like tables anymore */
+  /* Hide table headers (but not display: none;
+    , for accessibility) */
+  /* Label the data */
+
+  td:nth-of-type(1):before {
+    content: "Principal Name";
+  }
+
+  td:nth-of-type(2):before {
+    content: "Contact Type";
+  }
+
+  td:nth-of-type(3):before {
+    content: "Contact Name ";
+  }
+
+  td:nth-of-type(4):before {
+    content: "Contact Phone";
+  }
+
+  td:nth-of-type(5):before {
+    content: "Contact Email";
+  }
+}
+
+.tableFixHead td:nth-child(2),
+.tableFixHead th:nth-child(2) {
+  position: sticky;
+  left: 80px;
+  z-index: 1;
+  background-color: white;
+}
+
+.tableFixHead td:nth-child(3),
+.tableFixHead th:nth-child(3) {
+  position: sticky;
+  left: 162px;
+  z-index: 1 !important;
+  background-color: white;
+}
+
+.action-field{
+  white-space: wrap;
+  width: 150px;
+}
+
+.globally-chnage-mobile-view {
+  margin-bottom: 10px;
+}
+
+.uppercase {
+  white-space: wrap;
+  width: 315px;
+}
+
+.wrap{
+  white-space: wrap;
+  width: 210px;
+}
+
+.wrap1{
+  white-space:wrap;
+  width:315px;
+}
+.wrap-content {
+  padding-top: 120px;
+  padding-bottom: 10px;
+}
+::ng-deep.mat-paginator-container{
+  margin-bottom: 15px !important;
+}
+
+.table-design td:first-child {
+  position: sticky;
+  left: 0;
+  background: white;
+  width: 43px;
+}
+
+.table-design td:nth-child(2) {
+  position: sticky;
+  left: 44px;
+  background: white;
+  width: 95px;
+}
+
+@media screen and (max-width: 1024px) {
+  .table-design td:nth-child(2){
+    left: 103px;
+  } 
+}
+
+.table-design td:nth-child(3),
+.table-design td:nth-child(4),
+.table-design td:nth-child(5),
+.table-design td:nth-child(6) {
+  position: unset;
+  left: unset;
+  z-index: unset;
+}
+
+.table-design th:first-child{
+  position: sticky;
+  left: 0;
+  z-index: 99;
+  background: white;
+  width: 43px;
+}
+
+.table-design th:nth-child(2) {
+  position: sticky;
+  left: 44px;
+  z-index: 99;
+  background: white;
+  width: 95px;
+}
+@media screen and (max-width: 1024px) {
+  .table-design th:nth-child(2){
+    left: 103px;
+  } 
+}
+
+.table-design th:nth-child(3),
+.table-design th:nth-child(4),
+.table-design th:nth-child(5),
+.table-design th:nth-child(6) {
+  position: unset;
+  left: unset;
+  z-index: unset;
+}

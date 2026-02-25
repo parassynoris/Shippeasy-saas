@@ -1,0 +1,105 @@
+<div class="content">
+<div class="p-3 border-bottoms background-set" *ngIf="!activeContact?.name">
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center">
+      <i class="fa-solid fa-comments me-2"></i>
+      <span class="h6 mb-0">Chat</span>
+    </div>
+
+    <div class="d-flex align-items-center">
+      <button mat-icon-button (click)="openGroupChat()" class="me-2">
+        <mat-icon>group_add</mat-icon>
+      </button>
+
+      <!-- <button mat-icon-button (click)="openNewChat()" class="me-2">
+        <mat-icon>person_add</mat-icon>
+      </button> -->
+
+      <a class="color--secondary close-action" (click)="onCloseModal()">
+        <i class="bi bi-x-lg"></i>
+      </a>
+    </div>
+  </div>
+
+  <div class="mt-2" *ngIf="!activeContact?.name && !isGroupChatOpen && !isNewChatOpen">
+    <div class="position-relative">
+      <input type="text" class="form-control form-control-sm pe-5" placeholder="Search" (input)="onSearch($event)"
+        aria-label="Search">
+      <i class="bi bi-search position-absolute top-50 end-0 translate-middle-y me-3" style="color: #6c757d;"></i>
+    </div>
+  </div>
+</div>
+<div *ngIf="shouldShowUserNotFoundMessage" class="no-user-message">
+  <p>User Not Found!</p>
+</div>
+
+<app-group-chat *ngIf="isGroupChatOpen" [userdetails]="userdetails" (backButtonClicked)="onBackFromGroupChat()"></app-group-chat>
+
+<!-- <app-new-chat *ngIf="isNewChatOpen" (backbtnClicked)="backbtnClicked()"></app-new-chat> -->
+
+<div class="" id="contacts" *ngIf="!activeContact && !isGroupChatOpen && !isNewChatOpen && !shouldShowUserNotFoundMessage">
+  <ul *ngIf="!isLoading">
+    <li *ngFor="let contact of userdetails" [class.active]="activeContact === contact" class="contact"
+      (click)="setActiveContact(contact)">
+      <div class="wrap">
+        <img src="../../../assets/img/profiles.png" alt="" class="mr-2 imgs"
+          [ngClass]="{ 'border-set': contact?.userSocketStatus }" />
+        <div class="meta">
+          <p class="name">{{ contact?.name | titlecase }} <span class="mb-0 count-show mt-1"
+              *ngIf="contact?.unReadCount > 0">{{ contact?.unReadCount }}</span></p>
+          <p class="preview m-0">{{ truncateText(contact?.lastMessage?.messageText, 20) }}</p>
+        </div>
+      </div>
+    </li>
+  </ul>
+  <ngx-skeleton-loader count="6" appearance="line" *ngIf="isLoading"></ngx-skeleton-loader>
+  <ul class="list-group mt-2">
+    <li *ngFor="let user of filteredUsers" class="list-group-item" (click)="selectUser(user)">
+      {{ user.name }}
+    </li>
+  </ul>
+</div>
+
+<div id="user-profile" *ngIf="activeContact?.name && !isGroupChatOpen && !isNewChatOpen">
+  <div class="set-header paddings background-set">
+    <div class="profile d-flex border-bottoms pl-3">
+      <a class="color--secondary close-action mt-1" (click)="clearActiveContact()">
+        <i class="bi bi-chevron-left fs-6 mr-3 fw-bold"></i>
+      </a>
+      <img src="../../../assets/img/profiles.png" class="imgs" alt=""
+        [ngClass]="{ 'border-set': activeContact?.userSocketStatus }" />
+      <div class="meta ml-2">
+        <p class="name">{{ activeContact?.name | titlecase }}</p>
+        <p class="status mb-1">{{ activeContact?.userSocketStatus ? 'Online' : 'Offline' }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="chat" class="chat-window">
+    <div class="messages-container" *ngIf="selectedChat?.messages?.length" #messagesContainer>
+      <ng-container *ngFor="let message of selectedChat?.messages; let i = index">
+        <div *ngIf="message.showDateSeparator" class="date-separator text-center my-2">
+          <span class="date-label">{{ message.createdOn | date: 'mediumDate' }}</span>
+        </div>
+
+        <div class="message" [ngClass]="{ 'sent': message.sentByMe, 'received': !message.sentByMe }">
+          <div class="message-content">
+            <p class="chat-set mb-0">{{ message?.messageText }}</p>
+          </div>
+          <div class="message-info">
+            {{ message?.createdOn | date: 'shortTime' }}
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="message-input">
+    <input type="text" [(ngModel)]="newMessage" placeholder="Type a message..." class="border-0 form-control"
+      (keydown.enter)="sendMessage()">
+    <div class="send-icon mr-4" (click)="sendMessage()">
+      <i class="fa fa-paper-plane"></i>
+    </div>
+  </div>
+</div>
+</div>

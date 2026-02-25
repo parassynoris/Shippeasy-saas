@@ -1,0 +1,213 @@
+<div class="modal-content nz-allSelect vessel-master-component">
+    <div class="modal-headers mt-2">
+        <h4 class="modal-title">
+            Freight Certificate
+        </h4>
+        <button type="button" class="btn-close shadow-none float-end" (click)="onClose()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+            <form [formGroup]="blForm">
+                <div class="modal-body">
+                    <div class="row g-3">
+
+                        <div class="col-md-4">
+                            <div class="form-field-section">
+                                <label class="form-label">MBL No</label>
+                                <input formControlName="mblNo" type="text"
+                                    class="form-control custom-input rounded-0" id="mblNo" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-field-section">
+                                <label class="form-label">HBL No</label>
+                                <!-- <input formControlName="hblNo" type="text"
+                                    class="form-control custom-input rounded-0" id="mblNo" /> -->
+
+                                <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="HBL List"    formControlName="hblNo"
+                                (ngModelChange)="onBLSelect($event)">
+                                <nz-option ng *ngFor="let test of blData" [nzLabel]="test?.blNumber" [nzValue]="test.blNumber"></nz-option>
+                                </nz-select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-field-section">
+                                <label class="form-label">Container No</label>
+                                <input formControlName="container_no"  type="text"
+                                    class="form-control custom-input rounded-0" id="container_no" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-field-section">
+                                <label class="form-label">POL</label>
+                                <input formControlName="pol" type="text"
+                                    class="form-control custom-input rounded-0" id="container_no" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-field-section">
+                                <label class="form-label">DESTINATION</label>
+                                <input formControlName="destination"  type="text"
+                                    class="form-control custom-input rounded-0" id="destination" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-field-section">
+                                <label class="form-label">CONSIGNEE</label>
+                                <input formControlName="consignee"  type="text"
+                                    class="form-control custom-input rounded-0" id="consignee" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-field-section">
+                                <label class="form-label">IGM No</label>
+                                <input formControlName="igmNo"  type="text"
+                                    class="form-control custom-input rounded-0" id="consignee" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-field-section">
+                                <label class="form-label">IGM Date</label>
+
+                                <mat-form-field appearance="outline" class="custom-date-picker">
+                                    <div class="d-flex align-items-center  w-100">
+                                     <input matInput
+                                     [matDatepicker]="pickerEtan" formControlName="igmDate" class="h-0" placeholder="IGM Date"/>
+                                   <mat-datepicker-toggle matSuffix [for]="pickerEtan"></mat-datepicker-toggle>
+                                    </div>
+                                     <mat-datepicker #pickerEtan></mat-datepicker>
+                                 </mat-form-field>
+
+                                <!-- <input formControlName="igmDate"  type="text"
+                                    class="form-control custom-input rounded-0" id="consignee" /> -->
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-field-section">
+                                <label class="form-label">FREIGHT CHARGE</label>
+                                <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="freight"
+                                    (ngModelChange)="onChargeSelect($event)" nzPlaceHolder="Select Freight Charge">
+                                    <nz-option *ngFor="let shipping of charges" [nzLabel]="shipping.chargesName"
+                                        [nzValue]="shipping.chargesId">
+                                    </nz-option>
+                                </nz-select>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4" *ngIf="false">
+                            <div class="form-field-section">
+                                <label class="form-label">EX. RATE  </label>
+                                <input formControlName="exChangeRate" type="number" (keyup)="calculateTotal($event)"
+                                    class="form-control custom-input rounded-0" id="exChangeRate"  />
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-field-section">
+                                <label class="form-label">FREIGHT TOTAL (USD) </label>
+                                <input formControlName="sellTotalINR" type="number"
+                                    class="form-control custom-input rounded-0" id="sellTotalINR"  />
+                            </div>
+                        </div>
+
+                        <div class="col-md-4" *ngIf="false">
+                            <div class="form-field-section">
+                                <label class="form-label">Buy Total </label>
+                                <input formControlName="buyTotalINR" type="text"
+                                    class="form-control custom-input rounded-0" id="sellTotalINR"  />
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="row">
+                            <div class="col-md-12 without-ckecklist">
+                              <div class="table-responsive">
+                                <table aria-describedby="mytable1" class="gfg">
+                                  <thead>
+                                    <tr class="field-name background">
+                                      <th scope="col" class="width15">MBL NO</th>
+                                      <th scope="col" class="width15">HBL NO</th>
+                                      <th scope="col" class="width15">Container No</th>
+                                      <th scope="col" class="width15">CONSIGNEE</th>
+                                      <th scope="col" class="width15">IGM No</th>
+                                      <th scope="col" class="width15">FREIGHT TOTAL (USD)</th>
+                                      <th></th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr *ngFor="let certi of freightCertificateDetails">
+                                      <td>{{certi.mblNo}}</td>
+                                      <td>{{certi.hblNo}}</td>
+                                      <td>{{certi.container_no}}</td>
+                                      <td>{{certi.consignee}}</td>
+                                      <td>{{certi.igmNo}}</td>
+                                      <td>{{certi.sellTotalINR}}</td>
+                                      <td class="action-field">
+                                        <duv class="d-flex">
+                                          <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop boot-icon"><a
+                                              (click)="editFreightCerti(certi?.freightcertificateId);showChecklist = false"><em
+                                                class="bi bi-pencil color-pencil-red"></em></a>
+                                          </span>
+                                          <span nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}">
+                                            <a appAccessControl featureCode="['STM019']" accessType="view"
+                                              (click)="DownloadCertificate(certi.freightcertificateId,true)"><em
+                                                class="bi bi-eye globally-change-icon-color ml-2"></em></a>
+                                          </span>
+                                          <span class="mtop" nz-tooltip nzTooltipTitle="{{ 'common.download' | translate }}"><a>
+                                              <em class="bi bi-download globally-change-icon-color ml-2"
+                                                (click)="DownloadCertificate(certi.freightcertificateId)"></em></a>
+                                          </span>
+                                          <span class="mtop" nz-tooltip nzTooltipTitle="{{ 'common.shareViaWhatsapp' | translate }}"><a>
+                                              <em class="bi bi-whatsapp globally-change-icon-color ml-2" 
+                                              (click)="shareViaWhatsapp(certi.freightcertificateId,false,true)"></em>
+                                            </a>
+                                        </span>
+                                        </duv>
+                                        <!-- <span nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}" class="mtop"><a
+                                            (click)="DeleteFreightCerti(content1,delivery.freightcertificateId)"><em
+                                              class="typcn typcn-trash"></em></a>
+                                        </span> -->
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                              <!-- <div class="no-data-availble" *ngIf="deliveryOrderList.length === 0">
+                                {{'common.no_data' | translate}}
+                              </div> -->
+                            </div>
+                          </div>
+                    </div>
+                </div>
+
+                <div class="form-group wrap-form-action mt-4">
+                    <!-- Cancel button -->
+                    <button class="btn1 btn-lg float-end" (click)="onClose()" type="button">
+                        {{ "common.cancel" | translate }}
+                    </button>
+
+                    <!-- Save button for creating a new vessel -->
+                    <button (click)="CreateCertificate()" class="btn btn-outline-primary btn-lg float-end"
+                        type="button">
+                        Create Certificate
+                    </button>
+
+
+                    <!-- <button class="btn btn-outline-primary btn-lg float-end" (click)="DownloadCertificate()" type="submit">
+                        Download Certificate
+                    </button> -->
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

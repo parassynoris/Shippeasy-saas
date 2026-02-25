@@ -1,0 +1,179 @@
+<div class="table-with-gheading">
+  <div class="wrap-table-area">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="float-clear-mobile-view d-flex flex-column flex-sm-row gap-3 float-start search-section">
+          <div class="input-group custom-input">
+            <input type="text" class="form-control" placeholder="Search" aria-label="Search" />
+          </div>
+        </div>
+        <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2">
+          <div class="mt-2">
+            <span>
+              <h5>{{ fromSize }}-{{ count }} of {{ toalLength }}</h5>
+            </span>
+          </div>
+          <div class="mt-2">
+            <span class="prv" [class.disable-arrow-sign]="fromSize === 1" (click)="prev()"><em
+                class="typcn typcn-chevron-left"></em></span>
+            <span class="prv" [class.disable-arrow-sign]="count === toalLength" (click)="next()"><em
+                class="typcn typcn-chevron-right"></em></span>
+          </div>
+          <div class="mt-2">
+            <select class="form-select form-select-sm" (change)="filter($event)">
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+          <div class="mt-2">
+            <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="openPDF()">{{
+              'common.print' | translate }} {{
+                'common.list' | translate }}</a>
+          </div>
+          <div class="mt-2">
+            <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="exportAsExcelFile()">{{
+              'common.exportToExcel' | translate }}</a>
+          </div>
+          <div class="mt-2">
+            <a class="new-action" (click)="open(AddClause)">{{"common.add" | translate}} {{
+              "stolt.masters.SegmentMaster.SegmentMaster" | translate }}</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="table-responsive" id="htmlData">
+          <table aria-describedby="mytable" class="gfg">
+            <thead>
+              <tr class="field-name">
+                <th scope="col" class="text-center">
+                  Action
+                </th>
+                <th scope="col">
+                  {{ "stolt.masters.SegmentMaster.Segment" | translate }}
+                   <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                </th>
+
+                <th scope="col"></th>
+              </tr>
+              <tr>
+                <th scope="col">
+                  <input type="text" class="form-control" id=""  />
+                </th>
+                <th scope="col">
+                  <input type="text" class="form-control" id="" [(ngModel)]="segmentName" (change)="searchDataChange()"
+                    (keydown.enter)="search()" />
+                </th>
+
+                <th scope="col" class="wrap-table-btn">
+                  <button type="button" class="bi bi-search btn btn-outline-primary btn-sm rounded-pill" (click)="search()">
+                  
+                  </button>
+                  <a routerLink="#" class="bi bi-arrow-clockwise btn btn-outline-primary btn-sm rounded-pill" (click)="clear()">
+                    </a>
+                </th>
+              </tr>
+            </thead>
+
+            <tbody *ngIf="segmentData">
+              <tr *ngFor="let segment of segmentData; let i = index">
+                <td class="action-field">
+                  <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop"><a
+                      (click)="open(AddClause, segment)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                  </span>
+                  <span nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}"><a
+                    (click)="open(AddClause,segment,'show')"><em
+                        class="bi bi-eye globally-change-icon-color"></em></a></span>
+               
+                  <span class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" (change)="changeStatus(segment,i)"
+                      id="flexSwitchCheckChecked" [checked]="segment?._source?.status" />
+                    <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                  </span>
+                </td>
+                <td class="uppercase">{{ segment?._source?.typeName }}</td>
+
+                
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="no-data-availble" *ngIf="segmentData.length === 0">
+          {{'common.no_data' | translate}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #AddClause let-modal>
+  <div class="modal-content">
+    <div class="modal-headers">
+      <h4 class="modal-title" *ngIf="!this.segmentIdToUpdate">{{'common.add' | translate}} {{
+        "stolt.masters.SegmentMaster.SegmentMaster" | translate }}</h4>
+      <h4 class="modal-title" *ngIf="this.segmentIdToUpdate">{{'common.edit' |
+        translate}} {{ "stolt.masters.SegmentMaster.SegmentMaster" | translate }}</h4>
+      <button type="button" class="btn-close shadow-none float-end" (click)="onSave()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+        <form class="row g-3" [formGroup]="addSegmentForm">
+          <div class="col-md-4">
+            <label class="form-label"> {{ "stolt.masters.SegmentMaster.Segment" | translate }}<span
+                class="text-danger">*</span></label>
+            <input type="text" class="form-control custom-input" id=" " formControlName="typeName" value=""
+              [ngClass]="{ 'is-invalid': submitted && f.typeName.errors }" />
+            <div *ngIf="submitted && f.typeName.errors" class="invalid-feedback">
+              <div *ngIf="f.typeName.errors.required">
+                {{ "stolt.masters.SegmentMaster.SegmentValidation.validation" | translate }}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mobile-view-input-alignment">
+            <div class="taggle form-check form-switch">
+              <label class="form-check-label" for="flexSwitchCheckDefault">{{ "stolt.masters.uom.status" | translate
+                }}</label>
+              <input class="form-check-input" formControlName="status" type="checkbox" id="flexSwitchCheckDefault">
+            </div>
+          </div>
+          <div class="form-group wrap-form-action mt-4">
+            <button class="btn1 btn-lg float-end" (click)="onSave()" type="submit">
+              {{ "common.cancel" | translate }}
+            </button>
+            <button *ngIf="!this.segmentIdToUpdate" (click)="segmentMasters()"
+              class="btn btn-outline-primary btn-lg float-end" type="submit">
+              {{'common.save' | translate}}
+            </button>
+            <button *ngIf="this.segmentIdToUpdate && show !== 'show'" (click)="segmentMasters()"
+              class="btn btn-outline-primary btn-lg float-end" type="submit">
+              {{'common.update' | translate}}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #deletesegment let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body mt-4">
+      <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2">
+      </em>
+      <span class="text-dark fs-6"> {{"error.msg_delete" | translate}}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+          {{"common.no" | translate}}
+        </button>
+        <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+          {{"common.yes" | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>

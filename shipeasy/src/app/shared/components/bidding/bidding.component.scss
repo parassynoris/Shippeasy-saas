@@ -1,0 +1,50 @@
+.table-charge {
+    overflow: overlay;
+    max-width: 100%;
+    height: calc(40vh - 50px);
+    table {
+        // width: auto; 
+        border-collapse: separate;
+        border-spacing: 0;
+
+        .form-select {
+            min-width: 100px;
+        }
+
+        .custom-input {
+            min-width: 100px;
+        }
+
+        td:first-child,
+        th:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 1;
+        }
+
+        td:nth-child(2),
+        th:nth-child(2) {
+            position: sticky;
+            left: 20px;
+            z-index: 1;
+            // min-width: 200px;
+        }
+
+        td:last-child,
+        th:last-child {
+            position: sticky;
+            right: 0;
+            min-width: 60px;
+            z-index: 1;
+        }
+ 
+            // th:nth-last-child(2), td:nth-last-child(2) {
+            //     position: sticky;
+            //     right: 60px; 
+            //     z-index: 1;
+            //   }
+        
+
+    }
+
+}

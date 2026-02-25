@@ -1,0 +1,58 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h4 class="modal-title" *ngIf="isAddMode">{{ 'smartagent.smartAgent.costHead.addCostItem' | translate}}</h4>
+        <h4 class="modal-title" *ngIf="!isAddMode">{{ 'smartagent.smartAgent.costHead.editCostItem' | translate}}</h4>
+        <button type="button" class="btn-close shadow-none" (click)="onClose()" aria-label="Close">
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="wrap-form-field padding-space  modal-bottom-alignment-for-mobile-view">
+            <form [formGroup]="addHoliday" (ngSubmit)="saveCostHead()" class="row g-3 mt-3">
+                
+                <div class="col-md-4">
+                    <label class="form-label">{{ 'smartagent.smartAgent.costHead.cost_head_map' | translate
+                        }}</label><span class="text-danger">*</span>
+                        <select class="form-select custom-input" formControlName="CostHeadId"
+                        [ngClass]="{ 'is-invalid': submitted && f.CostHeadId.errors }">
+                        <option *ngFor="let costhead of costheadList" [value]="costhead?._source?.costheadId">{{costhead?._source?.costHeadName}}</option>
+                        </select>
+                    <div *ngIf="submitted && f.CostHeadId.errors" class="invalid-feedback">
+                        <div *ngIf="f.CostHeadId.errors.required">{{ 'smartagent.smartAgent.costHead.cost_item_map_required'
+                            |
+                            translate }}</div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">{{ 'smartagent.smartAgent.costHead.costItemNAme' | translate
+                        }}</label><span class="text-danger">*</span>
+                    <input formControlName="CostItemName" type="text" class="form-control custom-input" placeholder=""
+                        [ngClass]="{ 'is-invalid': submitted && f.CostItemName.errors }">
+                    <div *ngIf="submitted && f.CostItemName.errors" class="invalid-feedback">
+                        <div *ngIf="f.CostItemName.errors.required">{{ 'smartagent.smartAgent.costHead.costItemNAmeRequired'
+                            |
+                            translate }}</div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <span>{{ 'smartagent.smartAgent.department.status' | translate }}</span>
+                        <label class="switch" style=" margin-left: 20px;">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <button type="submit"class="btn btn-outline-primary float-end mt-3" *ngIf="isAddMode">
+                        {{ 'smartagent.smartAgent.costHead.addCostItem' | translate}}
+                    </button>
+                    <button type="submit" class="btn btn-outline-primary float-end mt-3" *ngIf="!isAddMode">
+                        {{ 'smartagent.smartAgent.costHead.editCostItem' | translate}}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

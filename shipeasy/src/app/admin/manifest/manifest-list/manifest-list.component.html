@@ -1,0 +1,214 @@
+<div class="table-with-gheading">
+    <div class="wrapper">
+      <div class="container-fluid">
+        <div class="wrap-content">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="page-title-box">
+                <div class="btn-group mt-2">
+                  <ol class="breadcrumb hide-phone p-0 m-0">
+                    <li class="breadcrumb-item">Manifest</li>
+                    <li class="breadcrumb-item active color-red">{{ holdControl }}</li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row my-3">
+         
+            <ng-container *ngIf="currentUrl === 'list'">
+              <div class="accordion form-accordian" id="accordionPanelsStayOpenExample">
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="route">
+                    <button *ngIf="!callapseALL" (click)="callapseALL = !callapseALL" class="accordion-button"
+                      type="button" data-bs-toggle="collapse" data-bs-target="#raouteDetails" aria-expanded="true"
+                      aria-controls="raouteDetails">
+                      Manifest Details
+                    </button>
+  
+                    <button *ngIf="callapseALL" (click)="callapseALL = !callapseALL" class="accordion-button"
+                      type="button" data-bs-toggle="collapse" data-bs-target="#demo" aria-expanded="true"
+                      aria-controls="demo">
+                      Manifest Details
+                    </button>
+                  </h2>
+                  <div id="raouteDetails" class="accordion-collapse collapse show" aria-labelledby="route"
+                    data-bs-parent="#accordionPanelsStayOpenExample">
+                    <div class="accordion-body">
+                      <div class="wrap-form-field">
+                        <ul class="nav nav-pills master-flow-body-content-alignment">
+                          <li class="" *ngFor="let man of manifest">
+                            <a class="" routerLink="{{man?.key}}">{{man?.name}}</a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item display-none">
+                  <h2 class="accordion-header" id="demo1">
+                    <button type="button" data-bs-toggle="collapse" data-bs-target="#demo" aria-expanded="false"
+                      aria-controls="demo">
+                    </button>
+                  </h2>
+                  <div id="demo" aria-labelledby="demo1" data-bs-parent="#accordionPanelsStayOpenExample">
+                    <div class="accordion-body">
+                    </div>
+                  </div>
+                </div>
+              </div>
+  
+  
+              <div class="col-md-12 mb-5">
+                <div class="table-responsive ">
+                  <div class="wrap-table-area wrap-table-design wrap-form-field" id="htmlData">
+                    <table aria-describedby="mytable" class="">
+                      <thead>
+                        <tr class="field-name">
+                          <th><input type="checkbox" /></th>
+                          <th scope="col" data-order="desc" data-name="basicDetails" data-keys='["stcQutationNo"]'>
+                            BL No.
+                          </th>
+                          <th scope="col" data-order="desc" data-name="basicDetails" data-keys='["stcQutationNo"]'>
+                            POL
+                          </th>
+                          <th scope="col" data-order="desc" data-name="basicDetails" data-keys='["stcQutationNo"]'>
+                            POD
+                          </th>
+                          <th scope="col" data-order="desc" data-name="basicDetails" data-keys='["stcQutationNo"]'>
+                            FPOD
+                          </th>
+                          <th scope="col" data-order="desc" data-name="basicDetails" data-keys='["stcQutationNo"]'>
+                            Consignee Name
+                          </th>
+                          <th scope="col" data-order="desc" data-name="basicDetails" data-keys='["stcQutationNo"]'>
+                            General Remarks
+                          </th>
+                          <th scope="col" data-order="desc" data-name="basicDetails" data-keys='["stcQutationNo"]'>
+                            POL Remarks
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let data of houseBlList">
+                          <td><input type="checkbox" /></td>
+                          <td class="">{{data?.blNumber}}</td>
+                          <td class="">{{data?.importPolName}}</td>
+                          <td class="">{{data?.importPodName}}</td>
+                          <td class="">{{data?.importFpodName}}</td>
+                          <td class="">{{data?.consigneeName}}</td>
+                          <td class="">{{data?.blGeneralRemarks}}</td>
+                          <td class="">{{data?.blGeneralRemarks}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="no-data-availble" *ngIf="searchList?.length === 0">
+                    No data found
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+      
+            <div class="row mt-3">
+              <div *ngIf="holdControl === 'checklist-igm'" [class.active]="holdControl === 'checklist-igm'"
+              class="tab-pane fade show" id="checklist-igm" role="tabpanel" aria-labelledby="checklist-igm-tab">
+              <app-igm-checklist></app-igm-checklist>
+            </div>
+              <div *ngIf="holdControl === 'view-master-bl'" [class.active]="holdControl === 'view-master-bl'"
+              class="tab-pane fade show" id="view-master-bl" role="tabpanel" aria-labelledby="view-master-bl-tab">
+              <app-house-bl></app-house-bl>
+            </div>
+              <div *ngIf="holdControl === 'update-sealNo'" [class.active]="holdControl === 'update-sealNo'"
+                class="tab-pane fade show" id="update-sealNo" role="tabpanel" aria-labelledby="update-sealNo-tab">
+                <app-update-seal-no></app-update-seal-no>
+              </div>
+              <div *ngIf="holdControl === 'igm-generation'" [class.active]="holdControl === 'igm-generation'"
+                class="tab-pane fade show" id="igm-generation" role="tabpanel" aria-labelledby="igm-generation-tab">
+                <app-igm-generation></app-igm-generation>
+              </div>
+              <div *ngIf="holdControl === 'update-master-bl'" [class.active]="holdControl === 'update-master-bl'"
+                class="tab-pane fade show" id="update-master-bl" role="tabpanel" aria-labelledby="update-master-bl-tab">
+                <app-update-master-bl></app-update-master-bl>
+              </div>
+              <div *ngIf="holdControl === 'update-bl-status'" [class.active]="holdControl === 'update-bl-status'"
+                class="tab-pane fade show" id="update-bl-status" role="tabpanel" aria-labelledby="update-bl-status-tab">
+                <app-update-bl-status></app-update-bl-status>
+              </div>
+              <div *ngIf="holdControl === 'update-cfs'" [class.active]="holdControl === 'update-cfs'"
+                class="tab-pane fade show" id="update-cfs" role="tabpanel" aria-labelledby="update-cfs-tab">
+                <app-update-cfs></app-update-cfs>
+              </div>
+              <div *ngIf="holdControl === 'update-item-no'" [class.active]="holdControl === 'update-item-no'"
+              class="tab-pane fade show" id="update-item-no" role="tabpanel" aria-labelledby="update-item-no-tab">
+              <app-update-item-no></app-update-item-no>
+            </div>
+            <div *ngIf="holdControl === 'update-tp'" [class.active]="holdControl === 'update-tp'"
+            class="tab-pane fade show" id="update-tp" role="tabpanel" aria-labelledby="update-tp-tab">
+            <app-update-tp></app-update-tp>
+          </div>
+              <div *ngIf="holdControl === 'update-freight'" [class.active]="holdControl === 'update-freight'"
+              class="tab-pane fade show" id="update-freight" role="tabpanel" aria-labelledby="update-freight-tab">
+              <app-update-freight></app-update-freight>
+            </div>
+              <div *ngIf="holdControl === 'update-checklist'" [class.active]="holdControl === 'update-checklist'"
+              class="tab-pane fade show" id="update-checklist" role="tabpanel" aria-labelledby="update-checklist-tab">
+              <app-update-checklist></app-update-checklist>
+            </div>
+              <div *ngIf="holdControl === 'update-slot-bl'" [class.active]="holdControl === 'update-slot-bl'"
+              class="tab-pane fade show" id="update-slot-bl" role="tabpanel" aria-labelledby="update-slot-bl-tab">
+              <app-update-slot-bl></app-update-slot-bl>
+            </div>
+              <div *ngIf="holdControl === 'update-container-cell'" [class.active]="holdControl === 'update-container-cell'"
+                class="tab-pane fade show" id="update-container-cell" role="tabpanel" aria-labelledby="update-container-cell-tab">
+                <app-update-container-cell-position></app-update-container-cell-position>
+              </div>
+
+              <div *ngIf="holdControl === 'view-SOC'" [class.active]="holdControl === 'view-SOC'"
+                class="tab-pane fade show" id="view-SOC" role="tabpanel" aria-labelledby="view-SOC-tab">
+                <app-view-soc-container></app-view-soc-container>
+              </div>
+
+              <div *ngIf="holdControl === 'update-product'" [class.active]="holdControl === 'update-product'"
+                class="tab-pane fade show" id="update-product" role="tabpanel" aria-labelledby="update-product-tab">
+                <app-update-product-details></app-update-product-details>
+              </div>
+
+              <div *ngIf="holdControl === 'cfs-summary'" [class.active]="holdControl === 'cfs-summary'"
+                class="tab-pane fade show" id="cfs-summary" role="tabpanel" aria-labelledby="cfs-summary-tab">
+                <app-view-cfs-summary></app-view-cfs-summary>
+              </div>
+              <div *ngIf="holdControl === 'update-bond'" [class.active]="holdControl === 'update-bond'"
+              class="tab-pane fade show" id="update-bond" role="tabpanel" aria-labelledby="update-bond-tab">
+              <app-update-bond></app-update-bond>
+            </div>
+              <div *ngIf="holdControl === 'edit-terminal-fpod'" [class.active]="holdControl === 'edit-terminal-fpod'"
+              class="tab-pane fade show" id="edit-terminal-fpod" role="tabpanel" aria-labelledby="edit-terminal-fpod-tab">
+              <app-edit-terminal-fpod></app-edit-terminal-fpod>
+              </div>
+
+              <div *ngIf="holdControl === 'edit-terminal-fpod-container'" [class.active]="holdControl === 'edit-terminal-fpod-container'"
+              class="tab-pane fade show" id="edit-terminal-fpod-container" role="tabpanel" aria-labelledby="edit-terminal-fpod-container-tab">
+              <app-edit-terminal-fpod-container></app-edit-terminal-fpod-container>
+              </div>
+              <div *ngIf="holdControl === 'update-cargo-departure'" [class.active]="holdControl === 'update-cargo-departure'"
+              class="tab-pane fade show" id="update-cargo-departure" role="tabpanel" aria-labelledby="update-cargo-departure-tab">
+              <app-update-cargo-departure></app-update-cargo-departure>
+              </div>
+
+              <div *ngIf="holdControl === 'update-loadport-remarks'" [class.active]="holdControl === 'update-loadport-remarks'"
+              class="tab-pane fade show" id="update-loadport-remarks" role="tabpanel" aria-labelledby="update-loadport-remarks-tab">
+              <app-update-loadport-remarks></app-update-loadport-remarks>
+              </div>
+
+              <div *ngIf="holdControl === 'update-igm-no-date'" [class.active]="holdControl === 'update-igm-no-date'"
+              class="tab-pane fade show" id="update-igm-no-date" role="tabpanel" aria-labelledby="update-igm-no-date-tab">
+              <app-update-igm-no-date></app-update-igm-no-date>
+              </div>
+            </div>
+  
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

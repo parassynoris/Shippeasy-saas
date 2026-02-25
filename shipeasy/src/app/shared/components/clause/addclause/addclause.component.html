@@ -1,0 +1,61 @@
+<div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">{{title}} Clause</h4>
+      <button type="button" class="btn-close shadow-none" (click)="onSave()" aria-label="Close">
+       
+       </button>
+      
+    </div>
+    <div class="modal-body">
+      <div class="wrap-form-field padding-space  modal-bottom-alignment-for-mobile-view">  
+      <form [formGroup]="addClause" class="row g-3 mt-3 align-items-center">
+              
+        <div class="col-md-6">
+            <label for="Principal" class="form-label">{{ 'smartagent.smartAgent.AllformAddedit.clauseName' | translate }} <span class="text-danger">*</span></label>
+            <input type="text" class="form-control custom-input" id="Principal " placeholder="" 
+            formControlName="clauseName" [ngClass]="{ 'is-invalid': submitted && f.clauseName.errors }">    
+               <div *ngIf="submitted && f.clauseName.errors" class="invalid-feedback">
+                   <div *ngIf="f.clauseName.errors.required">{{ 'smartagent.smartAgent.AllformAddedit.clauseNameisrequired' | translate }}</div>
+               </div>
+          </div>
+         
+
+            <div class="col-md-3">
+              <label class="mb-0 p-0 form-label">{{ 'smartagent.smartAgent.AllformAddedit.startDate' | translate }}</label>
+              <mat-form-field appearance="outline" class="custom-date-picker">
+               <div class="d-flex align-items-center  w-100">
+                <input matInput
+                [matDatepicker]="pickerEtay" formControlName="StartDate" class="h-0" [min]="minDate"/>
+              <mat-datepicker-toggle matSuffix [for]="pickerEtay"></mat-datepicker-toggle>
+               </div>
+                <mat-datepicker #pickerEtay></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="col-md-3">
+              <label class="mb-0 p-0 form-label">{{ 'smartagent.smartAgent.AllformAddedit.endDate' | translate }}</label>
+                <mat-form-field appearance="outline" class="custom-date-picker">
+                 <div class="d-flex align-items-center  w-100">
+                  <input matInput
+                  [matDatepicker]="pickerEtas" formControlName="EndDate" class="h-0" [min]="minDate"/>
+                <mat-datepicker-toggle matSuffix [for]="pickerEtas"></mat-datepicker-toggle>
+                 </div>
+                  <mat-datepicker #pickerEtas></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-md-12">
+                <label for="Country" class="form-label">{{ 'smartagent.smartAgent.AllformAddedit.remark' | translate }} </label>
+                <input type="text" class="form-control custom-input" id="clauseType " placeholder="" 
+                formControlName="remarks">
+                
+                </div>
+              
+              
+              <div class="col-md-12 wrap-form-action">
+                <button type="button" class="btn btn-outline-primary float-end mt-3" *ngIf="!editMode"  (click)="SaveClause()">save</button>
+                <button type="button" class="btn btn-outline-primary float-end mt-3" *ngIf="editMode"  (click)="SaveClause()">Update</button>
+                </div>
+            </form>
+       </div>
+    </div>
+  </div>
+

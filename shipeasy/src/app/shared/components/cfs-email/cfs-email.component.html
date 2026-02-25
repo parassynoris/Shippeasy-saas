@@ -1,0 +1,944 @@
+<div class="header-right">
+  <!-- Add CFS Button -->
+  <a appAccessControl featureCode="" accessType="add" title="Add CFS"
+    class="max-con new-action btn btn-outline-primary btn-sm rounded-pill" (click)="open(Addcfs,'Addcfs')">
+    Add CFS
+  </a>
+  <!-- Add IGM Button -->
+  <a appAccessControl featureCode="" accessType="add" title="Add {{isExport ? 'EGM' : 'IGM'}}"
+    class="max-con new-action btn btn-outline-primary btn-sm rounded-pill" (click)="open(Addigm,'Addigm')">
+    Add {{isExport ? 'EGM' : 'IGM'}}
+  </a>
+  <a appAccessControl featureCode="" accessType="add" title="Add NOC"
+    class="max-con new-action btn btn-outline-primary btn-sm rounded-pill" (click)="open(Addnoc,'Addnoc')">
+    Add NOC
+  </a>
+</div>
+
+
+<ng-template #Addnoc let-modal>
+  <div class="modal-content nz-allSelect">
+    <div class="modal-headers  ">
+      <h4 class="modal-title">
+        <ng-container>
+          Add NOC
+        </ng-container>
+      </h4>
+      <button type="button" class="btn-close shadow-none float-end" (click)="onclose('noc')"
+        aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <!-- <form class="row g-3"> -->
+      <div class="box" style="margin-top: -18px;">
+
+        <form [formGroup]="cfsForm" id="movementForm">
+          <div class="row">
+
+            <div class="col-md-6" style="margin-top: 5px;">
+              <label class="form-label" style="font-size: 12px; font-weight: bold;">Tracking No.</label>
+              <input type="text" formControlName="trackingNo" class="form-control custom-input"
+                placeholder="Tracking No." />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label" style="font-size: 12px; padding-top:5px; font-weight: bold;">Status </label>
+              <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="status"
+                nzPlaceHolder="Select status " style="font-size: 12px;">
+                <nz-option nzValue="Pending" nzLabel="Pending"></nz-option>
+                <nz-option nzValue="Sent" nzLabel="Sent"></nz-option>
+                <nz-option nzValue="Delivered" nzLabel="Delivered"></nz-option>
+              </nz-select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label" style="font-size: 12px; padding-top:5px; font-weight: bold;">NOC Date
+              </label>
+              <nz-date-picker class="form-select custom-input" nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss a"
+                formControlName="nocDate">
+              </nz-date-picker>
+            </div>
+
+            <div class="col-md-6" style="margin-top: 5px;">
+              <label class="form-label" style="font-size: 12px; font-weight: bold;">Agent</label>
+              <input type="text" formControlName="agent" class="form-control custom-input" placeholder="Agent" />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label" style="font-size: 12px; font-weight: bold;">Sending Option</label>
+              <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="igmThrouge"
+                nzPlaceHolder="Select Sending Method" style="font-size: 12px;">
+                <nz-option *ngFor="let test of igmThrouge" [nzValue]="test?.typeName"
+                  [nzLabel]="test?.typeName"></nz-option>
+              </nz-select>
+            </div>
+
+            <ng-container *ngIf="checkSendingOption()">
+
+              <div class="col-md-6" style="margin-top: 5px;">
+                <label class="form-label" style="font-size: 12px; font-weight: bold;">Track Type</label>
+                <div class="d-flex align-items-center">
+                  <div class="form-check me-3">
+                    <input class="form-check-input" type="radio" formControlName="isFastTrack" id="fastTrack" value="Fast-Track">
+                    <label class="form-check-label" for="fastTrack">Fast-Track</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" formControlName="isFastTrack" id="nonFastTrack" value="Non-Fast-Track">
+                    <label class="form-check-label" for="nonFastTrack">Non-Fast-Track</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6" style="margin-top: 5px;">
+                <label class="form-label" style="font-size: 12px; font-weight: bold;">Recipient’s Name</label>
+                <input type="text" formControlName="recipientName" class="form-control custom-input" placeholder="Recipient’s Name" />
+              </div>
+
+              <div class="col-md-6" style="margin-top: 5px;">
+                <label class="form-label" style="font-size: 12px; font-weight: bold;">Address</label>
+                <!-- <input type="text" formControlName="address" class="form-control custom-input" placeholder="Address" /> -->
+
+                <textarea class="form-control  " formControlName="address" rows="3" cols="30" PlaceHolder="Address">
+                </textarea>
+
+              </div>
+              <div class="col-md-6" style="margin-top: 5px;">
+                <label class="form-label" style="font-size: 12px; font-weight: bold;">Courier Date</label>
+                <nz-date-picker class="form-select custom-input" nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss a"
+                formControlName="courierDate">
+              </nz-date-picker>
+              </div>
+
+            </ng-container>
+            
+            <div class="col-md-6" style="margin-top: 5px;">
+              <label class="form-label" style="font-size: 12px; font-weight: bold;">Remarks</label>
+              <textarea class="form-control  " formControlName="remarks" rows="3" cols="30" PlaceHolder="remarks">
+                     </textarea>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; padding-top: 10px;">
+              <button (click)="onsave('Uploaddocument')" nz-tooltip nzTooltipTitle="Submit"
+                class="btn btn-outline-primary btn-lg mt-2" type="submit">
+                Submit <i class="bi bi-send"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!--Send CFS Email -->
+<ng-template #Addcfs let-modal>
+  <div class="modal-content nz-allSelect">
+    <div class="modal-headers  ">
+      <h4 class="modal-title">
+        <ng-container>
+          {{openAddCFS ? 'Add CFS Master' : 'Send CFS Email'}}
+        </ng-container>
+      </h4>
+      <button type="button" class="btn-close shadow-none float-end" (click)="onclose('cfs')"
+        aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <!-- <form class="row g-3"> -->
+      <div class="box" style="margin-top: -18px;">
+
+        <ng-container *ngIf="!openAddCFS">
+          <form [formGroup]="cfsForm" id="movementForm">
+            <div class="row">
+              <div class="col-md-6">
+                <label class="form-label" style="font-size: 12px; font-weight: bold;">Movement Type </label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="movementType"
+                  nzPlaceHolder="Select Movement Type" style="font-size: 12px;">
+                  <nz-option *ngFor="let test of movementType" [nzValue]="test?.typeName"
+                    [nzLabel]="test?.typeName"></nz-option>
+                </nz-select>
+              </div>
+
+
+              <div class="col-md-6">
+                <label class="form-label" style="font-size: 12px; font-weight: bold;">CFS Name</label>
+                <div class="d-flex align-items-center">
+                  <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="cfsId"
+                    nzPlaceHolder="Select CFS Name" style="font-size: 12px;">
+                    <nz-option *ngFor="let test of cfsList" [nzValue]="test?.locationId"
+                      [nzLabel]="test?.locationName"></nz-option>
+                  </nz-select>
+                  <em class="bi bi-plus-circle color-pencil-red pl-1" (click)="openCfs()"></em>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label" style="font-size: 12px; font-weight: bold;">Sending Option </label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="sendingMethod"
+                  nzPlaceHolder="Select Sending Method" style="font-size: 12px;">
+                  <nz-option *ngFor="let test of sendingMethod" [nzValue]="test?.typeName"
+                    [nzLabel]="test?.typeName"></nz-option>
+                </nz-select>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label" style="font-size: 12px; padding-top:5px; font-weight: bold;">CFS Date
+                </label>
+                <nz-date-picker class="form-select custom-input" nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss a"
+                  formControlName="cfsDate">
+                </nz-date-picker>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label" style="font-size: 12px; padding-top:5px; font-weight: bold;">CFS Request
+                </label>
+                <nz-date-picker class="form-select custom-input" nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss a"
+                  formControlName="cfsRequestDate">
+                </nz-date-picker>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label" style="font-size: 12px; padding-top:5px; font-weight: bold;">Status </label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="status"
+                  nzPlaceHolder="Select status " style="font-size: 12px;">
+                  <nz-option *ngFor="let test of status" [nzValue]="test?.typeName"
+                    [nzLabel]="test?.typeName"></nz-option>
+                </nz-select>
+              </div>
+              <div class="col-md-6" style="margin-top: 5px">
+                <label class="form-label" style="font-size: 12px; font-weight: bold;">MBL No.</label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="blNo" [(ngModel)]="selectedMBL" 
+                           (ngModelChange)="onBLNumberChange('MBL', $event)" nzPlaceHolder="Select MBL No.">
+                  <nz-option *ngFor="let mbl of getmbligl('cfs')" [nzValue]="mbl" [nzLabel]="mbl"></nz-option>
+                </nz-select>
+              </div>
+              <div class="col-md-6" style="margin-top: 5px">
+                <label class="form-label" style="font-size: 12px; font-weight: bold;">Branch Name</label>
+                <nz-select class="form-select" (ngModelChange)="onselectbranch($event)"  nzShowSearch nzAllowClear nzPlaceHolder="Select Branch"
+                  formControlName="branch_name"
+                  [ngClass]="{'is-invalid': submitted6 && f6.branch_name?.errors}">
+                  <nz-option *ngFor="let branch of branchList" [nzLabel]="branch?.branch_name" [nzValue]="branch?.branch_name"></nz-option>
+                </nz-select>
+                <div *ngIf="submitted6 && f6.branch_name?.errors" class="invalid-feedback">
+                  <div *ngIf="f6.branch_name.errors.required">
+                    Branch Name is required
+                  </div>
+                </div>
+              </div>
+              <div style="margin-right: 20px; padding-top:10px">
+                <label class="form-label">Upload Document</label>
+                <input type="file"  (change)="fileChanged($event,'cfsForm')" class="form-control custom-input"
+                  placeholder="" value="" />
+
+                  <span class="download-tab" *ngIf="this.editCFSData?.documentName">{{this.editCFSData?.documentName}} 
+                    <em class="bi bi-eye globally-change-icon-color mx-1" (click)="documentPreview(this.editCFSData)"></em>
+                    <em class="bi bi-download globally-change-icon-color mx-1"(click)="downloadFile(this.editCFSData)"></em>
+                  </span>
+              </div>
+
+              <div class="wrap-table-area wrap-form-field mb-2">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="table-responsive">
+                      <label class="form-label" style="font-size: 12px; font-weight: bold;">Attach Documents</label>
+
+                      <table aria-describedby="mytable" class="gfg">
+                        <thead>
+                          <tr class="field-name">
+                            <th scope="col"></th>
+                            <th scope="col">{{ 'smartagent.portenquiry.document.documentType' | translate }}</th>
+                            <th scope="col">{{ 'smartagent.portenquiry.document.documentName' | translate }}</th>  
+                            <th scope="col">Action</th>
+      
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let doc of documentTableData; let i = index">
+                            <td class="text-center">
+                              <input type="checkbox" [checked]="doc.isSelected" (change)="changesDataValue($event, doc.documentId)" name="isSelected{{i}}">
+                            </td>
+                            <td>{{doc.documentType}}</td>
+                            <td>{{doc?.documentName}}</td>
+                            <td class="text-center">
+                              <span class="mtop" nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}"><a >
+                                <em class="bi bi-eye globally-change-icon-color" (click)="documentPreview(doc)"></em></a>
+                            </span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <span class="form-check form-switch mx1 mb-0 mt-2 d-flex align-items-center">
+                  <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                    (change)="changeStatus($event)" formControlName="isEmail" />
+                  <label class="form-check-label ms-2" for="flexSwitchCheckChecked"
+                    style="font-size: 12px; font-weight: bold;">
+                    Send Email
+                  </label>
+                </span>
+              </div>
+            </div>
+
+            <div class="mt-2" *ngIf="this.cfsForm.get('isEmail').value">
+              <div class="">
+                <label class="form-label" style="font-size: 12px; font-weight: bold;">TO</label>
+                <mat-form-field class="w-100">
+                  <mat-chip-list #chipListTO aria-label="Email selection">
+                    <mat-chip *ngFor="let item of newMembersTO" [selectable]="selectable" [removable]="removable"
+                      (removed)="removenewMembersTO(item)">
+                      {{ item.to }}
+                      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <input formControlName="EmailTo" [matChipInputFor]="chipListTO"
+                      [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlurTO"
+                      (matChipInputTokenEnd)="addnewMembersTO($event)" />
+                  </mat-chip-list>
+                </mat-form-field>
+              </div>
+              <div class="">
+                <label class="form-label" style="font-size: 12px; font-weight: bold;">CC </label>
+                <mat-form-field class="w-100 small-dropdown">
+                  <mat-chip-list #chipListCC aria-label="CC email selection">
+                    <mat-chip *ngFor="let item of newMembersCC" [selectable]="selectable" [removable]="removable"
+                      (removed)="removenewMembersCC(item)">
+                      {{ item.cc }}
+                      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <input formControlName="CC"
+                           #autoTrigger="matAutocompleteTrigger"
+                           [matChipInputFor]="chipListCC"
+                           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                           [matChipInputAddOnBlur]="addOnBlurCC"
+                           (matChipInputTokenEnd)="addnewMembersCC($event)"
+                           [matAutocomplete]="auto" />
+                  </mat-chip-list>
+                  <!-- Dropdown arrow icon as a suffix -->
+                  <mat-icon matSuffix class="dropdown-icon" (click)="autoTrigger.openPanel()">keyboard_arrow_down</mat-icon>
+                  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedCC($event)" panelClass="custom-autocomplete">
+                    <mat-option *ngFor="let email of filteredUserEmails | async" [value]="email">
+                      {{ email }}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </div>
+
+              <div class=" my-2">
+                <label class="form-label" style="font-size: 12px; font-weight: bold;">Subject</label>
+                <input type="text" formControlName="subject" class="form-control custom-input" placeholder="Subject" />
+              </div>
+              <!-- <div class="col-md-8 mb-2 mrgn" style="position: relative; left:-16px;">
+                <label class="form-label">Attach Document</label>
+                <input type="file" (change)="fileChanged($event,'email')" class="form-control custom-input"
+                  placeholder="" />
+              </div> -->
+
+
+            
+
+              <div class="">
+                <ckeditor placeholder="Type here" formControlName="message" [editor]="Editor"></ckeditor>
+              </div>
+
+         
+
+              <button (click)="onsave('cfsForm')" class="btn btn-outline-primary btn-lg mt-2" type="submit">Send Email<i
+                  class="bi bi-send"></i>
+              </button>
+            </div>
+            <div style="display: flex; justify-content: flex-end; padding-top: 10px;">
+              <button (click)="onsave('Uploaddocument')" nz-tooltip nzTooltipTitle="Submit"
+                class="btn btn-outline-primary btn-lg mt-2" type="submit">
+                Submit <i class="bi bi-send"></i>
+              </button>
+            </div>
+          </form>
+        </ng-container>
+
+        <ng-container *ngIf="openAddCFS">
+          <form class="row g-3" [formGroup]="cfsAddForm">
+
+            <div class="col-md-4 location-input-bottom-alignment nz-select">
+              <label class="form-label">Master Type</label><span class="text-danger">*</span>
+              <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Master Type"
+                formControlName="masterType" [ngClass]="{'is-invalid': submitted6 && f6.masterType.errors}"
+                (ngModelChange)="getStateListCfs()">
+                <nz-option *ngFor="let master of masterTypeList" [nzLabel]="master?.label"
+                  [nzValue]="master?.value"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted6 && f6.masterType.errors" class="invalid-feedback">
+                <div *ngIf="f6.masterType.errors.required"> Master Type {{"common.isRequired" | translate}}</div>
+              </div>
+            </div>
+
+            <div class="col-md-4 location-input-bottom-alignment">
+              <label class="form-label">{{this.cfsAddForm.get('masterType').value}} Name</label><span
+                class="text-danger">*</span>
+              <input type="text" class="form-control custom-input" id=" " placeholder="Name" value=""
+                formControlName="name" [ngClass]="{ 'is-invalid': submitted6 && f6.name.errors }" appCapitalizeFirst />
+              <div *ngIf="submitted6 && f6.name.errors" class="invalid-feedback">
+                <div *ngIf="f6.name.errors.required">
+                  {{this.cfsAddForm.get('masterType').value}} {{"common.isRequired" |
+                  translate}}
+                </div>
+              </div>
+            </div>
+
+
+            <div class="col-md-4 location-input-bottom-alignment">
+              <label class="form-label">{{this.cfsAddForm.get('masterType').value}} Code</label>
+              <input type="text" class="form-control custom-input" id=" " placeholder="Code" value=""
+                formControlName="code" [ngClass]="{ 'is-invalid': submitted6 && f6.code.errors }" />
+              <div *ngIf="submitted6 && f6.code.errors" class="invalid-feedback">
+                <div *ngIf="f6.code.errors.required">
+                  {{this.cfsAddForm.get('masterType').value}} Code {{"common.isRequired" | translate}}
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 location-input-bottom-alignment" *ngIf="false">
+              <label class="form-label">Port Type</label><span class="text-danger">*</span>
+              <input type="text" class="form-control custom-input" id=" " placeholder="" value=""
+                formControlName="portType" [ngClass]="{ 'is-invalid': submitted6 && f6.portType.errors }" />
+              <div *ngIf="submitted6 && f6.portType.errors" class="invalid-feedback">
+                <div *ngIf="f6.portType.errors.required">
+                  {{ "stolt.masters.location.port_type" | translate }} {{"common.isRequired" | translate}}
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4 location-input-bottom-alignment">
+              <label class="form-label">Nominated CFS</label>
+              <input type="text" class="form-control custom-input" id=" " placeholder="Nominated CFS" value=""
+                formControlName="nominatedCfs" [ngClass]="{ 'is-invalid': submitted6 && f6.nominatedCfs.errors }" />
+              <div *ngIf="submitted6 && f6.nominatedCfs.errors" class="invalid-feedback">
+                <div *ngIf="f6.nominatedCfs.errors.required">
+                  Bond No {{"common.isRequired" | translate}}
+                </div>
+              </div>
+            </div>
+
+
+            <div class="col-md-4 location-input-bottom-alignment">
+              <label class="form-label">{{this.cfsAddForm.get('masterType').value}} EDI Code</label>
+              <input type="text" class="form-control custom-input" id=" " placeholder="EDI Code" value=""
+                formControlName="EDICode" [ngClass]="{ 'is-invalid': submitted6 && f6.EDICode.errors }" />
+              <div *ngIf="submitted6 && f6.EDICode.errors" class="invalid-feedback">
+                <div *ngIf="f6.EDICode.errors.required">
+                  {{this.cfsAddForm.get('masterType').value}} EDI Code {{"common.isRequired" |
+                  translate}}
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 location-input-bottom-alignment">
+              <label class="form-label">{{this.cfsAddForm.get('masterType').value}} Address</label><span
+                class="text-danger">*</span>
+              <textarea class="form-control  " [ngClass]="{'is-invalid': submitted6 && f6.address.errors}"
+                formControlName="address" rows="3" cols="30" PlaceHolder="Address">
+                      </textarea>
+
+
+              <div *ngIf="submitted6 && f6.address.errors" class="invalid-feedback">
+                <div *ngIf="f6.address.errors.required">
+                  Address {{"common.isRequired" | translate}}
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 location-input-bottom-alignment" *ngIf="false">
+              <label class="form-label">DO Print Address</label><span class="text-danger">*</span>
+              <input type="text" class="form-control custom-input" id=" " placeholder="" value=""
+                formControlName="DOaddress" [ngClass]="{ 'is-invalid': submitted6 && f6.DOaddress.errors }" />
+              <div *ngIf="submitted6 && f6.DOaddress.errors" class="invalid-feedback">
+                <div *ngIf="f6.DOaddress.errors.required">
+                  DO Address {{"common.isRequired" | translate}}
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 location-input-bottom-alignment nz-select">
+              <label class="form-label">Country</label><span class="text-danger">*</span>
+              <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Country" formControlName="country"
+                [ngClass]="{'is-invalid': submitted6 && f6.country.errors}" (ngModelChange)="getStateListCfs()">
+                <nz-option *ngFor="let country of countryData" [nzLabel]="country?.countryName"
+                  [nzValue]="country?.countryId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted6 && f6.country.errors" class="invalid-feedback">
+                <div *ngIf="f6.country.errors.required"> {{ "stolt.masters.location.city_country" | translate
+                  }}
+                  {{"common.isRequired" | translate}}
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 location-input-bottom-alignment nz-select">
+              <label class="form-label"> {{ "stolt.masters.location.state" |
+                translate }}</label><span class="text-danger">*</span>
+
+              <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="State" formControlName="state"
+                [ngClass]="{'is-invalid': submitted6 && f6.state.errors}">
+                <nz-option *ngFor="let state of stateListCfs" [nzLabel]="state?.typeDescription"
+                  [nzValue]="state?.stateId"></nz-option>
+              </nz-select>
+
+              <div *ngIf="submitted6 && f6.state.errors" class="invalid-feedback">
+                <div *ngIf="f6.state.errors.required"> {{
+                  "stolt.masters.location.state" | translate }}
+                  {{"common.isRequired" | translate}}
+                </div>
+              </div>
+            </div>
+
+
+
+            <div class="col-md-4 nz-select" *ngIf="f6.masterType.value == 'CFS'">
+              <label class="form-label">Port </label>
+              <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Port" formControlName="portName"
+                [ngClass]="{'is-invalid': submitted6 && f6.portName.errors}" (ngModelChange)="getTerminal($event)">
+                <nz-option *ngFor="let port of portList" [nzLabel]="port.portDetails?.portName"
+                  [nzValue]="port.portId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted6 && f6.portName.errors" class="invalid-feedback">
+                <div *ngIf="f6.portName.errors.required">Port Name is required
+                </div>
+              </div>
+            </div>
+
+            <ng-container *ngIf="f6.masterType.value === 'ICD'">
+              <div class="col-md-4" style="display: flex; align-items: center;">
+                <div class="form-check form-check-inline" style="display: flex; align-items: center;">
+                  <input formControlName="isSEZ" type="checkbox" id="isSEZ">
+                  <label class="form-check-label" for="isSEZ">Is SEZ</label>
+                </div>
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="false">
+              <div class="col-md-4">
+                <div class="form-check form-check-inline">
+                  <input formControlName="lineReference" class="form-check-input" type="checkbox" id="Reference">
+                  <label class="form-check-label" for="Reference">Line
+                    Reference</label>
+                </div>
+              </div>
+            </ng-container>
+
+            <div class="form-group wrap-form-action mt-4">
+              <button class="btn1 btn-lg float-end" (click)="onCancelCfs()" type="submit">
+                {{ "common.cancel" | translate }}
+              </button>
+              <button (click)="locationsMasters()" class="btn btn-outline-primary btn-lg float-end" type="submit">
+                {{'common.save' | translate}}
+              </button>
+            </div>
+          </form>
+        </ng-container>
+
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+<!-- Add IGM  -->
+<ng-template #Addigm let-modal> 
+    <form [formGroup]="cfsForm" id="movementForm">
+      <div class="modal-content nz-allSelect">
+        <div class="modal-headers">
+          <h4 class="modal-title">
+            <ng-container>
+              Send {{isExport ? 'EGM' : 'IGM'}} Email
+            </ng-container>
+          </h4>
+          <button type="button" class="btn-close shadow-none float-end" (click)="onclose('igm')"
+            aria-label="Close"></button>
+        </div>
+      </div>
+
+      <div class="row" style="margin:10px;">
+
+        <div class="col-md-6">
+          <label class="form-label" style="font-size: 12px; font-weight: bold;">{{isExport ? 'EGM' : 'IGM'}} Type</label>
+          <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="igmType"
+            nzPlaceHolder="Select Sending Method" style="font-size: 12px;">
+            <nz-option *ngFor="let test of igmType" [nzValue]="test?.typeName" [nzLabel]="test?.typeName"></nz-option>
+          </nz-select>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label" style="font-size: 12px; font-weight: bold;">{{isExport ? 'EGM' : 'IGM'}} Througe</label>
+          <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="igmThrouge"
+            nzPlaceHolder="Select Sending Method" style="font-size: 12px;">
+            <nz-option *ngFor="let test of igmThrouge" [nzValue]="test?.typeName"
+              [nzLabel]="test?.typeName"></nz-option>
+          </nz-select>
+        </div>
+
+        <div class="col-md-6" style="margin-top: 5px;">
+          <label class="form-label" style="font-size: 12px; font-weight: bold;">{{isExport ? 'EGM' : 'IGM'}} No</label>
+          <input type="text" formControlName="igmNo" class="form-control custom-input" placeholder="IGM No" />
+        </div>
+
+        <div class="col-md-6" style="margin-top:5px">
+          <label class="form-label" style="font-size: 12px; font-weight: bold;">{{isExport ? 'EGM' : 'IGM'}} Date </label>
+          <nz-date-picker class="form-select custom-input" nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss a"
+            formControlName="igmDate">
+          </nz-date-picker>
+        </div>
+
+        <div class="col-md-6" style="margin-top: 5px;">
+          <label class="form-label" style="font-size: 12px; font-weight: bold;">Line No./Subline No.</label>
+          <input type="text" formControlName="lineNo" class="form-control custom-input" placeholder="Line No./Subline No." />
+        </div>
+
+        <div class="col-md-6" style="margin-top:5px">
+          <label class="form-label" style="font-size: 12px; font-weight: bold;">{{isExport ? 'EGM' : 'IGM'}} Agent</label>
+          <div class="d-flex align-items-center">
+            <!-- <input type="text" formControlName="igmAgent" class="form-control custom-input" placeholder="IGM Agent" /> -->
+            <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="igmAgent"
+              [ngClass]="{'is-invalid': submitted && f.igmAgent.errors}" (ngModelChange)="setEmail($event)">
+              <nz-option *ngFor="let data of  partymasterList"
+                nzLabel="{{data?.partyShortcode}}{{data?.partyShortcode ? '-': ''}}{{data.name}}"
+                [nzValue]="data.partymasterId"></nz-option>
+            </nz-select>
+            <em class="bi bi-plus-circle color-pencil-red pl-1" (click)="toggleDrawer(drawer, 'Addigm')"></em>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label" style="font-size: 12px; padding-top:5px; font-weight: bold;">{{isExport ? 'EGM' : 'IGM'}} Request
+          </label>
+          <nz-date-picker class="form-select custom-input" nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss a"
+            formControlName="igmRequestDate">
+          </nz-date-picker>
+        </div>
+
+        <div class="col-md-6" style="margin-top:5px">
+          <label class="form-label" style="font-size: 12px; font-weight: bold;">Status </label>
+          <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="status"
+            nzPlaceHolder="Select status">
+            <nz-option *ngFor="let test of status" [nzValue]="test?.typeName" [nzLabel]="test?.typeName"></nz-option>
+          </nz-select>
+        </div>
+        <div class="col-md-6" style="margin-top: 5px">
+          <label class="form-label" style="font-size: 12px; font-weight: bold;">MBL No.</label>
+          <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="blNo" [(ngModel)]="selectedMBL" 
+                     (ngModelChange)="onBLNumberChange('MBL', $event,true)" nzPlaceHolder="Select MBL No.">
+            <nz-option *ngFor="let mbl of getmbligl('igm')" [nzValue]="mbl" [nzLabel]="mbl"></nz-option>
+          </nz-select>
+        </div>
+        <!-- <div class="col-md-6" style="margin-top: 5px">
+          <label class="form-label" style="font-size: 12px; font-weight: bold;">HBL No.</label>
+          <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="blNo" [(ngModel)]="selectedHBL" 
+                     (ngModelChange)="onBLNumberChange('HBL', $event)" nzPlaceHolder="Select HBL No.">
+            <nz-option *ngFor="let hbl of hblNumbers" [nzValue]="hbl" [nzLabel]="hbl"></nz-option>
+          </nz-select>
+        </div> -->
+        <div class="col-md-6" style="margin-top: 5px">
+          <label class="form-label" style="font-size: 12px; font-weight: bold;">HBL list</label>
+          <ng-multiselect-dropdown 
+            (onSelect)="onhblChange()"
+            (onDeSelect)="onhblChange()"
+            [settings]="settings"
+            [data]="hblDropdownList"
+            [(ngModel)]="listOfHblOptions"
+            [ngClass]="{ 'is-invalid': submitted }"
+            [ngModelOptions]="{ standalone: true }">
+          </ng-multiselect-dropdown>
+        </div>
+
+        <div class="col-md-6" style="margin-top:5px">
+          <label class="form-label" style="font-size: 12px; font-weight: bold;">CHA</label>
+          <div class="d-flex align-items-center">
+            <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="chaId"
+              [ngClass]="{'is-invalid': submitted && f.chaId.errors}">
+              <nz-option *ngFor="let data of chaList"
+                nzLabel="{{data?.partyShortcode}}{{data?.partyShortcode ? '-': ''}}{{data.name}}"
+                [nzValue]="data.partymasterId"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+
+        <div style="font-weight: bold; padding:10px ">
+          <label class="form-label">Upload Document</label>
+          <input type="file"  (change)="fileChanged($event,'cfsForm')" class="form-control custom-input" />
+          <span class="download-tab" *ngIf="this.editCFSData?.documentName">{{this.editCFSData?.documentName}} 
+            <em class="bi bi-eye globally-change-icon-color mx-1" (click)="documentPreview(this.editCFSData)"></em>
+            <em class="bi bi-download globally-change-icon-color mx-1"(click)="downloadFile(this.editCFSData)"></em>
+          </span>
+        </div>
+
+        <div class="wrap-table-area wrap-form-field mb-2">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="table-responsive">
+                <label class="form-label" style="font-size: 12px; font-weight: bold;">Attach Documents</label>
+
+                <table aria-describedby="mytable" class="gfg">
+                  <thead>
+                    <tr class="field-name">
+                      <th scope="col"></th>
+                      <th scope="col">{{ 'smartagent.portenquiry.document.documentType' | translate }}</th>
+                      <th scope="col">{{ 'smartagent.portenquiry.document.documentName' | translate }}</th>  
+                      <th scope="col">Action</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let doc of documentTableData; let i = index">
+                      <td class="text-center">
+                        <input type="checkbox" [checked]="doc.isSelected" (change)="changesDataValue($event, doc.documentId)" name="isSelected{{i}}">
+                      </td>
+                      <td>{{doc.documentType}}</td>
+                      <td>{{doc?.documentName}}</td>
+                      <td class="text-center">
+                        <span class="mtop" nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}"><a >
+                          <em class="bi bi-eye globally-change-icon-color" (click)="documentPreview(doc)"></em></a>
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <span class="form-check form-switch" style=" padding:5px 30px">
+            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+              (change)="changeStatus($event)"    formControlName="isEmail" />
+            <label class="form-check-label ms-2" for="flexSwitchCheckChecked"
+              style="font-size: 12px; font-weight: bold;">
+              Send Email
+            </label>
+          </span>
+        </div>
+      </div>
+
+      <div class="mx-4 mt-3" *ngIf="this.cfsForm.get('isEmail').value">
+        <div class="">
+          <label class="form-label" style="font-size: 12px; font-weight: bold;">TO</label>
+          <mat-form-field>
+            <mat-chip-list #chipListTO aria-label="Fruit selection">
+              <mat-chip *ngFor="let item of newMembersTO" [selectable]="selectable" [removable]="removable"
+                (removed)="removenewMembersTO(item)">
+                {{ item.to }}
+                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+              </mat-chip>
+              <input formControlName="EmailTo" [matChipInputFor]="chipListTO"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlurTO"
+                (matChipInputTokenEnd)="addnewMembersTO($event)" />
+            </mat-chip-list>
+          </mat-form-field>
+        </div>
+
+        <div class="">
+          <label class="form-label" style="font-size: 12px; font-weight: bold;">CC </label>
+          <mat-form-field class="w-100 small-dropdown">
+            <mat-chip-list #chipListCC aria-label="CC email selection">
+              <mat-chip *ngFor="let item of newMembersCC" [selectable]="selectable" [removable]="removable"
+                (removed)="removenewMembersCC(item)">
+                {{ item.cc }}
+                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+              </mat-chip>
+              <input formControlName="CC"
+                     #autoTrigger="matAutocompleteTrigger"
+                     [matChipInputFor]="chipListCC"
+                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                     [matChipInputAddOnBlur]="addOnBlurCC"
+                     (matChipInputTokenEnd)="addnewMembersCC($event)"
+                     [matAutocomplete]="auto" />
+            </mat-chip-list>
+            <!-- Dropdown arrow icon as a suffix -->
+            <mat-icon matSuffix class="dropdown-icon" (click)="autoTrigger.openPanel()">keyboard_arrow_down</mat-icon>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedCC($event)" panelClass="custom-autocomplete">
+              <mat-option *ngFor="let email of filteredUserEmails | async" [value]="email">
+                {{ email }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+
+        <div class=" my-2">
+          <label class="form-label" style="font-size: 12px; font-weight: bold;">Subject</label>
+          <input type="text" formControlName="subject" class="form-control custom-input" placeholder="Subject" />
+        </div>
+
+
+
+
+        <!-- <div class="col-md-8 mb-2 mrgn" style="position: relative; left:-16px;">
+          <label class="form-label">Attach Document</label>
+          <input type="file"  (change)="fileChanged($event,'email')" class="form-control custom-input"
+            placeholder="" value="" />
+        </div> -->
+ 
+       
+        <div class=" ">
+          <ckeditor placeholder="Type here" formControlName="message" [editor]="Editor" [(ngModel)]="defaultMessage" ></ckeditor>
+        </div>
+
+     
+
+
+
+        <button (click)="onsave('cfsForm')"  [disabled]="!emailButtonEnabled && !editCFSData"  class="btn btn-outline-primary btn-lg mt-2" type="button">
+          Send Email <i class="bi bi-send"></i>
+        </button>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; margin:10px;">
+        <button (click)="onsave('Uploaddocument')" nz-tooltip nzTooltipTitle="Submit"
+          class="btn btn-outline-primary btn-lg mt-2" type="submit">
+          Submit <i class="bi bi-send"></i>
+        </button>
+      </div>
+
+    </form> 
+  
+</ng-template>
+<mat-drawer-container>
+  <mat-drawer #drawer position="end" mode="over" class="drawer" (closed)="onDrawerClose()">
+    <app-add-party [isPopup]="true" [customerTypeFromPopup]="customerTypeFromPopup"
+      (getList)="handleGetList($event)"></app-add-party>
+  </mat-drawer>
+</mat-drawer-container>
+
+
+<div class="col-md-12" style="padding-top: 20px;">
+  <div class="table-design mb-5">
+    <table>
+      <thead>
+        <tr class="field-name">
+          <th scope="col">Type</th>
+          <th scope="col">Tracking No./{{isExport ? 'EGM' : 'IGM'}} No.</th>
+          <th scope="col">Sending Option</th>
+          <!-- <th scope="col" style="width: 30px !important;">Document Name</th> -->
+          <th scope="col">CFS/Agent Name </th>
+          <th scope="col">Status</th>
+          <th scope="col">{{isExport ? 'EGM' : 'IGM'}}/CFS Request</th>
+          <th scope="col">CFS/{{isExport ? 'EGM' : 'IGM'}}/NOC Date</th>
+          <th scope="col">Uploaded Date</th>
+          <th scope="col">Last Updated By</th>
+          <th scope="col">View Vessel</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let element of dataSource.data; let i = index">
+          <td>
+            {{ element?.type == 'Addigm' ? (element?.igmType == 'MBL + HBL' ? (isExport ? 'EGM' : 'IGM') : (element?.igmType || 'N/A')) : (element?.movementType || 'N/A') }}
+          </td>          
+          <td style="text-align: center;">{{ (element?.trackingNo || element?.igmNo) || 'N/A' }}</td>
+          <td>{{ element?.sendingMethod ? element.sendingMethod : element.igmThrouge || 'N/A' }}</td>
+          <!-- <td class="white-space-br">{{ getDocumentNames(element) || 'N/A' }}</td> -->
+          <td>{{ element?.cfsName }} {{ element?.agent || element?.igmAgentName || 'N/A' }}</td>
+          <td>{{element?.status || 'N/A'}}</td>
+          <td>{{(element?.igmRequestDate || element?.cfsRequestDate) | date: 'dd-MM-yyyy, hh:mm a' || 'N/A'}}</td>
+          <td>{{ getDateByType(element) | date: 'dd-MM-yyyy, hh:mm a' || ' N/A ' }}</td>
+          <td>{{element?.updatedOn | date: 'dd-MM-yyyy, hh:mm a' || 'N/A'}}</td>
+          <td class="text-start">{{element?.updatedBy || 'N/A' }}</td>
+          <td class="text-center">
+            <a appAccessControl (click)="openFunction(ShowData,element)" *ngIf="element?.igmNo"><em
+                class="bi bi-eye globally-change-icon-color"></em></a>
+          <td class="action-field ">
+            <span class="mtop" nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}"><a>
+                <em class="bi bi-pencil globally-change-icon-color"
+                  (click)="open(element?.type == 'Addigm' ?  Addigm : element?.type == 'Addcfs' ? Addcfs : Addnoc ,element?.type,element)"></em></a>
+            </span>
+
+            <span class="mtop" nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }} Document"
+              *ngIf="element?.documents?.length > 0 || element?.documentName"><a>
+                <em style="padding-left: 8px;" class="bi bi-eye globally-change-icon-color"
+                  (click)="documentPreviewArray(element)"></em></a>
+            </span>
+            <span class="mtop" nz-tooltip nzTooltipTitle="{{ 'common.download' | translate }} Document"
+              *ngIf="element?.documents?.length > 0 || element?.documentName"><a>
+                <em style="padding-left: 8px;" class="bi bi-download globally-change-icon-color"
+                  (click)="downloadFileArray(element)"></em></a>
+            </span>
+            <span class="mtop" nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}" ><a>
+              <em style="padding-left: 8px;" class="bi bi-trash globally-change-icon-color"
+                (click)="deleteRow(content1,element)"></em></a>
+          </span>
+          </td>
+        </tr>
+        <tr *ngIf="!dataSource.data.length">
+          <td colspan="11">{{ 'common.no_data' | translate }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div [ngClass]="{'display-none' : toalLength < 10}">
+  <mat-paginator [length]="toalLength" [pageSize]="pageSize" [pageIndex]="pageNumber-10" (page)="onPageChange($event)"
+    [pageSizeOptions]="_gc.PAGINATOR_OPTIONS" showFirstLastButtons></mat-paginator>
+</div>
+
+<ng-template #ShowData let-moda>
+  <div class="modal-content nz-allSelect" style="height: 500px;">
+    <div class="modal-headers mt-2">
+      <h4 class="modal-title">
+        <ng-container>
+          View Vessel
+        </ng-container>
+      </h4>
+      <button type="button" class="btn-close shadow-none float-end" (click)="onclose('cfs')"
+        aria-label="Close"></button>
+    </div>
+
+    <table *ngIf="ulipICEGATE.length > 0" class="custom-table">
+      <tr>
+        <th>Voyage Number</th>
+        <th>Vessel Type</th>
+        <th>Container Numbers</th>
+        <th>Expected Date of Arrival</th>
+        <th>Port of Arrival</th>
+        <th>IMO Code</th>
+        <th>{{isExport ? 'EGM' : 'IGM'}} Date</th>
+        <th>{{isExport ? 'EGM' : 'IGM'}} Number</th>
+        <th>Vessel Code</th>
+        <th>Total Lines</th>
+        <th>Master Name</th>
+      </tr>
+      <tr *ngFor="let item of ulipICEGATE">
+        <td>{{ item.voyageNo }}</td>
+        <td>{{ item.vesselType }}</td>
+        <td>
+          <div *ngFor="let container of item.containerNo">{{ container }}</div>
+        </td>
+        <td>{{ item.expDtOfArrival }}</td>
+        <td>{{ item.portOfArrival }}</td>
+        <td>{{ item.imoCodeOfVessel }}</td>
+        <td>{{ item.igmDt }}</td>
+        <td>{{ item.igmNo }}</td>
+        <td>{{ item.vesselCode }}</td>
+        <td>{{ item.totalNoOfLines }}</td>
+        <td>{{ item.masterName }}</td>
+      </tr>
+    </table>
+
+
+
+
+  </div>
+</ng-template>
+
+<ng-template #content1 let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+      </button>
+    </div>
+    <div class="modal-body mt-4 d-flex align-items-center">
+      <em class="bi bi-question-circle text-danger fs-2 text-center float-start me-2"> </em> <span
+        class=" text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary  btn-sm me-3" (click)="d('Cross click')">No</button>
+        <button type="button" class="btn btn-danger  btn-sm" (click)="c('yes')">Yes</button>
+      </div>
+    </div>
+  </div>
+</ng-template>

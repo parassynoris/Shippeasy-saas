@@ -1,0 +1,5 @@
+.form-select:disabled {
+  background-color: var(--theme-input-background-color);
+  border-radius: 2px !important;
+  padding: 6px 6px !important;
+}

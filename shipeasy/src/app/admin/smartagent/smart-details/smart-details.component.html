@@ -1,0 +1,233 @@
+<div class="table-with-gheading">
+  <div class="wrapper">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="page-title-box">
+            <div class="btn-group mt-3">
+              <!-- <ol class="breadcrumb hide-phone p-0 m-0">
+                <li class="breadcrumb-item">
+                 SHIPEASY
+                </li>
+                <li class="breadcrumb-item active">
+                  {{ isProductList ? holdControl : "Edit Product" }}
+                </li>
+              </ol> -->
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="tab-design-change">
+              <div class="wrap-bar ">
+                
+                <div class="">
+                <div class="wrap-right custome-tab">
+                  <ul
+                    class="nav nav-tabs"
+                    id="myTab"
+                    role="tablist"
+                    *ngIf="isProductList && isTemplateList"
+                  >
+                    <li
+                      class="nav-item"
+                      role="presentation"
+                      *ngFor="let tab of tabs"
+                    >
+                      <button
+                      *ngIf="!(queryurlParam.childUserList && (tab?.name === 'Holiday' || tab?.name === 'Email Settings' || tab?.name === 'User'))"
+                        class="nav-link"
+                        [class.active]="holdControl === tab.key"
+                        id="{{ tab.id }}"
+                        data-bs-toggle="tab"
+                        data-bs-target="#{{ tab.control }}"
+                        type="button"
+                        role="tab"
+                        aria-controls="{{ tab.control }}"
+                        aria-selected="true"
+                        (click)="onTab(tab)"
+                        [disabled]="currentUrl === 'addsmart' || disbleTab">
+                        {{ tab.name }}
+                      </button>
+                    </li>
+                  </ul> 
+                </div>
+                </div> 
+              </div>
+              <div *ngIf="commonfunction.isSuperAdmin()" class="text-end">
+                <button class="btn btn-outline-primary" (click)="backToList()">Back</button>
+              </div>
+              <div class="tab-content" id="myTabContent">
+                <div
+                  *ngIf="holdControl === 'details'"
+                  [class.active]="holdControl === 'details'"
+                  class="disabledNoOfCasesDiv tab-pane fade show"
+                  id="details"
+                  role="tabpanel"
+                  aria-labelledby="details-tab"
+                >
+                  <app-smartadd></app-smartadd>
+                </div>
+              
+                <div>
+                  <div
+                    *ngIf="holdControl === 'branch'"
+                    [class.active]="holdControl === 'branch'"
+                    class="tab-pane fade show"
+                    id="branch"
+                    role="tabpanel"
+                    aria-labelledby="branch-tab"
+                  >
+                    <app-branch [prentPath]="'register'"></app-branch>
+                  </div>
+
+                  <div
+                    *ngIf="holdControl === 'configuration'"
+                    [class.active]="holdControl === 'configuration'"
+                    class="tab-pane fade show"
+                    id="configuration"
+                    role="tabpanel"
+                    aria-labelledby="configuration-tab"
+                  >
+                    <app-configuration></app-configuration>
+                  </div>
+
+
+                  <div
+                    *ngIf="holdControl === 'department'"
+                    [class.active]="holdControl === 'department'"
+                    class="tab-pane fade show"
+                    id="department"
+                    role="tabpanel"
+                    aria-labelledby="department-tab"
+                  >
+                    <app-department></app-department>
+                  </div>
+
+                  <div
+                    *ngIf="holdControl === 'user'"
+                    [class.active]="holdControl === 'user'"
+                    class="tab-pane fade show"
+                    id="user"
+                    role="tabpanel"
+                    aria-labelledby="user-tab"
+                  >
+                    <app-user></app-user>
+                  </div>
+
+                  <div
+                    *ngIf="holdControl === 'roles'"
+                    [class.active]="holdControl === 'roles'"
+                    class="tab-pane fade show"
+                    id="roles"
+                    role="tabpanel"
+                    aria-labelledby="roles-tab"
+                  >
+                    <app-user-role [isSuperAdmin]="true"></app-user-role>
+                  </div>
+
+                  <div
+                    *ngIf="holdControl === 'bank'"
+                    [class.active.]="holdControl === 'bank'"
+                    class="tab-pane fade show"
+                    id="bank"
+                    role="tabpanel"
+                    aria-labelledby="bank-tab"
+                  >
+                    <app-gl-bank [prentPath]="'register'"></app-gl-bank>
+                  </div>
+                  <div
+                    *ngIf="holdControl === 'contacts'"
+                    [class.active.]="holdControl === 'contacts'"
+                    class="tab-pane fade show"
+                    id="contacts"
+                    role="tabpanel"
+                    aria-labelledby="contacts-tab"
+                  >
+                    <app-contacts [prentPath]="'register'"></app-contacts>
+                  </div>
+                  <div
+                    *ngIf="holdControl === 'holiday'"
+                    [class.active]="holdControl === 'holiday'"
+                    class="tab-pane fade show"
+                    id="holiday"
+                    role="tabpanel"
+                    aria-labelledby="holiday-tab"
+                  >
+                    <app-holidays></app-holidays>
+                  </div>
+                  <div
+                    *ngIf="holdControl === 'ticket'"
+                    [class.active]="holdControl === 'ticket'"
+                    class="tab-pane fade show"
+                    id="ticket"
+                    role="tabpanel"
+                    aria-labelledby="ticket-tab"
+                  >
+                    <app-ticket></app-ticket>
+                  </div>
+
+                  <div
+                    *ngIf="holdControl === 'notification'"
+                    [class.active]="holdControl === 'notification'"
+                    class="tab-pane fade show"
+                    id="notification"
+                    role="tabpanel"
+                    aria-labelledby="notification-tab"
+                  >
+                    <app-notification></app-notification>
+                  </div>
+
+                  <div
+                    *ngIf="holdControl === 'employee'"
+                    [class.active]="holdControl === 'employee'"
+                    class="tab-pane fade show"
+                    id="employee"
+                    role="tabpanel"
+                    aria-labelledby="employee-tab"
+                  >
+                    <app-employee-master></app-employee-master>
+                  </div>
+
+                  <div
+                    *ngIf="holdControl === 'icd'"
+                    [class.active]="holdControl === 'icd'"
+                    class="tab-pane fade show"
+                    id="icd"
+                    role="tabpanel"
+                    aria-labelledby="icd-tab"
+                  >
+                    <app-icd-master></app-icd-master>
+                  </div>
+                  <!-- for future use -->
+                  <!-- <div
+                    *ngIf="holdControl === 'location'"
+                    [class.active]="holdControl === 'location'"
+                    class="tab-pane fade show"
+                    id="location"
+                    role="tabpanel"
+                    aria-labelledby="location-tab"
+                  >
+                    <app-locations></app-locations>
+                  </div> -->
+
+                  <div
+                    *ngIf="holdControl === 'settings'"
+                    [class.active]="holdControl === 'settings'"
+                    class="tab-pane fade show"
+                    id="settings"
+                    role="tabpanel"
+                    aria-labelledby="settings-tab"
+                  >
+                    <app-settings></app-settings>
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

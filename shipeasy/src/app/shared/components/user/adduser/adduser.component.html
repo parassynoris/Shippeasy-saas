@@ -1,0 +1,312 @@
+<div class="modal-content nz-allSelect">
+  <div class="modal-header">
+    <h4 class="modal-title text-capitalize">{{  this.UserIdToUpdate ?'Edit User' : 'Add User' }}</h4>
+    <h4 class="modal-title" *ngIf="UserIdToUpdate === ''">
+    <!-- {{'stolt.masters.user.add_new_user' | translate }} -->
+      </h4>
+    <h4 class="modal-title" *ngIf="UserIdToUpdate !== ''">
+    <!-- {{'stolt.masters.user.update_new_user' | translate }} -->
+  </h4>
+    <button type="button" class="btn-close shadow-none" (click)="onSave()" aria-label="Close">
+
+    </button>
+  </div>
+  <div class="modal-body">
+    <form class="row g-3 mt-1" [formGroup]="userForm">
+
+
+      <div class="col-md-4">
+        <label for="firstName" class="form-label">{{ 'masters.user.firstname' | translate }} <span
+            class="text-danger">*</span></label>
+        <input type="text" class="form-control shadow-none" id="firstName"
+          oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^ A-Za-z]/g,'').replace(/ +/g, ' ')" value=""
+          formControlName="firstName" [ngClass]="{'is-invalid': submitted && userForm.controls['firstName'].errors}"
+          [attr.disabled]="IsSendCode? 'disabled' : null" placeholder="First Name" >
+        <div *ngIf="submitted && userForm.controls['firstName'].errors?.required" class="invalid-feedback">
+          {{'masters.user.firstname_required' | translate }}
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <label for="lastName" class="form-label">{{ 'masters.user.lastname' | translate }} <span
+            class="text-danger">*</span></label>
+        <input type="text" class="form-control shadow-none" id="lastName" placeholder="Last Name"
+          oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^ A-Za-z]/g,'').replace(/ +/g, ' ')"
+          formControlName="lastName" [ngClass]="{'is-invalid': submitted && userForm.controls['lastName'].errors}"
+          [attr.disabled]="IsSendCode? 'disabled' : null" >
+        <div *ngIf="submitted && userForm.controls['lastName'].errors?.required" class="invalid-feedback">
+          {{'masters.user.lastname_required' | translate }}
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <label for="shortName" class="form-label">Short Name</label>
+        <input type="text" class="form-control shadow-none" id="shortName" placeholder="Short Name"
+          oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^ A-Za-z]/g,'').replace(/ +/g, ' ')" value=""
+          formControlName="shortName" 
+          [attr.disabled]="IsSendCode? 'disabled' : null">
+        <!-- <div *ngIf="submitted && userForm.controls['shortName'].errors?.required" class="invalid-feedback">
+          Short Name is required
+        </div> -->
+      </div>
+
+      <div class="col-md-4">
+        <label for="Email " class="form-label"> {{ 'stolt.masters.user.email' | translate }} <span
+            class="text-danger">*</span></label>
+        <input type="text" class="form-control shadow-none" id="Email " placeholder="Email"
+          value="{{ 'stolt.masters.user.email_value' | translate }}" formControlName="email" (keyup)="userForm.controls['isEmail'].setValue(true)"
+          [ngClass]="{'is-invalid': submitted && userForm.controls['email'].errors}" [attr.disabled]="IsSendCode? 'disabled' : null">
+        <div *ngIf="submitted && userForm.controls['email'].errors" class="invalid-feedback">
+          <div *ngIf=" userForm.controls['email'].errors?.required"> {{'masters.user.email_required' | translate }}
+          </div>
+          <div *ngIf=" userForm.controls['email'].errors?.pattern">{{'error.err_valid_email' | translate}}</div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <label for="PhoneNo " class="form-label">{{ 'stolt.masters.user.phone_no' | translate }} <span
+            class="text-danger">*</span></label>
+        <input type="number" class="form-control shadow-none" id="PhoneNo " maxlength="11" (keyup)="userForm.controls['isMobile'].setValue(true)" (wheel)="$event.preventDefault()"
+          oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+          formControlName="phoneNo" [ngClass]="{'is-invalid': submitted && userForm.controls['phoneNo'].errors}"
+          [attr.disabled]="IsSendCode? 'disabled' : null" placeholder="Phone Number">
+
+        <div *ngIf="submitted && userForm.controls['phoneNo'].errors" class="invalid-feedback">
+          <div *ngIf=" userForm.controls['phoneNo'].errors?.required"> {{'masters.user.phone_no_required' | translate }}
+          </div>
+          <div *ngIf="userForm.controls['phoneNo'].errors?.pattern">{{'error.err_valid_phone' | translate}}</div>
+          <div *ngIf="userForm.controls['phoneNo'].errors?.maxlength">{{'error.err_maxlength' | translate}}</div>
+        </div>
+      </div>
+
+      <div class="col-md-4 nz-select">
+        <label for="department " class="form-label"> Department <span class="text-danger">*</span></label>
+          <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Department" formControlName="department"
+          [ngClass]="{'is-invalid': submitted && (userForm.controls['department'].errors?.required || userForm.controls['department'].value === 0)}">
+          <nz-option *ngFor="let department of departmentData" [nzLabel]="department.deptName" [nzValue]="department.departmentId"></nz-option>
+        </nz-select>
+        <div *ngIf="submitted && userForm.controls['department'].errors?.required" class="invalid-feedback">
+          Department is required
+        </div>
+      </div>
+
+      <div class="col-md-4 nz-select">
+        <label for="Role" class="form-label">{{ 'stolt.masters.user.role' | translate }} <span
+            class="text-danger">*</span></label>
+        <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Role" formControlName="userRole"
+          [ngClass]="{'is-invalid': submitted && (userForm.controls['userRole'].errors?.required || userForm.controls['userRole'].value === 0)}">
+          <nz-option *ngFor="let roles of roleList" [nzLabel]="roles.roleName" [nzValue]="roles.roleId"></nz-option>
+        </nz-select>
+        <div
+          *ngIf="submitted && (userForm.controls['userRole'].errors?.required || userForm.controls['userRole'].value === 0)"
+          class="invalid-feedback">
+          {{'masters.roles.role_name_required' | translate }}
+        </div>
+      </div>
+
+ 
+      <div class="col-md-4 nz-select">
+        <label for="agentBranch " class="form-label">Branch <span class="text-danger">*</span></label>
+          <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Branch" formControlName="agentBranch"
+          [ngClass]="{'is-invalid': submitted && (userForm.controls['agentBranch'].errors?.required || userForm.controls['agentBranch'].value === 0)}">
+          <nz-option *ngFor="let branch of branchData" [nzLabel]="branch.branchName" [nzValue]="branch.branchId"></nz-option>
+        </nz-select>
+        <div *ngIf="submitted && userForm.controls['agentBranch'].errors?.required" class="invalid-feedback">
+          Branch is required
+        </div>
+      </div>
+
+
+      <div class="col-md-4">
+        <label for="userName" class="form-label">{{ 'masters.user.userName' | translate }} <span
+            class="text-danger">*</span></label>
+         <input type="text" class="form-control shadow-none" id="userName" value="" formControlName="userName" placeholder="User Name"
+         
+          [ngClass]="{'is-invalid': submitted && userForm.controls['userName'].errors}" [attr.disabled]="IsSendCode? 'disabled' : null">
+        <div *ngIf="submitted && userForm.controls['userName'].errors?.required" class="invalid-feedback">
+          {{'masters.user.username_required' | translate }}
+        </div>
+        <div *ngIf="submitted && userForm.controls['userName'].errors?.notUnique" class="invalid-feedback">
+          {{'masters.user.username_uniqu' | translate }}
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Default Module</label>
+        <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Default Module"  
+            formControlName="defaultModule"
+            [ngClass]="{'is-invalid': submitted && userForm.controls['defaultModule'].errors}">
+            <nz-option nzLabel="Import" nzValue="Import"></nz-option>
+            <nz-option nzLabel="Export" nzValue="Export"></nz-option>
+            <nz-option nzLabel="Transport" nzValue="Transport"></nz-option>
+            <nz-option nzLabel="Warehouse" nzValue="Warehouse"></nz-option>
+        </nz-select>
+
+        <div *ngIf="submitted && userForm.controls['defaultModule'].errors" class="invalid-feedback">
+            <div *ngIf="userForm.controls['defaultModule'].errors?.required">This field is required</div>
+        </div>
+    </div>
+      <div class="col-md-4" *ngIf="false">
+        <label for="password " class="form-label"> {{ 'stolt.masters.user.password' | translate }} <span
+            class="text-danger">*</span></label>
+        <input type="password" class="form-control shadow-none" id="password " formControlName="password" [ngClass]="{'is-invalid': submitted && ( userForm.controls['password'].errors
+        || userForm.controls['password'].errors?.pattern )}" [attr.disabled]="IsSendCode? 'disabled' : null">
+        <div *ngIf="submitted && userForm.controls['password'].errors?.required" class="invalid-feedback">
+          {{'masters.user.password_required' | translate }}
+        </div>
+        <div *ngIf="submitted && userForm.controls['password'].errors?.minlength" class="invalid-feedback">
+          {{'error.err_minlength_Password' | translate}}</div>
+        <div *ngIf="submitted && userForm.controls['password'].errors?.pattern" class="invalid-feedback">
+          {{'error.err_password_pattern' | translate}}</div>
+      </div>
+
+      <div class="col-md-4 mt-5" >
+        <div class="d-flex align-items-center">
+          <div class=" col-md-6 form-check form-check-inline d-flex align-items-center" >
+            <input formControlName="superUser"  type="checkbox" class="mb-1">
+            <label class="form-label ml-1">Is Admin</label>
+          </div>
+          <div class="col-md-6 taggle form-check form-switch">
+            <label class="form-check-label">Status
+            </label>
+            <input [attr.disabled]="IsSendCode? 'disabled' : null" class="form-check-input mx-2" formControlName="status" type="checkbox"
+              id="flexSwitchCheckDefault">
+          </div> 
+        </div>
+      </div>
+      
+
+       
+      <!-- <div class="col-md-2">
+        <div class="form-check form-check-inline">
+          <input formControlName="jmbFAS" class="form-check-input" type="checkbox">
+          <label>FAS</label>
+        </div>
+      </div> -->
+
+     
+
+    
+
+
+    
+
+      <!-- <div class="col-md-4">
+        <label for="agent " class="form-label">Agent <span class="text-danger">*</span></label>
+        <input type="text" class="form-control shadow-none" id="agent "
+          oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^ A-Za-z]/g,'').replace(/ +/g, ' ')"
+          formControlName="agent" [ngClass]="{'is-invalid': submitted && userForm.controls['agent'].errors}"
+          [attr.disabled]="IsSendCode? 'disabled' : null">
+        <div *ngIf="submitted && userForm.controls['agent'].errors?.required" class="invalid-feedback">
+          Agent is required
+        </div>
+      </div> -->
+
+      <!-- <div class="col-md-4">
+        <label class="form-label">Principle</label>
+        <input type="text" class="form-control shadow-none" id="principle"
+          oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^ A-Za-z]/g,'').replace(/ +/g, ' ')"
+          formControlName="principle" readonly>
+        <div *ngIf="submitted && userForm.controls['principle'].errors" class="invalid-feedback">
+          <div *ngIf="userForm.controls['principle'].errors.required">Principle is required</div>
+        </div>
+      </div> -->
+      
+      <!-- <div class="col-md-4">
+        <label for="defaultPrinciple " class="form-label">Default Principle</label>
+        <input type="text" class="form-control shadow-none" id="defaultPrinciple"
+          oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^ A-Za-z]/g,'').replace(/ +/g, ' ')"
+          formControlName="defaultPrinciple" [attr.disabled]="IsSendCode? 'disabled' : null">
+      </div> -->
+      <!-- <div class="col-md-4">
+        <label for="LocationOffice " class="form-label"> {{ 'stolt.masters.user.office' | translate }} <span
+            class="text-danger">*</span></label>
+        <input type="text" class="form-control shadow-none" id="LocationOffice "
+          oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^ A-Za-z]/g,'').replace(/ +/g, ' ')"
+          value="{{ 'stolt.masters.user.branch_value' | translate }}" formControlName="branch"
+          [ngClass]="{'is-invalid': submitted && userForm.controls['branch'].errors}" [attr.disabled]="IsSendCode? 'disabled' : null">
+        <div *ngIf="submitted && userForm.controls['branch'].errors?.required" class="invalid-feedback">
+          {{'masters.user.office_required' | translate }}
+        </div>
+      </div> -->
+      <!-- <div class="col-md-2 taggle form-check form-switch">
+        <label class="form-check-label">Status
+        </label>
+        <input [attr.disabled]="IsSendCode? 'disabled' : null" class="form-check-input mx-2" formControlName="status" type="checkbox"
+          id="flexSwitchCheckDefault">
+      </div> -->
+
+      <!-- <div class="row mt-2">
+        <label for="firstName" class="form-label my-2">User Config Details</label>
+        <div class="col-md-3">
+          <div class="form-check form-check-inline">
+            <input formControlName="exportBackDate" class="form-check-input" type="checkbox">
+            <label>Export Back Dated</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-check form-check-inline">
+            <input formControlName="importBackDate" class="form-check-input" type="checkbox">
+            <label>Import Back dated</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-check form-check-inline">
+            <input formControlName="agencyInvoice" class="form-check-input" type="checkbox">
+            <label>Agency Invoice/NC</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-check form-check-inline">
+            <input formControlName="exRateEditable" class="form-check-input" type="checkbox">
+            <label>Ex Rate Editable</label>
+          </div>
+        </div>
+      </div> -->
+     
+
+      <div class="col-md-12">
+        <button *ngIf="!IsSendCode" type="button" (click)="onSave()" class="btn1 float-end mt-3"
+          type="submit">{{
+          'common.cancel' | translate
+          }}</button>
+        <button *ngIf="UserIdToUpdate === '' && !IsSendCode" type="button"
+          (click)="UserMasters()" class="btn btn-outline-primary float-end mt-3" type="submit">{{ 'common.save' |
+          translate
+          }}</button>
+        <button *ngIf="UserIdToUpdate !== '' && !IsSendCode && this.isType !== 'show'" type="button"
+          (click)="UserMasters()" class="btn btn-outline-primary float-end mt-3" type="submit">{{ 'common.update' |
+          translate }}</button>
+
+      </div>
+    </form>
+  </div>
+  <div class="modal-body">
+    <form class="row g-3 mt-1" [formGroup]="userConfirmForm" *ngIf="IsSendCode">
+      <div class="col-md-4" [hidden]="!IsSendCode">
+        <label for="verificationCodes " class="form-label"> {{ 'masters.user.verificationCode' | translate }} <span
+            class="text-danger">*</span></label>
+        <input type="text" class="form-control shadow-none" id="verificationCodes " formControlName="verificationCode"
+          maxlength="7"
+          oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+          value=""
+          [ngClass]="{'is-invalid': submittedForConfirm && userConfirmForm.controls['verificationCode'].errors}">
+        <div *ngIf="submittedForConfirm && userConfirmForm.controls['verificationCode'].errors?.required"
+          class="invalid-feedback">
+          {{'masters.user.verificationCode' | translate }}
+        </div>
+      </div>
+      <label *ngIf="IsSendCode" class="form-label"> Verification Code sent to {{userData?.userEmail}}, Please check...
+        <span class="text-danger">*</span></label>
+
+      <div class="col-md-12">
+        <button *ngIf="IsSendCode" type="button" (click)="onSave()" class="btn btn-outline-primary float-end mt-3"
+          type="submit">{{
+          'common.cancel' | translate
+          }}</button>
+        <button *ngIf="IsSendCode" type="button" (click)="ngOnConfirm()" class="btn btn-outline-primary float-end mt-3"
+          type="submit">{{ 'common.submit' | translate
+          }}</button>
+      </div>
+    </form>
+  </div>
+</div>

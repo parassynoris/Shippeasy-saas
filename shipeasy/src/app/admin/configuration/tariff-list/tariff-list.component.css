@@ -1,0 +1,21 @@
+.table-responsive {
+	max-height: calc(100vh - 302px);
+}
+
+
+.two-line-short {
+	-webkit-line-clamp: 2;
+	max-width: 250px;
+	white-space: break-spaces;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: block;
+	display: -webkit-box;
+}
+
+
+.globally-chnage-mobile-view {
+	margin-bottom: 10px;
+}
+

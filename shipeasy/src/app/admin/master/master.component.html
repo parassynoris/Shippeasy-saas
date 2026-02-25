@@ -1,0 +1,416 @@
+<div class="table-with-gheading">
+  <div class="wrapper">
+    <div class="container-fluid">
+      <div class="wrap-content">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="page-title-box">
+              <div class="btn-group mt-2">
+                <ol class="breadcrumb hide-phone p-0 m-0">
+                  <li class="breadcrumb-item">
+                    {{ "stolt.masters.heading" | translate }}
+                  </li>
+                  <li class="breadcrumb-item active color-red">
+                    {{
+                      IsAccess ?
+                        (holdControl === 'shipping-line' ? 'Carrier' :
+                          (holdControl === 'VesselMaster' ? 'Fleet Master' :
+                            (holdControl === 'CFS&Yard' ? 'ICD/CFS' : holdControl)
+                          )
+                        )
+                        : 'Not Found'
+                    }}
+                  </li>
+                  
+                   
+                </ol>
+              </div>
+            </div>
+          
+
+            <div class="row mt-3">
+              <div class="col-md-12">
+                <div class="tab-content" id="myTabContent">
+ <div *ngIf="holdControl === 'chargemaster'" [class.active]="holdControl === 'chargemaster'"
+                    class="tab-pane fade show" id="chargemaster" role="tabpanel" aria-labelledby="chargemaster-tab">
+                    <app-cost-items></app-cost-items>
+                  </div>
+                  <div *ngIf="holdControl === 'location'" [class.active]="holdControl === 'location'"
+                    class="tab-pane fade show" id="location" role="tabpanel" aria-labelledby="location-tab">
+                    <app-locations></app-locations>
+                  </div>
+                  <div *ngIf="holdControl === 'rate-master'" [class.active]="holdControl === 'rate-master'"
+                    class="tab-pane fade show" id="rate-master" role="tabpanel" aria-labelledby="rate-master-tab">
+                    <app-rate-master></app-rate-master>
+                  </div>
+                  <div *ngIf="holdControl === 'CFS&Yard'" [class.active]="holdControl === 'CFS&Yard'"
+                    class="tab-pane fade show" id="CFS&Yard" role="tabpanel" aria-labelledby="CFS&Yard-tab">
+                    <app-yard-cfs-master></app-yard-cfs-master>
+                  </div>
+                  <!-- <div *ngIf="holdControl === 'warehouse'" [class.active]="holdControl === 'warehouse'"
+                    class="tab-pane fade show" id="warehouse" role="tabpanel" aria-labelledby="ware-house-tab">
+                    <app-ware-house></app-ware-house>
+                  </div> -->
+                  <div *ngIf="holdControl === 'icd'" [class.active]="holdControl === 'icd'" class="tab-pane fade show"
+                    id="icd" role="tabpanel" aria-labelledby="icd-tab">
+                    <app-icd-master></app-icd-master>
+                  </div>
+                  <div *ngIf="holdControl === 'UOM'" [class.active]="holdControl === 'UOM'" class="tab-pane fade show"
+                    id="UOM" role="tabpanel" aria-labelledby="UOM-tab">
+                    <app-uom></app-uom>
+                  </div>
+                  <div *ngIf="holdControl === 'product'" [class.active]="holdControl === 'product'"
+                    class="tab-pane fade show" id="product" role="tabpanel" aria-labelledby="product-tab">
+                    <app-product></app-product>
+                  </div>
+                  <div *ngIf="holdControl === 'pdatemplates'" [class.active]="holdControl === 'pdatemplates'"
+                    class="tab-pane fade show" id="pdatemplates" role="tabpanel" aria-labelledby="pdatemplates-tab">
+                    <app-pda-templates></app-pda-templates>
+                  </div>
+                  <div *ngIf="holdControl === 'user'" [class.active]="holdControl === 'user'" class="tab-pane fade show"
+                    id="user" role="tabpanel" aria-labelledby="user-tab">
+                    <app-user></app-user>
+                  </div>
+                  <div *ngIf="holdControl === 'roles'" [class.active]="holdControl === 'roles'" class="tab-pane fade show"
+                    id="roles" role="tabpanel" aria-labelledby="roles-tab">
+                    <app-user-role></app-user-role>
+                  </div>
+                  <div *ngIf="holdControl === 'systemtype'" [class.active]="holdControl === 'systemtype'"
+                    class="tab-pane fade show" id="systemtype" role="tabpanel" aria-labelledby=" systemtype-tab">
+                    <app-system-type></app-system-type>
+                  </div>
+                  <div *ngIf="holdControl === 'ActivityMaster'" [class.active]="holdControl === 'ActivityMaster'"
+                  class="tab-pane fade show" id="ActivityMaster" role="tabpanel" aria-labelledby="ActivityMaster">
+                  <app-activity-master></app-activity-master>
+                </div>
+
+                  <div *ngIf="holdControl === 'mailtemplate'" [class.active]="holdControl === 'mailtemplate'"
+                    class="tab-pane fade show" id="mailtemplate" role="tabpanel" aria-labelledby=" mailtemplate-tab">
+                    <app-mail-template></app-mail-template>
+                  </div>
+                  <div *ngIf="holdControl === 'shipping-line'" [class.active]="holdControl === 'shipping-line'"
+                    class="tab-pane fade show" id="shipping-line" role="tabpanel" aria-labelledby="shipping-line-tab">
+                    <app-shipping-line-master></app-shipping-line-master>
+                  </div>
+                  <div *ngIf="holdControl === 'shipping-line-tariff'"
+                    [class.active]="holdControl === 'shipping-line-tariff'" class="tab-pane fade show"
+                    id="shipping-line-tariff" role="tabpanel" aria-labelledby="shipping-line-tariff-tab">
+                    <app-shipping-line></app-shipping-line>
+                  </div>
+                  <div *ngIf="holdControl === 'local-tariff'"
+                    [class.active]="holdControl === 'local-tariff'" class="tab-pane fade show"
+                    id="local-tariff" role="tabpanel" aria-labelledby="local-tariff-tab">
+                    <app-local-tariff></app-local-tariff>
+                  </div>
+
+                  <div *ngIf="holdControl === 'tariff-list'"
+                    [class.active]="holdControl === 'tariff-list'" class="tab-pane fade show"
+                    id="tariff-list" role="tabpanel" aria-labelledby="tariff-list-tab">
+                    <app-tariff-list></app-tariff-list>
+                  </div>
+                  
+                  <div *ngIf="holdControl === 'vessel'" [class.active]="holdControl === 'vessel'"
+                    class="tab-pane fade show" id="vessel" role="tabpanel" aria-labelledby="vessel-tab">
+                    <app-vessel></app-vessel>
+                  </div>
+                  <div *ngIf="holdControl === 'exchange-rate'" [class.active]="holdControl === 'exchange-rate'"
+                    class="tab-pane fade show" id="exchange-rate" role="tabpanel" aria-labelledby="exchange-rate-tab">
+                    <app-curr-rate></app-curr-rate>
+                  </div>
+                  <div *ngIf="holdControl === 'import-voyage'" [class.active]="holdControl === 'import-voyage'"
+                    class="tab-pane fade show" id="import-voyage" role="tabpanel" aria-labelledby="import-voyage-tab">
+                    <app-vessel-voyage voyageType="import"></app-vessel-voyage>
+                  </div>
+                  <div *ngIf="holdControl === 'export-voyage'" [class.active]="holdControl === 'export-voyage'"
+                    class="tab-pane fade show" id="export-voyage" role="tabpanel" aria-labelledby="export-voyage-tab">
+                    <app-vessel-voyage voyageType="export"></app-vessel-voyage>
+                  </div>
+                  <div *ngIf="holdControl === 'service'" [class.active]="holdControl === 'service'"
+                    class="tab-pane fade show" id="service" role="tabpanel" aria-labelledby="service-tab">
+                    <app-services></app-services>
+                  </div>
+                  <div *ngIf="holdControl === 'department'" [class.active.]="holdControl === 'department'"
+                    class="tab-pane fade show" id="department" role="tabpanel" aria-labelledby="department-tab">
+                    <app-department></app-department>
+                  </div>
+                  <div *ngIf="holdControl === 'activity'" [class.active.]="holdControl === 'activity'"
+                    class="tab-pane fade show" id="activity" role="tabpanel" aria-labelledby="activity-tab">
+                    <app-activity></app-activity>
+                  </div>
+                  <div *ngIf="holdControl === 'costhead'" [class.active.]="holdControl === 'costhead'"
+                    class="tab-pane fade show" id="costhead" role="tabpanel" aria-labelledby="costhead-tab">
+                    <app-cost-head></app-cost-head>
+                  </div>
+                  <div *ngIf="holdControl === 'bank'" [class.active.]="holdControl === 'bank'" class="tab-pane fade show"
+                    id="bank" role="tabpanel" aria-labelledby="bank-tab">
+                  
+                    <app-bank-master></app-bank-master>
+                  </div>
+                  <div *ngIf="holdControl === 'holiday'" [class.active.]="holdControl === 'holiday'"
+                    class="tab-pane fade show" id="holiday" role="tabpanel" aria-labelledby="holiday-tab">
+                    <app-holidays></app-holidays>
+                  </div>
+
+                  <div *ngIf="holdControl === 'PrincipalMaster'" [class.active]="holdControl === 'PrincipalMaster'"
+                    class="tab-pane fade show" id="PrincipalMaster" role="tabpanel"
+                    aria-labelledby="PrincipalMaster-tab">
+                    <app-prinicpal-master></app-prinicpal-master>
+                  </div>
+                  <div *ngIf="holdControl === 'DepartmentMaster'" [class.active.]="holdControl === 'DepartmentMaster'"
+                    class="tab-pane fade show" id="DepartmentMaster" role="tabpanel"
+                    aria-labelledby="DepartmentMaster-tab">
+                    <app-department-master></app-department-master>
+                  </div>
+                  <div *ngIf="holdControl === 'BankMaster'" [class.active.]="holdControl === 'BankMaster'"
+                    class="tab-pane fade show" id="BankMaster" role="tabpanel" aria-labelledby="BankMaster-tab">
+                    <app-bank-master></app-bank-master>
+                  </div>
+                  <div *ngIf="holdControl === 'AgencyTypeMaster'" [class.active.]="holdControl === 'AgencyTypeMaster'"
+                    class="tab-pane fade show" id="AgencyTypeMaster" role="tabpanel"
+                    aria-labelledby="AgencyTypeMaster-tab">
+                    <app-agencytype-master></app-agencytype-master>
+                  </div>
+                  <div *ngIf="holdControl === 'SegmentMaster'" [class.active.]="holdControl === 'SegmentMaster'"
+                    class="tab-pane fade show" id="SegmentMaster" role="tabpanel" aria-labelledby="SegmentMaster-tab">
+                    <app-segment-master></app-segment-master>
+                  </div>
+                  <div *ngIf="holdControl === 'PortMaster'" [class.active.]="holdControl === 'PortMaster'"
+                    class="tab-pane fade show" id="PortMaster" role="tabpanel" aria-labelledby="PortMaster-tab">
+                    <app-port-master></app-port-master>
+                  </div>
+                  <div *ngIf="holdControl === 'ShipStatusMaster'" [class.active.]="holdControl === 'ShipStatusMaster'"
+                    class="tab-pane fade show" id="ShipStatusMaster" role="tabpanel"
+                    aria-labelledby="ShipStatusMaster-tab">
+                    <app-shipstatus-master></app-shipstatus-master>
+                  </div>
+                  <div *ngIf="holdControl === 'Branch/SubagentMaster'"
+                    [class.active.]="holdControl === 'Branch/SubagentMaster'" class="tab-pane fade show"
+                    id="Branch/SubagentMaster" role="tabpanel" aria-labelledby="Branch/SubagentMaster-tab">
+                    <app-branch-subagent-master></app-branch-subagent-master>
+                  </div>
+                  <div *ngIf="holdControl === 'VesselMaster'" [class.active.]="holdControl === 'VesselMaster'"
+                    class="tab-pane fade show" id="VesselMaster" role="tabpanel" aria-labelledby="VesselMaster-tab">
+                    <app-vessel-master></app-vessel-master>
+                  </div>
+                  <div *ngIf="holdControl === 'rail-fleet'" [class.active.]="holdControl === 'rail-fleet'"
+                  class="tab-pane fade show" id="rail-fleet" role="tabpanel" aria-labelledby="rail-fleet-tab">
+                  <app-rail-fleet></app-rail-fleet>
+                  </div>
+
+                  <div *ngIf="holdControl === 'land-fleet'" [class.active.]="holdControl === 'land-fleet'"
+                  class="tab-pane fade show" id="land-fleet" role="tabpanel" aria-labelledby="land-fleet-tab">
+                  <app-land-fleet></app-land-fleet>
+                  </div>
+
+                  <div *ngIf="holdControl === 'ocen-fleet'" [class.active.]="holdControl === 'ocen-fleet'"
+                  class="tab-pane fade show" id="ocen-fleet" role="tabpanel" aria-labelledby="ocen-fleet-tab">
+                  <app-ocen-fleet></app-ocen-fleet>
+                  </div>
+
+                  <div *ngIf="holdControl === 'VesselCallMaster'" [class.active.]="holdControl === 'VesselCallMaster'"
+                    class="tab-pane fade show" id="VesselCallMaster" role="tabpanel"
+                    aria-labelledby="VesselCallMaster-tab">
+                    <app-vesselcall-master></app-vesselcall-master>
+                  </div>
+                  <div *ngIf="holdControl === 'vesselcallPurposemaster'"
+                    [class.active.]="holdControl === 'vesselcallPurposemaster'" class="tab-pane fade show"
+                    id="vesselcallPurposemaster" role="tabpanel" aria-labelledby="vesselcallPurposemaster-tab">
+                    <app-vesselcall-purpose-master></app-vesselcall-purpose-master>
+                  </div>
+                  <div *ngIf="holdControl === 'LineMaster'" [class.active.]="holdControl === 'LineMaster'"
+                    class="tab-pane fade show" id="LineMaster" role="tabpanel" aria-labelledby="LineMaster-tab">
+                    <app-line-master></app-line-master>
+                  </div>
+                  <div *ngIf="holdControl === 'EnquiryTypeMaster'" [class.active.]="holdControl === 'EnquiryTypeMaster'"
+                    class="tab-pane fade show" id="EnquiryTypeMaster" role="tabpanel"
+                    aria-labelledby="EnquiryTypeMaster-tab">
+                    <app-enquiry-type-master></app-enquiry-type-master>
+                  </div>
+                  <div *ngIf="holdControl === 'Commoditymaster'" [class.active.]="holdControl === 'Commoditymaster'"
+                    class="tab-pane fade show" id="Commoditymaster" role="tabpanel"
+                    aria-labelledby="Commoditymaster-tab">
+                    <app-commodity-master></app-commodity-master>
+                  </div>
+                  <div *ngIf="holdControl === 'CargoMaster'" [class.active.]="holdControl === 'CargoMaster'"
+                    class="tab-pane fade show" id="CargoMaster" role="tabpanel" aria-labelledby="CargoMaster-tab">
+                    <app-cargo-master></app-cargo-master>
+                  </div>
+                  <div *ngIf="holdControl === 'Vendor-Master'" [class.active.]="holdControl === 'Vendor-Master'"
+                    class="tab-pane fade show" id="Vendor-Master" role="tabpanel" aria-labelledby="Vendor Master-tab">
+                    <app-vendor-master></app-vendor-master>
+                  </div>
+                  <div *ngIf="holdControl === 'BUSINESS_DEPARTMENT'"
+                    [class.active.]="holdControl === 'BUSINESS_DEPARTMENT'" class="tab-pane fade show"
+                    id="BUSINESS_DEPARTMENT" role="tabpanel" aria-labelledby="BUSINESS_DEPARTMENT-tab">
+                    <app-business-department></app-business-department>
+                  </div>
+                  <div *ngIf="holdControl === 'Charterparty'" [class.active.]="holdControl === 'Charterparty'"
+                    class="tab-pane fade show" id="Charterparty" role="tabpanel" aria-labelledby="Charterparty-tab">
+                    <app-charter-party-master></app-charter-party-master>
+                  </div>
+
+                  <div *ngIf="holdControl === 'PackageTypeMaster'" [class.active.]="holdControl === 'PackageTypeMaster'"
+                    class="tab-pane fade show" id="PackageTypeMaster" role="tabpanel"
+                    aria-labelledby="PackageTypeMaster-tab">
+                    <app-packagetype-master></app-packagetype-master>
+                  </div>
+                  <div *ngIf="holdControl === 'clause-master'" [class.active.]="holdControl === 'clause-master'"
+                    class="tab-pane fade show" id="clause-master" role="tabpanel" aria-labelledby="clause-master-tab">
+                    <app-clause-master></app-clause-master>
+                  </div>
+                  <div *ngIf="holdControl === 'country-master'" [class.active.]="holdControl === 'country-master'"
+                    class="tab-pane fade show" id="country-master" role="tabpanel" aria-labelledby="country-master-tab">
+                    <app-country-master></app-country-master>
+                  </div>
+                  <div *ngIf="holdControl === 'stateCitymaster'" [class.active.]="holdControl === 'stateCitymaster'"
+                    class="tab-pane fade show" id="state-city-master-tab" role="tabpanel"
+                    aria-labelledby="state-city-master-tab">
+                    <app-state-city-master></app-state-city-master>
+                  </div>
+                  <div *ngIf="holdControl === 'state-master'" [class.active.]="holdControl === 'state-master'"
+                    class="tab-pane fade show" id="state-master-tab" role="tabpanel" aria-labelledby="state-master-tab">
+                    <app-state-master></app-state-master>
+                  </div>
+                  <div *ngIf="holdControl === 'surveyor-master'" [class.active.]="holdControl === 'surveyor-master'"
+                    class="tab-pane fade show" id="surveyor-master-tab" role="tabpanel" aria-labelledby="surveyor-master-tab">
+                    <app-surveryor-master></app-surveryor-master>
+                  </div>
+                  <div *ngIf="holdControl === 'city-master'" [class.active.]="holdControl === 'city-master'"
+                    class="tab-pane fade show" id="city-master-tab" role="tabpanel" aria-labelledby="city-master-tab">
+                    <app-city-master></app-city-master>
+                  </div>
+                  <div *ngIf="holdControl === 'currency-master'" [class.active.]="holdControl === 'currency-master'"
+                    class="tab-pane fade show" id="currency-master" role="tabpanel"
+                    aria-labelledby="currency-master-tab">
+                    <app-currency-master></app-currency-master>
+                  </div>
+                  <div *ngIf="holdControl === 'Agency-Type'" [class.active.]="holdControl === 'Agency-Type'"
+                    class="tab-pane fade show" id="Agency-Type" role="tabpanel" aria-labelledby="Agency-Type-tab">
+                    <app-agency-type-master></app-agency-type-master>
+                  </div>
+                  <div *ngIf="holdControl === 'catagory-master'" [class.active.]="holdControl === 'catagory-master'"
+                    class="tab-pane fade show" id="catagory-master" role="tabpanel"
+                    aria-labelledby="catagory-master-tab">
+                    <app-category-master></app-category-master>
+                  </div>
+
+                  <div *ngIf="holdControl === 'commodity-group-master'"
+                    [class.active.]="holdControl === 'commodity-group-master'" class="tab-pane fade show"
+                    id="tramp-commodity-group-master" role="tabpanel"
+                    aria-labelledby="tramp-commodity-group-master-tab">
+                    <app-commodity-group-master></app-commodity-group-master>
+                  </div>
+
+                  <div *ngIf="holdControl === 'commodity-master'" [class.active.]="holdControl === 'commodity-master'"
+                    class="tab-pane fade show" id="commodity-master" role="tabpanel"
+                    aria-labelledby="commodity-master-tab">
+
+                    <app-commodity-master></app-commodity-master>
+                  </div>
+ <div *ngIf="holdControl === 'port-DA-charge-master'"
+                    [class.active.]="holdControl === 'port-DA-charge-master'" class="tab-pane fade show"
+                    id="tramp-port-DA-charge-master" role="tabpanel" aria-labelledby="tramp-port-DA-charge-master-tab">
+                    <app-port-da-charge-master></app-port-da-charge-master>
+                  </div>
+
+                  <div *ngIf="holdControl === 'port-tariff-detail'" [class.active.]="holdControl === 'port-tariff-detail'"
+                    class="tab-pane fade show" id="port-tariff-detail" role="tabpanel"
+                    aria-labelledby="port-tariff-detail-tab">
+                    <app-triff-detail-master></app-triff-detail-master>
+                  </div>
+                  <div *ngIf="holdControl === 'tramp-port-tariff-HDR'"
+                    [class.active.]="holdControl === 'tramp-port-tariff-HDR'" class="tab-pane fade show"
+                    id="tramp-port-tariff-HDR" role="tabpanel" aria-labelledby="tramp-port-tariff-HDR-tab">
+                    <app-triff-hdr-master></app-triff-hdr-master>
+                  </div>
+                  <div *ngIf="holdControl === 'TRAMP_PRINCIPAL_MASTER'"
+                    [class.active.]="holdControl === 'TRAMP_PRINCIPAL_MASTER'" class="tab-pane fade show"
+                    id="TRAMP_PRINCIPAL_MASTER" role="tabpanel" aria-labelledby="TRAMP_PRINCIPAL_MASTER-tab">
+                    <app-prinicpal-master></app-prinicpal-master>
+                  </div>
+                  <div *ngIf="holdControl === 'TRAMP_VESSEL_MASTER'"
+                    [class.active.]="holdControl === 'TRAMP_VESSEL_MASTER'" class="tab-pane fade show"
+                    id="TRAMP_VESSEL_MASTER" role="tabpanel" aria-labelledby="TRAMP_VESSEL_MASTER-tab">
+                    <app-vessal-master></app-vessal-master>
+                  </div>
+                  <div *ngIf="holdControl === 'TRAMP_VESSEL_TYPE_MASTER'"
+                    [class.active.]="holdControl === 'TRAMP_VESSEL_TYPE_MASTER'" class="tab-pane fade show"
+                    id="TRAMP_VESSEL_TYPE_MASTER" role="tabpanel" aria-labelledby="TRAMP_VESSEL_TYPE_MASTER-tab">
+                    <app-vessel-type-master></app-vessel-type-master>
+                  </div>
+                  <div *ngIf="holdControl === 'bond-filing'" [class.active.]="holdControl === 'bond-filing'"
+                    class="tab-pane fade show" id="bond-filing" role="tabpanel" aria-labelledby="Vendor Master-tab">
+                    <app-bond-filing></app-bond-filing>
+                  </div>
+                  <div *ngIf="holdControl === 'VENDOR_TYPE_MASTER'" [class.active.]="holdControl === 'VENDOR_TYPE_MASTER'"
+                    class="tab-pane fade show" id="VENDOR_TYPE_MASTER" role="tabpanel"
+                    aria-labelledby="VENDOR_TYPE_MASTER-tab">
+                    <app-vendor-type-master></app-vendor-type-master>
+                  </div>
+                  <!-- <div *ngIf="holdControl === 'party-master'" [class.active.]="holdControl === 'party-master'"
+                    class="tab-pane fade show" id="party-master" role="tabpanel" aria-labelledby="party-master-tab">
+                    <app-party-master></app-party-master>
+                  </div> -->
+                  <div *ngIf="holdControl === 'customer-GST'" [class.active.]="holdControl === 'customer-GST'"
+                    class="tab-pane fade show" id="customer-GST" role="tabpanel" aria-labelledby="customer-GST-tab">
+                    <app-customer-gst></app-customer-gst>
+                  </div>
+                  <div *ngIf="holdControl === 'container-master'" [class.active.]="holdControl === 'container-master'"
+                    class="tab-pane fade show" id="container-master" role="tabpanel"
+                    aria-labelledby="container-master-tab">
+                    <app-container-master></app-container-master>
+                  </div>
+                  <div *ngIf="holdControl === 'driver-master'" [class.active.]="holdControl === 'driver-master'"
+                  class="tab-pane fade show" id="driver-master" role="tabpanel"
+                  aria-labelledby="driver-master-tab">
+                  <app-driver-master></app-driver-master>
+                </div>
+                <div *ngIf="holdControl === 'milestone-master'" [class.active.]="holdControl === 'milestone-master'"
+                class="tab-pane fade show" id="milestone-master" role="tabpanel"
+                aria-labelledby="milestone-master-tab">
+                <app-milestone-master></app-milestone-master>
+              </div>
+                  <div *ngIf="holdControl === 'Container-Status'" [class.active.]="holdControl === 'Container-Status'"
+                    class="tab-pane fade show" id="Container-Status" role="tabpanel"
+                    aria-labelledby="Container-Status-tab">
+                    <app-container-survey></app-container-survey>
+                  </div>
+                  <div *ngIf="holdControl === 'charge-template-master'"
+                    [class.active.]="holdControl === 'charge-template-master'" class="tab-pane fade show"
+                    id="charge-template-master" role="tabpanel" aria-labelledby="charge-template-master-tab">
+                    <app-template-master></app-template-master>
+                  </div>
+                  <div *ngIf="holdControl === 'employee-master'" [class.active.]="holdControl === 'employee-master'"
+                    class="tab-pane fade show" id="employee-master" role="tabpanel"
+                    aria-labelledby="employee-master-tab">
+                    <app-employee-master></app-employee-master>
+                  </div>
+                  <div *ngIf="holdControl === 'label'" [class.active.]="holdControl === 'label'" class="tab-pane fade show"
+                    id="label" role="tabpanel" aria-labelledby="label-tab">
+                    <app-labels></app-labels>
+                  </div>
+
+                  <div *ngIf="holdControl === 'tds-slabs'" [class.active.]="holdControl === 'tds-slabs'"
+                    class="tab-pane fade show" id="tds-slabs" role="tabpanel" aria-labelledby="tds-slabs-tab">
+                    <app-tds-slabs></app-tds-slabs>
+                  </div>
+
+                  <div *ngIf="holdControl === 'hsn'" [class.active.]="holdControl === 'hsn'" class="tab-pane fade show"
+                    id="hsn" role="tabpanel" aria-labelledby="hsn-tab">
+                    <app-sac></app-sac>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <ul class="menuright">
+          <li><a><em class="mdi mdi-folder-upload "></em></a></li>
+          <li><a (click)="calculator()"><em class="mdi mdi-calculator"></em></a></li>
+          <li><a><em class="mdi mdi-comment-text "></em></a></li>
+        </ul> -->
+      </div>
+    </div>
+  </div>
+</div>

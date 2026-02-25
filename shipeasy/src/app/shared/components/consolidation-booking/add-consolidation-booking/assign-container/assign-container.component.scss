@@ -1,0 +1,75 @@
+@import '../../../../../../assets/styles/mixins/global.scss';
+.table-responsive{
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-collapse: separate;
+        border-spacing: 0;
+  
+        tbody {
+          tr {
+            td {
+              padding:  6px 10px;
+              font-style: normal;
+              font-size: 12px;
+              color: #3B3939;
+              text-align: left;
+              font-weight: 400;
+              line-height: normal;
+              // line-break: anywhere;
+              border: 0.1px solid rgb(226, 226, 226);
+              background-color: white;
+              white-space: nowrap;
+            }
+  
+            .link-text {
+              color: #007BFF !important;
+              cursor: pointer;
+  
+              &:hover {
+                color: #007BFF !important;
+                font-weight: 600 !important;
+              }
+            }
+  
+  
+          }
+  
+  
+        }
+  
+        thead {
+  
+          tr {
+            th {
+              font-size: 12px !important;
+              font-style: normal !important;
+              padding: 5px 10px !important;
+              text-align: left !important;
+              line-height: normal !important;
+              font-weight: 600 !important;
+              // line-break: anywhere;
+              // border-bottom: 0;
+              border: 0.1px solid #e0e0e0 !important;
+              background-color: var(--theme-light-bg) !important;
+              white-space: nowrap !important;
+              text-align: left !important;
+              line-height: normal !important;
+              color: #3B3939 !important;
+              text-transform: capitalize !important;
+              letter-spacing: 0px !important;
+            }
+  
+          }
+        }
+  
+        tr.mat-row,
+        tr.mat-footer-row {
+          height: auto !important;
+        }
+  
+        tr.mat-header-row {
+          height: auto;
+        }
+      }
+}

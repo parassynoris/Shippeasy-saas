@@ -1,0 +1,184 @@
+<div class="table-with-gheading">
+    <div class="wrapper wrap-table-area">
+        <div class="container-fluid" [ngClass]="customerUser ? 'contents' : ''">
+            <div class="wrap-content" [ngClass]="customerUser ? 'content' : ''">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="page-title-box">
+                            <div class="btn-group mt-2">
+                                <ol class="breadcrumb hide-phone p-0 m-0">
+                                    <li class="breadcrumb-item" *ngIf="!customerUser">SHIPEASY
+                                    </li>
+                                    <li class="breadcrumb-item" *ngIf="!customerUser">FAQ</li>
+                                </ol>
+                            </div>
+                        </div>
+                        <div class="container-fluid">
+                         <div class="d-flex justify-content-end">
+                          <a appAccessControl featureCode="['FAQ']" accessType="add"
+                          class="max-con new-action  btn btn-outline-primary btn-sm rounded-pill" (click)="onenMap(AddFAQ)"
+                          >Add</a>
+                         </div>
+                      </div>
+                        <div class="wrap-all-faq">
+                            <div class="container-fluid py-3">
+                              <div class="w-100 mt-3 menu-title">
+                                <h1 class="heading--h1 new-text-color font-20 mb-4">Frequently Asked Questions</h1>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-3 col-sm-12">
+                                  <div class="wrap-menu pb-4" [ngClass]="customerUser ? 'z-index' : ''">
+                                    <div class="input-group responsive-show mb-3 pt-5">
+                                      <select class="semibold--label new-text-color font-12" (change)="onSelectTopic(mySelect.value)" #mySelect [ngxScrollTo]="isSelected">
+                                        <option value="" selected>All Topic</option>
+                                        <option *ngFor="let toppic of faqdata" [value]="toppic.id" class="new-text-color font-12">{{toppic?.attributes?.title}}</option>
+                                      </select>
+                                    </div>
+                                    <div class="pbauto desktop-show" *ngFor="let toppic of faqdata" (click)="holdId=toppic.id" [ngxScrollTo]="toppic.id">
+                                      <h6 class="heading--h6 font-12" [ngClass]="holdId === toppic.id ? 'color--secondary font-14 ': 'color--lightMenu font-14'">{{toppic?.attributes?.title}}</h6>
+                                    </div>
+                                  </div>
+                                </div>
+                            
+                                <div class="col-md-9 col-sm-12 responsive mb-4" [ngClass]="customerUser ? 'overflow' : ''">
+                                  <div class="ids-card" *ngFor="let toppic of faqdata ; let pid=index;" id="{{toppic.id}}">
+                                    <div class="ids-card-body pt-0">
+                                      <div class="row">
+                                        <div class="col-md-12 col-sm-12">
+                                          <div class="">
+                                            <h4 class="heading--h4 font-16 new-text-color mb-2 mt-5">{{toppic?.attributes?.title}}</h4>
+                                            <ul class="list-group list-group-flush">
+                                              <li class="list-group-item border--bordercolor"
+                                                *ngFor="let faqs of toppic.attributes.faq; let cid=index;">
+                                                <div class="row justify-center">
+                                                  <div class="col-11">
+                                                    <span class="text--smalltext question" [ngClass]="faqs?.opened ? 'color--secondary' : 'new-text-color'">
+                                                      {{faqs.question}}
+                                                    </span>
+                                                  </div>
+                                                  <div class="col-1 text-end d-flex align-items-baseline">
+                                                    <div *ngIf="!customerUser"><em
+                                                      class="bi bi-pencil mr-1" (click)="onenMap(AddFAQ,faqs)"></em>
+                                                      <i class="bi bi-trash" (click)="onDelete(deletedata,faqs)"></i>
+                                                    </div>
+                                                    <div class="icon" (click)="faqs.opened = !faqs.opened"  >
+                                                      <em *ngIf="!faqs?.opened" class="bi bi-plus color--lightMenu font-16"></em>
+                                                      <em *ngIf="faqs?.opened" class="bi bi-dash color--secondary font-16"></em>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <div  [ngClass]="faqs?.opened ? 'd-block' : 'd-none'" >
+                                                  <div class="text--smalltext new-text-color question wrap-answer">
+                                                    {{faqs.answer}}
+                                                  </div>
+                                                </div>
+                                              </li>
+                            
+                                            </ul>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            </div>
+                          
+                          
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<ng-template #AddFAQ let-modal>
+  <div class="modal-content nz-allSelect">
+      <div class="modal-headers mt-2">
+          <h4 class="modal-title" >
+              {{CurrentFaqId ? 'Edit' : 'Add'}} FAQ
+          </h4>
+      </div>
+      <div class="modal-body">
+          <div class="wrap-form-field padding-space">
+            <form [formGroup]="FAQForm">
+              <div class="row">
+                <div class="col-md-12 mb-3">
+                  <label class="form-label">Category Type<span class="text-danger">*</span></label>
+            
+                <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="categoryType"
+                [ngClass]="{'is-invalid': submitted && f.categoryType.errors}">
+                <nz-option
+                *ngFor="let value of ['Inquiry','Booking','Invoice','General']"
+                [nzLabel]="value" [nzValue]="value"></nz-option>
+                </nz-select>
+                <div *ngIf="submitted && f.categoryType.errors" class="invalid-feedback">
+                  <div *ngIf="f.categoryType.errors.required">
+                    categoryType Type is Required
+                  </div>
+                </div>
+                </div>
+                <div class="col-md-12 mb-3">
+                  <label class="form-label">Question<span class="text-danger">*</span></label>
+                  <input id="question" name="question" type="text" formControlName="question"
+                    class="form-control custom-input rounded-0"
+                    [ngClass]="{'is-invalid': submitted && f.question.errors}">
+                  <div *ngIf="submitted && f.question.errors" class="invalid-feedback">
+                    <div *ngIf="f.question.errors.required">question is required
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 mb-3">
+                  <label class="form-label">Answer<span class="text-danger">*</span></label>
+                  <textarea id="answer" name="answer" rows="10" cols="50" formControlName="answer"
+                    class="form-control custom-input rounded-0" style="height: 65px;"
+                    [ngClass]="{'is-invalid': submitted && f.answer.errors}"></textarea>
+                  <div *ngIf="submitted && f.answer.errors" class="invalid-feedback">
+                    <div *ngIf="f.answer.errors.required">Answer is required
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group wrap-form-action mt-4">
+                <button class="btn1 btn-lg float-end" (click)="Cancel()" type="submit">
+                    {{ "common.cancel" | translate }}
+                </button>
+                <button (click)="AddSave()" *ngIf="!CurrentFaqId" class="btn btn-outline-primary btn-lg float-end" type="submit">
+                        {{ 'common.save' | translate }}
+                </button>
+                <button (click)="AddSave()" *ngIf="CurrentFaqId"  class="btn btn-outline-primary btn-lg float-end" type="submit">
+                  {{ 'common.update' | translate }}
+          </button>
+            </div>
+            </form>
+          </div>
+      </div>
+  </div>
+</ng-template>
+
+<ng-template #deletedata let-c="close" let-d="dismiss">
+  <div class="modal-content">
+      <div class="modal-header">
+          <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+      </div>
+      <div class="modal-body mt-4 d-flex align-items-center">
+          <em class="bi bi-question-circle text-danger fs-2 text-center float-start me-2"> </em> <span
+              class=" text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+      </div>
+      <div class="modal-footer">
+          <div class="text-center">
+              <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+                  {{ "common.no" | translate }}
+              </button>
+              <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+                  {{ "common.yes" | translate }}
+              </button>
+          </div>
+      </div>
+  </div>
+</ng-template>

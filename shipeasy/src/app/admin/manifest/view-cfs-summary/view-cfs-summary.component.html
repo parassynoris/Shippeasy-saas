@@ -1,0 +1,219 @@
+<div class="table-with-gheading">
+    <div class="wrap-content">
+       
+        <div class="row">
+            <div class="col-md-12 table-with-gheading">
+                <div class="table-responsive">
+                    <div class="wrap-table-area  wrap-table-design wrap-form-field"
+                        id="htmlData">
+                        <table  aria-describedby="mytable" >
+                            <thead>
+                                <tr>
+                                    <th colspan="6" class="text-center">
+                                        CFS WISE SUMMARY
+                                    </th>
+
+                                </tr>
+                                <tr>
+                                    <th rowspan="2">CFS </th>
+                                    <th>GENERAL FCL</th>
+                                    <th> HAZ FCL</th>
+                                   
+                                    <th>TOTAL</th>
+                                    <th rowspan="2"> CNTR</th>
+                                    <th rowspan="2">TEUS</th>
+                                </tr>
+                                <tr>
+                                    <th>20</th>
+                                    <th>20</th>
+                                    <th>20</th>
+                                </tr>
+                               
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let bl of csfContainerSummury">
+                                    <td >{{bl?.cfsLocation}}</td>
+                                    <td>{{bl?.nonHaz}}</td>
+                                    <td>{{bl?.haz}}</td>
+                                    <td>{{bl?.containerCount}}</td>
+                                    <td>{{bl?.containerCount}}</td>
+                                    <td>{{bl?.containerCount}}</td>
+
+                                </tr>
+                                <tr *ngIf="csfContainerSummury.length !== 0">
+                                    <td >TOTAL</td>
+                                    <td>{{totalHaz()}}</td>
+                                    <td>{{totalHaz('haz')}}</td>
+                                    <td>{{totalContainer()}}</td>
+                                    <td>{{totalContainer()}}</td>
+                                    <td>{{totalContainer()}}</td>
+                                </tr>
+                            </tbody>
+                         
+                        </table>
+                        <div class="no-data-availble mt-0" *ngIf="houseBlList.length === 0">
+                            {{'common.no_data' | translate}}
+                        </div>
+                        <div class="py-3">
+                            <button class="btn btn-outline-primary float-end" (click)="printCfs()">
+                                Print
+                            </button>
+                            <button class="btn btn-outline-primary float-end" (click)="excelCfs()">
+                                Excel
+                            </button>
+                            
+                        </div>
+                    </div>
+
+                    <div class="wrap-table-area  wrap-table-design wrap-form-field"
+                        id="htmlData">
+                        <table aria-describedby="mytable">
+                            <thead>
+                                <tr>
+                                    <th colspan="6" class="text-center">
+                                        FPOD WISE SUMMARY
+                                    </th>
+
+                                </tr>
+                                <tr>
+                                    <th rowspan="2">FPOD </th>
+                                    <th>GENERAL FCL</th>
+                                    <th> HAZ FCL</th>
+                                   
+                                    <th>TOTAL</th>
+                                    <th rowspan="2"> CNTR</th>
+                                    <th rowspan="2">TEUS</th>
+                                </tr>
+                                <tr>
+                                    <th>20</th>
+                                    <th>20</th>
+                                    <th>20</th>
+                                </tr>
+                               
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let bl of fpodContainerSummury">
+                                    <td>{{bl?.fpod}}</td>
+                                    <td>{{bl?.nonHaz}}</td>
+                                    <td>{{bl?.haz}}</td>
+                                    <td>{{bl?.containerCount}}</td>
+                                    <td>{{bl?.containerCount}}</td>
+                                    <td>{{bl?.containerCount}}</td>
+
+                                </tr>
+                                <tr *ngIf="fpodContainerSummury.length !== 0">
+                                    <td>TOTAL</td>
+                                    <td>{{totalHaz()}}</td>
+                                    <td>{{totalHaz('haz')}}</td>
+                                    <td>{{totalContainer()}}</td>
+                                    <td>{{totalContainer()}}</td>
+                                    <td>{{totalContainer()}}</td>
+                                </tr>
+                            </tbody>
+                         
+                        </table>
+                        <div class="no-data-availble mt-0" *ngIf="fpodContainerSummury.length === 0">
+                            {{'common.no_data' | translate}}
+                        </div>
+                        <div class="py-3">
+                            <button class="btn btn-outline-primary float-end" (click)="printFod()">
+                                Print
+                            </button>
+                            <button class="btn btn-outline-primary float-end" (click)="excelFod()">
+                                Excel
+                            </button>
+                            
+                        </div>
+                    </div>
+                </div>
+                </div>
+        </div>
+        <div class="btn-onscreen  my-3" >
+            <div class="form-group wrap-form-action ">
+                <button class="btn btn-outline-primary float-end" (click)="back()"> 
+                  Back </button>
+            </div>
+          </div>
+    </div>
+</div>
+
+<div class="display-none" id="cfsSummury">
+    <table style="width: 100%;" aria-describedby="mytable" >
+        <thead>
+            <tr>
+                <th style="border: 1px solid black;" colspan="6" class="text-center">
+                    CFS WISE SUMMARY
+                </th>
+            </tr>
+            <tr>
+                <th style="border: 1px solid black;">CFS </th>
+                <th style="border: 1px solid black;">GENERAL FCL / 20</th>
+                <th style="border: 1px solid black;"> HAZ FCL / 20</th>
+               
+                <th style="border: 1px solid black;">TOTAL / 20</th>
+                <th style="border: 1px solid black;"> CNTR</th>
+                <th style="border: 1px solid black;">TEUS</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let bl of csfContainerSummury">
+                <td style="border: 1px solid black;">{{bl?.cfsLocation}}</td>
+                <td style="border: 1px solid black;">{{bl?.nonHaz}}</td>
+                <td style="border: 1px solid black;">{{bl?.haz}}</td>
+                <td style="border: 1px solid black;">{{bl?.containerCount}}</td>
+                <td style="border: 1px solid black;">{{bl?.containerCount}}</td>
+                <td style="border: 1px solid black;">{{bl?.containerCount}}</td>
+
+            </tr>
+            <tr *ngIf="csfContainerSummury.length !== 0">
+                <td style="border: 1px solid black;">TOTAL</td>
+                <td style="border: 1px solid black;">{{totalHaz()}}</td>
+                <td style="border: 1px solid black;">{{totalHaz('haz')}}</td>
+                <td style="border: 1px solid black;">{{totalContainer()}}</td>
+                <td style="border: 1px solid black;">{{totalContainer()}}</td>
+                <td style="border: 1px solid black;">{{totalContainer()}}</td>
+            </tr>
+        </tbody>
+     
+    </table>
+</div>
+<div class="display-none" id="fodSummury">
+    <table style="width: 100%;" aria-describedby="mytable" >
+        <thead>
+            <tr>
+                <th style="border: 1px solid black;" colspan="6" class="text-center">
+                    FPOD WISE SUMMARY
+                </th>
+            </tr>
+            <tr>
+                <th style="border: 1px solid black;">FPOD </th>
+                <th style="border: 1px solid black;">GENERAL FCL / 20</th>
+                <th style="border: 1px solid black;"> HAZ FCL / 20</th>
+               
+                <th style="border: 1px solid black;">TOTAL / 20</th>
+                <th style="border: 1px solid black;"> CNTR</th>
+                <th style="border: 1px solid black;">TEUS</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let bl of fpodContainerSummury">
+                <td style="border: 1px solid black;">{{bl?.fpod}}</td>
+                <td style="border: 1px solid black;">{{bl?.nonHaz}}</td>
+                <td style="border: 1px solid black;">{{bl?.haz}}</td>
+                <td style="border: 1px solid black;">{{bl?.containerCount}}</td>
+                <td style="border: 1px solid black;">{{bl?.containerCount}}</td>
+                <td style="border: 1px solid black;">{{bl?.containerCount}}</td>
+
+            </tr>
+            <tr *ngIf="fpodContainerSummury.length !== 0">
+                <td style="border: 1px solid black;">TOTAL</td>
+                <td style="border: 1px solid black;">{{totalHazfpod()}}</td>
+                <td style="border: 1px solid black;">{{totalHazfpod('haz')}}</td>
+                <td style="border: 1px solid black;">{{totalContainerfpod()}}</td>
+                <td style="border: 1px solid black;">{{totalContainerfpod()}}</td>
+                <td style="border: 1px solid black;">{{totalContainerfpod()}}</td>
+            </tr>
+        </tbody>
+     
+    </table>
+</div>

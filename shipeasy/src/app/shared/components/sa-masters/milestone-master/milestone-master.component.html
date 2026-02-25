@@ -1,0 +1,427 @@
+<div class="table-header-area">
+    <div class="mat-table-with-gheading">
+        <div class="wrapper">
+            <div class="container-fluid">
+                <div class="pt-2">
+                    <div class="wrap-mat-table-area">
+                        <div class="table-header-area pt-2">
+                            <div>
+                                <table-filters [TDP]="[false, false, true, true]" (filterInput)="applyFilter($event)"
+                                    (onClickExport)="exportAsExcelFile()">
+                                </table-filters>
+                            </div>
+                            <div class="header-right">
+                                <div class="mt-2">
+                                    <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="openPDF()">{{
+                                        'common.print' | translate }} {{ 'common.list' | translate }}</a>
+                                </div>
+                                <div class="mt-2">
+                                    <a class="new-action btn btn-outline-primary btn-sm rounded-pill" appAccessControl
+                                        featureCode="['DRIV01']" accessType="add" (click)="open(AddState)">{{
+                                        "common.add" | translate }} Milestone Master</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-card">
+                        <div class="table-design example-container mat-elevation-z8">
+                            <table mat-table [dataSource]="dataSource" matSort class="full-width-table"
+                                summary="agreement">
+                                <ng-container matColumnDef="#">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef style="width: 3%;">
+                                        # <em class="custom-tooltip" [attr.title]="'Toggle Filters'"
+                                            (click)="toggleFilters = !toggleFilters" class="bi bi-search"></em>
+                                    </th>
+                                    <td mat-cell *matCellDef="let element; let i = index">
+                                        {{ element?.id}}
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="action">
+                                    <th scope="col" id="action" class="charterersPdfHead" mat-header-cell
+                                        *matHeaderCellDef style="width: 8%;">
+                                        {{ 'Actions' }}
+                                    </th>
+                                    <td class="borderBottom" mat-cell *matCellDef="let element; let i = index">
+                                        <div class="d-flex" style="align-items: center;">
+                                            <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}"
+                                                class="mtop mx-1">
+                                                <a appAccessControl featureCode="['DRIV01']" accessType="update"
+                                                    (click)="open(AddState, element)"><em
+                                                        class="bi bi-pencil color-pencil-red"></em></a>
+                                            </span>
+                                            <span nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}"
+                                                class="mx-1">
+                                                <a appAccessControl featureCode="['DRIV01']" accessType="view"
+                                                    (click)="open(AddState, element,'show')"><em
+                                                        class="bi bi-eye globally-change-icon-color"></em></a></span>
+
+                                            <span class="form-check form-switch mx1 mb-0 mt-1">
+                                                <input appAccessControl featureCode="['DRIV01']" accessType="update"
+                                                    class="form-check-input" type="checkbox" role="switch"
+                                                    id="flexSwitchCheckChecked" (change)="changeStatus(element)"
+                                                    [checked]="element.status" />
+                                                <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="freightTypeName">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header
+                                        style="width: 10%;">
+                                        Freight Type
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{ element?.freightTypeName }}
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="flowType">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header
+                                        style="width: 15%;">
+                                        Flow Type
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{ element?.flowType }}
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="shipmentType">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header
+                                        style="width: 15%;">
+                                        Shipment Type
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{ returnString(element?.shipmentType) }}
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="loadType">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header
+                                        style="width: 10%;">
+                                        Load Type
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{ element?.loadType }}
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="locationType">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header
+                                        style="width: 10%;">
+                                        Location Type
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{ element?.locationType }}
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="mileStoneName">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header
+                                        style="width: 25%;">
+                                        Milestone Name
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{ element?.mileStoneName }}
+                                    </td>
+                                </ng-container>
+                                
+                                
+                                <ng-container matColumnDef="seq">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header
+                                        style="width: 5%;">
+                                        Sequence
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{ element?.seq }}
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="color">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header
+                                        style="width: 1%;">
+                                        Color
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <div 
+                                            class="color-box" 
+                                            [style.background-color]="element?.color ? element?.color:'#007BFF'" 
+                                            [title]="element?.color"
+                                            >
+                                        </div>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="status">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header
+                                        style="width: 10%;">
+                                        Status
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{ element?.status ? "Active" : "Inactive"}}
+                                    </td>
+                                </ng-container>
+                                <!-- <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index" [matColumnDef]="headersFilter">
+                                    <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+                                        <div class="filters-container" [class.animate]="!toggleFilters">
+                                            <em *ngIf="i > 0 && i < displayedColumns1.length - 7" class="custom-tooltip" [attr.title]="'Clear Filters'"
+                                                (click)="clearFilters();toggleFilters = !toggleFilters" class="bi bi-x-circle"></em>
+                                            <div *ngIf="i > 1 && i < displayedColumns1.length - 0" appearance="outline">
+                                                <input class="form-control input-txt" placeholder="Press 'Enter' to search"
+                                                    [(ngModel)]="filtersModel[i]" (keyup.enter)="searchColumns()">
+                                            </div>
+                                
+                                        </div>
+                                    </th>
+                                </ng-container> -->
+                                <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index" [matColumnDef]="headersFilter">
+                                    <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+                                      <div class="filters-container" [class.animate]="!toggleFilters">
+                                        <em *ngIf="i > 0 && i < displayedColumns1.length - 2" class="custom-tooltip bi bi-x-circle"
+                                          [attr.title]="'Clear Filters'" (click)="clearFilters(); toggleFilters = !toggleFilters">
+                                        </em>
+                                        <div *ngIf="i > 1 && i < displayedColumns1.length - 0" appearance="outline">
+                                          <ng-container *ngIf="displayedColumns[i] === 'status'; else textInput">
+                                            <select class="form-control" [(ngModel)]="filtersModel[i]" (change)="searchColumns()">
+                                              <option value="">All</option>
+                                              <option value="active">Active</option>
+                                              <option value="inactive">Inactive</option>
+                                            </select>
+                                          </ng-container>
+                                          <ng-template #textInput>
+                                            <input class="form-control input-txt" placeholder="Press 'Enter' to search" [(ngModel)]="filtersModel[i]"
+                                              (keyup.enter)="searchColumns()">
+                                          </ng-template>
+                                        </div>
+                                      </div>
+                                    </th>
+                                  </ng-container>
+                                <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumns">
+                                </tr>
+                                <tr mat-header-row class="no-default-height" *matHeaderRowDef="displayedColumns1"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns">
+                                </tr>
+                                <tr class="mat-row" *matNoDataRow>
+                                    <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+                                        <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+                                        <span *ngIf="!loaderService?.isLoadingcircle && !dataSource?.data?.length">
+                                            No data available</span>
+                                    </td>
+                                </tr>
+
+
+                            </table>
+                        </div>
+
+                        <div [ngClass]="{'display-none' : toalLength < 10}">
+                            <mat-paginator [length]="toalLength" [pageSize]="pageSize" [pageIndex]="pageNumber-1"
+                                (page)="onPageChange($event)" [pageSizeOptions]="_gc.PAGINATOR_OPTIONS"
+                                showFirstLastButtons></mat-paginator>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #AddState let-modal>
+    <div class="modal-content nz-allSelect">
+        <div class="modal-headers mt-2">
+            <h4 class="modal-title">
+                <ng-container *ngIf="!this.idToUpdate; else stateUpdate">
+                    {{ 'common.add' | translate }}
+                    {{"stolt.masters.MILESTONE_MASTER.MILESTONE_MASTER"| translate }}
+                </ng-container>
+                <ng-template #stateUpdate>
+                    {{ 'common.edit' | translate }}
+                    {{"stolt.masters.MILESTONE_MASTER.MILESTONE_MASTER"| translate}}
+
+
+                </ng-template>
+            </h4>
+            <button type="button" class="btn-close shadow-none float-end" (click)="close()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="wrap-form-field padding-space">
+                <form class="row g-3" [formGroup]="addMileStoneForm">
+
+
+                    <div class="col-md-4">
+                        <label class="form-label">{{"stolt.masters.MILESTONE_MASTER.flowType" | translate}}</label><span
+                            class="text-danger">*</span>
+                        <nz-select class="w-100" formControlName="flowType" id="flowType" 
+                            [ngClass]="{ 'is-invalid': submitted && f.flowType.errors }"
+                            nzPlaceHolder="Select Flow Type">
+                            <nz-option nzValue="export" nzLabel="Export"></nz-option>
+                            <nz-option nzValue="import" nzLabel="Import"></nz-option>
+                            <nz-option nzValue="transport" nzLabel="Transport"></nz-option>
+                        </nz-select>
+                        <div *ngIf="submitted && f.flowType.errors" class="invalid-feedback">
+                            <div *ngIf="f.flowType.errors.required">
+                                {{"stolt.masters.MILESTONE_MASTER.flowType" | translate}} is required
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-4">
+                        <label class="form-label">{{"stolt.masters.MILESTONE_MASTER.freightType" | translate}}
+                            <span class="text-danger">*</span></label>
+                        <nz-select nzPlaceHolder="Select Freight Type" (ngModelChange)="shipmentType($event)"
+                            class="form-select" nzShowSearch nzAllowClear formControlName="freightType"
+                            [ngClass]="{'is-invalid': submitted && f.freightType.errors}">
+                            <nz-option *ngFor="let test of shipmentTypes" [nzLabel]="test?.typeName"
+                                [nzValue]="test?.systemtypeId"></nz-option>
+                        </nz-select>
+                        <div *ngIf="submitted && f.freightType.errors" class="invalid-feedback">
+                            <div *ngIf="f.freightType.errors.required">{{
+                                "stolt.masters.MILESTONE_MASTER.freightType" | translate
+                                }} is
+                                required</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">{{"stolt.masters.MILESTONE_MASTER.loadType" | translate}} <span
+                                class="text-danger">*</span></label>
+
+                        <nz-select class="form-select" nzPlaceHolder="Select Load Type" nzShowSearch nzAllowClear
+                            formControlName="loadType" [ngClass]="{'is-invalid': submitted && f.loadType.errors}">
+                            <nz-option *ngFor="let test of loadTypeList" [nzLabel]="test?.typeName"
+                                [nzValue]="test?.typeName"></nz-option>
+                        </nz-select>
+                        <div *ngIf="submitted && f.loadType.errors" class="invalid-feedback">
+                            <div *ngIf="f.loadType.errors.required">{{"stolt.masters.MILESTONE_MASTER.loadType" |
+                                translate}}
+                                is required</div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-4">
+                        <label class="form-label">{{"stolt.masters.MILESTONE_MASTER.locationType" |
+                            translate}}</label><span class="text-danger">*</span>
+                        <nz-select formControlName="locationType" nzPlaceHolder="Select Location Type" class="w-100"
+                            [ngClass]="{ 'is-invalid': submitted && f.locationType.errors }">
+                            <!-- <nz-option *ngIf="f.flowType.value?.toLowerCase() == 'export' &&  getFreightYpe(f.freightType.value)?.toLowerCase() == 'ocean'" nzValue="Origin ICD" nzLabel="Origin ICD"></nz-option>
+                            <nz-option *ngIf="f.flowType.value?.toLowerCase() == 'export' && getFreightYpe(f.freightType.value)?.toLowerCase() == 'ocean'" nzValue="Origin Address" nzLabel="Origin Address"></nz-option> -->
+                            <nz-option nzValue="load" nzLabel="Load"></nz-option>
+                            <nz-option nzValue="transhipment" nzLabel="Transhipment"></nz-option>
+                            <nz-option nzValue="discharge" nzLabel="Discharge"></nz-option>
+                            <!-- <nz-option *ngIf="f.flowType.value?.toLowerCase() == 'export' && getFreightYpe(f.freightType.value)?.toLowerCase() == 'ocean'" nzValue="Destination ICD" nzLabel="Destination ICD"></nz-option>
+                            <nz-option *ngIf="f.flowType.value?.toLowerCase() == 'export' && getFreightYpe(f.freightType.value)?.toLowerCase() == 'ocean'" nzValue="Destination Address" nzLabel="Destination Address"></nz-option> -->
+                        </nz-select>
+
+                        <div *ngIf="submitted && f.locationType.errors" class="invalid-feedback">
+                            <div *ngIf="f.locationType.errors.required">
+                                {{"stolt.masters.MILESTONE_MASTER.locationType" | translate}} is required
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">{{"stolt.masters.MILESTONE_MASTER.shipmentType" |
+                            translate}}</label><span class="text-danger">*</span>
+                        <!-- <nz-select formControlName="shipmentType" nzPlaceHolder="Select Shipment Type" class="w-100"
+                            [ngClass]="{ 'is-invalid': submitted && f.shipmentType.errors }">
+                            <nz-option *ngFor="let test of jobShipmentType" [nzLabel]="test?.typeName"
+                                [nzValue]="test?.typeName"></nz-option>
+                        </nz-select> -->
+
+                         <ng-multiselect-dropdown
+                            [placeholder]="'Select Shipment Type'"
+                            [settings]="dropdownSettings"
+                            [data]="jobShipmentType"
+                            name="shipmentType"
+                            formControlName="shipmentType">
+                        </ng-multiselect-dropdown>
+
+                        <div *ngIf="submitted && f.shipmentType.errors" class="invalid-feedback">
+                            <div *ngIf="f.shipmentType.errors.required">
+                                {{"stolt.masters.MILESTONE_MASTER.shipmentType" | translate}} is required
+                            </div>
+                        </div>
+                    </div>
+
+                    
+
+
+                    <div class="col-md-4">
+                        <label class="form-label">{{"stolt.masters.MILESTONE_MASTER.mileStoneName" |
+                            translate}}</label><span class="text-danger">*</span>
+                        <input type="text" class="form-control custom-input" id="mileStoneName"
+                            formControlName="mileStoneName" placeholder="Milestone Name" value=""
+                            [ngClass]="{ 'is-invalid': submitted && f.mileStoneName.errors }" />
+                        <div *ngIf="submitted && f.mileStoneName.errors" class="invalid-feedback">
+                            <div *ngIf="f.mileStoneName.errors.required">
+                                {{"stolt.masters.MILESTONE_MASTER.mileStoneName" | translate}} is required
+                            </div>
+                        </div>
+                    </div>
+
+                    
+
+                    
+
+
+                    <div class="col-md-4">
+                        <label class="form-label">{{"stolt.masters.MILESTONE_MASTER.seq" | translate}}</label><span
+                            class="text-danger">*</span>
+                        <input type="number" class="form-control custom-input" id="seq" formControlName="seq"
+                            placeholder="Sequence Number" value=""
+                            [ngClass]="{ 'is-invalid': submitted && f.seq.errors }" />
+                        <div *ngIf="submitted && f.seq.errors" class="invalid-feedback">
+                            <div *ngIf="f.seq.errors.required">
+                                {{"stolt.masters.MILESTONE_MASTER.seq" | translate}} is required
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">{{"stolt.masters.MILESTONE_MASTER.color" | translate}}</label><span
+                            class="text-danger">*</span>
+                        <input type="color" class="form-control custom-input" id="color" formControlName="color" />
+                        <div *ngIf="submitted && f.color.errors" class="invalid-feedback">
+                            <div *ngIf="f.color.errors.required">
+                                {{"stolt.masters.MILESTONE_MASTER.color" | translate}} is required
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4  d-flex align-items-center">
+                        <div class="form-check mx-1 d-flex align-items-center">
+                            <input class="" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                                formControlName="customOrigin" [checked]="addMileStoneForm?.value?.customOrigin" />
+                            <label class="form-check-label mx-1" for="flexSwitchCheckChecked"></label>
+                            <label class="form-check-label mx-1">{{
+                                "stolt.masters.MILESTONE_MASTER.customOrigin" | translate
+                                }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4  d-flex align-items-center">
+                        <div class="form-check mx-1 d-flex align-items-center">
+                            <input class="" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                                formControlName="customDestination"
+                                [checked]="addMileStoneForm?.value?.customDestination" />
+                            <label class="form-check-label mx-1" for="flexSwitchCheckChecked"></label>
+                            <label class="form-check-label mx-1">{{
+                                "stolt.masters.MILESTONE_MASTER.customDestination" | translate
+                                }}</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group wrap-form-action mt-4">
+                        <button class="btn1 btn-lg float-end" (click)="close()" type="button">
+                            {{ "common.cancel" | translate }}
+                        </button>
+                        <button (click)="onSaveMileStoneMaster()" class="btn btn-outline-primary btn-lg float-end"
+                            type="submit" *ngIf="!isViewMode"> <!-- Show button only if not in view mode -->
+                            <ng-container *ngIf="!idToUpdate; else mileStoneUpdate">
+                                {{ 'common.save' | translate }}
+                            </ng-container>
+                            <ng-template #mileStoneUpdate>
+                                {{ 'common.update' | translate }}
+                            </ng-template>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-template>

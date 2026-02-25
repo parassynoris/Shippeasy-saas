@@ -1,0 +1,186 @@
+<div class="table-with-gheading">
+
+    <div class="wrap-table-area">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="float-clear-mobile-view d-flex flex-column flex-sm-row gap-3 float-start search-section">
+                    <div class="input-group custom-input">
+                        <input type="text" class="form-control" placeholder="Search" aria-label="Search">
+                    </div>
+                </div>
+                <div
+                    class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2 ">
+                    <div class="mt-2">
+                        <span>
+                            <h5>{{ fromSize }}-{{ count }} of {{ toalLength }}</h5>
+                        </span>
+                    </div>
+                    <div class="mt-2">
+
+                        <span class="prv" [class.disable-arrow-sign]="fromSize === 1" (click)="prev()"><em
+                                class="typcn typcn-chevron-left"></em></span>
+                        <span class="prv" [class.disable-arrow-sign]="count === toalLength" (click)="next()"><em
+                                class="typcn typcn-chevron-right"></em></span>
+                    </div>
+                    <div class="mt-2">
+                        <select class="form-select form-select-sm" (change)="filter($event)">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                    <div class="mt-2">
+                        <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="openPDF()">{{
+                          'common.print' | translate }} {{
+                            'common.list' | translate }}</a>
+                      </div>
+                    <div class="mt-2">
+                        <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="exportAsExcelFile()">{{
+                          'common.exportToExcel' | translate }}</a>
+                      </div>
+                    <div class="mt-2">
+                        <a class="new-action" (click)="open(AddClause)">{{"common.add" | translate}} {{
+                            'stolt.masters.TRAMP_PORT_TARIFF_HDR.TRAMP_PORT_TARIFF_HDR' | translate }}</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="table-responsive" id="htmlData">
+                    <table aria-describedby="mytable" class="gfg">
+                        <thead>
+                            <tr class="field-name">
+                                <th scope="col" class="text-center">Action</th>
+                              
+                                <th scope="col">Port Name  <em class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_HDR.FROM_DATE' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_HDR.CREATED_BY' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_HDR.CREATED_DT' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_HDR.LAST_UPDATED_BY' | translate }}
+                                     <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                                </th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_PORT_TARIFF_HDR.LAST_UPDATED_DT' | translate }}
+                                     <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                                </th>
+
+
+                                <th scope="col"></th>
+                            </tr>
+                            <tr>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="portName"
+                                        (keydown.enter)="search()"></th>
+                                <th scope="col"><input type="date" class="form-control" id="" [(ngModel)]="fromDate"
+                                        (keydown.enter)="search()"></th>
+                                <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="createdBy"
+                                        (keydown.enter)="search()"></th>
+                                <th scope="col"><input type="date" class="form-control" id="" [(ngModel)]="createdOn"
+                                        (keydown.enter)="search()"></th>
+                                <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="updatedBy"
+                                        (keydown.enter)="search()"></th>
+                                <th scope="col"><input type="date" class="form-control" id="" [(ngModel)]="updatedOn"
+                                        (keydown.enter)="search()"></th>
+
+
+                                <th scope="col" class="wrap-table-btn">
+                                    <button type="button"  class="bi bi-search btn btn-outline-primary btn-sm rounded-pill" (click)="search()"></button>
+                                    <a (click)="clear()" class="bi bi-arrow-clockwise btn btn-outline-primary btn-sm rounded-pill"> </a>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let tariff of tariffList">
+                                <td class="action-field">
+                                    <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop"><a
+                                            (click)="open(AddClause,tariff)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                                    </span>
+                                    <span nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}"><a
+                                        (click)="open(AddClause, tariff,'show')"><em
+                                            class="bi bi-eye globally-change-icon-color"></em></a></span>
+                                  
+                                    <span class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" role="switch"
+                                            id="flexSwitchCheckChecked" (change)="changeStatus(tariff)"
+                                            [checked]="tariff?._source?.status" />
+                                        <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                                    </span>
+                                </td>
+                                <td class="">{{ tariff?._source?.port }}</td>
+                                <td class="">{{ tariff?._source?.fromDate | date: "dd-MM-YYYY"}}</td>
+                                <td class="">{{ tariff?._source?.createdBy }}</td>
+                                <td class="">{{ tariff?._source?.createdOn | date: "dd-MM-YYYY"}}</td>
+                                <td class="">{{ tariff?._source?.updatedBy }} </td>
+                                <td class="">{{ tariff?._source?.updatedOn | date: "dd-MM-YYYY"}} </td>
+
+                              
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="no-data-availble" *ngIf="tariffList.length === 0">
+                    {{'common.no_data' | translate}}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<ng-template #AddClause let-modal>
+    <div class="modal-content">
+        <div class="modal-headers mt-2">
+            <h4 class="modal-title">{{"common.add" | translate}} {{
+                'stolt.masters.TRAMP_PORT_TARIFF_HDR.TRAMP_PORT_TARIFF_HDR' | translate }}</h4>
+           
+        </div>
+        <div class="modal-body">
+            <div class="wrap-form-field padding-space">
+                <form class="row g-3 align-items-center" [formGroup]="HDRForm">
+
+                   
+                    <div class="col-md-4">
+                        <label class="form-label ">Port <span class="text-danger">*</span></label>
+                       
+                        <select formControlName="port" class="form-control"
+                            [ngClass]="{ 'is-invalid': submitted && f1.port.errors }">
+                            <option *ngFor="let port of portListData" [value]="port?._source?.portId">
+                                {{port?._source?.portDetails?.portName}}</option>
+                        </select>
+                        <div *ngIf="submitted && f1.port.errors" class="invalid-feedback">
+                            <div *ngIf="f1.port.errors.required">Port is required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="mb-0 p-0 form-label">{{ 'stolt.masters.TRAMP_PORT_TARIFF_HDR.FROM_DATE' | translate }}<span
+                          class="text-danger">*</span></label>
+                        <mat-form-field appearance="outline" class="custom-date-picker">
+                           <div class="d-flex align-items-center  w-100">
+                            <input matInput
+                            [matDatepicker]="pickerEtay" formControlName="fromDate" class="h-0"/>
+                          <mat-datepicker-toggle matSuffix [for]="pickerEtay"></mat-datepicker-toggle>
+                           </div>
+                            <mat-datepicker #pickerEtay></mat-datepicker>
+                        </mat-form-field>
+                        <mat-error>
+                          <div  *ngIf="submitted && f1?.fromDate?.errors?.required" class="set-error-msg">{{ 'stolt.masters.TRAMP_PORT_TARIFF_HDR.FROM_DATE'
+                            | translate
+                            }} is required</div>
+                      </mat-error>
+                    </div>
+                   
+                    <div class="form-group wrap-form-action mt-4">
+                        <button class="btn1 btn-lg float-end" (click)="cancel()">
+                            {{ 'common.cancel' | translate }}
+                        </button>
+                        <button class="btn btn-outline-primary btn-lg float-end" *ngIf="show !== 'show'" (click)="onSave()">
+                            {{ 'common.save' | translate }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-template>

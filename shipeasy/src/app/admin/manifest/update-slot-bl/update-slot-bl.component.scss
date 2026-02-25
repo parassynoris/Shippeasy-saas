@@ -1,0 +1,6 @@
+::ng-deep {
+    .ant-select-show-search.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+        cursor: text;
+        border-radius: 50px !important;
+    }
+}

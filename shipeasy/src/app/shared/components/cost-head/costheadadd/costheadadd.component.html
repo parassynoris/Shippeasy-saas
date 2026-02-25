@@ -1,0 +1,55 @@
+<div class="modal-header">
+  <h4 class="modal-title" *ngIf="!fromParent">{{ 'smartagent.smartAgent.costHead.addCostHead' | translate}}</h4>
+  <h4 class="modal-title" *ngIf="fromParent">{{ 'smartagent.smartAgent.costHead.editCostHead' | translate}}</h4>
+  <button type="button" class="btn-close shadow-none" (click)="onClose()" aria-label="Close">
+  </button>
+</div>
+<div class="modal-body">
+  <div class="wrap-form-field padding-space  modal-bottom-alignment-for-mobile-view">
+    <form [formGroup]="addCostHead" (ngSubmit)="saveCostHead()" class="row g-3 mt-3">
+      <div class="col-md-4">
+        <label class="form-label">{{ "smartagent.smartAgent.costHead.costCode" | translate}}</label><span
+          class="text-danger">*</span>
+        <input formControlName="costHeadCode" type="number" class="form-control custom-input" placeholder="Cost Code"
+          [ngClass]="{ 'is-invalid': submitted && f.costHeadCode.errors }">
+        <div *ngIf="submitted && f.costHeadCode.errors" class="invalid-feedback">
+          <div *ngIf="f.costHeadCode.errors.required">{{ 'smartagent.smartAgent.costHead.costCodeRequired'
+            |
+            translate }}</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">{{ 'smartagent.smartAgent.costHead.costName' | translate
+          }}</label><span class="text-danger">*</span>
+        <input formControlName="costHeadName" type="text" class="form-control custom-input" placeholder="Cost Name"
+          [ngClass]="{ 'is-invalid': submitted && f.costHeadName.errors }"appCapitalizeFirst>
+        <div *ngIf="submitted && f.costHeadName.errors" class="invalid-feedback">
+          <div *ngIf="f.costHeadName.errors.required">{{ 'smartagent.smartAgent.costHead.costNameRequired'
+            |
+            translate }}</div>
+        </div>
+      </div>
+     <div class="col-md-6">
+        <div class="taggle form-check form-switch">
+          <label class="form-check-label" for="flexSwitchCheckDefault"> {{ 'smartagent.smartAgent.department.status' |
+            translate }}</label>
+          <input class="form-check-input" formControlName="status" type="checkbox" id="flexSwitchCheckDefault">
+        </div>
+      </div>
+
+      <div class="form-group wrap-form-action mt-4">
+        <button class="btn1 btn-lg float-end" (click)="onClose()">
+          {{ "common.cancel" | translate }}
+        </button>
+        <button class="btn btn-outline-primary btn-lg float-end">
+          <ng-container *ngIf="!fromParent">
+            {{ "common.save" | translate }}
+          </ng-container>
+          <ng-container *ngIf="fromParent">
+            {{ "common.update" | translate }}
+          </ng-container>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

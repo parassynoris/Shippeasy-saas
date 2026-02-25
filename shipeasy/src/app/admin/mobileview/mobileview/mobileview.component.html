@@ -1,0 +1,347 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"></script>
+<div class="mobile-view-section-top-alignment">
+  <div class="container-fluid">
+    <div class="wrap-bar">
+      <div class="wrap-left">
+        <h1>Mobile view</h1>
+      </div>
+    </div>
+    <div class="custom-date-picker">
+      <label>Select Date</label>
+      <input type="date" (change)="onSelectDateJob($event)" />
+    </div>
+
+    <div class="vessel-update-button-center-alignment">
+      <button (click)="onAdd()">Add Activity</button>
+    </div>
+    <div class="tab-design-change">
+    <div class="wrap-right custome-tab">
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item active" role="presentation">
+          <button
+            class="nav-link"
+            (click)="onTab('tab1')"
+            data-bs-toggle="tab"
+            data-bs-target="tab1"
+            type="button"
+            role="tab"
+            aria-controls="tab1"
+            aria-selected="true"
+          >
+            vessel
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            (click)="onTab('tab2')"
+            data-bs-toggle="tab"
+            data-bs-target="tab2"
+            type="button"
+            role="tab"
+            aria-controls="tab2"
+            aria-selected="true"
+          >
+            Activity
+          </button>
+        </li>
+      </ul>
+    </div>
+    </div>
+    
+
+   <div *ngIf="activeTab === 'tab1'">
+      <div class="mobile-view-content-alignment">
+        <div class="grid">
+          <div class="grid-items" *ngFor="let sof of vesselList">
+            <div class="container">
+              <ng-multiselect-dropdown
+                class="container"
+                [placeholder]="'custom placeholder'"
+                [data]="dropdownList"
+                [(ngModel)]="selectedItems"
+                [settings]="dropdownSettings"
+                (onSelect)="onItemSelect($event)"
+                (onSelectAll)="onSelectAll($event)"
+                name="fieldName"
+                ngDefaultControl
+              >
+              </ng-multiselect-dropdown>
+            </div>
+
+            <div class="text-grid">
+              <div class="text-grid-items">
+                <span>Vessel ETA:</span>
+              </div>
+              <div class="text-grid-items">
+                <p>{{sof?._source?.generalDetails?.effectiveDate| date:"dd-MM-YYYY,hh:mm"}}</p>
+              </div>
+            </div>
+
+            <div class="text-grid">
+              <div class="text-grid-items">
+                <span>Vessel Name:</span>
+              </div>
+              <div class="text-grid-items">
+                <p>{{sof._source.vesselName}}</p>
+              </div>
+            </div>
+
+            <div class="text-grid">
+              <div class="text-grid-items">
+                <span>Vessel Status:</span>
+              </div>
+              <div class="text-grid-items">
+                <p>{{ sof._source.status   ? 'Active' : 'InActive' }}</p>
+              </div>
+            </div>
+            <div
+              class="vessel-update-button-center-alignment"
+              (click)="setActivity1(sof,'vessel')"
+            >
+              <button>Update Activity</button>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="activeTab === 'tab2'">
+          <div class="mobile-view-content-alignment">
+            <div class="grid">
+              <div class="grid-items" *ngFor="let sof of sofListinData">
+                <div class="container">
+                  <ng-multiselect-dropdown
+                    class="container"
+                    [placeholder]="'custom placeholder'"
+                    [data]="dropdownList"
+                    [(ngModel)]="selectedItems"
+                    [settings]="dropdownSettings"
+                    (onSelect)="onItemSelect($event)"
+                    (onSelectAll)="onSelectAll($event)"
+                    name="fieldName"
+                    ngDefaultControl
+                  >
+                  </ng-multiselect-dropdown>
+                </div>
+
+                <div class="text-grid">
+                  <div class="text-grid-items">
+                    <span>Vessel1 ETA:</span>
+                  </div>
+                  <div class="text-grid-items">
+                    <p>
+                      {{
+                        sof?._source?.arrival?.vesselArrived
+                          | date: "dd-MM-YYYY,hh:mm"
+                      }}
+                    </p>
+                  </div>
+                </div>
+                <div class="text-grid">
+                  <div class="text-grid-items">
+                    <span> Activity Name : </span>
+                  </div>
+                  <div class="text-grid-items">
+                    <p>{{ sof._source.activityName }}</p>
+                  </div>
+                </div>
+
+                <div class="text-grid">
+                  <div class="text-grid-items">
+                    <span>Activity Status:</span>
+                  </div>
+                  <div class="text-grid-items">
+                    <p>{{ sof._source.activityType }}</p>
+                  </div>
+                </div>
+                <div
+                  class="vessel-update-button-center-alignment"
+                  (click)="setActivity1(sof,'activity')"
+                >
+                  <button>Update Activity</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="activeTab === 'tab2'">
+      <div class="mobile-view-content-alignment">
+        <div class="grid">
+          <div class="grid-items" *ngFor="let sof of sofListinData">
+            <div class="container">
+              <ng-multiselect-dropdown
+                class="container"
+                [placeholder]="'custom placeholder'"
+                [data]="dropdownList"
+                [(ngModel)]="selectedItems"
+                [settings]="dropdownSettings"
+                (onSelect)="onItemSelect($event)"
+                (onSelectAll)="onSelectAll($event)"
+                name="fieldName"
+                ngDefaultControl
+              >
+              </ng-multiselect-dropdown>
+            </div>
+
+            <div class="text-grid">
+              <div class="text-grid-items">
+                <span>Activity ETA:</span>
+              </div>
+              <div class="text-grid-items">
+                <p>
+                  {{
+                    sof?._source?.arrival?.vesselArrived
+                      | date: "dd-MM-YYYY,hh:mm"
+                  }}
+                </p>
+              </div>
+            </div>
+            <div class="text-grid">
+              <div class="text-grid-items">
+                <span> Activity Name : </span>
+              </div>
+              <div class="text-grid-items">
+                <p>{{ sof._source.activityName }}</p>
+              </div>
+            </div>
+
+            <div class="text-grid">
+              <div class="text-grid-items">
+                <span>Activity Status:</span>
+              </div>
+              <div class="text-grid-items">
+                <p>{{ sof._source.activityType }}</p>
+              </div>
+            </div>
+            <div
+              class="vessel-update-button-center-alignment"
+              (click)="setActivity1(sof,'activity')"
+            >
+              <button>Update Activity</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="isShow" class="cus-modal-wrapper">
+      <div class="modal-md">
+        <div class="cus-modal-header">
+          <h1>Activity Update</h1>
+          <i (click)="closeActivity()" class="fa-solid fa-xmark"></i>
+        </div>
+        <div class="modal-body-content-alignment">
+          <div class="vessel-name-here-text">
+            <p>Activity Name :</p>
+            <select
+              name="Vessel Update"
+              id="Vessel Update"
+              [(ngModel)]="activityName"
+            >
+              <option value="arrival">Arrival</option>
+              <option value="berthing">Berthing</option>
+              <option value="departure">Departure</option>
+            </select>
+          </div>
+          <div class="vessel-select-input">
+            <label>Activity Status</label>
+            <select
+              name="Vessel Update"
+              id="Vessel Update"
+              [(ngModel)]="activityStatus"
+              (change)="onSelectActivity($event)"
+            >
+              <option *ngFor="let act of activitiesValue" [value]="act.key">
+                {{ act.label }}
+              </option>
+            </select>
+          </div>
+          <div class="vessel-select-input">
+            <label>Date-Time</label>
+            <input
+              type="datetime-local"
+              [ngModel]="dateTimeOfActivity"
+              (change)="onSelectDate($event)"
+            />
+          </div>
+          <div class="vessel-select-input">
+            <label>Remark</label>
+            <input type="text" placeholder="Remark" [ngModel]="remark" />
+          </div>
+        </div>
+        <div class="modal-body-footer-contnet-alignment">
+          <div class="vessel-update-button-center-alignment">
+            <button (click)="saveActivity('update')">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="displayBasic === 'add'" class="cus-modal-wrapper">
+    <div class="modal-md">
+      <div class="cus-modal-header">
+        <h1>Activity Update</h1>
+        <i (click)="closeActivity()" class="fa-solid fa-xmark"></i>
+      </div>
+      <div class="modal-body-content-alignment">
+        <div class="vessel-select-input">
+          <p>Job Number</p>
+          <select
+            name="Vessel Update"
+            id="Vessel Update"
+            [(ngModel)]="jobNo"
+            (change)="onJobNoChange($event, 'add')"
+          >
+            <option [value]="job._source.jobNo" *ngFor="let job of jobData">
+              {{ job._source.jobNo }}
+            </option>
+          </select>
+        </div>
+        <div class="vessel-name-here-text">
+          <p>Activity Name :</p>
+          <select
+            name="Vessel Update"
+            id="Vessel Update"
+            [(ngModel)]="activityName"
+          >
+            <option value="arrival">Arrival</option>
+            <option value="berthing">Berthing</option>
+            <option value="departure">Departure</option>
+          </select>
+        </div>
+        <div class="vessel-select-input">
+          <label>Activity Status</label>
+          <select
+            name="Vessel Update"
+            id="Vessel Update"
+            [(ngModel)]="selectedActivity"
+            (change)="onSelectActivity($event)"
+          >
+            <option *ngFor="let act of activitiesValue" [value]="act.key">
+              {{ act.label }}
+            </option>
+          </select>
+         </div>
+        <div class="vessel-select-input">
+          <label>Date-Time</label>
+          <input
+            type="datetime-local"
+            [ngModel]="dateTimeOfActivity"
+            (change)="onSelectDate($event)"
+          />
+        </div>
+        <div class="vessel-select-input">
+          <label>Remark</label>
+          <input type="text" placeholder="Remark" [ngModel]="remark" />
+        </div>
+      </div>
+      <div class="modal-body-footer-contnet-alignment">
+        <div class="vessel-update-button-center-alignment">
+          <button (click)="saveActivity('add')">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

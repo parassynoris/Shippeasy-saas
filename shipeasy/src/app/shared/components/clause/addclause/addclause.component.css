@@ -1,0 +1,14 @@
+.btncal {
+   background-color: transparent;
+   border-right: 0;
+   border-left: 0;
+   border-top: 0;
+   border-bottom: 1px solid var(--theme-border-bottom-color);
+}
+
+.btncal i {
+   color: var(--link-text-color);
+
+   font-size: 12px;
+
+}

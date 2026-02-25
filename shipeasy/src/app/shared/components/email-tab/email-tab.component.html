@@ -1,0 +1,275 @@
+<div class="row">
+
+  <div class="col-md-2 overflow-y-scroll mt-3" style="margin-top: 3.5rem !important;">
+    <div class="card1 mb-2.5 mt-5" *ngFor="let item of emailList"  [class.selected]="item === selectedItem" (click)="open(item)">
+      <!-- <ng-container class="card-body">
+        <div class="m-3">
+          <div class="align col-md-12">
+            <div class="mb-2 col-md-4">
+              <span class="namebold">To :- {{returnemail(item?.to)}}</span>
+            </div>
+            <div class="mb-2 col-md-5">
+              <span class="namebold1">Subject:- {{item?.conversationSubject}}</span>
+            </div>
+            <div class="col-md-2">
+              <p class="description">{{item?.startedOn | date : 'short' ||
+                '-'}}</p>
+            </div>
+          </div>
+        </div>
+
+      </ng-container> -->
+      <ng-container class="card-body">
+        <div class="m-3">
+          <div class="align">
+            <div class="mb-2 d-flex justify-content-between w-100">
+              <!-- <span class="namebold">To :- {{returnemail(item?.to)}}</span> -->
+              <!-- <span class="namebold">From :- {{returnemail(item?.from[0].email)}}</span> -->
+              
+              <span>{{item?.time | date : 'short' }}</span>
+            </div>
+            <div class="mb-2">
+              <p class="description"> </p>
+            </div>
+          </div>
+          <div class="align">
+            <div class="mb-2">
+              <span class="namebold">Subject :- {{item?.conversationSubject}}</span>
+
+            </div>
+          </div>
+          <div>
+            <span class="namebold">
+              <p class="description">Date :- {{item?.startedOn | date : 'short' ||
+              '-'}}</p>
+            </span>
+          </div>
+
+        </div>
+        </ng-container>
+    </div>
+    <ng-template #noData>
+      <div class="no-data-availble mt-0">
+        {{'common.no_data' | translate}}
+      </div>
+    </ng-template>
+  </div>
+  <div class="col-md-8 mt-3" style="width:83%;">
+    <div class="d-flex justify-content-end gap-2">
+      <!-- New Email Button with Manual Dropdown -->
+      <div class="dropdown position-relative">
+        <button class="btn1 btn-lg mt-2" type="button" (click)="toggleDropdown($event)">
+          New Email <i class="bi bi-caret-down-fill ms-1"></i>
+        </button>
+        <ul class="dropdown-menu" [ngClass]="{'show': showDropdown}" style="position: absolute; right: 0; left: auto; top: 100%; margin-top: 0.125rem;">
+          <li><a class="dropdown-item" (click)="openNewEmail('shippingLine')" style="cursor: pointer;">Shipping Line</a></li>
+          <li><a class="dropdown-item" (click)="openNewEmail('cha')" style="cursor: pointer;">CHA</a></li>
+          <li><a class="dropdown-item" (click)="openNewEmail('agent')" style="cursor: pointer;">Agent</a></li>
+        </ul>
+      </div>
+
+      <!-- Reply Button -->
+      <button type="button" class="btn1 btn-lg mt-2" *ngIf="!isreply && !isNewEmail && emailListchild?.isShow && this.currentUrl !== 'show'" (click)="isreply=true">
+        Reply <i class="bi bi-reply"></i>
+      </button>
+    </div>
+    <div class="popupheight">
+      <div class="card mb-2" *ngFor="let item of emailListchild?.List">
+        <ng-container class="card-body">
+          <div class="m-3 border-bottom">
+            <div class="align">
+              <div class="mb-2 d-flex justify-content-between w-100">
+                <span class="namebold" style="border-radius: 35px !important; padding-left: 13px; color:#126ebe; padding-right: 3px; width: 87%;">To :- {{returnemail1(item?.to)}}</span>
+                <span style="border-radius: 4pc; color: #585858;">{{item?.time | date : 'short' }}</span>
+              </div>
+              <div class="mb-2">
+                <p class="description"> </p>
+              </div>
+            </div>
+            <div class="align" style="color: black; border-radius: 35px !important; padding-left: 13px; width: 25%; height: 18px;">
+              <div class="mb-2">
+                <span class="namebold">From :- {{item?.from}}</span>
+
+              </div>
+            </div>
+            <div class="p-4">
+              <span class="namebold">
+                <div [innerHTML]="item?.body"></div>
+              </span>
+            </div>
+            <div class="upload-box" *ngFor="let doc of item?.attachment">
+              <div class="upload-icon">
+                <i class="bi bi-file-earmark-text-fill" style="font-size: larger"></i>
+                <p class="file-name" style="margin-left: 5px;">{{doc?.filename}}</p>
+              </div>
+                    <div class="upload-actions">
+                  <button >
+                    <i (click)="downlaod(doc)" class="bi bi-download"></i>
+                  </button>
+              </div>
+              <div class="corner-ribbon"></div>
+          </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+    <form *ngIf="isreply" class="row g-3" [formGroup]="SentEmail">
+      <div class="box">
+        <div class="d-flexs">
+          <div class="m-2">
+            <p class="mb-0 red-text-color h5">Reply</p>
+          </div>
+          <button type="button" class="btn-close shadow-none" (click)="closeReplyForm()"></button>
+        </div>
+        <div class="m-3">
+          <mat-form-field class="w-100">
+            <mat-label style="font-size: 16px ;color: black;">TO</mat-label>
+
+            <mat-chip-list #chipListTO aria-label="Fruit selection">
+              <mat-chip *ngFor="let item of newMembersTO" [selectable]="selectable" [removable]="removable"
+                (removed)="removenewMembersTO(item)">
+                {{ item.to }}
+                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+              </mat-chip>
+              <input formControlName="EmailTo" [matChipInputFor]="chipListTO" style="border: none;"
+                placeholder="Type To" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="addOnBlurTO" (matChipInputTokenEnd)="addnewMembersTO($event)" />
+            </mat-chip-list>
+            <mat-error *ngIf="chipListTO?.errorState">Email is required</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="m-3">
+          <mat-form-field class="w-100">
+            <mat-label>CC</mat-label>
+            <mat-chip-list #chipListCC aria-label="Fruit selection">
+              <mat-chip *ngFor="let item of newMembersCC" [selectable]="selectable" [removable]="removable"
+                (removed)="removenewMembersCC(item)">
+                {{ item.cc }}
+                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+              </mat-chip>
+              <input formControlName="CC" [matChipInputFor]="chipListCC" style="border: none;" placeholder="Type CC"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlurCC"
+                (matChipInputTokenEnd)="addnewMembersCC($event)" />
+            </mat-chip-list>
+            <mat-error *ngIf="chipListCC?.errorState">Email is required</mat-error>
+          </mat-form-field>
+          <!-- for future use -->
+          <!-- <div class="col-md-8 mb-2 mrgn">
+              <label class="form-label">To<span class="text-danger">*</span></label>
+              <input type="email" formControlName="EmailTo" class="form-control custom-input"  placeholder=""   [[ngClass]="{'is-invalid': submitted && f.EmailTo.errors}"/>
+              <div *ngIf="submitted && f.EmailTo.errors" class="invalid-feedback">
+                <div *ngIf="f.EmailTo.errors.required">estimated Margin is required</div>
+              </div>
+            </div>
+            <div class="col-md-8 mb-2 mrgn">
+              <label class="form-label">CC</label>
+              <input type="email" formControlName="CC" class="form-control custom-input"  [[ngClass]="{'is-invalid': submitted && f.CC.errors}"/>
+              <div *ngIf="submitted && f.CC.errors" class="invalid-feedback">
+                <div *ngIf="f.CC.errors.required">estimated Margin is required</div>
+              </div>
+            </div> -->
+          <div class="col-md-8 mb-2 mrgn">
+            <label class="form-label">Attach Document</label>
+            <input type="file" (change)="fileChanged($event)" class="form-control custom-input" placeholder=""
+              value="" />
+          </div>
+          <div>
+            <ckeditor placeholder="Type here" formControlName="message" [editor]="Editor"></ckeditor>
+
+          </div>
+          <button *ngIf="this.currentUrl !== 'show'" (click)="onSave()" nz-tooltip nzTooltipTitle="Send Email" class="btn btn-outline-primary btn-lg mt-2"
+            type="submit">Send <i class="bi bi-send"></i>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="no-data-availble" *ngIf="emailList?.length === 0">
+    <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+   <span *ngIf="!loaderService?.isLoadingcircle && emailList?.length === 0">No Mail available</span>
+  </div>
+</div>
+
+
+<ng-template #newEmailModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">New Email - {{selectedEmailType | titlecase}}</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="SentEmail">
+      <!-- TO Field -->
+      <div class="mb-3">
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label style="font-size: 16px; color: black;">TO *</mat-label>
+          <mat-chip-list #chipListTO aria-label="Email selection">
+            <mat-chip *ngFor="let item of newMembersTO" [selectable]="selectable" [removable]="removable"
+              (removed)="removenewMembersTO(item)">
+              {{ item.to }}
+              <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+            </mat-chip>
+            <input formControlName="EmailTo" [matChipInputFor]="chipListTO"
+              placeholder="Type email and press Enter"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              [matChipInputAddOnBlur]="addOnBlurTO" 
+              (matChipInputTokenEnd)="addnewMembersTO($event)" />
+          </mat-chip-list>
+        </mat-form-field>
+        <!-- Show error if no TO emails added -->
+        <div class="text-danger mt-1" *ngIf="newMembersTO.length === 0 && SentEmail.get('EmailTo')?.touched">
+          At least one recipient email is required
+        </div>
+      </div>
+      
+      <!-- CC Field -->
+      <div class="mb-3">
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>CC</mat-label>
+          <mat-chip-list #chipListCC aria-label="CC selection">
+            <mat-chip *ngFor="let item of newMembersCC" [selectable]="selectable" [removable]="removable"
+              (removed)="removenewMembersCC(item)">
+              {{ item.cc }}
+              <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+            </mat-chip>
+            <input formControlName="CC" [matChipInputFor]="chipListCC" 
+              placeholder="Type CC email and press Enter"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes" 
+              [matChipInputAddOnBlur]="addOnBlurCC"
+              (matChipInputTokenEnd)="addnewMembersCC($event)" />
+          </mat-chip-list>
+        </mat-form-field>
+      </div>
+
+      <!-- ADDED: Subject Field - THIS WAS MISSING -->
+      <div class="mb-3">
+        <label class="form-label">Subject *</label>
+        <input type="text" formControlName="subject" class="form-control" placeholder="Enter email subject" />
+        <div class="text-danger mt-1" *ngIf="SentEmail.get('subject')?.hasError('required') && SentEmail.get('subject')?.touched">
+          Subject is required
+        </div>
+      </div>
+            
+      <!-- Attachment Field -->
+      <div class="mb-3">
+        <label class="form-label">Attach Document</label>
+        <input type="file" (change)="fileChanged($event)" class="form-control" />
+      </div>
+      
+      <!-- Message Field -->
+      <div class="mb-3">
+        <label class="form-label">Message *</label>
+        <ckeditor placeholder="Type your message here" formControlName="message" [editor]="Editor"></ckeditor>
+        <div class="text-danger mt-1" *ngIf="SentEmail.get('message')?.hasError('required') && SentEmail.get('message')?.touched">
+          Message is required
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="sendNewEmail(modal)">
+      Send <i class="bi bi-send ms-1"></i>
+    </button>
+  </div>
+</ng-template>

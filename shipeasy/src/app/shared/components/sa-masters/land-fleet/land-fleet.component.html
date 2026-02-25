@@ -1,0 +1,409 @@
+<ng-template #AddClause let-modal>
+    <div class="modal-content nz-allSelect vessel-master-component">
+      <div class="modal-headers mt-2">
+        <h4 *ngIf="!vesselIdToUpdate" class="modal-title">
+          {{ "common.add" | translate }}
+          Vehicle details
+        </h4>
+        <h4 *ngIf="vesselIdToUpdate" class="modal-title">
+          {{ "common.edit" | translate }}
+          Vehicle details
+        </h4>
+        <button type="button" class="btn-close shadow-none float-end" (click)="onSave()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+          <form [formGroup]="addVesselForm">
+            <div class="row g-3">
+              
+            <div class="col-md-3 nz-select">
+              <label for="ownershipeType" class="form-label">Ownershipe Type<span class="text-danger">*</span>
+              </label>
+              
+              <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Ownershipe Type" formControlName="ownershipeType"
+                [ngClass]="{'is-invalid': submitted && f.ownershipeType.errors}">
+                <nz-option *ngFor="let data of ownershipeType" [nzLabel]="data" [nzValue]="data"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.ownershipeType.errors" class="invalid-feedback">
+                <div *ngIf="f.ownershipeType.errors.required">Transporter/Carrier is required</div>
+              </div>
+            </div>
+
+            <div class="col-md-3 nz-select">
+              <label for="typeCarrier" class="form-label">Transporter/Carrier<span class="text-danger">*</span>
+              </label>
+              
+              <nz-select [nzDisabled]="currentLogin === 'transporter'" class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Transporter/Carrier" formControlName="typeCarrier"
+                [ngClass]="{'is-invalid': submitted && f.typeCarrier.errors}">
+                <nz-option *ngFor="let test of shippinglineData" [nzLabel]="test.name" [nzValue]="test.shippinglineId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.typeCarrier.errors" class="invalid-feedback">
+                <div *ngIf="f.typeCarrier.errors.required">Transporter/Carrier is required</div>
+              </div>
+            </div>
+
+            <div class="col-md-3 nz-select">
+              <label for="vehicleType" class="form-label">Vehicle Type<span class="text-danger">*</span>
+              </label>
+              <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Transporter/Carrier" formControlName="vehicleType"
+              [ngClass]="{'is-invalid': submitted && f.vehicleType.errors}">
+              <nz-option *ngFor="let test of vehicleType" [nzLabel]="test?.typeName" [nzValue]="test.typeName"></nz-option>
+            </nz-select>
+              <div *ngIf="submitted && f.vehicleType.errors" class="invalid-feedback">
+                <div *ngIf="f.vehicleType.errors.required">Vehicle Type is required</div>
+              </div>
+            </div>
+            
+              <div class="col-md-3">
+                <div class="form-field-section">
+                  <label class="form-label">License Plate Number<span class="text-danger">*</span></label>
+                  <input type="text"
+                         class="form-control custom-input rounded-0"
+                         formControlName="vehicleLicence"
+                         placeholder="License Plate Number"
+                         [ngClass]="{'is-invalid': submitted && f.vehicleLicence.errors}"  />
+                  <div *ngIf="submitted && f.vehicleLicence.errors" class="invalid-feedback">
+                    <div *ngIf="f.vehicleLicence.errors.required">License Plate Number is required</div>
+                  </div>
+                </div>
+              </div>
+  
+              <div class="col-md-3">
+                  <div class="form-field-section">
+                    <label class="form-label">Manufactured year</label>
+                    <input type="text"
+                           class="form-control custom-input rounded-0"
+                           formControlName="Make"
+                           placeholder="Manufactured year"/>
+                  </div>
+                </div>
+   
+              
+   
+                <div class="col-md-3">
+                  <div class="form-field-section">
+                    <label class="form-label">Model</label>
+                    <input type="text"
+                           class="form-control custom-input rounded-0"
+                           formControlName="Model"
+                           placeholder="Model"/>
+                  </div>
+                </div>
+   
+              
+   
+                <div class="col-md-3">
+                  <div class="form-field-section">
+                    <label class="form-label">Chassis Number.</label>
+                    <input type="text"
+                           class="form-control custom-input rounded-0"
+                           formControlName="vehicleRegistration"
+                           placeholder="Chassis Number" />
+                  </div>
+                </div>
+  
+                <div class="col-md-3 nz-select">
+                  <label for="typeTemp" class="form-label">Vehicle Fuel Type
+                  </label>
+                  
+                  <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Vehicle Fuel Type" formControlName="vehicleFuel"
+                    [ngClass]="{'is-invalid': submitted && f.vehicleFuel.errors}">
+                    <nz-option *ngFor="let data of vehicleFuel" [nzLabel]="data" [nzValue]="data"></nz-option>
+                  </nz-select>
+                </div>
+  
+                <div class="col-md-3">
+                  <div class="form-field-section">
+                    <label class="form-label">Max Weight Capacity</label>
+                    <input type="text"
+                           class="form-control custom-input rounded-0"
+                           formControlName="maxWeight"
+                           placeholder="Max Weight Capacity" />
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  <div class="form-field-section">
+                    <label class="form-label">Engine Number</label>
+                    <input type="text"
+                           class="form-control custom-input rounded-0"
+                           formControlName="engineNumber"
+                           placeholder="Engine Number"  />
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  <div class="form-field-section">
+                    <label class="form-label">Weight Unit</label>
+                    <input type="text"
+                           class="form-control custom-input rounded-0"
+                           formControlName="weightUnit"
+                           placeholder="Weight Unit" />
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  <div class="form-field-section">
+                    <label class="form-label">Contact person</label>
+                    <input type="text"
+                           class="form-control custom-input rounded-0"
+                           formControlName="person"
+                           placeholder="Contact person" />
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  <div class="form-field-section">
+                    <label class="form-label">Mobile No </label>
+                    <input type="number"
+                           class="form-control custom-input rounded-0"
+                           formControlName="mobileNo"
+                           placeholder="mobile no " />
+                  </div>
+                </div>
+  
+              </div>
+              
+  
+            <div class="form-group wrap-form-action mt-4">
+              <button class="btn1 btn-lg float-end" (click)="onSave()" type="submit">
+                {{ "common.cancel" | translate }}
+              </button>
+              <button (click)="vesselMasters()" *ngIf="!isViewMode && !vesselIdToUpdate"
+                class="btn btn-outline-primary btn-lg float-end" type="submit">
+                {{ "common.save" | translate }}
+              </button>
+              
+              <button (click)="vesselMasters()" *ngIf="!isViewMode && vesselIdToUpdate"
+                class="btn btn-outline-primary btn-lg float-end" type="submit">
+                {{ "common.update" | translate }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <div class="table-header-area mt-2" >
+    <div class="mat-table-with-gheading">
+      <div class="wrapper">
+        <div class="container-fluid">
+          <div class=" pt-2">
+            <div class="wrap-mat-table-area">
+              <div class="table-header-area pt-2">
+                <div>
+                  <table-filters [TDP]="[false, false, true, true]" (filterInput)="applyFilter($event)" (onClickExport)="exportAsExcelFile()">
+                  </table-filters>
+                </div>
+                <div class="header-right">
+                  <a class="new-action btn btn-outline-primary btn-sm rounded-pill"   (click)="open(AddClause)">Add Vehicle details</a>
+                </div>
+              </div>
+            </div>
+            <div class="table-card">
+              <div class="table-design example-container mat-elevation-z8">
+                <table mat-table [dataSource]="dataSource" matSort class="full-width-table" summary="agreement">
+                  <ng-container matColumnDef="#">
+                    <th scope="col" mat-header-cell *matHeaderCellDef style="width: 3%;">
+                      # <em class="custom-tooltip" [attr.title]="'Toggle Filters'"
+                        (click)="toggleFilters = !toggleFilters" class="bi bi-search"></em>
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i = index">
+                      {{ element?.id}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="action">
+                    <th scope="col" id="action" class="charterersPdfHead" mat-header-cell
+                          *matHeaderCellDef style="width: 8%;">
+                        {{ 'Actions' }}
+                    </th>
+                    <td class="borderBottom" mat-cell *matCellDef="let element; let i = index">
+                      
+                            <div class="d-flex"  style="align-items: center;">
+                              <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop">
+                                <a routerLink="#"  
+                                  (click)="open(AddClause, element)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                              </span>
+                                <span nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}" class="mx-1">
+                                    <a   (click)="open(AddClause, element,'show')">
+                                        <em class="bi bi-eye globally-change-icon-color"></em>
+                                    </a>
+                                </span>
+                                <span class="form-check form-switch mx1 mb-0 mt-1">
+                                    <input   class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" (change)="changeStatus(element,i)" [checked]="element.status" />
+                                    <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                                </span>
+                            </div>
+                        </td>
+                    
+                    
+                </ng-container>
+                  <ng-container matColumnDef="ownershipeType">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                      Ownershipe Type
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.ownershipeType}}
+                    </td>
+                  </ng-container>
+                   <ng-container matColumnDef="typeCarrier">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                      Carrier
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.typeCarrier}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="vehicleType">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                      Vehicle Type
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.vehicleType}}
+                    </td>
+                  </ng-container> 
+  
+                  <ng-container matColumnDef="vehicleLicence">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                      License Plate Number
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.vehicleLicence}}
+                    </td>
+                  </ng-container>  
+  
+                  <ng-container matColumnDef="Make">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                      Make 
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.Make}}
+                    </td>
+                  </ng-container>  
+  
+                  <ng-container matColumnDef="Model">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                      Model
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.Model}}
+                    </td>
+                  </ng-container>  
+  
+                  <ng-container matColumnDef="vehicleRegistration">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                      Chassis Number
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.vehicleRegistration}}
+                    </td>
+                  </ng-container>  
+
+                  <ng-container matColumnDef="vehicleFuel">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                      Vehicle Fuel Type
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.vehicleFuel}}
+                    </td>
+                  </ng-container>  
+
+                  <ng-container matColumnDef="maxWeight">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                      Max Weight Capacity
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.maxWeight}}
+                    </td>
+                  </ng-container>  
+
+                  <ng-container matColumnDef="engineNumber">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                      Weight Unit
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.engineNumber}}
+                    </td>
+                  </ng-container>  
+
+                  <ng-container matColumnDef="weightUnit">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                      Engine Number
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.weightUnit}}
+                    </td>
+                  </ng-container>  
+                  
+                  <ng-container matColumnDef="status">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                      Status
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.status? "Active" : "Inactive"}}
+                    </td>
+                  </ng-container> 
+  
+                  <!-- <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index" [matColumnDef]="headersFilter">
+                    <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+                      <div class="filters-container" [class.animate]="!toggleFilters">
+                        <em *ngIf="i > 0 && i < displayedColumns1.length - 12" class="custom-tooltip" [attr.title]="'Clear Filters'"
+                          (click)="clearFilters();toggleFilters = !toggleFilters" class="bi bi-x-circle"></em>
+                        <div *ngIf="i > 1 && i < displayedColumns1.length - 0" appearance="outline">
+                          <input class="form-control input-txt" placeholder="Press 'Enter' to search" [(ngModel)]="filtersModel[i]"
+                            (keyup.enter)="searchColumns()">
+                        </div>
+                  
+                      </div>
+                    </th>
+                  </ng-container> -->
+
+                  <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index" [matColumnDef]="headersFilter">
+                    <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+                      <div class="filters-container" [class.animate]="!toggleFilters">
+                        <em *ngIf="i > 0 && i < displayedColumns1.length - 2" class="custom-tooltip bi bi-x-circle"
+                          [attr.title]="'Clear Filters'" (click)="clearFilters(); toggleFilters = !toggleFilters">
+                        </em>
+                        <div *ngIf="i > 1 && i < displayedColumns1.length - 0" appearance="outline">
+                          <ng-container *ngIf="displayedColumns[i] === 'status'; else textInput">
+                            <select class="form-control" [(ngModel)]="filtersModel[i]" (change)="searchColumns()">
+                              <option value="">All</option>
+                              <option value="active">Active</option>
+                              <option value="inactive">Inactive</option>
+                            </select>
+                          </ng-container>
+                          <ng-template #textInput>
+                            <input class="form-control input-txt" placeholder="Press 'Enter' to search" [(ngModel)]="filtersModel[i]"
+                              (keyup.enter)="searchColumns()">
+                          </ng-template>
+                        </div>
+                      </div>
+                    </th>
+                  </ng-container>
+  
+                  <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumns">
+                  </tr>
+                  <tr mat-header-row class="no-default-height" *matHeaderRowDef="displayedColumns1"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns">
+                  </tr>
+                  <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+                      <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+                      <span *ngIf="!loaderService?.isLoadingcircle && !dataSource?.data?.length">No data available</span>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+  
+              <div [ngClass]="{'display-none' : toalLength < 10}">
+                <mat-paginator [length]="toalLength" [pageSize]="pageSize" [pageIndex]="pageNumber-1"
+                  (page)="onPageChange($event)"  [pageSizeOptions]="_gc.PAGINATOR_OPTIONS" showFirstLastButtons></mat-paginator>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

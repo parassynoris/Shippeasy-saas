@@ -1,0 +1,264 @@
+@import '../../../assets/styles/mixins/global.scss';
+
+
+
+.modal-header {
+
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.quotation{
+  height: 17px;
+}
+.pointerNone {
+  opacity: .7;
+  pointer-events: none;
+}
+.InquiryAccepted {
+  color: green; 
+}
+.modal-footer {
+
+  border-top: 0;
+  justify-content: center;
+}
+
+.modal-title {
+  color: #242582;
+}
+
+.btn-close {
+
+  color: #242582;
+}
+
+.modal-content {
+  padding: 10px 10px;
+  border: 0;
+}
+
+.modal-body {
+  padding-top: 0px;
+
+}
+
+.menuright {
+  position: fixed;
+  right: 0;
+  top: 40%;
+  width: 10px;
+  margin: -2.5em 0 0 0;
+  z-index: 5;
+  background: var(--theme-white-background-color);
+  color: var(--link-text-color);
+  font-weight: bold;
+  text-align: left;
+  padding: 10px 30px 10px 0px;
+  box-shadow: var(--theme-shadow);
+  border-radius: 10px 0 0px 10px;
+}
+
+.menuright li {
+  width: 30px;
+  border-bottom: 1px solid var(--theme-border-color-light);
+  list-style: none;
+  padding: 0px 0 0px 3px;
+}
+
+.menuright li:last-child {
+  border-bottom: 0;
+}
+
+.menuright li i {
+  font-size: 21px;
+  color: var(--link-text-color);
+}
+
+.menuright li em {
+  font-size: 21px;
+  color: var(--link-text-color);
+}
+
+.wrapper1,
+.wrapper2 {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  width: 300px;
+}
+
+.wrapper1 {
+  height: 20px;
+}
+
+.wrapper2 {
+  height: 500px
+}
+
+.div1 {
+  width: 1000px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  height: 20px;
+}
+
+.div2 {
+  width: 1000px;
+  height: 20px;
+}
+
+.input-txt {
+  font-size: 12px;
+  color: var(--theme-black-300);
+  font-weight: 400;
+}
+
+ 
+.form-control {
+  border: 1px solid #ced4da !important;
+}
+
+.divider {
+  border-left: 3px solid grey;
+  height: 30px;
+  opacity: .2;
+}
+
+.globle-search {
+  width: -webkit-fill-available;
+  border-radius: 50px;
+}
+
+.width-33 {
+  width: 33%;
+}
+ 
+
+.active-in-active-box {
+  width: 120px;
+
+  select {
+    text-align: center;
+  }
+}
+
+.ft-18 {
+  font-size: 14px !important;
+}
+
+ 
+.draft-background {
+  color: grey !important;
+}
+
+.enquiry-background {
+ color: #007BFF !important;
+}
+
+.batch-background {
+  color: green !important;
+}
+
+
+ 
+
+.wrap-batch {
+
+  .wrap-open {
+    display: none;
+    background-color: white !important;
+    box-shadow: var(--theme-shadow);
+    font-size: 12px;
+    position: absolute;
+    padding-top: 5px;
+    &:hover {
+      display: inline-block;
+    }
+
+    .wrap-inside {
+      padding: 5px 10px;
+      border-bottom: 1px solid #bcd7ee ;
+      color: var(--theme-black-320);
+      &:hover{
+        text-decoration: underline;
+        color: #242582;
+      }
+    }
+  }
+
+  &:hover .wrap-open {
+    display: inline-block;
+  }
+}
+// .wrap-table-area {
+//   padding: 20px 0px 50px 0 !important;
+// }
+
+.popup-content {
+  display: none; /* Hide the popup content by default */
+  position: absolute;
+  background-color: var(--theme-light-bg);
+  border: 1px solid var(--theme-border-color-light);
+  padding: 10px;
+  z-index: 1;
+}
+
+.popup-button:hover + .popup-content {
+  display: block; /* Show the popup content when the button is hovered over */
+}
+.table-design { 
+  // min-height: calc(100vh - 280px);
+  max-height: calc(100vh - 280px);
+}
+.flex{
+  display: flex;
+}
+.mat-menu-panel.wrap-open {
+  background-color: white !important;
+  box-shadow: var(--theme-shadow);
+  font-size: 12px;
+}
+
+.mat-menu-item.wrap-inside {
+  padding: 0px 20px;
+  border-bottom: 1px solid #bcd7ee;
+  color: var(--theme-black-320);
+}
+::ng-deep.mat-menu-content:not(:empty){
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+::ng-deep.mat-menu-panel{
+  position: relative !important;
+  right: 40px !important;
+  min-height:unset !important;
+  }
+  .clicked {
+    color: black !important;
+    border: 3px solid black !important;
+    border-radius: 4px !important;
+  }
+  .font-13{
+    font-size: 13px;
+    font-weight: 500;
+  }
+.mat-table .mat-row .mat-cell.air {
+  color: #a4880a !important; 
+  font-weight: 500;
+}
+
+.mat-table .mat-row .mat-cell.land {
+  color: #ad563b !important;
+  font-weight: 500;
+}
+
+.mat-table .mat-row .mat-cell.ocean {
+  color: #008080 !important; 
+  font-weight: 500;
+}
+.w-150{
+  width: 150px;
+}
+
+
+  

@@ -1,0 +1,325 @@
+<div [formGroup]="inwardContainerForm">
+  <div class="row mt-3">
+    <div class="col-md-12">
+      <label class="form-label">Entry Type <span class="text-danger">*</span></label>
+      <div class="form-check-container">
+        <div class="row">
+          <div class="col-md-3" *ngFor="let option of entryTypeOptions">
+            <div class="form-check">
+              <input  
+                type="radio" 
+                [id]="option.value" 
+                [value]="option.value"
+                formControlName="entryType"
+                [ngClass]="{ 'is-invalid': submitted && f.entryType.errors }">
+              <label class="form-check-label" [for]="option.value">
+                {{ option.label }}
+              </label>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="submitted && f.entryType.errors" class="invalid-feedback d-block">
+          Entry Type is required
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="selectedEntryType === 'EX-BOND'" class="row mt-3">
+    <div class="row mt-3">
+      <div class="col-md-3">
+        <label class="form-label">Bill of Entry No. <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="billOfEntryNo"
+          [ngClass]="{ 'is-invalid': submitted && f.billOfEntryNo.errors }" placeholder="Bill Of Entry No" />
+        <div *ngIf="submitted && f.billOfEntryNo.errors" class="invalid-feedback">
+          Field is required
+        </div>
+      </div>
+    
+      <div class="col-md-3">
+        <label class="form-label">EX BE No. <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="exBeNo"
+          [ngClass]="{ 'is-invalid': submitted && f.exBeNo.errors }" placeholder="EX BE No." />
+        <div *ngIf="submitted && f.exBeNo.errors" class="invalid-feedback">
+          Field is required
+        </div>
+      </div>
+    
+      <div class="col-md-3">
+        <label class="form-label">BE No. Date <span class="text-danger">*</span></label>
+        <nz-date-picker class="form-control custom-input" nzShowTime nzFormat="dd-MM-yyyy"
+          formControlName="beNoDate" [ngClass]="{ 'is-invalid': submitted && f.beNoDate.errors }"></nz-date-picker>
+        <div *ngIf="submitted && f.beNoDate.errors" class="invalid-feedback">
+          Date is required
+        </div>
+      </div>
+    
+      <div class="col-md-3">
+        <label class="form-label">CHA Ledger <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="chaLedger"
+          [ngClass]="{ 'is-invalid': submitted && f.chaLedger.errors }" placeholder="CHA Ledger" />
+        <div *ngIf="submitted && f.chaLedger.errors" class="invalid-feedback">
+          Field is required
+        </div>
+      </div>
+    </div>
+  
+    <div class="row mt-3">
+      <!-- Gross Qty -->
+      <div class="col-md-3">
+        <label class="form-label">Gross Weight <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="grossQty"
+          [ngClass]="{ 'is-invalid': submitted && f.grossQty.errors }" placeholder="Gross Weight" />
+        <div *ngIf="submitted && f.grossQty.errors" class="invalid-feedback">
+          Field is required
+        </div>
+      </div>
+  
+      <!-- Unit (for Gross Qty) -->
+      <div class="col-md-3">
+        <label class="form-label">Unit <span class="text-danger">*</span></label>
+        <div class="form-field-section">
+          <nz-select class="nz-form-select nz-select-width"
+            style="border-bottom: none !important; width: 100% !important;" formControlName="grossQtyUnit" nzShowSearch
+            nzAllowClear [ngClass]="{'is-invalid': submitted && f.grossQtyUnit.errors}">
+            <nz-option *ngFor="let enquiryType of weighthData" [nzLabel]="enquiryType.uomShort"
+              [nzValue]="enquiryType.uomId"></nz-option>
+          </nz-select>
+          <div *ngIf="submitted && f.grossQtyUnit.errors" class="invalid-feedback">
+            Field is required
+          </div>
+        </div>
+      </div>
+  
+      <div class="col-md-3">
+        <label class="form-label">Duty Challan No. 
+          <span class="text-danger" *ngIf="!inwardContainerForm.get('toppleForAdvanceLicense')?.value">*</span>
+        </label>
+        <input type="number" class="form-control" formControlName="challanDuty" 
+          [disabled]="inwardContainerForm.get('toppleForAdvanceLicense')?.value"
+          [ngClass]="{ 'is-invalid': submitted && f.challanDuty.errors }"
+          placeholder="Duty Challan No." 
+          (keydown)="blockInvalidInput($event)" />
+        <div *ngIf="submitted && f.challanDuty.errors" class="invalid-feedback">
+          Field is required
+        </div>
+      </div>
+  
+      <div class="col-md-3">
+        <label class="form-label">
+          Duty Amount
+          <span class="text-danger" *ngIf="!inwardContainerForm.get('toppleForAdvanceLicense')?.value">*</span>
+        </label>
+      
+        <input type="number" class="form-control" placeholder="Duty Amount" formControlName="dutyAmount"
+          [disabled]="inwardContainerForm.get('toppleForAdvanceLicense')?.value"
+          [class.is-invalid]="submitted && f.dutyAmount.errors" 
+          (keydown)="blockInvalidInput($event)"
+          (input)="removeLeadingZeros($event)"
+          min="0"
+          step="0.01" />
+      
+        <div *ngIf="submitted && f.dutyAmount.errors" class="invalid-feedback">Field is required</div>
+      </div>
+        
+      <div class="col-md-3">
+        <label class="form-label">Packages <span class="text-danger">*</span></label>
+        <input type="number" class="form-control" formControlName="pkgs" placeholder="Packages"
+          [class.is-invalid]="submitted && f.pkgs.errors" 
+          (keydown)="blockInvalidInput($event)"
+          min="0" />
+        <div *ngIf="submitted && f.pkgs.errors" class="invalid-feedback">
+          Field is required
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Party Name <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="partyName"
+          [ngClass]="{ 'is-invalid': submitted && f.partyName.errors }" placeholder="Party Name" />
+        <div *ngIf="submitted && f.partyName.errors" class="invalid-feedback">
+          Field is required
+        </div>
+      </div>
+      
+      <div class="col-md-3">
+        <label class="form-label">Remarks <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="remarks"
+          [ngClass]="{ 'is-invalid': submitted && f.remarks.errors }" placeholder="Remarks" />
+        <div *ngIf="submitted && f.remarks.errors" class="invalid-feedback">
+          Field is required
+        </div>
+      </div>
+      
+      <div class="col-md-3">
+        <div class="form-check mt-4">
+          <input type="checkbox" class="form-check-input" id="toppleForAdvanceLicense"
+            formControlName="toppleForAdvanceLicense">
+          <label class="form-check-label" for="toppleForAdvanceLicense">
+             Advance License
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="inwardContainerForm.get('toppleForAdvanceLicense')?.value" class="row mt-3">
+      <div class="col-md-3">
+        <label class="form-label">Duty No. <span class="text-danger">*</span></label>
+        <input type="number" class="form-control" formControlName="toppleFordutyNo"
+          [ngClass]="{ 'is-invalid': submitted && f.toppleFordutyNo.errors }"
+          placeholder="Duty No."
+          (keydown)="blockInvalidInput($event)"
+          min="0" />
+        <div *ngIf="submitted && f.toppleFordutyNo.errors" class="invalid-feedback">
+          Field is required
+        </div>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Duty Amount <span class="text-danger">*</span></label>
+        <input type="number" class="form-control" formControlName="conditionalDutyAmount"
+          [ngClass]="{ 'is-invalid': submitted && f.conditionalDutyAmount.errors }"
+          placeholder="Duty Amount"
+          (keydown)="blockInvalidInput($event)"
+          (input)="removeLeadingZeros($event)"
+          min="0"
+          step="0.01" />
+        <div *ngIf="submitted && f.conditionalDutyAmount.errors" class="invalid-feedback">
+          Field is required
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="selectedEntryType === 'RE-EXPORT'" class="row mt-4">
+    <div class="col-md-12">
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">LEO No. <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" formControlName="leoNo"
+        [ngClass]="{ 'is-invalid': submitted && f.leoNo.errors }" placeholder="LEO No." />
+      <div *ngIf="submitted && f.leoNo.errors" class="invalid-feedback">
+        Field is required
+      </div>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">LEO Date <span class="text-danger">*</span></label>
+      <nz-date-picker class="form-control custom-input" nzShowTime nzFormat="dd-MM-yyyy"
+        formControlName="leoDate" [ngClass]="{ 'is-invalid': submitted && f.leoDate.errors }"></nz-date-picker>
+      <div *ngIf="submitted && f.leoDate.errors" class="invalid-feedback">
+        Field is required
+      </div>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">CHA Name <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" formControlName="chaName"
+        [ngClass]="{ 'is-invalid': submitted && f.chaName.errors }" placeholder="CHA Name" />
+      <div *ngIf="submitted && f.chaName.errors" class="invalid-feedback">
+        Field is required
+      </div>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Party Name <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" formControlName="partyName"
+        [ngClass]="{ 'is-invalid': submitted && f.partyName.errors }" placeholder="Party Name" />
+      <div *ngIf="submitted && f.partyName.errors" class="invalid-feedback">
+        Field is required
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="selectedEntryType === 'RE-EXPORT'" class="row mt-3">
+    <div class="col-md-3">
+      <label class="form-label">Packages <span class="text-danger">*</span></label>
+      <input type="number" class="form-control" formControlName="pkgs"
+        [ngClass]="{ 'is-invalid': submitted && f.pkgs.errors }" 
+        placeholder="Packages"
+        (keydown)="blockInvalidInput($event)"
+        min="0" />
+      <div *ngIf="submitted && f.pkgs.errors" class="invalid-feedback">
+        Field is required
+      </div>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Gross Weight <span class="text-danger">*</span></label>
+      <input type="number" class="form-control" formControlName="grossWeight"
+        [ngClass]="{ 'is-invalid': submitted && f.grossWeight.errors }" 
+        placeholder="Gross Weight"
+        (keydown)="blockInvalidInput($event)"
+        min="0"
+        step="0.01" />
+      <div *ngIf="submitted && f.grossWeight.errors" class="invalid-feedback">
+        Field is required
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="selectedEntryType === 'BOND TO BOND TRANSFER'" class="row mt-4">
+    <div class="col-md-12">
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Permission No. <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" formControlName="permissionNo"
+        [ngClass]="{ 'is-invalid': submitted && f.permissionNo.errors }" placeholder="Permission No." />
+      <div *ngIf="submitted && f.permissionNo.errors" class="invalid-feedback">
+        Field is required
+      </div>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">New Warehouse Name <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" formControlName="newWarehouseName"
+        [ngClass]="{ 'is-invalid': submitted && f.newWarehouseName.errors }" placeholder="New Warehouse Name" />
+      <div *ngIf="submitted && f.newWarehouseName.errors" class="invalid-feedback">
+        Field is required
+      </div>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Bond Code <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" formControlName="bondCode"
+        [ngClass]="{ 'is-invalid': submitted && f.bondCode.errors }" placeholder="Bond Code" />
+      <div *ngIf="submitted && f.bondCode.errors" class="invalid-feedback">
+        Field is required
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="selectedEntryType === 'DISPOSAL'" class="row mt-4">
+    <div class="col-md-3">
+      <label class="form-label">Document No. <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" formControlName="documentNo"
+        [ngClass]="{ 'is-invalid': submitted && f.documentNo.errors }" placeholder="Document No." />
+      <div *ngIf="submitted && f.documentNo.errors" class="invalid-feedback">
+        Field is required
+      </div>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Document Date <span class="text-danger">*</span></label>
+      <nz-date-picker class="form-control custom-input" nzShowTime nzFormat="dd-MM-yyyy"
+        formControlName="documentDate" [ngClass]="{ 'is-invalid': submitted && f.documentDate.errors }"></nz-date-picker>
+      <div *ngIf="submitted && f.documentDate.errors" class="invalid-feedback">
+        Field is required
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-md-12">
+      <div class="wrap-form-field wrap-pagination d-flex justify-content-end alignment">
+        <div class="header-right">
+          <a (click)="open('add', '', 'document')"
+            class="max-con new-action btn btn-outline-primary btn-sm rounded-pill">
+            Upload Document
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group wrap-form-action btn-onscreen">
+    <button (click)="onSubmit()" class="btn btn-outline-primary btn-lg float-end" type="submit">
+      {{ editIndex !== null ? 'Update Ex Bond Bill Entry' : 'Add Ex Bond Bill Entry' }}
+    </button>
+    <button class="btn1 btn-lg float-end" type="submit" (click)="onCancel()">
+      Cancel
+    </button>
+  </div>
+</div>

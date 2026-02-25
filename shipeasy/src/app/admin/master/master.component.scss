@@ -1,0 +1,9 @@
+
+.wrap-left, .wrap-right{
+    flex: 1 1 100% !important;
+    margin-right: 0 !important;
+    justify-content: flex-start !important;
+}
+.custome-tab .nav-tabs .nav-item{
+    margin-right: 3px;
+}

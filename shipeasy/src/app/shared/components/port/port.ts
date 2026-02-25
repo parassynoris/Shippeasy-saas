@@ -1,0 +1,19 @@
+export class PortDetails {
+    portAuthority: string = "";
+    terminals: string = "";
+    berths: string = "";
+    address: string = "";
+    phone: string = "";
+    faxNumber: string = "";
+    tollNumber: string = "";
+    emailId: string = "";
+    latitude: string = "";
+    longitude: string = "";
+    uncode: string = "";
+    country: string = "";
+    gmtOffset: string = "";
+    maxDraft: string = "";
+    portType: string = "";
+    portSize: string = "";
+    ESIRebaleApplication: string = "";
+}

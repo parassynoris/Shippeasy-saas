@@ -1,0 +1,89 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title" *ngIf="isAddMode">
+      {{ "common.add" | translate }}
+      {{ "smartagent.smartAgent.costHead.cost_head_map" | translate }}
+    </h4>
+    <h4 class="modal-title" *ngIf="!isAddMode">
+      {{ "common.edit" | translate }}
+      {{ "smartagent.smartAgent.costHead.cost_head_map" | translate }}
+    </h4>
+    <button type="button" class="btn-close shadow-none" (click)="onClose()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+      <form [formGroup]="addCostHeadMapping" class="row g-3 mt-3">
+        <div class="col-md-4">
+          <label class="form-label">{{
+            "smartagent.smartAgent.costHead.costHead" | translate
+            }}</label><span class="text-danger">*</span>
+          <select (change)="setCostHead($event)" class="form-select custom-input" formControlName="costheadName"
+            [ngClass]="{ 'is-invalid': submitted && f.costheadName.errors }">
+            <option *ngFor="let costhead of costheadList" [value]="costhead?._source?.costheadId">
+              {{ costhead?._source.costheadName }}
+            </option>
+          </select>
+          <div *ngIf="submitted && f.costheadName.errors" class="invalid-feedback">
+            <div *ngIf="f.costheadName.errors.required">
+              {{ "smartagent.smartAgent.costHead.costHead" | translate }}
+              {{ "common.isRequired" | translate }}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">{{
+            "smartagent.smartAgent.costHead.cost_head_mapping" | translate
+            }}</label><span class="text-danger">*</span>
+          <input formControlName="costitemMapping" type="text" class="form-control custom-input" placeholder=""
+            [ngClass]="{ 'is-invalid': submitted && f.costitemMapping.errors }" />
+          <div *ngIf="submitted && f.costitemMapping.errors" class="invalid-feedback">
+            <div *ngIf="f.costitemMapping.errors.required">
+              {{
+              "smartagent.smartAgent.costHead.cost_head_mapping" | translate
+              }}
+              {{ "common.isRequired" | translate }}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">{{
+            "smartagent.smartAgent.costHead.VMScode/PrincipalCode" | translate
+            }}</label><span class="text-danger">*</span>
+          <input formControlName="vmscode" type="text" class="form-control custom-input" placeholder=""
+            oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^ A-Za-z0-9]/g,'').replace(/ +/g, ' ')"
+            [ngClass]="{ 'is-invalid': submitted && f.vmscode.errors }" />
+          <div *ngIf="submitted && f.vmscode.errors" class="invalid-feedback">
+            <div *ngIf="f.vmscode.errors.required">
+              {{
+              "smartagent.smartAgent.costHead.VMScode/PrincipalCode"
+              | translate
+              }}
+              {{ "common.isRequired" | translate }}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="taggle form-check form-switch">
+            <label class="form-check-label" for="flexSwitchCheckDefault">
+              {{ "smartagent.smartAgent.department.status" | translate }}</label>
+            <input class="form-check-input" formControlName="status" type="checkbox" id="flexSwitchCheckDefault" />
+          </div>
+        </div>
+        <div class="col-md-12">
+          <button class="btn1 btn-lg float-end" (click)="onClose()">
+            {{ "common.cancel" | translate }}
+          </button>
+          <button class="btn btn-outline-primary btn-lg float-end" (click)="saveCostHeadMapping()">
+            <ng-container *ngIf="isAddMode">
+              {{ "common.save" | translate }}
+            </ng-container>
+            <ng-container *ngIf="!isAddMode">
+              {{ "common.update" | translate }}
+            </ng-container>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

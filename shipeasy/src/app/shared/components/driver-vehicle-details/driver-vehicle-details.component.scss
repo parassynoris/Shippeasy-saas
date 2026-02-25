@@ -1,0 +1,68 @@
+.globally-chnage-mobile-view{
+	margin-bottom: 10px;
+}
+
+.upload-btn-wrapper {
+	position: relative;
+	overflow: hidden;
+	display: inline-block;
+	width: 100%;
+  }
+  .btns {
+	border: 2px dashed #c2bcbc;
+	color: var(--theme-gray-800); 
+	background-color: var(--theme-light-bg);
+	padding: 8px 20px;
+	border-radius: 8px;
+	font-size: 14px;
+	font-weight: bold;
+	text-align: center;
+  }
+
+  .upload-btn-wrapper input[type=file] {
+	font-size: 100px;
+	position: absolute;
+	left: 0;
+	top: 0;
+	opacity: 0;
+  }
+
+  .icons-file{
+	em{
+	  margin-right: 10px;
+	}
+   }
+
+   .disaplay-non{
+	pointer-events: none;
+	opacity: .7;
+  }
+
+  ::ng-deep {
+
+    .add-new-option{
+      background-color: #ee2b2b !important; /* Change background color */
+      font-weight: bold !important;          /* Bold text */
+      color: #ff0000 !important;  
+    }
+    .wrap-modal-autosearch {
+        nz-select {
+ 
+            input,
+            select {
+                padding: 0 0px !important;
+                border: 1px solid rgb(207 202 202) !important;
+            }
+        }
+ 
+        .nz-form-select.wrap-inline-select nz-select-top-control {
+            height: 32px !important;
+        }
+    }
+ 
+    .cdk-overlay-container,
+    .cdk-overlay-pane {
+        z-index: 2000 !important;
+    }
+
+}

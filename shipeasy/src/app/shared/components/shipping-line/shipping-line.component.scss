@@ -1,0 +1,31 @@
+@import '../../../../assets/styles/mixins/global.scss';
+.width15{
+    width: 15%;
+}
+.width10{
+    width: 10%;
+}
+::ng-deep {
+	.cdk-overlay-container,
+	.cdk-overlay-pane {
+	  z-index: 2000 !important;
+	}
+
+  }
+  .modal-body{
+	.table-with-gheading {
+		min-height: auto;
+		margin-bottom: 0px;
+	}
+  }
+
+  .globally-chnage-mobile-view{
+	margin-bottom: 10px;
+  }
+ 
+//   .border-setting{
+// 	border: 1px solid #d9d9d9;
+//     height: 34px;
+//     border-radius: 5px;
+//     margin-top: 6.8px;
+//   }

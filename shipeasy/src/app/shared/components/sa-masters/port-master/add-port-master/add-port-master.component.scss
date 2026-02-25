@@ -1,0 +1,33 @@
+.costtable table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  .costtable th {
+    background-color: #f5f5f5
+  }
+
+  .costtable th,
+  .costtable td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #e0e0e0;
+  }
+
+  .costtable td.bnull {
+    border: 0px !important;
+    border-bottom: 1px solid #bbb !important;
+  }
+
+ 
+
+  .no-data-availble {
+    border: 1px solid var(--theme-border-color-light);
+    padding: 33px;
+    margin-top: 15px;
+    background: var(--theme-light-background-800);
+    text-align: center;
+    border-radius: 4px;
+    text-transform: capitalize;
+    color: #393339;
+  }

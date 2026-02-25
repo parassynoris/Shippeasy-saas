@@ -1,0 +1,897 @@
+<div class="mat-table-with-gheading">
+    <div class="wrapper">
+        <div class="container-fluid">
+            <div class="wrap-mat-table-area">
+<div class="wrap-content">
+    <div class="row">
+    <div class="header">
+        <h1 class="centered-heading">Container Load Calculation</h1>
+      </div>
+    </div>
+</div>
+<div class="container">
+    <div class="basicdetails mb-4">
+        <mat-tab-group  [(selectedIndex)]="selectedTabIndex" mat-stretch-tabs dynamicHeight>
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <i class="fa-solid fa-bag-shopping icon"></i> PRODUCTS
+                </ng-template>
+                    <div class="box">
+                        <a type="submit" (click)="addGroup()" class="max-con new-action  btn btn-outline-primary btn-sm rounded-pill"><i class="fal fa-plus icon"></i><span>Add Group</span></a>
+                    </div>
+                    <div [formGroup]="groupForm">
+                      <div formArrayName="groups">
+                        <!-- Iterate over each group in the groups array -->
+                        <div *ngFor="let group of groups.controls; let i = index" [formGroupName]="i">
+                                <div class="bFqpNG1R3Wtl2Vzq4oEY">
+                                <div class="usjmvZTWWthIw4eGVKQQ">
+                                  <div class="lajKwTyzPDvQMdogUg2z">
+                                    <div>
+                                      <div class="Xzm8qk2b6ADBUF1KArrx">
+                                        <div class="k57mojYgD7yttWIJdrNM">
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <h3>
+                                    <input type="text" disabled size="8" maxlength="20" formControlName="groupName"> <i class="bi bi-pencil-fill" (click)="enableGroupName(i)"></i></h3>
+                                   
+                                  </div>
+                                  <div class="c40FiS78osht9rJ3q66y">
+                                    <a type="submit" (click)="removeGroup(i)" class="WTsBDLCOKo9YUGHVtMxw bOA6VyakTVuwao7P1y5K M9HPdv_Ew3g9E6C69ZAM"><i class="far fa-trash-alt"></i></a>
+                                </div>
+                                </div>
+                          
+                                <!-- Product section inside each group -->
+                                <div formArrayName="products">
+                                  <table class="product" style="width: 100%; border-collapse: collapse; text-align: left;">
+                                    <!-- Table Headers -->
+                                    <thead>
+                                      <tr>
+                                        <th>Type</th>
+                                        <th>Product Name</th>
+                                        <th>Length / Diameter</th>
+                                        <th>Width</th>
+                                        <th>Height</th>
+                                        <th>Weight</th>
+                                        <th>Quantity</th>
+                                        <th>Stack</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <!-- Products Data Rows -->
+                                      <tr *ngFor="let product of getProducts(i).controls; let j = index" [formGroupName]="j">
+                                        <!-- Product Image -->
+                                        <td>
+                                          <img src="assets/img/load-calc/box.svg" alt="Product Image" style="max-width: 26px; height: 20px;">
+                                        </td>
+                                  
+                                        <!-- Product Name Input -->
+                                        <td>
+                                          <div class="ant-form-item">
+                                            <div class="ant-row ant-form-item-row">
+                                              <div class="ant-col ant-form-item-control">
+                                                <div class="ant-form-item-control-input">
+                                                  <div class="ant-form-item-control-input-content">
+                                                    <input formControlName="productName" aria-required="true" class="ant-input" placeholder="Product Name">
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </td>
+                                  
+                                        <!-- Length Input -->
+                                        <td>
+                                          <div class="ant-form-item unit">
+                                            <div class="ant-row ant-form-item-row">
+                                              <div class="ant-col ant-form-item-control">
+                                                <div class="ant-form-item-control-input">
+                                                  <div class="ant-form-item-control-input-content">
+                                                    <input formControlName="length" type="number" class="ant-input" placeholder="Length">
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </td>
+                                  
+                                        <!-- Width Input -->
+                                        <td>
+                                          <div class="ant-form-item unit">
+                                            <div class="ant-row ant-form-item-row">
+                                              <div class="ant-col ant-form-item-control">
+                                                <div class="ant-form-item-control-input">
+                                                  <div class="ant-form-item-control-input-content">
+                                                    <input formControlName="width" type="number" class="ant-input" placeholder="Width">
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </td>
+                                  
+                                        <!-- Height Input -->
+                                        <td>
+                                          <div class="ant-form-item unit">
+                                            <div class="ant-row ant-form-item-row">
+                                              <div class="ant-col ant-form-item-control">
+                                                <div class="ant-form-item-control-input">
+                                                  <div class="ant-form-item-control-input-content">
+                                                    <input formControlName="height" type="number" class="ant-input" placeholder="Height">
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </td>
+                                  
+                                        <!-- Weight Input -->
+                                        <td>
+                                          <div class="ant-form-item unit">
+                                            <div class="ant-row ant-form-item-row">
+                                              <div class="ant-col ant-form-item-control">
+                                                <div class="ant-form-item-control-input">
+                                                  <div class="ant-form-item-control-input-content">
+                                                    <input formControlName="weight" type="number" class="ant-input" placeholder="Weight">
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </td>
+                                  
+                                        <!-- Quantity Input -->
+                                        <td>
+                                          <div class="ant-form-item unit">
+                                            <div class="ant-row ant-form-item-row">
+                                              <div class="ant-col ant-form-item-control">
+                                                <div class="ant-form-item-control-input">
+                                                  <div class="ant-form-item-control-input-content">
+                                                    <input formControlName="quantity" type="number" class="ant-input" placeholder="Quantity">
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </td>
+                                  
+                                        <!-- Remove Product Button -->
+                                        <td>
+                                          <span>
+                                            <div class="SXVXJ41xSqm7pvC9u4Kv ">
+                                              <a type="submit" class="
+                                            WTsBDLCOKo9YUGHVtMxw 
+                                            lQP65hUeyn5KCn_ePXQP 
+                                            Fa3_6TvaRVn649ixo9uz"
+                                            (click)="open(content, i, true, j)">
+                                            <i class="fas fa-cog"></i>
+                                          </a>
+                                          <a type="submit" class="
+                                            WTsBDLCOKo9YUGHVtMxw 
+                                            lQP65hUeyn5KCn_ePXQP 
+                                            bOA6VyakTVuwao7P1y5K" (click)="removeProduct(i, j)">
+                                            <i class="far fa-trash-alt"></i>
+                                          </a>
+                                        </div></span>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                  
+                                </div>
+                                <div class="w2wOWEh_p_1A6MLsPGmS">
+                                <!-- Button to add product in a group -->
+                                <a type="submit" class="WTsBDLCOKo9YUGHVtMxw sS13Lr4gPj5w8hjm11J5 Fa3_6TvaRVn649ixo9uz" (click)="open(content, i)"><i class="fal fa-plus"></i><span class="">Add product</span></a>
+                              </div>
+                              </div>
+                            </div>
+                          
+                            <!-- Submit form -->
+                            <!-- <button (click)="onSubmit()">Submit</button> -->
+                          </div>                          
+                    </div>
+                    <div class="QfqOw4g59PKa5anb2Mkb"><button type="submit" class="
+                      WTsBDLCOKo9YUGHVtMxw 
+                      Ed0afDfS99z14xdrTI3j 
+                      c0QiXdlOxRUjwIDbPMow" (click)="goToNextTab()"><span class="" style="margin-left: 0px;">Next</span></button></div>
+              </mat-tab>
+              <mat-tab>
+                <ng-template mat-tab-label>
+                  <!-- <button (click)="open1(content2, element)">Add Product</button> -->
+                    <i class="fa-solid fa-truck icon"></i> CONTAINER & TRUCKS
+                  </ng-template>
+                  <div class="box1">
+                    <a type="submit" (click)="open1(content2, 'container')"  class="max-con new-action  btn btn-outline-primary btn-sm rounded-pill" [ngClass]="{'disabled': truckSelected1}"><i class="fal fa-plus icon"></i><span>Add Container</span></a>
+                    <a type="submit" (click)="open1(content2, 'truck')" class="max-con new-action  btn btn-outline-primary btn-sm rounded-pill" [ngClass]="{'disabled': containerSelected1}"><i class="fal fa-plus icon"></i><span>Add Truck</span></a>
+                </div>
+                <form [formGroup]="containerTruckForm">
+                <div formArrayName="items">
+                <div *ngFor="let item of items.controls; let i = index" >
+                  <div [formGroupName]="i">
+                        <div class="j44Nbsx1_H4varFq7CVC">
+                          <div class="pIpzEP6qIvh1scp371w7">
+                            <div class="undefined ">
+                              <div class="T63soucb3vY7K84HFyq0 PT0mm0jJc7q6iQ_Hg3TC">
+                                <div class="ant-select ant-select-single ant-select-show-arrow">
+                                  <div class="ant-select-selector">
+                                    <span class="ant-select-selection-search">
+                                      <input type="search" autocomplete="off" class="ant-select-selection-search-input" role="combobox" aria-haspopup="listbox" aria-owns="rc_select_82_list" aria-autocomplete="list" aria-controls="rc_select_82_list" aria-activedescendant="rc_select_82_list_0" readonly="" unselectable="on" style="opacity: 0;">
+                                    </span>
+                                    <span class="ant-select-selection-item">{{item.get('name').value}}</span>
+                                  </div>
+                                  <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;">
+                                    <span role="img" aria-label="down" class="anticon anticon-down ant-select-suffix">
+                                      <svg viewBox="64 64 896 896" focusable="false" data-icon="down" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                                        <path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path>
+                                      </svg>
+                                    </span>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="N4hmC603v9bY3ck9zpyQ">
+                              <a type="submit" class="WTsBDLCOKo9YUGHVtMxw lQP65hUeyn5KCn_ePXQP bOA6VyakTVuwao7P1y5K" (click)="removeItem(i)">
+                          <i class="far fa-trash-alt"></i><span class="">Delete</span>
+                      </a>
+                      </div>
+                      </div>
+                      <div class="fk0VQmPkpSJDgP4pl87m">
+                        <div class="i3NpuHF7dz983A9uS45H">
+                          <div class="OUWktaW7OzIvaIt5oNVb">
+                            <img
+                            [src]="item.get('imageUrl').value"
+                              alt=""
+                            />
+                          </div>
+                          <div class="zHaFm318LCfrhn25Bmnc">
+                            <div class="_Jc4rr15JvzlXx2kg2oz">
+                              <div class="ai0hQrvFBw9Odh1tP67l">
+                                <p class="c2kT4KjzaxsUjs0CGzkQ">Count</p>
+                                <div class="xy9c_fzSpEgblVTpCqex">
+                                  <span class="Wjd6AOkJ_b0ouzvMzRix" (click)="decrementCount(i)">-</span
+                                  ><input type="number" name="count" formControlName="count" />
+                                  <span class="zED076EH1sxuM5_09lEF" (click)="incrementCount(i)">+</span>
+                                </div>
+                              </div>
+                              <div class="NXdlW5c0gfl051A5f1Qt undefined unit">
+                                <p class="rc3gsaQvFQB3KotKL0Sz">Length</p>
+                                <div class="ant-form-item">
+                                  <div class="ant-row ant-form-item-row">
+                                    <div class="ant-col ant-form-item-control">
+                                      <div class="ant-form-item-control-input">
+                                        <div class="ant-form-item-control-input-content">
+                                          <input
+                                          autocomplete="off"
+                                          type="text"
+                                          placeholder=""
+                                          name="width-1f9e75"
+                                          id="containers-form_width-1f9e75"
+                                          aria-required="true"
+                                          disabled=""
+                                          class="ant-input ant-input-disabled u3Fc16wJrxbJ9o1PU_b6 g0lUJn6NiyB8jLWFtHvK"
+                                          formControlName="il"
+                                        />
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <p class="ydh3F54di6K3xulG46uJ">mm</p>
+                              </div>
+                              <div class="NXdlW5c0gfl051A5f1Qt undefined unit">
+                                <p class="rc3gsaQvFQB3KotKL0Sz">Width</p>
+                                <div class="ant-form-item">
+                                  <div class="ant-row ant-form-item-row">
+                                    <div class="ant-col ant-form-item-control">
+                                      <div class="ant-form-item-control-input">
+                                        <div class="ant-form-item-control-input-content">
+                                          <input
+                                            autocomplete="off"
+                                            type="text"
+                                            placeholder=""
+                                            name="width-1f9e75"
+                                            id="containers-form_width-1f9e75"
+                                            aria-required="true"
+                                            disabled=""
+                                            class="ant-input ant-input-disabled u3Fc16wJrxbJ9o1PU_b6 g0lUJn6NiyB8jLWFtHvK"
+                                            formControlName="iw"
+                                          />
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <p class="ydh3F54di6K3xulG46uJ">mm</p>
+                              </div>
+                              <div class="NXdlW5c0gfl051A5f1Qt undefined unit">
+                                <p class="rc3gsaQvFQB3KotKL0Sz">Height</p>
+                                <div class="ant-form-item">
+                                  <div class="ant-row ant-form-item-row">
+                                    <div class="ant-col ant-form-item-control">
+                                      <div class="ant-form-item-control-input">
+                                        <div class="ant-form-item-control-input-content">
+                                          <input
+                                            autocomplete="off"
+                                            type="text"
+                                            placeholder=""
+                                            name="height-1f9e75"
+                                            id="containers-form_height-1f9e75"
+                                            aria-required="true"
+                                            disabled=""
+                                            class="ant-input ant-input-disabled u3Fc16wJrxbJ9o1PU_b6 g0lUJn6NiyB8jLWFtHvK"
+                                            formControlName="ih"
+                                          />
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <p class="ydh3F54di6K3xulG46uJ">mm</p>
+                              </div>
+                              <div class="NXdlW5c0gfl051A5f1Qt undefined unit">
+                                <p class="rc3gsaQvFQB3KotKL0Sz">Max Weight</p>
+                                <div class="ant-form-item">
+                                  <div class="ant-row ant-form-item-row">
+                                    <div class="ant-col ant-form-item-control">
+                                      <div class="ant-form-item-control-input">
+                                        <div class="ant-form-item-control-input-content">
+                                          <input
+                                            autocomplete="off"
+                                            type="text"
+                                            placeholder=""
+                                            name="maxMass-1f9e75"
+                                            id="containers-form_maxMass-1f9e75"
+                                            aria-required="true"
+                                            disabled=""
+                                            class="ant-input ant-input-disabled u3Fc16wJrxbJ9o1PU_b6 g0lUJn6NiyB8jLWFtHvK"
+                                            formControlName="maxh"
+                                          />
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <p class="ydh3F54di6K3xulG46uJ">kg</p>
+                              </div>
+                            </div>
+                            
+                          </div>
+                        </div>
+                      </div>
+                        <!-- <div *ngIf="item.get('type').value === 'truck'">
+                          <p>Truck: {{item.get('name').value}}</p>
+                          <img [src]="item.get('imageUrl').value" alt="Truck Image">
+                        </div>
+                        <div *ngIf="item.get('type').value === 'container'">
+                          <p>Container: {{item.get('name').value}}</p>
+                          <img [src]="item.get('imageUrl').value" alt="Container Image">
+                        </div> -->
+                      </div>
+                    </div>
+                    
+                </div>
+              </div>
+            </form>
+            <div class="QfqOw4g59PKa5anb2Mkb">
+              <a class="PT9bqnip2TuIOEwJ331s" (click)="goToPreviousTab()">Back</a>
+              <button type="submit" class="
+              WTsBDLCOKo9YUGHVtMxw 
+              Ed0afDfS99z14xdrTI3j 
+              c0QiXdlOxRUjwIDbPMow" (click)="saveData()"><span class="" style="margin-left: 0px;">Next</span></button></div>
+              </mat-tab>
+              <mat-tab>
+                <ng-template mat-tab-label>
+                    <i class="fa-solid fa-boxes-stacked icon"></i> STUFFING RESULTS
+                </ng-template>
+                <div class="example-large-box mat-elevation-z4">
+                  CONTAINER & TRUCKS
+                </div>
+              </mat-tab>
+          </mat-tab-group>
+    </div>
+    </div>
+</div>
+</div>
+</div>
+<ng-template #content let-modal>
+    <div class="nz-allSelect">
+        <div class="cargo-modal">
+          <form  [formGroup]="AddproductForm" >
+            <!-- Cargo Type Selection -->
+            <div class="pad">
+              <div class="dsply-s">
+                <h3 class="font"><span>1.</span> Select Cargo Type</h3>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" (click)="closeModal()"></button>
+              </div>
+                <div class="cargo-types">
+              <label *ngFor="let type of cargoTypes">
+                <div class="boxx" [ngClass]="{'selected-box': selectedCargoType === type.name}">
+                <div class="boxx1">
+                <div class="boxx2">
+                <input type="radio" name="cargoType" [value]="type.name" [(ngModel)]="selectedCargoType" >
+                <img class="heig" [src]="type.icon" [alt]="type.name"  [ngClass]="{'selected-img': selectedCargoType === type.name}"/>
+                <div class="boxx3" [ngClass]="{'selected-boxx3': selectedCargoType === type.name}">{{ type.displayName }}</div>
+            </div>
+            </div>
+            </div>
+              </label>
+            </div>
+        </div>
+        
+            <!-- Cargo Dimensions Section -->
+            <div class="cargo-dimensions">
+              <h3 class="font"> <span>2.</span> Select Cargo Dimensions</h3>
+              <div class="col-12 dspl">
+              <div class="col-4">
+              <div class="cargo-svg">
+                <ng-container [ngSwitch]="selectedCargoType">
+                  <img *ngSwitchCase="'box'" src="assets/img/load-calc/box (1).svg" alt="Box Dimensions">
+                  <img *ngSwitchCase="'bigbags'" src="assets/img/load-calc/bigbags (1).svg" alt="Bigbags Dimensions">
+                  <img *ngSwitchCase="'sacks'" src="assets/img/load-calc/sacks.svg" alt="Sacks Dimensions">
+                  <img *ngSwitchCase="'barrels'" src="assets/img/load-calc/barrels.svg" alt="Barrels Dimensions">
+                  <img *ngSwitchCase="'roll'" src="assets/img/load-calc/roll.svg" alt="Roll Dimensions">
+                  <img *ngSwitchCase="'pipes'" src="assets/img/load-calc/roll.svg" alt="Pipes Dimensions">
+                  <img *NgSwitchDefault src="assets/img/load-calc/box (1).svg" alt="Pipes Dimensions">
+                </ng-container>
+              </div>
+              </div>
+              <div class="col-8">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-8">
+                <label> <p class="fnt1">
+                  Product Name</p>
+                  <input type="text" class="ant-inputs" formControlName="productName">
+                </label>
+            </div>
+            <div class="col-4">
+                <label>
+                    <p class="fnt1">Color</p>
+                  <div>
+                  <div class="bgclr"></div>
+                </div>
+                </label>
+            </div>
+            </div>
+            </div>
+           <div class="col-12">
+                    <div class="row">
+                        <div class="col-4">
+                            <label *ngIf="selectedCargoType === 'roll' || selectedCargoType === 'barrels' || selectedCargoType === 'pipes'">
+                                <p class="fnt1">Diameter (mm)</p>
+                    <input type="number" class="ant-inputs" formControlName="diameter">
+                  </label>
+                            <label *ngIf="selectedCargoType !== 'roll' && selectedCargoType !== 'barrels' && selectedCargoType !== 'pipes'">
+                                <p class="fnt1">Length (mm)</p>
+                    <input type="number" class="ant-inputs" formControlName="lengthh">
+                  </label>
+                  </div>
+                  <div class="col-4">
+                  <label *ngIf="selectedCargoType === 'roll' || selectedCargoType === 'barrels' || selectedCargoType === 'pipes'">
+                    <p class="fnt1">Height (mm)</p>
+                    <input type="number" class="ant-inputs" formControlName="heightBarrels">
+                  </label>
+                  <label *ngIf="selectedCargoType !== 'roll' && selectedCargoType !== 'barrels' && selectedCargoType !== 'pipes'">
+                    <p class="fnt1">Width (mm)</p>
+                    <input type="number" class="ant-inputs" formControlName="width">
+                  </label>
+                  </div>
+                  <div class="col-4">
+                  <label *ngIf="selectedCargoType !== 'roll' && selectedCargoType !== 'barrels' && selectedCargoType !== 'pipes'">
+                    <p class="fnt1">Height (mm)</p>
+                    <input type="number" class="ant-inputs" formControlName="height">
+                  </label>
+                  <!-- <label>
+                    <p class="fnt1">Height (mm)</p>
+                    <input type="number" class="ant-inputs" formControlName="cargoHeight">
+                  </label> -->
+                  </div>
+                </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-4">
+                <label>
+                    <p class="fnt1">Weight (kg)</p>
+                  <input type="number" class="ant-inputs" formControlName="weight">
+                </label>
+                </div>
+                <div class="col-4">
+                <label >
+                    <p class="fnt1">Quantity</p>
+                  <input type="number"  class="ant-inputs" formControlName="quantity">
+                </label>
+            </div>
+                </div>
+                </div>
+           
+            </div>
+            </div>
+            </div>
+            <div class="cargo-dimensions1">
+            <div class="col-12 dspl">
+                <div class="col-4 brdr">
+            <!-- Spacing Settings Section -->
+            <div class="spacing-settings">
+              <h3 class="font"><span>3.</span> Spacing Settings</h3>
+
+              
+              <!-- Dynamic SVG for Spacing Settings based on type -->
+              <div class="spacing-svg">
+                <ng-container [ngSwitch]="selectedCargoType">
+                    <div class="row">
+                        <div class="d-flex align-items-center">
+                            <input class="" type="checkbox" role="switch" formControlName="spacingTilttoLength" id="flexSwitchCheckChecked">
+                            <label class="form-label mx-1" style="margin-top: 5px;">Tilt to Length</label>
+                    </div>
+                    </div>
+                    <div class="row">
+                  <img *ngSwitchCase="'box'" src="assets/img/load-calc/boxes-ttl.svg" alt="Box Spacing">
+                  <img *ngSwitchCase="'bigbags'" src="assets/img/load-calc/bigbags-ttl.svg" alt="Box Spacing">
+                  <img *ngSwitchCase="'sacks'" src="assets/img/load-calc/sacks-ttl.svg" alt="Box Spacing">
+                  <img *ngSwitchCase="'barrels'" src="assets/img/load-calc/barrels-ttl.svg" alt="Box Spacing">
+                  <img *ngSwitchCase="'roll'" src="assets/img/load-calc/rolls-ttl.svg" alt="Box Spacing">
+                  <img *ngSwitchCase="'pipes'" src="assets/img/load-calc/rolls-ttl.svg" alt="Box Spacing">
+                    </div>
+                    <div *ngIf="selectedCargoType !== 'roll' && selectedCargoType !== 'barrels'" class="row">
+                        <div class="d-flex align-items-center">
+                            <input class="" type="checkbox" role="switch"
+                            formControlName="tiltWidth" 
+                            id="flexSwitchCheckChecked">
+                            <label class="form-label mx-1 fnt" style="margin-top: 5px;">Tilt to Length</label>
+                    </div>
+                    </div>
+                  <div class="row">
+                  <img *ngSwitchCase="'box'" src="assets/img/load-calc/boxes-ttw.svg" alt="Box Spacing">
+                  <img *ngSwitchCase="'bigbags'" src="assets/img/load-calc/bigbags-ttw.svg" alt="Bigbags Spacing">
+                  <img *ngSwitchCase="'sacks'" src="assets/img/load-calc/sacks-ttw.svg" alt="Sacks Spacing">
+                  <div class="dspl">
+                  <img *ngSwitchCase="'roll'" src="assets/img/load-calc/pallet-square.svg" alt="Roll Spacing">
+                  <img *ngSwitchCase="'barrels'" src="assets/img/load-calc/pallet-square.svg" alt="Roll Spacing">
+                  <img class="mrgn-l" *ngSwitchCase="'roll'" src="assets/img/load-calc/pallet-hexagon.svg" alt="Pipes Spacing">
+                  <img class="mrgn-l" *ngSwitchCase="'barrels'" src="assets/img/load-calc/pallet-hexagon.svg" alt="Pipes Spacing">
+                </div>
+                  <img *ngSwitchCase="'bulk'" src="assets/img/load-calc/bigbags-ttl.svg" alt="Bulk Spacing">
+                </div>
+                <div *ngIf="selectedCargoType === 'roll' || selectedCargoType === 'barrels'" class="dspl">
+                    <div class="d-flex align-items-center mrgn-l">
+                        <input class="" type="checkbox" role="switch" 
+                        formControlName="sqare"
+                        id="flexSwitchCheckChecked">
+                        <label class="form-label mx-1 fnt" style="margin-top: 5px;">Square</label>
+                </div>
+                    <div class="d-flex align-items-center mrgn-r">
+                        <input class="" type="checkbox" role="switch" 
+                        formControlName="hexagon"
+                        id="flexSwitchCheckChecked">
+                        <label class="form-label mx-1 fnt" style="margin-top: 5px;">Hexagon</label>
+                </div>
+                </div>
+                </ng-container>
+              </div>
+          
+              <!-- Add spacing-related controls here -->
+            </div>
+        </div>
+          
+        <div class="col-8 padi">
+            <!-- Stuffing Settings Section -->
+            <div class="stuffing-settings">
+              <h3 class="font"><span>4.</span> Stuffing Settings</h3>
+          
+              <!-- Dynamic SVG for Stuffing Settings based on type -->
+              <div class="stuffing-svg">
+                <ng-container [ngSwitch]="selectedCargoType">
+                    <div class="col-12 dspl">
+                        <div>
+                                <div class="stufimg">
+                  <img *ngSwitchCase="'box'" src="assets/img/load-calc/boxes-layers.svg" alt="Box Stuffing">
+                  <img *ngSwitchCase="'bigbags'" src="assets/img/load-calc/bigbags-layers.svg" alt="Bigbags Stuffing">
+                  <img *ngSwitchCase="'sacks'" src="assets/img/load-calc/sacks-layers.svg" alt="Sacks Stuffing">
+                  <img *ngSwitchCase="'barrels'" src="assets/img/load-calc/barrels-layers.svg" alt="Barrels Stuffing">
+                  <img *ngSwitchCase="'roll'" src="assets/img/load-calc/bigbags-layers.svg" alt="Roll Stuffing">
+                  <img *ngSwitchCase="'pipes'" src="assets/img/load-calc/bigbags-layers.svg" alt="Pipes Stuffing">
+                  <img *ngSwitchCase="'bulk'" src="assets/img/load-calc/bigbags-layers.svg" alt="Bulk Stuffing">
+                </div>
+            </div>
+                    <div class="row">
+                        <div class="d-flex align-items-center">
+                            <input class="" type="checkbox" role="switch" id="flexSwitchCheckChecked" formControlName="layerCount">
+                            <label class="form-label mx-1 fnt" style="margin-top: 5px;">Layers Count</label>
+                    </div>
+                    <div class="row">
+                        <label >
+                          <input type="number"  class="ant-inputs1" formControlName="layerCount1">
+                        </label>
+                    </div>
+                    </div>
+                <div>
+                    <div class="stufimg">
+      <img *ngSwitchCase="'box'" src="assets/img/load-calc/boxes-mass.svg" alt="Box Stuffing">
+      <img *ngSwitchCase="'bigbags'" src="assets/img/load-calc/bigbags-mass.svg" alt="Bigbags Stuffing">
+      <img *ngSwitchCase="'sacks'" src="assets/img/load-calc/sacks-mass.svg" alt="Sacks Stuffing">
+      <img *ngSwitchCase="'barrels'" src="assets/img/load-calc/barrels-mass.svg" alt="Barrels Stuffing">
+      <img *ngSwitchCase="'roll'" src="assets/img/load-calc/bigbags-mass.svg" alt="Roll Stuffing">
+      <img *ngSwitchCase="'pipes'" src="assets/img/load-calc/bigbags-mass.svg" alt="Pipes Stuffing">
+      <img *ngSwitchCase="'bulk'" src="assets/img/load-calc/bigbags-mass.svg" alt="Bulk Stuffing">
+    </div>
+    </div>
+    <div class="row">
+        <div class="d-flex align-items-center">
+            <input class="" type="checkbox" role="switch" id="flexSwitchCheckChecked" formControlName="mass">
+            <label class="form-label mx-1 fnt" style="margin-top: 5px;">Mass</label>
+    </div>
+    <div class="row">
+        <label >
+          <input type="number"  class="ant-inputs1"  formControlName="mass1">
+        </label>
+    </div>
+    </div>
+                </div>
+                    <div class="col-12 dspl mrgn-t">
+                        <div>
+                                <div class="stufimg">
+                  <img *ngSwitchCase="'box'" src="assets/img/load-calc/boxes-height.svg" alt="Box Stuffing">
+                  <img *ngSwitchCase="'bigbags'" src="assets/img/load-calc/bigbags-height.svg" alt="Bigbags Stuffing">
+                  <img *ngSwitchCase="'sacks'" src="assets/img/load-calc/sacks-height.svg" alt="Sacks Stuffing">
+                  <img *ngSwitchCase="'barrels'" src="assets/img/load-calc/barrels-height.svg" alt="Barrels Stuffing">
+                  <img *ngSwitchCase="'roll'" src="assets/img/load-calc/rolls-height.svg" alt="Roll Stuffing">
+                  <img *ngSwitchCase="'pipes'" src="assets/img/load-calc/rolls-height.svg" alt="Pipes Stuffing">
+                  <img *ngSwitchCase="'bulk'" src="assets/img/load-calc/bulk-height.svg" alt="Bulk Stuffing">
+                </div>
+            </div>
+                    <div class="row">
+                        <div class="d-flex align-items-center">
+                            <input class="" type="checkbox" role="switch" id="flexSwitchCheckChecked" formControlName="spacingHeigth">
+                            <label class="form-label mx-1 fnt" style="margin-top: 5px;">Height</label>
+                    </div>
+                    <div class="row">
+                        <label >
+                          <input type="number"  class="ant-inputs1" formControlName="spacingHeigth1">
+                        </label>
+                    </div>
+                    </div>
+                <div>
+                    <div class="stufimg" *ngIf="selectedCargoType === 'box'">
+      <img *ngSwitchCase="'box'" src="assets/img/load-calc/boxes-layers.svg" alt="Box Stuffing">
+    
+    </div>
+   
+    </div>
+    <div class="row" *ngSwitchCase="'box'">
+        <div class="d-flex align-items-center">
+            <input class="" type="checkbox" role="switch" id="flexSwitchCheckChecked" formControlName="disableStack">
+            <label class="form-label mx-1 fnt" style="margin-top: 5px;">Disable</label>
+    </div>
+    </div>
+    <div class="row" *ngIf="selectedCargoType !== 'box'">
+        <div class="d-flex align-items-center">
+            <input class="" type="checkbox" role="switch" id="flexSwitchCheckChecked" formControlName="disableStack1">
+            <label class="form-label mx-1 fnt" style="margin-top: 5px;">Disable</label>
+    </div>
+ 
+    </div>
+                </div>
+                </ng-container>
+              </div>
+          
+              <!-- Add stuffing-related controls here -->
+            </div>
+            </div>
+        </div>
+            </div>
+          </form>
+        
+           
+            <div class="VcrUAy5WOt29VF1nfbah">
+              <a type="submit" class=" WTsBDLCOKo9YUGHVtMxw Ed0afDfS99z14xdrTI3j Fa3_6TvaRVn649ixo9uz" (click)="closeModal()">Cancel</a>
+              <a type="submit" class=" WTsBDLCOKo9YUGHVtMxw c0QiXdlOxRUjwIDbPMow Ed0afDfS99z14xdrTI3j" (click)="onProductFormSubmit()">Save</a>
+            </div>
+          </div>
+    </div>
+    </ng-template>
+    <ng-template #content2 let-modal>
+      <div class="ant-modal-body">
+        <div>
+          <h6>Container & truck types</h6>
+        <div class="UUL1mQJvkzA_udI0uAaW">
+          <div class="dspl">
+            <div class="tab-item"  (click)="!truckSelected1 && selectTab('container')" [class.active]="selectedTab === 'container'" [class.disabled]="truckSelected1" > 
+           <i class="fa-solid fa-box"></i>  Container
+          </div>
+            <div class="tab-item"  (click)="!containerSelected1 && selectTab('truck')" [class.active]="selectedTab === 'truck'" [class.disabled]="containerSelected1">
+            <i class="bi bi-truck"></i>  Truck
+          </div>
+        </div>
+        </div>
+    
+        <!-- Main content: show trucks/containers if Learn More is not active -->
+        
+        <div *ngIf="!learnMoreVisible">
+          <div *ngIf="selectedTab === 'container'" class="cZI_AHnH42wfNEW20xxx">
+          <div class="mr3MpdCdkzmLJzSdSwi4 uqQSz45jsbbA5XdfUfiy" *ngFor="let container of containers" [ngClass]="{'uqQSz45jsbbA5XdfUfiy': isContainerSelected(container)}"  (click)="selectContainer(container)">
+                <p class="Rvh6wVsipFfqp6xpsAMe">{{container.name}}</p>
+                <img [src]="container.imageUrl" alt="Container Image">
+                <p class="zMNq1WncGFgLDiP3u87O" (click)="openLearnMore(container); $event.stopPropagation()">Learn More</p>
+                
+              </div>
+
+          </div>
+          <div *ngIf="selectedTab === 'truck'" class="cZI_AHnH42wfNEW20xxx">
+          <div class="mr3MpdCdkzmLJzSdSwi4 uqQSz45jsbbA5XdfUfiy" *ngFor="let truck of trucks" [ngClass]="{'uqQSz45jsbbA5XdfUfiy': isTruckSelected(truck)}"   (click)="selectTruck(truck)">
+                  <p class="Rvh6wVsipFfqp6xpsAMe">{{truck.name}}</p>
+                  <img [src]="truck.imageUrl" alt="Truck Image">
+                  <p class="zMNq1WncGFgLDiP3u87O" (click)="openLearnMore(truck); $event.stopPropagation()">Learn More</p>
+  
+            </div>
+          </div>
+        </div>
+    
+        <!-- Learn More content (detailed information) -->
+        <div *ngIf="learnMoreVisible" >
+          <div *ngIf="selectedTab === 'container'">
+            <div class="HhsT_1TZ8jYc4rVd_r5i">
+              <span class="AYcbffY8GlSEEfzEj3AW">
+                <svg width="7" height="11" viewBox="0 0 7 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6 0.588379L1 5.58838L6 10.5884" stroke="black"></path>
+                </svg>
+                <span (click)="goBack()">BACK</span>
+              </span>
+              <div class="LFmJRIvKedgQkUKPhLPe">
+                <aside class="L02JpjOzRMl5IaHOhWPI">
+                  <ul class="TD1rNwt5uj_cLiPifNwx">
+                    <li 
+                      *ngFor="let container of containers" 
+                      class="zCq2zs_zvNnLmUwpXGiv" 
+                      (click)="selectContainer(container)"
+                      [ngClass]="{'fLWbVAZrJw7qdwBWef9E': container === selectedContainer}"
+                      [class.selected]="container === selectedContainer">
+
+                      {{ container.name }}
+                    </li>
+                  </ul>
+                </aside>
+                <main class="i8H9tNTYVtHVOCNfxGbR">
+                  <div class="hNRuKegwlOJEYRL4jdDY">
+                    <div class="TLLpTQJt1xpx68E2qDHU">
+                      <div class="bLHMCR8nkMaJXWK7V9P3">
+                        <img [src]="selectedContainer?.imageUrl" alt="">
+                      </div>
+                      <ul class="yejWNUjxncHVJvFGr7U1">
+                        <li class="vKUndLrD0wstL6K5kFl7">
+                          <span class="E1lHTP5mLjdALJ9eh7aD">Inside Length</span>
+                          <span class="TIrCl9c_OXU2qINpqWkb">{{selectedContainer?.il}}</span>
+                        </li>
+                        <li class="vKUndLrD0wstL6K5kFl7">
+                          <span class="E1lHTP5mLjdALJ9eh7aD">Inside Width</span>
+                          <span class="TIrCl9c_OXU2qINpqWkb">{{selectedContainer?.iw}}</span>
+                        </li>
+                        <li class="vKUndLrD0wstL6K5kFl7">
+                          <span class="E1lHTP5mLjdALJ9eh7aD">Inside Height</span>
+                          <span class="TIrCl9c_OXU2qINpqWkb">{{selectedContainer?.ih}}</span>
+                        </li>
+                        <li class="vKUndLrD0wstL6K5kFl7">
+                          <span class="E1lHTP5mLjdALJ9eh7aD">Door Width</span>
+                          <span class="TIrCl9c_OXU2qINpqWkb">{{selectedContainer?.doorWidth}}</span>
+                        </li>
+                        <li class="vKUndLrD0wstL6K5kFl7">
+                          <span class="E1lHTP5mLjdALJ9eh7aD">Door Height</span>
+                          <span class="TIrCl9c_OXU2qINpqWkb">{{selectedContainer?.doorHeight}}</span>
+                        </li>
+                        <li class="vKUndLrD0wstL6K5kFl7">
+                          <span class="E1lHTP5mLjdALJ9eh7aD">Capacity</span>
+                          <span class="TIrCl9c_OXU2qINpqWkb">{{selectedContainer?.cap}}</span>
+                        </li>
+                        <li class="vKUndLrD0wstL6K5kFl7">
+                          <span class="E1lHTP5mLjdALJ9eh7aD">Tare Weight</span>
+                          <span class="TIrCl9c_OXU2qINpqWkb">{{selectedContainer?.tareWeight}}</span>
+                        </li>
+                        <li class="vKUndLrD0wstL6K5kFl7">
+                          <span class="E1lHTP5mLjdALJ9eh7aD">Max Weight</span>
+                          <span class="TIrCl9c_OXU2qINpqWkb">{{selectedContainer?.maxh}}</span>
+                        </li>
+                      </ul>
+                      
+                    </div>
+                    <div class="xsM_sacD6wxPTK3nRLhT">
+                      <h4 class="mN81LIYt52Qpqv5IMWiO">Description</h4>
+                      <p class="qBCtffN_PVJK9edIuXjD">{{selectedContainer?.p1}}</p>
+                      <p class="">{{selectedContainer?.p2}}</p>
+                      <ul *ngIf="selectedContainer && (selectedContainer.name === '20\' Standard' || selectedContainer.name === '40\' Standard')">
+                        <li>{{selectedContainer?.li1}}</li>
+                        <li>{{selectedContainer?.li2}}</li>
+                        <li>{{selectedContainer?.li3}}</li>
+                      </ul>
+                      <p>{{selectedContainer?.p3}}</p>
+                      <p>{{selectedContainer?.p4}}</p>
+                      <p>{{selectedContainer?.p5}}</p>
+                      <p>{{selectedContainer?.p6}}</p>
+                      <p>{{selectedContainer?.p7}}</p>
+                      <p>{{selectedContainer?.p8}}</p>
+                      <p>{{selectedContainer?.p9}}</p>
+                      <p>{{selectedContainer?.p10}}</p>
+                      <p>{{selectedContainer?.p11}}</p>
+                      <p>{{selectedContainer?.p12}}</p>
+                      <p>{{selectedContainer?.p13}}</p>
+                      <p>{{selectedContainer?.p14}}</p>
+                    </div>
+                  </div>
+                </main>
+              </div>
+            </div>
+          </div>
+          
+          <div *ngIf="selectedTab === 'truck'">
+          <div class="HhsT_1TZ8jYc4rVd_r5i">
+            <span class="AYcbffY8GlSEEfzEj3AW"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 0.588379L1 5.58838L6 10.5884" stroke="black"></path></svg>
+              <path d="M6 0.588379L1 5.58838L6 10.5884" stroke="black"></path>
+              <span (click)="goBack()">BACK</span>
+            </span>
+            <div class="LFmJRIvKedgQkUKPhLPe">
+              <aside class="L02JpjOzRMl5IaHOhWPI">
+                <ul class="TD1rNwt5uj_cLiPifNwx">
+                  <li 
+            *ngFor="let truck of trucks" 
+            class="zCq2zs_zvNnLmUwpXGiv" 
+            (click)="selectTruck(truck)"
+            [ngClass]="{'fLWbVAZrJw7qdwBWef9E': truck === selectedTruck}"
+            [class.selected]="truck === selectedTruck"> <!-- Add 'selected' class if truck is selected -->
+            {{ truck.name }}
+          </li>
+                </ul>
+              </aside>
+              <main class="i8H9tNTYVtHVOCNfxGbR">
+                <div class="hNRuKegwlOJEYRL4jdDY">
+                  <div class="TLLpTQJt1xpx68E2qDHU">
+                    <div class="bLHMCR8nkMaJXWK7V9P3">
+                      <img [src]="selectedTruck?.imageUrl" alt="{{ selectedTruck?.name }}">
+                    </div>
+                    <ul class="yejWNUjxncHVJvFGr7U1">
+                      <li class="vKUndLrD0wstL6K5kFl7">
+                        <span class="E1lHTP5mLjdALJ9eh7aD">Inside Length</span>
+                        <span class="TIrCl9c_OXU2qINpqWkb">{{ selectedTruck?.il }}</span>
+                      </li>
+                      <li class="vKUndLrD0wstL6K5kFl7">
+                        <span class="E1lHTP5mLjdALJ9eh7aD">Inside Width</span>
+                        <span class="TIrCl9c_OXU2qINpqWkb">{{ selectedTruck?.iw }}</span>
+                      </li>
+                      <li class="vKUndLrD0wstL6K5kFl7">
+                        <span class="E1lHTP5mLjdALJ9eh7aD">Inside Height</span>
+                        <span class="TIrCl9c_OXU2qINpqWkb">{{ selectedTruck?.ih }}</span>
+                      </li>
+                      <li class="vKUndLrD0wstL6K5kFl7">
+                        <span class="E1lHTP5mLjdALJ9eh7aD">Capacity</span>
+                        <span class="TIrCl9c_OXU2qINpqWkb">{{ selectedTruck?.cap }}</span>
+                      </li>
+                      <li class="vKUndLrD0wstL6K5kFl7">
+                        <span class="E1lHTP5mLjdALJ9eh7aD">Max Weight</span>
+                        <span class="TIrCl9c_OXU2qINpqWkb">{{ selectedTruck?.maxh }}</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="xsM_sacD6wxPTK3nRLhT">
+                    <h6 class="mN81LIYt52Qpqv5IMWiO">Description</h6>
+                    <p class="qBCtffN_PVJK9edIuXjD">{{ selectedTruck?.description }}</p>
+                  </div>
+                </div>
+              </main>
+            </div>
+          </div>
+        </div>
+          <!-- <h2>{{selectedItem?.name}}</h2> -->
+          <!-- <p>{{selectedItem?.description}}</p> -->
+          <!-- <button (click)="addItem(selectedItem)">Add to List</button> -->
+          <!-- <button (click)="closeLearnMore()">Close</button> -->
+          <!-- <button (click)="goBack()">Back</button> -->
+        </div>
+    
+        <div class="VcrUAy5WOt29VF1nfbah">
+          <a type="submit" class=" WTsBDLCOKo9YUGHVtMxw Ed0afDfS99z14xdrTI3j Fa3_6TvaRVn649ixo9uz" (click)="closeModal()">Cancel</a>
+          <a type="submit" class=" WTsBDLCOKo9YUGHVtMxw c0QiXdlOxRUjwIDbPMow Ed0afDfS99z14xdrTI3j" (click)="confirmSelection()">Select</a>
+        </div>
+      </div>
+    </div>
+    </ng-template>
+    
+    

@@ -1,0 +1,373 @@
+<div class="table-with-gheading">
+  <div class="wrapper">
+    <div class="container-fluid">
+      <div class="wrap-content">
+        <div class="row header my-3">
+          <div class="col-md-12 ">
+            <span class="title capitlize font1">{{greet}}!</span>
+          </div>
+          <div class="col-md-12 my-2">
+            <span class="sub-title">You have {{notificationList.length}} notifications </span>
+          </div>
+        </div>
+
+        <div class="set-position" *ngIf="profileData && !allSectionsCompleted() && !superAdmin">
+          <div class="seticons">
+            <button class="border-0 bg-transparent" type="button" (click)="onUserGuide()">
+              <i class="bi bi-pencil-square setcomments"></i>
+            </button>
+            <div class="send-msg">
+              <span></span>
+            </div>
+          </div>
+        </div>
+        <div class="mb-5 mt-5" *ngIf="superAdmin">
+          <div class="row pt-3 mb-3 d-flex align-items-center">
+            <div class="col-md-4">
+              <label class="form-label">From To Date</label>
+              <nz-range-picker class="heightSet" [(ngModel)]="dateRange" (ngModelChange)="fetchCountonselection()"
+                style="width: 100%;"></nz-range-picker>
+            </div>
+            <div class="col-md-1 mt-4">
+              <button type="button" class="btn btn-outline-primary" (click)="clear()">{{ 'common.clear' |
+                translate }}</button>
+            </div>
+            <div class="col-md-3">
+              <div class="form-field-section">
+                <label class="form-label"> Company</label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear
+                [(ngModel)]="companyId"
+                (ngModelChange)="fetchCountonselection()"
+                [ngModel]="companyId || 0"
+                nzPlaceHolder="Company Name"
+                    >
+                    <nz-option [nzLabel]="'All'" [nzValue]="0"></nz-option>
+                    <nz-option *ngFor="let agent of smartAgentregistereList" [nzLabel]="agent?.agentName" [nzValue]="agent?.agentId">
+                    </nz-option>
+                </nz-select>
+            </div>
+            </div>
+          </div>
+         
+        <div class="border p-3 rounded">
+          <div class="dashboard-widgets">
+            <div class="widget">
+              <h3>Total Trial</h3>
+              <p>{{ smartAgentTrialCount }}</p>
+            </div>
+            <div class="widget">
+              <h3>Total Registered</h3>
+              <p>{{ smartAgentregisteredCount }}</p>
+            </div>
+            <div class="widget">
+              <h3>Total Job</h3>
+              <p>{{ batchDetailsCount }}</p>
+            </div>
+            <div class="widget">
+              <h3>Total Invoice</h3>
+              <p>
+                <span [title]="'Purchase: ' + buyerInvoiceCount">{{ buyerInvoiceCount }}</span> /
+                <span [title]="'Sale: ' + sellerInvoiceCount">{{ sellerInvoiceCount }}</span>
+                
+              </p>
+                                        
+            </div>
+          </div>
+          <div class="dashboard-widgets">
+            <div class="widget">
+              <h3>Total Unregistered</h3>
+              <p>{{ smartAgentUnregisteredCount }}</p>
+            </div>
+            <div class="widget">
+              <h3>Total Requested</h3>
+              <p>{{ smartAgentRequestedCount }}</p>
+            </div>
+            <div class="widget">
+              <h3>Total Expired</h3>
+              <p>{{ smartAgentExpiredCount }}</p>
+            </div>
+            <div class="widget">
+              <h3>Total Open Tickets</h3>
+              <p>{{ filteredTicketCount }}</p>                         
+            </div>
+          </div>
+          <div class="dashboard-widgets">
+            <div class="widget wdth ">
+              <h3>Total Container</h3>
+              <p>{{ smartAgentTrialCount }}</p>
+            </div>
+          </div>
+          
+        </div>
+
+      </div>
+
+        <div class="card-pad mb-5" *ngIf="!superAdmin">
+
+          <label class="form-label mt-4">From To Date</label>
+          <div class=" row mb-4 align-items-start gap-2 gap-sm-0">
+
+            <div class="col-12 col-sm-4">
+              <nz-range-picker class="h-34" [(ngModel)]="dateRange" (ngModelChange)="checkDate()"
+                style="width: 100%;"></nz-range-picker>
+
+              <!-- <mat-form-field appearance="fill" class="custom-date-picker"> 
+                  <mat-date-range-input [(ngModel)]="dateRange" [rangePicker]="picker" >
+                    <input class="h-0"  matStartDate formControlName="start" placeholder="Start date">
+                    <input class="h-0"  matEndDate formControlName="end" placeholder="End date">
+                  </mat-date-range-input>
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-date-range-picker #picker></mat-date-range-picker>
+                </mat-form-field> -->
+
+
+            </div>
+            <div class="col-12 col-sm-2">
+              <button type="button" class="btn btn-outline-primary w-100 w-sm-unset" (click)="clear()">{{ 'common.clear' |
+                translate }}</button>
+            </div>
+            <!-- <div class="col-md-4 mb-1"></div> -->
+            <div class="col-12 col-sm-2">
+              <div class="dropdown">
+                <div>
+                  <mat-select class="btn1 heig" [(value)]="shipmentType"   (selectionChange)="onShipmentTypeChange($event.value)" panelClass="ss_select">
+                    <mat-option *ngFor="let option of shipmentTypes" [value]="option.typeName">
+                      {{ option.typeName }}
+                    </mat-option>
+                  </mat-select>
+                </div>
+            </div>
+            </div>
+            <div class="col-12 col-sm-2">
+              <div class="dropdown">
+                <div>
+                  <mat-select class="btn1 heig" [(value)]="loadType"   (selectionChange)="onloadTypeChange($event.value)" panelClass="ss_select">
+                    <mat-option *ngFor="let option of loadTypes" [value]="option.typeName">
+                      {{ option.typeName }}
+                    </mat-option>
+                  </mat-select>
+                </div>
+            </div>
+            </div>
+            <div class="col-12 col-sm-2 gap-1 gap-sm-2 justify-content-center d-flex">
+              <a class="col-6 col-sm-4 m-0 btn btn-outline-primary" nz-tooltip nzTooltipTitle="Download Excel" (click)="exportToExcel()"><i class="bi bi-download"></i></a>
+              <a class="col-6 col-sm-4 m-0 btn btn-outline-primary" nz-tooltip nzTooltipTitle="Download PDF" (click)="exportToPDF()"><i class="bi bi-printer-fill"></i></a>
+            </div>
+          </div>
+
+
+
+          <div class="row d-flex  mt-4 mt-2">
+
+            <div class="col-lg-2 col-md-3" *ngFor="let data of totalData">
+              <div class="card shadow mb-3" *ngIf="!loader1">
+                <div class="card-header py-2">
+                  <span class="m-0 header-color" [ngClass]="data.jobCount > 0 ? 'count positive' : 'count zero'">
+                    {{data.mileStoneName}}&nbsp;<i class="bi bi-box-arrow-up-right" (click)="navigateToNewTab1(data.mileStoneName)"></i></span>
+                </div>
+                <div class="card-body text-secondary" [ngClass]="data.jobCount > 0 ? 'count positive' : 'count zero'">
+                  {{data.jobCount}}
+                </div>
+              </div>
+              <ngx-skeleton-loader count="{{totalCount1}}" appearance="circle" *ngIf="loader1"></ngx-skeleton-loader>
+            </div>
+            <div class="row m-0" *ngIf="currentLogin !== 'transporter'">
+              <!-- pie chart -->
+
+              <div class="col-12 col-lg-6 p-0 p-sm-2" *ngIf="totalData?.length">
+                <div id="pieChart" class="graphstyle2-bar mb-2 globally-mat-sass-card chart-container d-flex justify-content-center"></div>
+              </div>
+
+              <div class="col-12 col-lg-6 p-0 p-sm-2" *ngIf="totalData?.length">
+                <div id="lineChart" class="graphstyle2-bar mb-2 globally-mat-sass-card chart-container d-flex justify-content-center"></div>
+              </div>
+
+
+              <div class="col-12 col-lg-6 p-0 p-sm-2" *ngIf="ChartData?.length">
+                <div class="chart-container">
+                  <ngx-charts-bar-vertical-2d
+                    [view]="view"
+                    [scheme]="colorScheme"
+                    [results]="ChartData"
+                    [gradient]="gradient"
+                    [xAxis]="showXAxis"
+                    [yAxis]="showYAxis"
+                    [legend]="showLegend"
+                    [showXAxisLabel]="showXAxisLabel"
+                    [showYAxisLabel]="showYAxisLabel">
+                  </ngx-charts-bar-vertical-2d>
+                </div>
+  
+              </div>
+              <div class="col-12 col-lg-6 p-0 p-sm-2">
+                <div class="mat-table-with-gheading">
+                  <div class="wrapper">
+                    <!-- <div class="container-fluid"> -->
+                      <div class="">
+                        <div class="row">
+                          <div class="page-title-box font1 my-2 col-6">
+                            My Reminder Task List
+                          </div>
+                           <div class="d-flex justify-content-end align-items-center col-6">
+                            <div class="taggle form-check form-switch d-flex align-items-center mt-2">
+                              <input type="checkbox" id="All" (change)="onCheckboxChange($event,'All')" />
+                              <label for="All" class="pl-1 mb-0 pr-4 font-13">All</label><br>
+                            
+                              <input type="checkbox" id="Pending" (change)="onCheckboxChange($event, 'Pending')" />
+                              <label for="Pending" class="pl-1 mb-0 pr-4 font-13">Pending</label><br>
+                            </div>
+                        </div> 
+                        <ng-container>
+                          <div class="wrap-mat-table-area" [ngClass]="{'display-none' : loader1}">
+                            <div class="table-card">
+                              <div class="table-design example-container mat-elevation-z8">
+                                <table mat-table [dataSource]="dataSource" matSort class="" summary="agreement">
+
+                                  <ng-container matColumnDef="#">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef>
+                                      # </th>
+                                    <td mat-cell *matCellDef="let element;let i = index">
+                                      {{ element?.id}}
+                                    </td>
+                                  </ng-container>
+
+                                  <ng-container matColumnDef="jobNo">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                      Job No.
+                                    </th>
+                                    <!-- <td mat-cell *matCellDef="let element">
+                                      <div (click)="navigateToNewTab(element)">
+                                        {{element.batchNo}}
+                                      </div> 
+                                    </td> -->
+                                    <td mat-cell *matCellDef="let element"
+                                      style="color: var(--change-theme) !important; cursor: pointer;">
+                                      <a class="font-weight" (click)="navigateToNewTab(element)">{{ element?.batchNo
+                                        }}</a>
+                                    </td>
+                                  </ng-container>
+
+
+                                  <ng-container matColumnDef="taskType">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                      Task Type
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                      {{element.reminderType}}
+                                    </td>
+                                  </ng-container>
+                                  <ng-container matColumnDef="taskDescription">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                      Task Description
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                      {{element.description}}
+                                    </td>
+                                  </ng-container>
+                                  <ng-container matColumnDef="createdOn">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                      Created Time
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                      {{element.createdOn | date: 'dd-MM-yyyy hh:mm'}}
+                                    </td>
+                                  </ng-container>
+                                  <ng-container matColumnDef="reminderTime">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                      Reminder Time
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                      {{element.reminderTime === 'Custom Date'? (element.customDate | date: 'dd-MM-yyyy hh:mm') : element.reminderTime}}
+                                    </td>
+                                  </ng-container>
+                                  <ng-container matColumnDef="status">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                      Status
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                      <div [class]="element.reminderStatus == 'Pending' ? 'red' : 'green'">
+                                        {{element.reminderStatus}}
+                                      </div>
+
+                                    </td>
+                                  </ng-container>
+                                  <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumns"></tr>
+
+                                  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                                  <tr class="mat-row" *matNoDataRow>
+                                    <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+                                      <span>No data available</span>
+                                    </td>
+                                  </tr>
+                                </table>
+
+                              </div>
+                              <!-- [ngClass]="{'display-none' : dataSource.filteredData.length < 20}" -->
+                              <div [ngClass]="{'display-none' : dataSource.filteredData.length < 5}">
+                                <mat-paginator [pageSizeOptions]="pagenation" showFirstLastButtons
+                                  aria-label="Select page">
+                                </mat-paginator>
+                              </div>
+                            </div>
+                          </div>
+                        </ng-container>
+                        <ng-container *ngIf="loader1">
+                          <ngx-skeleton-loader count="{{totalCount}}" appearance="line"></ngx-skeleton-loader>
+                        </ng-container>
+                      </div>
+                    <!-- </div> -->
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+            <div class="d-flex align-items-end">
+              <div class="col-md-10 mb-1"></div>
+              <!-- <div class="col-md-2 heigh">
+                <div class="dropdown mrgn1">
+                  <mat-form-field>
+                    <mat-select
+                      class="btn1 btn-lg heig"
+                      [(value)]="selectedParty"
+                      (selectionChange)="onPartyChange($event.value)"
+                      panelClass="ss_select"
+                      placeholder="Select Party"
+                    >
+                      <mat-option *ngFor="let party of partymasterList" [value]="party.partymasterId">
+                        {{ party.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                
+              </div> -->
+              <div class="col-md-2">
+                <!-- <label class="form-label">Party Name</label> -->
+              
+                <nz-select
+                  class="form-select"
+                  nzShowSearch
+                  nzAllowClear
+                  [(ngModel)]="selectedPartyId"
+                  name="partymasterId"
+                  (ngModelChange)="containerslocation()"
+                  [ngClass]="{ 'is-invalid': submitted && !selectedPartyId }"
+                  nzPlaceHolder="Select Party"
+                >
+                  <nz-option
+                    *ngFor="let party of partymasterList"
+                    [nzLabel]="party.name"
+                    [nzValue]="party.partymasterId"
+                  ></nz-option>
+                </nz-select>
+              </div>
+              
+            </div>
+            <div id="map"></div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

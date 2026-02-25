@@ -1,0 +1,7 @@
+@use "../mixins/breakpoint.scss" as bp;
+$bp: (
+  base: 0px,
+  sm: 540px,
+  md: 992px,
+  lg: 1280px,
+);

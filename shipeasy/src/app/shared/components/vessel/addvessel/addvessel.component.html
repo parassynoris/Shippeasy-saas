@@ -1,0 +1,667 @@
+<div class="table-with-gheading">
+  <div class="wrap-form-field custome-stepper">
+    <aw-wizard [awNavigationMode] navigateBackward="allow">
+      <aw-wizard-step>
+        <ng-template awWizardStepSymbol let-wizardStep="wizardStep">
+          <em *ngIf="wizardStep.completed" class="bi bi-check-lg"></em>
+        </ng-template>
+        <div class="row align-items-center">
+          <div class="col-md-12">
+            <form class="row g-3 mt-3" [formGroup]="vesselMastersForm">
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.MV/MT' | translate }}<span
+                    class="text-danger">*</span></label>
+                <select type="text" class="form-select custom-input" value="pune" formControlName="mvmt"
+                  [ngClass]="{ 'is-invalid': submitted && f.mvmt.errors }">
+                  <option>Motor Vessel</option>
+                  <option>Motor Tanker</option>
+                </select>
+                <div *ngIf="submitted && f.mvmt.errors" class="invalid-feedback">
+                  <div *ngIf="f.mvmt.errors.required">
+                    {{ 'stolt.masters.vessel-Master.vesselvalidation.mvmtvalidation' | translate }}
+
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.name' | translate }}<span
+                    class="text-danger">*</span></label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="vesselName"
+                  [ngClass]="{ 'is-invalid': submitted && f.vesselName.errors }">
+                <div *ngIf="submitted && f.vesselName.errors" class="invalid-feedback">
+                  <div *ngIf="f.vesselName.errors.required">
+                    {{ 'stolt.masters.vessel-Master.vesselvalidation.namevalidation' | translate }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.IMO_NO' | translate }}<span
+                    class="text-danger">*</span></label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="lloydsImoNo"
+                  [ngClass]="{ 'is-invalid': submitted && f.lloydsImoNo.errors }">
+                <div *ngIf="submitted && f.lloydsImoNo.errors" class="invalid-feedback">
+                  <div *ngIf="f.lloydsImoNo.errors.required">
+                    {{ 'stolt.masters.vessel-Master.vesselvalidation.lyodsvalidation' | translate }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.flag' | translate }}<span
+                    class="text-danger">*</span></label>
+                <select type="text" class="form-select custom-input" placeholder="SHIPEASY Product Id"
+                  value="Marketing Manager" formControlName="vesselFlag"
+                  [ngClass]="{ 'is-invalid': submitted && f.vesselFlag.errors }">
+
+                  <option>XYZ</option>
+                </select>
+                <div *ngIf="submitted && f.vesselFlag.errors" class="invalid-feedback">
+                  <div *ngIf="f.vesselFlag.errors.required">
+                    {{ 'stolt.masters.vessel-Master.vesselvalidation.flagvalidation' | translate }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.call_sign' | translate }}<span
+                    class="text-danger">*</span></label>
+                <input type="text" class="form-control custom-input" value="" formControlName="callSign"
+                  [ngClass]="{ 'is-invalid': submitted && f.callSign.errors }">
+                <div *ngIf="submitted && f.callSign.errors" class="invalid-feedback">
+                  <div *ngIf="f.callSign.errors.required">
+                    {{ 'stolt.masters.vessel-Master.vesselvalidation.callsignvalidation' | translate }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.built' | translate }}<span
+                    class="text-danger">*</span></label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="built"
+                  [ngClass]="{ 'is-invalid': submitted && f.built.errors }">
+                <div *ngIf="submitted && f.built.errors" class="invalid-feedback">
+                  <div *ngIf="f.built.errors.required">
+                    {{ 'stolt.masters.vessel-Master.vesselvalidation.builtvalidation' | translate }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label for="Vesselcategory" class="form-label">{{
+                  "smartagent.smartAgent.AllformAddedit.vesselCategory" | translate
+                }}</label>
+                <select
+                  id="Vesselcategory"
+                  class="form-select shadow-none"
+                  formControlName="category"
+                >
+                  <option
+                    *ngFor="let vessel of vesselData"
+                    [value]="vessel?._source?.category"
+                  >
+                    {{ vessel?._source?.category }}
+                  </option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.type' | translate }}<span
+                    class="text-danger">*</span></label>
+                <select type="text" class="form-select custom-input" value="pune" formControlName="type"
+                  [ngClass]="{ 'is-invalid': submitted && f.type.errors }">
+                  <option>xyz</option>
+                  <option>xyz</option>
+                </select>
+                <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
+                  <div *ngIf="f.type.errors.required">
+                    {{ 'stolt.masters.vessel-Master.vesselvalidation.typevalidation' | translate }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label for="VesselSubtype" class="form-label">{{
+                  "smartagent.smartAgent.AllformAddedit.vesselSubtype" | translate
+                }}</label>
+                <select
+                  id="VesselSubtype"
+                  class="form-select shadow-none"
+                  formControlName="subtype"
+                >
+                  <option
+                    *ngFor="let vessel of vesselData"
+                    [value]="vessel?._source?.vesselSubType?.vesselSubTypeId"
+                  >
+                    {{ vessel?._source?.vesselSubType?.vesselSubTypeName }}
+                  </option>
+                </select>
+              </div>
+
+
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.sub_type' | translate }}<span
+                    class="text-danger">*</span></label>
+                <select type="text" class="form-select custom-input" value="pune" formControlName="subtype"
+                  [ngClass]="{ 'is-invalid': submitted && f.subtype.errors }">
+                  <option>xyz</option>
+                  <option>xyz</option>
+                </select>
+                <div *ngIf="submitted && f.subtype.errors" class="invalid-feedback">
+                  <div *ngIf="f.subtype.errors.required">
+                    {{ 'stolt.masters.vessel-Master.vesselvalidation.subtypevalidation' | translate }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.Category' | translate }}<span
+                    class="text-danger">*</span></label>
+                <select type="text" class="form-select custom-input" value="pune" formControlName="category"
+                  [ngClass]="{ 'is-invalid': submitted && f.category.errors }">
+                  <option>xyz</option>
+                  <option>xyz</option>
+                </select>
+                <div *ngIf="submitted && f.category.errors" class="invalid-feedback">
+                  <div *ngIf="f.category.errors.required">
+                    {{ 'stolt.masters.vessel-Master.vesselvalidation.categoryvalidation' | translate }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.Ownership' | translate }}<span
+                    class="text-danger">*</span></label>
+                <select type="text" class="form-select custom-input" value="pune" formControlName="ownership"
+                  [ngClass]="{ 'is-invalid': submitted && f.ownership.errors }">
+                  <option>Owned</option>
+                  <option>Time Chartered</option>
+                </select>
+                <div *ngIf="submitted && f.ownership.errors" class="invalid-feedback">
+                  <div *ngIf="f.ownership.errors.required">
+                    {{ 'stolt.masters.vessel-Master.vesselvalidation.ownershipvalidation' | translate }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.port_registory' | translate }}</label>
+                <select type="text" class="form-select custom-input" value="pune" formControlName="portOfRegistry">
+                  <option>xyz</option>
+                  <option>xyz</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.P_I_club' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="piclub">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.SHIP_REGISTRATION_NO' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="registrationNumber">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.reference_bank' | translate }}</label>
+                <select type="text" class="form-select custom-input" value="pune"
+                  formControlName="refferedBankAccounts">
+                  <option>xyz</option>
+                  <option>xyz</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.Classification' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune"
+                  formControlName="classificationSociety">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.igs' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="igs">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.ship_manager' | translate }}</label>
+                <select type="text" class="form-select custom-input" value="pune" formControlName="shipManager">
+                  <option>xyz</option>
+                  <option>xyz</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.integration_id' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="integrationId">
+              </div>
+              <div class="col-md-4">
+                <label class="mb-0 p-0 form-label">{{'stolt.masters.vessel-Master.efective_date' | translate }}<span
+                  class="text-danger">*</span></label>
+                <mat-form-field appearance="outline" class="custom-date-picker">
+                 <div class="d-flex align-items-center  w-100">
+                  <input matInput
+                  [matDatepicker]="pickerEtay" formControlName="effectiveDate" class="h-0"/>
+                <mat-datepicker-toggle matSuffix [for]="pickerEtay"></mat-datepicker-toggle>
+                 </div>
+                  <mat-datepicker #pickerEtay></mat-datepicker>
+                </mat-form-field>
+                <mat-error>
+                  <div  *ngIf="submitted && f?.effectiveDate?.errors?.required" class="set-error-msg">
+                    {{ 'stolt.masters.vessel-Master.vesselvalidation.effectivedatevalidation' | translate }}</div>
+              </mat-error>
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.is_active' | translate }}<span
+                    class="text-danger">*</span></label>
+                <input type="checkbox" value="pune" formControlName="isActive"
+                  [ngClass]="{ 'is-invalid': submitted && f.isActive.errors }">
+                <div *ngIf="submitted && f.isActive.errors" class="invalid-feedback">
+                  <div *ngIf="f.isActive.errors.required">
+                    {{ 'stolt.masters.vessel-Master.vesselvalidation.isactivevalidation' | translate }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.gt' | translate }} </label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="gt">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.nt' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="nt">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.rgt' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="rgt">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.sdwt' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="sdwt">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.sbt' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="sbt">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.panamagt' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="panamagt">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.panamant' | translate }} </label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="panamant">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.suezgt' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="suezgt">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.sueznt' | translate }} </label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="sueznt">
+              </div>
+              <div class="form-group wrap-form-action">
+                <button (click)="onCloseVessel($event)" class="btn1 btn-lg float-end"
+                  type="submit">
+                  {{'common.cancel' |translate}}
+                </button>
+                <button class="btn btn-outline-primary btn-lg float-end" type="submit" (click)="vesselMasters()">
+                  {{'common.next' |translate}}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </aw-wizard-step>
+      <aw-wizard-step>
+        <ng-template awWizardStepSymbol let-wizardStep="wizardStep">
+          <em *ngIf="wizardStep.completed" class="bi bi-check-lg"></em>
+        </ng-template>
+        <div class="row">
+          <div class="col-md-12">
+            <form class="row g-3 mt-3" [formGroup]="vesselMastersFormOne">
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.draftsw' | translate }} </label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="draftsw">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.loa' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="loa">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.beam' | translate }} </label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="beam">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.module_depth' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="moduleDepth">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.lbp' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="lbp">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.C_B_M' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="cbm">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.winterswDeadwt' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="winterswDeadwt">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.Tropical' | translate }} </label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="tropicalswDeadwt">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.Tropical_fw' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="tropicalfwDeadwt">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.Engine_Type' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="engineType">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.no_of_engin' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="noOfEngines">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.enginePower' | translate }} </label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="enginePower">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.Propulsion' | translate }} </label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="propulsionType">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.propellers' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="noOfPropellers">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.Thruster' | translate }} </label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="noOfSternThruster">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.Bow_Thruster' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="noOfBowThruster">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.Bow_Thruster_power' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="bowThrusterPower">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.max_spee' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="maxSpeed">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.cranes_no' | translate }} </label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="noOfCranes">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.Hatches_no' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="noOfHatches">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.Grain/Bale' | translate }} </label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="grain">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.capacity_crane' | translate }} </label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="capacityOfCranes">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.no_tank' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="noOfHold">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.no_grabs' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="noOfGrabs">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.Satellite_Phone' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="satellitePhone">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.Satellite_fax' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="satelliteFax">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.cellPhone' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="cellPhone"
+                  [class.is-invalid]="vesselMastersFormOne.get('cellPhone').invalid && vesselMastersFormOne.get('cellPhone').touched">
+                <div
+                  *ngIf="(vesselMastersFormOne.get('cellPhone').invalid && vesselMastersFormOne.get('cellPhone').touched) || vesselMastersFormOne.get('cellPhone').dirty"
+                  class="invalid-feedback">
+                  <div *ngIf="vesselMastersFormOne.get('cellPhone').errors?.pattern">
+                    {{ "error.err_valid_phone" | translate }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.email' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="email"
+                  [class.is-invalid]="vesselMastersFormOne.get('email').invalid && vesselMastersFormOne.get('email').touched">
+                <div
+                  *ngIf="(vesselMastersFormOne.get('email').invalid && vesselMastersFormOne.get('email').touched) || vesselMastersFormOne.get('email').dirty"
+                  class="invalid-feedback">
+                  <div *ngIf="vesselMastersFormOne.get('email').errors?.pattern">
+                    {{ "error.err_valid_email" | translate }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.telex_no' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="telexNo">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.masterName | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="masterName">
+              </div>
+             <div class="form-group wrap-form-action">
+                <button awPreviousStep class="btn btn-outline-secondary btn-lg float-end" type="submit">
+                  {{'common.previous'|translate}}
+                </button>
+                <button class="btn btn-outline-primary btn-lg float-end" type="submit" (click)="vesselMastersOne()">
+                  {{'common.add'|translate}}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </aw-wizard-step>
+      <aw-wizard-step>
+        <ng-template awWizardStepSymbol let-wizardStep="wizardStep">
+          <em *ngIf="wizardStep.completed" class="bi bi-check-lg"></em>
+        </ng-template>
+        <div class="row align-items-center">
+          <div class="col-md-12">
+            <form class="row g-3 mt-3 align-items-center" [formGroup]="vesselMastersFormTwo">
+              <div class="col-md-4">
+                <label class="mb-0 p-0 form-label">{{'stolt.masters.vessel-Master.creation_date' | translate }}</label>
+                <mat-form-field appearance="outline" class="custom-date-picker">
+                 <div class="d-flex align-items-center  w-100">
+                  <input matInput
+                  [matDatepicker]="pickerEtas" formControlName="creationDate" class="h-0"/>
+                <mat-datepicker-toggle matSuffix [for]="pickerEtas"></mat-datepicker-toggle>
+                 </div>
+                  <mat-datepicker #pickerEtas></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <label class="mb-0 p-0 form-label">{{'stolt.masters.vessel-Master.checked_date' | translate }}</label>
+                <mat-form-field appearance="outline" class="custom-date-picker">
+                 <div class="d-flex align-items-center  w-100">
+                  <input matInput
+                  [matDatepicker]="pickerEtaw" formControlName="checkedDate" class="h-0"/>
+                <mat-datepicker-toggle matSuffix [for]="pickerEtaw"></mat-datepicker-toggle>
+                 </div>
+                  <mat-datepicker #pickerEtaw></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.match_strength' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="matchStrength">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.sanction_name' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="sanctionName">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.category_type' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="matchCategoryType">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.regit_country' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="registeredCountry">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.status' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="status">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.description' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="description">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.entity_type' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="entityType">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.sources' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="sources">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.comments' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="comments">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.ownerPDF' | translate }}</label>
+                <input type="checkbox" value="pune" formControlName="isOwnerPdf">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.ownerPercent' | translate }}</label>
+                <input type="number" class="form-control custom-input" value="pune" formControlName="ownersPDFPercent">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.char_pdf' | translate }}</label>
+                <input type="checkbox" value="pune" formControlName="isChartererPdf">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.char_pdf_per' | translate }}</label>
+                <input type="number" class="form-control custom-input" value="pune"
+                  formControlName="charterersPDFPercent">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.vessel_iom' | translate }}<span class="text-danger">*</span></label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="vesselIMO"
+                  [ngClass]="{ 'is-invalid': submitted && f2.vesselIMO.errors }">
+                <div *ngIf="submitted && f2.vesselIMO.errors" class="invalid-feedback">
+                  <div *ngIf="f2.vesselIMO.errors.required">
+                    {{ 'stolt.masters.vessel-Master.vesselvalidation.imovalidation' | translate }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="mb-0 p-0 form-label">{{'stolt.masters.vessel-Master.vessel_reg_date' | translate }}<span
+                  class="text-danger">*</span></label>
+                <mat-form-field appearance="outline" class="custom-date-picker">
+                 <div class="d-flex align-items-center  w-100">
+                  <input matInput
+                  [matDatepicker]="pickerEtay1" formControlName="vesselRegistrationDate" class="h-0"/>
+                <mat-datepicker-toggle matSuffix [for]="pickerEtay1"></mat-datepicker-toggle>
+                 </div>
+                  <mat-datepicker #pickerEtay1></mat-datepicker>
+                </mat-form-field>
+                <mat-error>
+                  <div  *ngIf="submitted && f2?.vesselRegistrationDate?.errors?.required" class="set-error-msg">
+                    {{ 'stolt.masters.vessel-Master.vesselvalidation.registrationdatevalidation' | translate }}</div>
+              </mat-error>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.operator' | translate }}<span class="text-danger">*</span></label>
+                <select class="form-select custom-input" value="pune" formControlName="operator"
+                  [ngClass]="{ 'is-invalid': submitted && f2.operator.errors }">
+                  <option>Operator</option>
+                </select>
+                <div *ngIf="submitted && f2.operator.errors" class="invalid-feedback">
+                  <div *ngIf="f2.operator.errors.required">
+                    {{ 'stolt.masters.vessel-Master.vesselvalidation.operatorvalidation' | translate }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.legal_entity' | translate }}<span class="text-danger">*</span></label>
+                <select class="form-select custom-input" value="pune" formControlName="legalEntity"
+                  [ngClass]="{ 'is-invalid': submitted && f2.legalEntity.errors }">
+                  <option>Legal Entity</option>
+                </select>
+                <div *ngIf="submitted && f2.legalEntity.errors" class="invalid-feedback">
+                  <div *ngIf="f2.legalEntity.errors.required">
+                    {{ 'stolt.masters.vessel-Master.vesselvalidation.legalentityvalidation' | translate }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.ownerpdfmail' | translate }}<span class="text-danger">*</span></label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="ownersPDFToMail">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.ownerpdfcc' | translate }}<span class="text-danger">*</span></label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="ownersPDFCCMail">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.ownerpdftext' | translate }}<span class="text-danger">*</span></label>
+                <textarea type="text" class="form-control custom-input" value="pune"
+                  formControlName="ownersPDFEmailText"></textarea>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.char_pdf_mail' | translate }}<span class="text-danger">*</span></label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="chartererPDFToMail">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.char_pdf_ccmail' | translate }}<span class="text-danger">*</span></label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="chartererPDFCCMail">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.char_pdf_textmail' | translate }}<span class="text-danger">*</span></label>
+                <textarea type="text" class="form-control custom-input" value="pune"
+                  formControlName="chartererPDFEmailText"></textarea>
+              </div>
+ <div class="form-group wrap-form-action">
+                <button awPreviousStep class="btn btn-outline-secondary btn-lg float-end" type="submit">
+                  {{'common.previous' |translate}}
+                </button>
+                <button class="btn btn-outline-primary btn-lg float-end" type="submit" (click)="vesselMastersTwo()">
+                  {{'common.next' |translate}}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </aw-wizard-step>
+      <aw-wizard-step>
+        <ng-template awWizardStepSymbol let-wizardStep="wizardStep">
+          <em *ngIf="wizardStep.completed" class="bi bi-check-lg"></em>
+        </ng-template>
+        <div class="row">
+          <div class="col-md-12">
+            <form class="row g-3 mt-3" [formGroup]="vesselMastersFormThree">
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.vessel_mail' | translate }}</label>
+                <input type="text" class="form-control custom-input" value="pune" formControlName="vesselEmail">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.pda_advance_per' | translate }}</label>
+                <input type="text" class="form-control custom-input" placeholder="SHIPEASY Product Id" value="India"
+                  formControlName="pdaAdvancePercentage">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.af_advance_per' | translate }}</label>
+                <input type="text" class="form-control custom-input" placeholder="SHIPEASY Product Id" value="Product 123"
+                  formControlName="afAdvancePercentage">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{'stolt.masters.vessel-Master.ida_advance_per' | translate }}</label>
+                <input type="text" class="form-control custom-input" aria-label="Mapping With Customer Master"
+                  formControlName="idaAdvancePercentage">
+              </div>
+             <div class="form-group wrap-form-action">
+                <button awPreviousStep class="btn btn-outline-secondary btn-lg float-end" type="submit">
+                  {{'common.previous'|translate}}
+                </button>
+                <button class="btn btn-outline-primary btn-lg float-end" type="submit" (click)="vesselMastersThree()">
+                  {{'common.add'|translate}}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </aw-wizard-step>
+    </aw-wizard>
+  </div>
+
+</div>

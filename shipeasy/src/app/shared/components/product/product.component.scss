@@ -1,0 +1,59 @@
+.width15 {
+	width: 15%;
+}
+
+.width25 {
+	width: 25%;
+}
+
+// @media only screen and (max-width: 760px),
+// (min-device-width: 768px) and (max-device-width: 1024px) {
+
+
+// 	/*
+// 	Label the data
+// 	*/
+// 	td:nth-of-type(1):before {
+// 		content: "Product Name";
+// 	}
+
+// 	td:nth-of-type(2):before {
+// 		content: "Product Type";
+// 	}
+
+// 	td:nth-of-type(3):before {
+// 		content: "SHIPEASY";
+// 	}
+
+// 	td:nth-of-type(4):before {
+// 		content: "Action";
+// 	}
+
+// }
+
+.product-bottom-alignment-input {
+	@media screen and (max-width: 767px) {
+		padding: 0 15px 20px 15px;
+	}
+}
+
+.globally-chnage-mobile-view {
+	margin-bottom: 10px;
+}
+
+.uppercase {
+	white-space: wrap;
+	width: 550px;
+}
+
+.wrap{
+  white-space:wrap;
+  width: 350px;
+}
+
+.wrap1{
+	white-space:wrap;
+  width:250px;
+}
+
+

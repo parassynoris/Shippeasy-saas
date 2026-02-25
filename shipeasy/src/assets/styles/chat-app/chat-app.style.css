@@ -1,0 +1,91 @@
+/* CHAT APP STYLES */
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: "Roboto", sans-serif !important;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+/* // Global Styles */
+
+.mat-dialog-container {
+  /* background: transparent !important; */
+  box-shadow: none;
+  /* position: relative;
+  left: 0;
+  top: 0; */
+  overflow: auto;
+  border-radius: 12px !important;
+  padding: 24px !important;
+  padding-right: 5px;
+} 
+
+/* // Global Styles */
+.chat-modal-container .mat-dialog-container {
+  background: transparent !important;
+  box-shadow: none;
+  position: relative;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+  padding: 0 !important;
+  padding-right: 5px;
+  border-radius: 12px !important;
+}
+
+.chat-modal-container .mat-dialog-container .mat-icon-button {
+    width: 40px !important;
+} 
+.chat-modal-container .mat-dialog-container .mat-mini-fab {
+    width: 40px !important;
+} 
+
+.chat-modal-container.cdk-overlay-pane {
+  max-width: 100% !important;
+}
+
+.chat-menu .mat-menu-item {
+  height: 32px !important;
+  line-height: 32px !important;
+  padding: 0 16px !important;
+  gap: 8px;
+}
+
+.chat-select.mat-select-panel {
+  margin-top: 80px;
+  margin-left: 18px;
+}
+
+.chat-menu .mat-menu-item span {
+  font-size: 12px;
+  line-height: 24px;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+  gap: 8px;
+}
+.chat-menu.mat-menu-panel {
+  min-height: 32px !important;
+}
+
+.mat-pseudo-checkbox-checked {
+  background: #155cac !important;
+}
+
+.mat-select-panel {
+  margin-top: 40px;
+}
+
+@media (min-width: 992px) { 
+  /* Not Required */
+  .chat-modal-container.cdk-overlay-pane{
+    /* position: absolute !important;
+    top: 133px;
+    height: 500px !important; */
+  }
+ }

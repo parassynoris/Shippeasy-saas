@@ -1,0 +1,331 @@
+ <div class="wrap-form-field table-with-gheading">
+  <div class="row align-items-center">
+    <div class="col-md-12">
+      <form [formGroup]="newCredit" class="row g-4 align-items-center">
+        <div class="col-md-3" *ngIf="isEdit">
+
+          <label class="form-label">Debit Note No</label>
+
+          <input disabled class="form-control custom-input" type="text" formControlName="credit_note_no" />
+          <div *ngIf="submitted && f.credit_note_no.errors" class="invalid-feedback">
+            <div *ngIf="f.credit_note_no.errors.required"> {{
+              'stolt.finance.credit.new_credit_note.credit_note_no_label_required' | translate }}</div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">{{ 'stolt.finance.credit.new_credit_note.batch_no' | translate }} <span class="text-danger">*</span></label>
+
+          <nz-select class="form-select " nzShowSearch nzAllowClear (ngModelChange)="getContainerData($event)"
+            formControlName="batch_no" [ngClass]="{'is-invalid': submitted && f.batch_no.errors}" nzPlaceHolder="Job Number">
+            <nz-option *ngFor="let data of batchList" [nzLabel]="data.batchNo"
+              [nzValue]="data.batchId"></nz-option>
+          </nz-select>
+          <div *ngIf="submitted && f.batch_no.errors" class="invalid-feedback">
+            <div *ngIf="f.batch_no.errors.required"> Job No is required</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Invoice No  <span class="text-danger">*</span></label>
+
+          <nz-select class="form-select " nzShowSearch nzAllowClear (ngModelChange)="getChargeDetails($event)"
+            formControlName="invoiceNo" [ngClass]="{'is-invalid': submitted && f.invoiceNo.errors}" nzPlaceHolder="Invoice Number">
+            <nz-option *ngFor="let data of batchInvoiceList" [nzLabel]="data.invoiceNo"
+              [nzValue]="data.invoiceId"></nz-option>
+          </nz-select>
+          <div *ngIf="submitted && f.invoiceNo.errors" class="invalid-feedback">
+            <div *ngIf="f.invoiceNo.errors.required">Invoice No is required</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Debit From <span class="text-danger">*</span></label>
+          <nz-select class="form-select " nzShowSearch nzAllowClear (ngModelChange)="onCreditToChange()"
+            formControlName="debit_from" [ngClass]="{'is-invalid': submitted && f.debit_from.errors}" nzPlaceHolder="Debit From">
+            <nz-option *ngFor="let data of partyMasterList" nzLabel="{{data?.partyShortcode}}{{data?.partyShortcode ? '-': ''}}{{data.name}}"
+              [nzValue]="data?.partymasterId"></nz-option>
+          </nz-select>
+          <div *ngIf="submitted && f.debit_from.errors" class="invalid-feedback">
+            <div *ngIf="f.debit_from.errors.required">Debit From is required</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Debit To <span class="text-danger">*</span></label>
+          <nz-select class="form-select " nzShowSearch nzAllowClear (ngModelChange)="onCreditToChange()"
+            formControlName="credit_to" [ngClass]="{'is-invalid': submitted && f.credit_to.errors}" nzPlaceHolder="Debit To">
+            <nz-option *ngFor="let data of partyMasterList" nzLabel="{{data?.partyShortcode}}{{data?.partyShortcode ? '-': ''}}{{data.name}}"
+              [nzValue]="data?.partymasterId"></nz-option>
+          </nz-select>
+          <div *ngIf="submitted && f.credit_to.errors" class="invalid-feedback">
+            <div *ngIf="f.credit_to.errors.required">Debit To is required</div>
+          </div>
+        </div>
+
+
+        <div class="col-md-3">
+          <label class="form-label">{{ 'stolt.finance.credit.new_credit_note.currency' | translate }} <span class="text-danger">*</span></label>
+          <nz-select class="form-select " nzShowSearch nzAllowClear formControlName="currency"
+            [ngClass]="{'is-invalid': submitted && f.currency.errors}" nzPlaceHolder="Currency">
+            <nz-option *ngFor="let data of currencyList" [nzLabel]="data.currencyShortName"
+              [nzValue]="data.currencyId"></nz-option>
+          </nz-select>
+          <div *ngIf="submitted && f.currency.errors" class="invalid-feedback">
+            <div *ngIf="f.currency.errors.required"> {{ 'stolt.finance.credit.new_credit_note.currency' | translate }}
+              {{ 'common.isRequired' | translate }}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">{{ 'stolt.finance.credit.new_credit_note.bank_name' | translate }} <span class="text-danger">*</span></label>
+          <nz-select class="form-select " nzShowSearch nzAllowClear (ngModelChange)="onBankChange()"
+            formControlName="bank_name" [ngClass]="{'is-invalid': submitted && f.bank_name.errors}" nzPlaceHolder="Bank Name">
+            <nz-option *ngFor="let data of bankList" [nzLabel]="data.bankName"
+              [nzValue]="data.bankId"></nz-option>
+          </nz-select>
+          <div *ngIf="submitted && f.bank_name.errors" class="invalid-feedback">
+            <div *ngIf="f.bank_name.errors.required"> Bank {{ 'common.isRequired' | translate }}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">{{ 'stolt.finance.credit.new_credit_note.amount_received' | translate }} </label>
+          <input class="form-control custom-input" type="text" formControlName="amount" placeholder="Amount Received" />
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">{{ 'stolt.finance.credit.new_credit_note.payment_mode' | translate }} <span class="text-danger">*</span></label>
+
+          <nz-select class="form-select " nzShowSearch nzAllowClear (ngModelChange)="onBankChange()"
+            formControlName="payment_mode" [ngClass]="{'is-invalid': submitted && f.payment_mode.errors}" nzPlaceHolder="Payment Mode">
+            <nz-option *ngFor="let data of paymentMode" [nzLabel]="data.typeName"
+              [nzValue]="data.systemtypeId"></nz-option>
+          </nz-select>
+          <div *ngIf="submitted && f.payment_mode.errors" class="invalid-feedback">
+            <div *ngIf="f.payment_mode.errors.required"> {{ 'stolt.finance.credit.new_credit_note.payment_mode' |
+              translate }} {{ 'common.isRequired' | translate }}
+            </div>
+          </div>
+
+        </div>
+
+
+        <div class="col-md-3">
+          <label class="form-label">{{ 'stolt.finance.credit.new_credit_note.vessel_name' | translate }}</label>
+          <input class="form-control custom-input" disabled type="text" formControlName="vessel" placeholder="Vessel Name" />
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">{{ 'stolt.finance.credit.new_credit_note.voyage_no' | translate }}</label>
+          <input class="form-control custom-input" disabled type="text" formControlName="voyage" placeholder="Voyage Number"/>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">{{ 'stolt.finance.credit.new_credit_note.move_no' | translate }}</label>
+          <input class="form-control custom-input" disabled type="text" formControlName="move_no" placeholder="Move Number"/>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">{{ 'stolt.finance.credit.new_credit_note.payment_reference_no' | translate
+            }} <span class="text-danger">*</span></label>
+          <input class="form-control custom-input" formControlName="payment_ref_no" type="text" value=""
+            [ngClass]="{'is-invalid': submitted && f.payment_ref_no.errors}" value="" placeholder="Payment Reference No"/>
+          <div *ngIf="submitted && f.payment_ref_no.errors" class="invalid-feedback">
+            <div *ngIf="f.payment_ref_no.errors.required"> {{
+              'stolt.finance.credit.new_credit_note.payment_reference_no' | translate }}
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col-md-3">
+          <label class="mb-0 p-0 form-label">{{
+            'stolt.finance.credit.new_credit_note.recieved_on'
+            | translate
+            }}</label>
+          <mat-form-field appearance="outline" class="custom-date-picker">
+           <div class="d-flex align-items-center  w-100">
+            <input matInput
+            [matDatepicker]="pickerEtay" formControlName="credit_note_date" class="h-0" placeholder="Recieved On"/>
+          <mat-datepicker-toggle matSuffix [for]="pickerEtay"></mat-datepicker-toggle>
+           </div>
+            <mat-datepicker #pickerEtay></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">{{ 'stolt.finance.credit.new_credit_note.upload_document' | translate }}</label>
+          <input class="form-control custom-input" [disabled]="this.isType === 'show'" (change)="selectFile($event)"
+            type="file" id="formFileMultiple">
+          <span *ngIf="urlParam.id">{{ this.filename }}</span>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">{{ 'stolt.finance.credit.new_credit_note.additional_comment' | translate }} </label>
+          <input class="form-control custom-input" type="text" formControlName="comment" placeholder="Additional Comment"/>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+
+  <div class="wrap-table-area my-5">
+    <div class="row">
+      <div class="col-md-12">
+      
+      </div>
+      <div class="col-md-12">
+        <div class="table-responsive">
+          <table aria-describedby="mytable" class="gfg">
+            <thead>
+              <tr class="field-name">
+              
+                <th >Action</th>
+                <th scope="col">Charge Name</th>
+                <th scope="col">Ex Rate</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Rate</th>
+                <th scope="col">HSN Code</th>
+                <th scope="col">Charge Amount</th>
+                <th scope="col">Taxable amount</th>
+                <th scope="col">Tax %</th>
+                <th scope="col">Exemp Flag</th>
+                <th scope="col">Exclude GST</th>
+                <!-- <th scope="col" *ngIf="selectedInvoice?.gstType === 'igst'">IGST</th>
+                <th scope="col" *ngIf="selectedInvoice?.gstType === 'tax'">TAX</th>
+                <th scope="col" *ngIf="selectedInvoice?.gstType !== 'igst'">SGST</th>
+                <th scope="col" *ngIf="selectedInvoice?.gstType !== 'igst'">CGST</th> -->
+                <th scope="col">Tax Amount</th>
+                <th scope="col">Total Amount</th>
+                <!-- <th scope="col">Container Number</th> -->
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of chargeItemList">
+                <td><input type="checkbox" [(ngModel)]="data.isSelected" 
+                  (change)="checkedTot()"/></td>
+                <td>{{data?.costItemName}}</td>
+                <td>{{data?.selEstimates?.exChangeRate}}</td>
+                <td>{{data?.quantity}}</td>
+                <td class="text-end">{{data?.selEstimates?.rate | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td>
+                <td>{{data?.hsnCode || ''}}</td>
+                <td class="text-end">{{data?.selEstimates?.rate | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td>
+                <td class="text-end">{{data?.selEstimates?.taxableAmount | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td>
+                <td class="text-end">{{data?.tax[0]?.taxRate | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td>
+                <td>{{data?.exemp?'Y':'N'}}</td>
+                <td><input type="checkbox" [(ngModel)]="data.excludeGst"
+                  (change)="calcuTaxAmt();calcTotalAmt()" /></td>
+                  <!-- <td *ngIf="data?.gstType === 'igst' || data?.gstType === 'tax'">{{ data?.selEstimates?.igst }}</td>
+                  <td *ngIf="data?.gstType !== 'igst'">{{ data?.gstType !== 'igst' ? data?.selEstimates?.sgst : 0}}</td>
+                  <td *ngIf="data?.gstType !== 'igst' ">{{data?.gstType !== 'igst' ? data?.selEstimates?.cgst : 0}}</td> -->
+                <td class="text-end">{{ calTotalTax(data)| number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td>
+                <td class="text-end">{{totalCreditValue(data)| number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td>
+                <!-- <td><span *ngFor="let c of data?.containerNumber">{{c}} ,</span></td> -->
+               
+              </tr>
+              <tr class="footer-ui" *ngIf="chargeItemList?.length !== 0">
+                <th scope="col"  colspan="10" class="footer-heading">{{
+                  'stolt.finance.credit.new_credit_note.total_payment' | translate }}</th>
+                   <!-- <th scope="col" *ngIf="selectedInvoice?.gstType === 'igst' || selectedInvoice?.gstType === 'tax'" colspan="11" class="footer-heading">{{
+                    'stolt.finance.credit.new_credit_note.total_payment' | translate }}</th> -->
+                <td class="text-end">{{totalTaxAmt | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td>
+                <td class="text-end" colspan="1">{{totalTotAmt | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="no-data-availble" *ngIf="chargeItemList?.length === 0">
+          {{'common.no_data' | translate}}
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+  <div class="wrap-table-area mb-5" *ngIf="false">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2"
+          *ngIf="this.isType !== 'show'">
+          <div class="mt-2">
+            <a class="new-action" (click)="addAssignContainerOpen(assignContainer, 0)">Add Invoice
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="table-responsive">
+          <table aria-describedby="mytable" class="gfg">
+            <thead>
+              <tr class="field-name">
+                <th scope="col">{{ 'stolt.finance.credit.new_credit_note.batch_no' | translate }}</th>
+                <th scope="col">{{ 'stolt.finance.credit.new_credit_note.invoice_no' | translate }}</th>
+                <th scope="col">{{ 'stolt.finance.credit.new_credit_note.invoice_date' | translate }}</th>
+                <th scope="col">{{'stolt.finance.credit.new_credit_note.charge_item'| translate }}</th>
+                <th scope="col">{{ 'stolt.finance.credit.new_credit_note.remarks' | translate }}</th>
+                <th scope="col">{{ 'stolt.finance.credit.new_credit_note.invoice_amount' | translate }}</th>
+                <th scope="col"> Charge Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let container of invoiceData">
+                <td scope="col">{{ container.batchNo}}</td>
+                <td scope="col">{{ container.invoiceNo }}</td>
+                <td scope="col">{{ container.invoice_date | date : 'dd-MM-yyyy' }}</td>
+                <td scope="col"><span *ngFor="let cost of container?.costItems">{{cost?.costItemName}},
+                  </span></td>
+                <td scope="col">{{ container.remarks }}</td>
+                <td scope="col">{{ container.invoiceAmount }}</td>
+                <td scope="col"><span *ngFor="let cost of container?.costItems">{{cost?.totalAmount}},
+                  </span></td>
+                <td class="action-field">
+
+                  <span nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}" class="mtop"><a><em
+                        class="bi bi-trash color-pencil-red" (click)="deleteContainer(content1, container)"></em></a>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="no-data-availble" *ngIf="invoiceData.length === 0">
+          {{'common.no_data' | translate}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-onscreen wrap-form-action mb-3">
+    <button (click)="onCloseBill($event)" class="btn1 btn-lg float-end" type="submit">
+      {{ 'common.cancel' | translate }}
+    </button>
+    <button *ngIf="isEdit" (click)="onSave($event)" class="btn btn-outline-primary btn-lg float-end " type="submit">
+      {{ 'common.update' | translate }}
+    </button>
+    <button *ngIf="isEdit"  class="btn btn-outline-primary btn-lg float-end " appAccessControl featureCode="['STFD01']" accessType="print" type="submit">
+      Print
+    </button>
+    <button *ngIf="!isEdit" (click)="onSave($event)" class="btn btn-outline-primary btn-lg float-end " type="submit">
+      {{ 'common.save' | translate }}
+    </button>
+  </div>
+</div>
+
+<ng-template #content1 let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body mt-4">
+      <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2">
+      </em>
+      <span class="text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+          No
+        </button>
+        <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+          Yes
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>

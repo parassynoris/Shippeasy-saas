@@ -1,0 +1,58 @@
+
+// @media only screen and (max-width: 760px),
+// (min-device-width: 768px) and (max-device-width: 1024px)  {
+
+    
+// 	/*
+// 	Label the data
+// 	*/
+// 	td:nth-of-type(1):before { content: "UMO Id"; }
+// 	td:nth-of-type(2):before { content: "UMO Name"; }
+// 	td:nth-of-type(3):before { content: "UOM Short"; }
+// 	td:nth-of-type(4):before { content: "Action"; }
+
+// }
+
+.mobile-view-input-alignment {
+	@media screen and (max-width: 767px)  {
+		padding: 0 15px 20px 15px ;
+	}
+}
+
+
+.globally-chnage-mobile-view {
+	margin-bottom: 10px;
+}
+
+::ng-deep {
+    .wrap-modal-autosearch {
+        nz-select {
+
+            input,
+            select {
+                padding: 0 0px !important;
+                border: 1px solid rgb(207 202 202) !important;
+            }
+        }
+
+        .nz-form-select.wrap-inline-select nz-select-top-control {
+            height: 32px !important;
+        }
+    }
+
+    .cdk-overlay-container,
+    .cdk-overlay-pane {
+        z-index: 2000 !important;
+    }
+}
+
+.nz-select-width {
+    width: 100%;
+}
+
+.form-check-label {
+    margin-right: 10px; 
+  }
+  
+
+  

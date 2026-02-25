@@ -1,0 +1,89 @@
+@import '../../../../../assets/styles/mixins/global.scss';
+
+.form-field-section {
+  .form-label {
+    font-size: 12px;
+    color: var(--theme-light-gray-color);
+    margin-bottom: 0px;
+  }
+
+  .custom-input {
+    border: 0;
+    outline: 0;
+    border-bottom: 1px solid var(--theme-border-bottom-color);
+    color: var(--theme-light-text-color);
+    @include new-heading-12;
+    font-weight: normal;
+    padding: 6px 0;
+  }
+}
+
+.form-select:focus,
+input:focus {
+  box-shadow: none;
+  border-color: var(--link-text-color);
+}
+
+.table-responsive {
+  table {
+    border-collapse: collapse;
+    width: -webkit-fill-available;
+  }
+
+  margin-top: 15px;
+
+  tbody,
+  td,
+  tfoot,
+  th,
+  thead,
+  tr {
+    border-color: inherit;
+    border-style: solid;
+    border-width: 0;
+    border: 1px solid #ced4da !important;
+    padding: 7px;
+    color: var(--theme-black-320);
+  }
+
+  a {
+    color: var(--theme-black-320);
+    text-decoration: none;
+    background-color: transparent;
+    outline: 0;
+    cursor: pointer;
+    transition: color .3s;
+    -webkit-text-decoration-skip: objects;
+    em{
+      font-size: 12px;
+      padding: 3px;
+    }
+  }
+}
+
+::ng-deep {
+
+  .cdk-overlay-container,
+  .cdk-overlay-pane {
+    z-index: 2000 !important;
+  }
+}
+
+@media only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px) {
+  td:nth-of-type(1):before {
+    content: "Document Name";
+  }
+
+  td:nth-of-type(2):before {
+    content: "Document Type";
+  }
+
+  td:nth-of-type(3):before {
+    content: "Date Uploaded";
+  }
+
+  td:nth-of-type(4):before {
+    content: "Action";
+  }
+}

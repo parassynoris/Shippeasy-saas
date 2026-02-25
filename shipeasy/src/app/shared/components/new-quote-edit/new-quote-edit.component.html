@@ -1,0 +1,1058 @@
+<div class="table-with-gheading">
+    <div class="wrapper">
+        <div class="container-fluid">
+            <div class="wrap-content">
+                <div class="row">
+                    <div class="col-sm-12 ">
+                        <div class="page-title-box">
+                            <div class="btn-group mt-2">
+                                <ol class="breadcrumb hide-phone p-0 m-0">
+                                    <!-- <li class="breadcrumb-item">{{ 'stolt.heading' | translate }}</li> -->
+                                    <li class="breadcrumb-item active">{{ 'stolt.enquiry.heading' | translate }}</li>
+                                    <li class="breadcrumb-item active">Quotation</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <ng-container>
+                        <form [formGroup]="quoteForm">
+                            <div class="col-md-12 mt-3 p-0">
+                                <div class="row g-2 " *ngIf="!loader">
+                                    <div class="col-md-3">
+                                        <label class="form-label">Trade Type</label>
+                                        <input formControlName="enquiryTypeName" class="form-control custom-input"
+                                            type="textarea" [ngClass]="{'is-invalid': submitted && f.remarks.errors}" [value]="enquiryTypeName" readonly>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="mb-0 p-0 form-label">Valid From <span
+                                                class="text-danger">*</span></label>
+                                        <mat-form-field appearance="outline" class="custom-date-picker">
+                                            <div class="d-flex align-items-center  w-100">
+                                                <input matInput [matDatepicker]="pickerEta1" formControlName="validFrom"
+                                                    (ngModelChange)="changeFromDate()" (click)="pickerEta1.open()" class="h-0" [min]="todayDate" />
+                                                <mat-datepicker-toggle matSuffix
+                                                    [for]="pickerEta1"></mat-datepicker-toggle>
+                                            </div>
+                                            <mat-datepicker #pickerEta1></mat-datepicker>
+                                        </mat-form-field>
+                                        <mat-error>
+                                            <div *ngIf="submitted && f?.validFrom?.errors?.required">Valid From
+                                                is required</div>
+                                        </mat-error>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="mb-0 p-0 form-label">Valid To <span
+                                                class="text-danger">*</span></label>
+                                        <mat-form-field appearance="outline" class="custom-date-picker">
+                                            <div class="d-flex align-items-center  w-100">
+                                                <input matInput [matDatepicker]="pickerEta10" formControlName="validTo"
+                                                    [min]="this.quoteForm.controls.validFrom.value" (click)="pickerEta10.open()"class="h-0"
+                                                    [disabled]="!this.quoteForm.controls.validFrom.value" />
+                                                <mat-datepicker-toggle matSuffix
+                                                    [for]="pickerEta10"></mat-datepicker-toggle>
+                                            </div>
+                                            <mat-datepicker #pickerEta10></mat-datepicker>
+                                        </mat-form-field>
+                                        <mat-error>
+                                            <div *ngIf="submitted && f?.validTo?.errors?.required">Valid To
+                                                is required</div>
+                                        </mat-error>
+                                    </div>
+                                   
+
+                                    <!-- <div class="col-md-3">
+                                        <label class="form-label">Shipper</label>
+                                        <input formControlName="shipperName" class="form-control custom-input"
+                                            type="textarea" [ngClass]="{'is-invalid': submitted && f.remarks.errors}" [value]="shipperName" >
+                                    </div> -->
+                                    <div class="col-md-3">
+                                        <label class="form-label">{{ 'stolt.enquiry.new.shipper' | translate }} </label>
+                                        <div class="d-flex align-items-center">
+                                          <nz-select [nzDisabled]="agentAdviceDetails?.enquiryStatus == 'Inquiry Received'"
+                                            class="form-select" nzShowSearch nzAllowClear formControlName="shipperName">
+                                            <nz-option *ngFor="let shipper of shipperList"
+                                               nzLabel="{{shipper?.partyShortcode}}{{shipper?.partyShortcode ? '-': ''}}{{shipper.name}}" [nzValue]="shipper.partymasterId"></nz-option>
+                                          </nz-select>
+                                           <!-- <em class="bi bi-plus-circle color-pencil-red pl-1"
+                                                      (click)="drawer.toggle()"></em> -->
+                                        </div>
+                                    
+                                      </div>
+                                    <div class="col-md-3">
+                                        <label for="branch" class="form-label">{{
+                                            "smartagent.smartAgent.AllformAddedit.branch" | translate
+                                            }}<span class="text-danger">*</span></label>
+                                        <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear
+                                            formControlName="branch" (ngModelChange)="setGstType()"
+                                            [ngClass]="{'is-invalid': submitted && f.branch.errors}">
+
+                                            <nz-option *ngFor="let branch of branchList" [nzLabel]="branch?.branchName"
+                                                [nzValue]="branch?.branchId"></nz-option>
+                                        </nz-select>
+
+                                        <div *ngIf="submitted && f.branch.errors" class="invalid-feedback">
+                                            <div *ngIf="f.branch.errors.required">
+                                                {{
+                                                "smartagent.smartAgent.AllformAddedit.branchisrequired"
+                                                | translate
+                                                }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3" *ngIf="!isTrasportSelf">
+                                        <label class="form-label">
+                                            {{ isTransport ? 'Transporter ' : (activeFright === 'air' ? 'Airline' : 'Carrier') }}<span class="text-danger">*</span></label>
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear
+                                            formControlName="shipping_line"
+                                            [ngClass]="{'is-invalid': submitted && f.shipping_line.errors}">
+                                            <nz-option
+                                                *ngFor="let shippingLine of shippingLineList | filterByType : 'ShipmentTypeName': activeFright"
+                                                [nzLabel]="shippingLine.name"
+                                                [nzValue]="shippingLine.shippinglineId"></nz-option>
+                                            </nz-select>
+                                        <div *ngIf="submitted && f.shipping_line.errors" class="invalid-feedback">
+                                            <div *ngIf="f.shipping_line.errors.required">
+                                                {{ isTransport ? 'Transporter ' : (activeFright === 'air' ? 'Airline' : 'Carrier') }}
+                                                is required</div>
+                                             </div>
+                                    </div>
+  
+
+                                    <div class="col-md-3" *ngIf="activeFright == 'air'">
+                                        <label class="form-label">Flight No.<span class="text-danger">*</span></label>
+
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear
+                                            formControlName="flightNo"
+                                            [ngClass]="{'is-invalid': submitted && f.flightNo.errors}">
+                                            <nz-option *ngFor="let vessel of flightList | filterByType : 'airlineId' : f.shipping_line.value" [nzLabel]="vessel?.flight"
+                                                [nzValue]="vessel?.airId"></nz-option>
+                                        </nz-select>
+                                        <div *ngIf="submitted && f.flightNo.errors" class="invalid-feedback">
+                                            <div *ngIf="f.flightNo.errors.required">Flight No. is required</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- <div class="col-md-3" *ngIf="activeFright == 'land'">
+                                        <label class="form-label">Vehicle No.<span class="text-danger">*</span></label>
+
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear
+                                            formControlName="vehicleNo"
+                                            [ngClass]="{'is-invalid': submitted && f.vehicleNo.errors}">
+                                            <nz-option *ngFor="let vessel of vehicalList | filterByType : 'typeCarrierId' : f.shipping_line.value" [nzLabel]="vessel?.vehicleLicence"
+                                                [nzValue]="vessel?.landId"></nz-option>
+                                        </nz-select>
+                                        <div *ngIf="submitted && f.vehicleNo.errors" class="invalid-feedback">
+                                            <div *ngIf="f.vehicleNo.errors.required">Vehicle No. is required</div>
+                                        </div>
+                                    </div> -->
+                                 
+                                    <ng-container *ngIf="activeFright == 'ocean'">
+                                        <div class="col-md-3">
+                                            <label class="form-label">Vessel Name<span
+                                                    class="text-danger">*</span></label>
+
+                                            <nz-select class="form-select" nzShowSearch nzAllowClear (ngModelChange)="setVoyage($event)"
+                                                formControlName="plannedVessel"
+                                                [ngClass]="{'is-invalid': submitted && f.plannedVessel.errors}">
+                                                <nz-option *ngFor="let vessel of vesselList  "
+                                                    [nzLabel]="vessel.vesselName"
+                                                    [nzValue]="vessel.vesselId"></nz-option>
+                                            </nz-select>
+                                            <div *ngIf="submitted && f.plannedVessel.errors" class="invalid-feedback">
+                                                <div *ngIf="f.plannedVessel.errors.required">Vessel Name is required
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <label class="form-label">Voyage No.<span
+                                                    class="text-danger">*</span></label>
+                                            <input formControlName="voyageNumber" class="form-control custom-input"
+                                                type="text"
+                                                [ngClass]="{'is-invalid': submitted && f.voyageNumber.errors}">
+
+                                                <!-- <nz-select class="form-select" nzShowSearch  
+                                                            formControlName="voyageNumber"
+                                                            [ngClass]="{'is-invalid': submitted && f.voyageNumber.errors}">
+                                                            <nz-option *ngFor="let vessel of voyageList"
+                                                                [nzLabel]="vessel?.voyage_number"
+                                                                [nzValue]="vessel?.voyage_number"></nz-option>
+                                                        </nz-select> -->
+
+                                            <div *ngIf="submitted && f.voyageNumber.errors" class="invalid-feedback">
+                                                <div *ngIf="f.voyageNumber.errors.required">Voyage No. is required</div>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+
+
+                                 
+
+                                  
+
+                                    <!-- <div class="col-md-3" *ngIf="!isTransport">
+                                        <label class="form-label">Port of Loading<span class="text-danger">*</span>
+                                        </label>
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear
+                                            formControlName="load_port"
+                                            [ngClass]="{'is-invalid': submitted && f.load_port.errors}">
+                                            <nz-option *ngFor="let port of portList | filterByFlag: activeFrightAir"
+                                                [nzLabel]="port?.portName"
+                                                [nzValue]="port?.portId"></nz-option>
+                                        </nz-select>
+                                        <div *ngIf="submitted && f.load_port.errors" class="invalid-feedback">
+                                            <div *ngIf="f.load_port.errors.required">{{ 'stolt.enquiry.new.loadPort' |
+                                                translate }} is
+                                                required</div>
+                                        </div>
+                                    </div> -->
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">Place Of Carrier Receipt</label>
+
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear
+                                            formControlName="carrierReceipt"
+                                            [ngClass]="{'is-invalid': submitted && f.carrierReceipt.errors}">
+
+                                            <nz-option *ngFor="let icd of sort(locationList ,'locationName')"
+                                                [nzLabel]="icd.locationName" [nzValue]="icd.locationId"></nz-option>
+                                            <!-- <nz-option *ngFor="let port of  portList"
+                                                [nzLabel]="port?.portName"
+                                                [nzValue]="port?.portId"></nz-option> -->
+                                        </nz-select>
+                                    </div>
+
+                                    <div class="col-md-3" *ngIf="!isTransport">
+                                        <label class="form-label"> {{activeFrightAir ? 'Airport' : 'Port'}} of Loading<span class="text-danger">*</span>
+                                        </label>
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear
+                                            formControlName="load_port"
+                                            [ngClass]="{'is-invalid': submitted && f.load_port.errors}">
+                                            <nz-option *ngFor="let port of portList | filterByFlag: activeFrightAir"
+                                                [nzLabel]="port?.portName"
+                                                [nzValue]="port?.portId"></nz-option>
+                                        </nz-select>
+                                        <div *ngIf="submitted && f.load_port.errors" class="invalid-feedback">
+                                            <div *ngIf="f.load_port.errors.required"> {{activeFrightAir ? 'Airport' : 'Port'}} of Loading is
+                                                required</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3" *ngIf="isTransport">
+                                        <label class="form-label">Origin<span class="text-danger">*</span>
+                                        </label>
+                                        <nz-select *ngIf="enquiryDetails?.transportDetails?.origin[0]?.locationType === 'port'" class="form-select" nzShowSearch nzAllowClear
+                                            formControlName="load_port"
+                                            [ngClass]="{'is-invalid': submitted && f.load_port.errors}">
+                                            <nz-option *ngFor="let port of portList | filterByFlag: activeFrightAir"
+                                                [nzLabel]="port?.portName"
+                                                [nzValue]="port?.portId"></nz-option>
+                                        </nz-select>
+
+                                        <nz-select *ngIf="enquiryDetails?.transportDetails?.origin[0]?.locationType === 'location'" class="form-select" nzShowSearch nzAllowClear
+                                            formControlName="load_port"
+                                            [ngClass]="{'is-invalid': submitted && f.load_port.errors}"> 
+                                            <nz-option *ngFor="let icd of sort(locationList ,'locationName')"
+                                                [nzLabel]="icd.locationName" [nzValue]="icd.locationId"></nz-option> 
+                                        </nz-select>
+
+                                        <input type="text" class="form-control custom-input" *ngIf="enquiryDetails?.transportDetails?.origin[0]?.locationType === 'address'"  formControlName="load_port"
+                                        [ngClass]="{'is-invalid': submitted && f.load_port.errors}">
+
+                                        <div *ngIf="submitted && f.load_port.errors" class="invalid-feedback">
+                                            <div *ngIf="f.load_port.errors.required">{{ 'stolt.enquiry.new.loadPort' |
+                                                translate }} is
+                                                required</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="mb-0 p-0 form-label">Estimated Time Of Departure</label>
+                                        <nz-date-picker 
+                                          nzShowTime
+                                          nzPlaceHolder="ETD date"
+                                          class="form-select custom-input" 
+                                          nzFormat="dd-MM-yyyy HH:mm:ss"
+                                          formControlName="etd" 
+                                          [nzDisabled]="bookingCancel" 
+                                          [nzDisabledDate]="disabledDate"
+                                          class="w-100" 
+                                          style="width: 100%;">
+                                        </nz-date-picker>
+                                      </div>
+ 
+
+                        
+ 
+                                    <div class="col-md-3" *ngIf="!isTransport">
+                                        <label class="form-label">{{activeFrightAir ? 'Airport' : 'Port'}} of Destination<span
+                                                class="text-danger">*</span></label>
+
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear
+                                            formControlName="discharge_port"
+                                            [ngClass]="{'is-invalid': submitted && f.discharge_port.errors}">
+                                            <nz-option
+                                                *ngFor="let port of  portList | filterByFlag: activeFrightAir"
+                                                [nzLabel]="port?.portName"
+                                                [nzValue]="port?.portId"></nz-option>
+                                        </nz-select>
+                                        <div *ngIf="submitted && f.discharge_port.errors" class="invalid-feedback">
+                                            <div *ngIf="f.discharge_port.errors.required">{{activeFrightAir ? 'Airport' : 'Port'}} of Destination is required</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3" *ngIf="isTransport">
+                                        <label class="form-label">Destination<span class="text-danger">*</span>
+                                        </label>
+                                        <nz-select *ngIf="enquiryDetails?.transportDetails?.origin[0]?.locationType === 'port'" class="form-select" nzShowSearch nzAllowClear
+                                            formControlName="discharge_port"
+                                            [ngClass]="{'is-invalid': submitted && f.discharge_port.errors}">
+                                            <nz-option *ngFor="let port of portList | filterByFlag: activeFrightAir"
+                                                [nzLabel]="port?.portName"
+                                                [nzValue]="port?.portId"></nz-option>
+                                        </nz-select>
+
+                                        <nz-select *ngIf="enquiryDetails?.transportDetails?.origin[0]?.locationType === 'location'" class="form-select" nzShowSearch nzAllowClear
+                                            formControlName="discharge_port"
+                                            [ngClass]="{'is-invalid': submitted && f.discharge_port.errors}"> 
+                                            <nz-option *ngFor="let icd of sort(locationList ,'locationName')"
+                                                [nzLabel]="icd.locationName" [nzValue]="icd.locationId"></nz-option> 
+                                        </nz-select>
+
+                                        <input type="text" *ngIf="enquiryDetails?.transportDetails?.origin[0]?.locationType === 'address'"  formControlName="discharge_port"
+                                        [ngClass]="{'is-invalid': submitted && f.discharge_port.errors}">
+
+                                        <div *ngIf="submitted && f.discharge_port.errors" class="invalid-feedback">
+                                            <div *ngIf="f.discharge_port.errors.required">{{
+                                                'stolt.enquiry.new.dischargePort' | translate
+                                                }} is required</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- <div class="col-md-3">
+                                        <label class="mb-0 p-0 form-label">Estimated Time Of Arrival</label>
+                                        <mat-form-field appearance="outline" class="custom-date-picker">
+                                            <div class="d-flex align-items-center w-100">
+                                             <input matInput [ngxMatDatetimePicker]="etaid" formControlName="eta" placeholder="ETA date">
+                                             <mat-datepicker-toggle matSuffix [for]="etaid"></mat-datepicker-toggle>
+                                             <ngx-mat-datetime-picker [color]="color" [touchUi]="touchUi"
+                                               [enableMeridian]="enableMeridian" #etaid>
+                                             </ngx-mat-datetime-picker>
+                                           </div>
+                                         </mat-form-field>
+                                    </div> -->
+                                 
+                                    
+
+                                    <!-- <div class="col-md-3">
+                                        <label class="mb-0 p-0 form-label">Estimated Time Of Departure</label>
+                                        <mat-form-field appearance="outline" class="custom-date-picker">
+                                            <div class="d-flex align-items-center w-100">
+                                             <input matInput [ngxMatDatetimePicker]="etdid" formControlName="etd" placeholder="ETD date">
+                                             <mat-datepicker-toggle matSuffix [for]="etdid"></mat-datepicker-toggle>
+                                             <ngx-mat-datetime-picker [color]="color" [touchUi]="touchUi"
+                                               [enableMeridian]="enableMeridian" #etdid>
+                                             </ngx-mat-datetime-picker>
+                                           </div>
+                                         </mat-form-field>
+                                    </div> -->
+
+                                    
+
+                                      <div class="col-md-3">
+                                        <label class="mb-0 p-0 form-label">Estimated Time Of Arrival</label>
+                                        <nz-date-picker 
+                                          nzShowTime
+                                          nzPlaceHolder="ETA date"
+                                          class="form-select custom-input" 
+                                          nzFormat="dd-MM-yyyy HH:mm:ss"
+                                          formControlName="eta" 
+                                          [nzDisabled]="bookingCancel" 
+                                          [nzDisabledDate]="disabledDate"
+                                          class="w-100" 
+                                          style="width: 100%;">
+                                        </nz-date-picker>
+                                      </div>
+                                    
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">Place Of Carrier Delivery</label>
+
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear
+                                            formControlName="carrierDelivery"
+                                            [ngClass]="{'is-invalid': submitted && f.carrierDelivery.errors}">
+
+                                            <nz-option *ngFor="let icd of sort(locationList ,'locationName')"
+                                                [nzLabel]="icd.locationName" [nzValue]="icd.locationId"></nz-option>
+                                            <!-- <nz-option *ngFor="let port of  portList"
+                                                [nzLabel]="port?.portName"
+                                                [nzValue]="port?.portId"></nz-option> -->
+                                        </nz-select>
+                                    </div>
+
+
+                                    <div *ngIf="!activeFrightAir && !(isTransport)" class="col-md-3" >
+                                        <label class="form-label">Destination Port Free Days</label>
+                                        <input formControlName="destPortFreeDays" class="form-control custom-input"
+                                            type="number"
+                                            [ngClass]="{'is-invalid': submitted && f.destPortFreeDays.errors}">
+                                        <div *ngIf="submitted && f.destPortFreeDays.errors" class="invalid-feedback">
+                                            <div *ngIf="f.destPortFreeDays.errors.required">Routing is required</div>
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="!activeFrightAir && !(isTransport)" class="col-md-3">
+                                        <label class="form-label">Origin Carrier Free Days</label>
+                                        <input formControlName="originFreeDays" class="form-control custom-input"
+                                            type="number"
+                                            [ngClass]="{'is-invalid': submitted && f.originFreeDays.errors}">
+                                        <div *ngIf="submitted && f.originFreeDays.errors" class="invalid-feedback">
+                                            <div *ngIf="f.originFreeDays.errors.required">Origin Free Days is required
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="!activeFrightAir && !(isTransport)" class="col-md-3">
+                                        <label class="form-label">Destination Carrier Free Days</label>
+                                        <input formControlName="destFreeDays" class="form-control custom-input"
+                                            type="number"
+                                            [ngClass]="{'is-invalid': submitted && f.destFreeDays.errors}">
+                                        <div *ngIf="submitted && f.destFreeDays.errors" class="invalid-feedback">
+                                            <div *ngIf="f.destFreeDays.errors.required">Dest Free Days is required</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">Local Currency<span
+                                                class="text-danger">*</span></label>
+                                        <nz-select nzDisabled (ngModelChange)="CurrChange()" class="form-select"
+                                            nzShowSearch nzAllowClear formControlName="currency"
+                                            [ngClass]="{'is-invalid': submitted && f.currency.errors}">
+                                            <nz-option *ngFor="let currency of   currencyList "
+                                                [nzLabel]="currency.currencyShortName"
+                                                [nzValue]="currency.currencyId"></nz-option>
+                                        </nz-select>
+
+                                        <div *ngIf="submitted && f.currency.errors" class="invalid-feedback">
+                                            <div *ngIf="f.currency.errors.required">Currency is required</div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-3" *ngIf="false">
+                                        <label class="form-label">Exchange Rate<span
+                                                class="text-danger">*</span></label>
+                                        <input disabled formControlName="exRate" class="form-control custom-input"
+                                            type="number" [ngClass]="{'is-invalid': submitted && f.exRate.errors}">
+                                        <div *ngIf="submitted && f.exRate.errors" class="invalid-feedback">
+                                            <div *ngIf="f.exRate.errors.required">Exchange Rate is required</div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">Remarks</label>
+                                        <input formControlName="remarks" class="form-control custom-input"
+                                            type="textarea" [ngClass]="{'is-invalid': submitted && f.remarks.errors}">
+                                        <div *ngIf="submitted && f.remarks.errors" class="invalid-feedback">
+                                            <div *ngIf="f.remarks.errors.required">Remarks is required</div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <ngx-skeleton-loader count="{{totalCount}}" appearance="line"
+                                    *ngIf="loader"></ngx-skeleton-loader>
+                            </div>
+                            <hr>
+                            <div class="col-md-12 p-0">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="d-grid-2">
+                                                    <span class="header">Prov. Income :</span>
+                                                    <span class="text font-weight-bold green"> {{sellTotal | number :
+                                                        '1.2-2' | customCurrency:quoteForm?.value?.currencyShortName }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="d-grid-2">
+                                                    <span class="header">Prov. Expense :</span>
+                                                    <span class="text font-weight-bold red"> {{buyTotal| number :
+                                                        '1.2-2' | customCurrency:quoteForm?.value?.currencyShortName}}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="d-grid-2">
+                                                    <span class="header">Prov. Margin :</span>
+                                                    <span class="text font-weight-bold"
+                                                        [ngStyle]="{'color': isNegative ? 'red' : 'green'}"> {{sellTotal
+                                                        - buyTotal | number : '1.2-2' |
+                                                        customCurrency:quoteForm?.value?.currencyShortName}}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div
+                                            class="wrap-form-field  wrap-pagination  d-flex justify-content-end alignment">
+                                            <div class="mb-2">
+                                                <a *ngIf="!isOnlyView"
+                                                    class="max-con new-action  btn btn-outline-primary btn-sm rounded-pill"
+                                                    (click)="addChargeRow()">Add Charge Item </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 p-0 pb-5 mb-5">
+                                <div class="table-charge1" *ngIf="!loader">
+                                    <table aria-describedby="mytable" class="gfg">
+                                        <thead>
+                                            <tr class="field-name">
+                                                <th scope="col" class="text-center"> </th>
+                                                <th scope="col" class="text-center"> </th>
+                                                <th colspan="3" scope="col" class="text-center">Quantity</th>
+
+
+                                                <th *ngIf="gstType == 'cgst'  && isIndian()" colspan="10" scope="col"
+                                                    class="text-center sellEstimate">Sell Estimates</th>
+                                                <th *ngIf="(gstType == 'igst' || gstType == 'tax')  && isIndian()"
+                                                    colspan="9" scope="col" class="text-center sellEstimate">Sell
+                                                    Estimates</th>
+                                                <th *ngIf="!isIndian()" colspan="9" scope="col"
+                                                    class="text-center sellEstimate">Sell Estimates</th>
+
+
+                                                <th *ngIf="gstType == 'cgst' && isIndian()" colspan="10" scope="col"
+                                                    class="text-center buyEstimate">Buy Estimates</th>
+                                                <th *ngIf="(gstType == 'igst' || gstType == 'tax')  && isIndian() "
+                                                    colspan="9" scope="col" class="text-center buyEstimate">Buy
+                                                    Estimates</th>
+                                                <th *ngIf="!isIndian()" colspan="9" scope="col"
+                                                    class="text-center buyEstimate">Buy Estimates</th>
+
+                                                <th scope="col" class="text-center"></th>
+                                                <th scope="col" class="text-center"></th>
+                                            </tr>
+                                            <tr class="field-name">
+                                                <th scope="col" class="text-center">#</th>
+                                                <th scope="col" class="text-center">Charge Item <span
+                                                        *ngIf="getChargeControlsLength() > 0"
+                                                        class="text-danger">*</span> </th>
+                                                <th scope="col" class="text-center">Basis </th>
+                                                <th scope="col" class="text-center">Qty<span
+                                                        *ngIf="getChargeControlsLength() > 0"
+                                                        class="text-danger">*</span></th>
+                                                <th scope="col" class="text-center" *ngIf="isIndian()">GST</th>
+                                                <th scope="col" class="text-center" *ngIf="!isIndian()">TAX</th>
+
+
+
+                                                <th scope="col" class="text-center sellEstimate">Cur.<span
+                                                        *ngIf="getChargeControlsLength() > 0"
+                                                        class="text-danger">*</span></th>
+                                                <th scope="col" class="text-center sellEstimate">Sell Rate<span
+                                                        *ngIf="getChargeControlsLength() > 0"
+                                                        class="text-danger">*</span></th>
+                                                <th scope="col" class="text-center sellEstimate">Sell Total</th>
+                                                <th scope="col" class="text-center sellEstimate">Ex. Rate<span
+                                                        *ngIf="getChargeControlsLength() > 0"
+                                                        class="text-danger">*</span></th>
+
+                                                <th scope="col" class="text-center sellEstimate">Taxable
+                                                    ({{quoteForm?.value?.currencyShortName}})</th>
+                                                <th scope="col" class="text-center sellEstimate">Tax Amount
+                                                    ({{quoteForm?.value?.currencyShortName}})</th>
+                                                <ng-container *ngIf="gstType == 'cgst' && isIndian()">
+                                                    <th scope="col" class="text-center sellEstimate">CGST</th>
+                                                    <th scope="col" class="text-center sellEstimate">SGST</th>
+                                                </ng-container>
+                                                <ng-container *ngIf="gstType == 'igst' && isIndian()">
+                                                    <th scope="col" class="text-center sellEstimate">IGST</th>
+                                                </ng-container>
+                                                <ng-container *ngIf=" gstType == 'tax' && isIndian()">
+                                                    <th scope="col" class="text-center sellEstimate">TAX</th>
+                                                </ng-container>
+
+                                                <th scope="col" class="text-center sellEstimate">Total Sell
+                                                    ({{quoteForm?.value?.currencyShortName}})</th>
+                                                <th scope="col" class="text-center sellEstimate">Terms </th>
+                                                <th scope="col" class="text-center sellEstimate">Remarks</th>
+
+                                                <th scope="col" class="text-center buyEstimate">Cur.<span
+                                                        *ngIf="getChargeControlsLength() > 0"
+                                                        class="text-danger">*</span></th>
+                                                <th scope="col" class="text-center buyEstimate">Buy Rate<span
+                                                        *ngIf="getChargeControlsLength() > 0"
+                                                        class="text-danger">*</span></th>
+                                                <th scope="col" class="text-center buyEstimate">Buy Total</th>
+                                                <th scope="col" class="text-center buyEstimate">Ex. Rate<span
+                                                        *ngIf="getChargeControlsLength() > 0"
+                                                        class="text-danger">*</span></th>
+
+                                                <th scope="col" class="text-center buyEstimate">Taxable
+                                                    ({{quoteForm?.value?.currencyShortName}})</th>
+                                                <th scope="col" class="text-center buyEstimate">Tax Amount
+                                                    ({{quoteForm?.value?.currencyShortName}})</th>
+                                                <ng-container *ngIf="gstType == 'cgst' && isIndian()">
+                                                    <th scope="col" class="text-center buyEstimate">CGST</th>
+                                                    <th scope="col" class="text-center buyEstimate">SGST</th>
+                                                </ng-container>
+                                                <ng-container *ngIf="gstType == 'igst' && isIndian()">
+                                                    <th scope="col" class="text-center buyEstimate">IGST</th>
+                                                </ng-container>
+                                                <ng-container *ngIf=" gstType == 'tax' && isIndian()">
+                                                    <th scope="col" class="text-center buyEstimate">TAX</th>
+                                                </ng-container>
+
+                                                <th scope="col" class="text-center buyEstimate">Total Buy
+                                                    ({{quoteForm?.value?.currencyShortName}})</th>
+                                                <th scope="col" class="text-center buyEstimate">Terms </th>
+                                                <th scope="col" class="text-center buyEstimate">Supplier </th>
+
+
+
+                                                <th scope="col" class="text-center">Margin</th>
+                                                <th scope="col" class="text-center">Action</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody formArrayName="charge">
+                                            <tr class="collapse-ui" *ngFor="let row of getChargeControls(); let i=index"
+                                                [formGroupName]="i">
+                                                <td>{{i+1}}</td>
+                                                <td>
+                                                    <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                        formControlName="chargeName" (ngModelChange)="setGSTtoRow(i)"
+                                                        [ngClass]="{'is-invalid': submitted && row?.get('chargeName')?.errors}">
+                                                        <nz-option
+                                                            *ngFor="let data of   sort(chargeName ,'costitemName')"
+                                                            [nzLabel]="data.costitemName"
+                                                            [nzValue]="data.costitemId"></nz-option>
+                                                    </nz-select>
+                                                    <div *ngIf="submitted && row?.get('chargeName')?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="row?.get('chargeName')?.errors.required">{{
+                                                            'stolt.batch.charges.new.ChargeName' | translate }} is
+                                                            required</div>
+                                                    </div>
+                                                </td>
+                                                <td><nz-select class="form-select" nzShowSearch nzAllowClear
+                                                        formControlName="basic" (ngModelChange)="setQuantity(i)"
+                                                        [ngClass]="{'is-invalid': submitted && row?.get('basic')?.errors}">
+                                                        <nz-option *ngFor="let enquiryType of  chargeBasic"
+                                                            [nzLabel]="enquiryType.typeName"
+                                                            [nzValue]="enquiryType.systemtypeId"></nz-option>
+                                                    </nz-select>
+                                                    <div *ngIf="submitted && row?.get('basic')?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="row?.get('basic')?.errors.required">Basic is
+                                                            required</div>
+                                                    </div>
+                                                </td>
+                                                <td> <input formControlName="quantity" type="number"
+                                                        class="form-control custom-input"
+                                                        [ngClass]="{'is-invalid': submitted && row?.get('quantity')?.errors}"
+                                                        (keyup)="calcBuyAMT(i);calcBuyAMT(i)" (wheel)="$event.preventDefault()">
+                                                    <div *ngIf="submitted && row?.get('quantity')?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="row?.get('quantity')?.errors.required">Quantity
+                                                            is required</div>
+                                                    </div>
+                                                </td>
+
+                                                <td>
+                                                    <!-- <input formControlName="gst" type="number"
+                                                    class="form-control custom-input" readonly
+                                                    [ngClass]="{'is-invalid': submitted && row?.get('gst')?.errors}"
+                                                     >
+                                                <div *ngIf="submitted && row?.get('gst')?.errors"
+                                                    class="invalid-feedback">
+                                                    <div *ngIf="row?.get('gst')?.errors.required">GST
+                                                        is required</div>
+                                                </div> -->
+
+                                                    {{row?.get('gst').value}}%
+                                                </td>
+
+
+
+
+                                                <td class="sellEstimate">
+                                                    <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                        formControlName="currencySell"
+                                                        [ngClass]="{'is-invalid': submitted && row?.get('currencySell')?.errors}"
+                                                        (ngModelChange)="sellCurrChange(i)">
+                                                        <nz-option
+                                                            *ngFor="let data of  sort(currencyList ,'currencyShortName')"
+                                                            [nzLabel]="data.currencyShortName"
+                                                            [nzValue]="data.currencyId"></nz-option>
+                                                    </nz-select>
+
+                                                    <div *ngIf="submitted && row?.get('currencySell')?.errors"
+                                                        class="error-msg">
+                                                        <div *ngIf="row?.get('currencySell')?.errors.required">{{
+                                                            'stolt.batch.charges.new.Currency' | translate }} is
+                                                            required
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="sellEstimate"> <input appDecimalInput formControlName="sellRate"
+                                                        type="number" class="form-control custom-input"
+                                                        [ngClass]="{'is-invalid': submitted && row?.get('sellRate')?.errors}"
+                                                        (keyup)="calcBuyAMT(i)" (wheel)="$event.preventDefault()">
+                                                    <div *ngIf="submitted && row?.get('sellRate')?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="row?.get('sellRate')?.errors.required"> Rate
+                                                            is required</div>
+                                                    </div>
+                                                </td>
+                                                <td class="text-end sellEstimate "> {{row?.get('sellTotal').value |
+                                                    number : '1.2-2'}} </td>
+                                                <td class="sellEstimate"> <input appDecimalInput formControlName="sellExRate"
+                                                        type="number" class="form-control custom-input"
+                                                        [ngClass]="{'is-invalid': submitted && row?.get('sellExRate')?.errors}"
+                                                        (keyup)="calcBuyAMT(i)" (wheel)="$event.preventDefault()"
+                                                        >
+                                                    <div *ngIf="submitted && row?.get('sellExRate')?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="row?.get('sellExRate')?.errors.required">Ex. Rate
+                                                            is required</div>
+                                                    </div>
+                                                </td>
+
+                                                <td class="text-end sellEstimate"> {{row?.get('sellTaxable').value |
+                                                    number : '1.2-2' |
+                                                    customCurrency:quoteForm?.value?.currencyShortName}} </td>
+                                                <td class="text-end sellEstimate"> {{row?.get('sellIgst').value | number
+                                                    : '1.2-2' | customCurrency:quoteForm?.value?.currencyShortName }}
+                                                </td>
+                                                <ng-container *ngIf="gstType == 'cgst' && isIndian()">
+                                                    <td class="text-end sellEstimate"> {{row?.get('sellCgst').value |
+                                                        number : '1.2-2' |
+                                                        customCurrency:quoteForm?.value?.currencyShortName}} </td>
+                                                    <td class="text-end sellEstimate"> {{row?.get('sellSgst').value |
+                                                        number : '1.2-2' |
+                                                        customCurrency:quoteForm?.value?.currencyShortName}} </td>
+                                                </ng-container>
+                                                <ng-container
+                                                    *ngIf="(gstType == 'igst' || gstType == 'tax') && isIndian()">
+                                                    <td class="text-end sellEstimate"> {{row?.get('sellIgst').value |
+                                                        number : '1.2-2' |
+                                                        customCurrency:quoteForm?.value?.currencyShortName}} </td>
+                                                </ng-container>
+
+                                                <td class="text-end green sellEstimate">
+                                                    {{row?.get('sellTotalINR').value | number : '1.2-2' |
+                                                    customCurrency:quoteForm?.value?.currencyShortName}} </td>
+                                                <td class="sellEstimate"> <nz-select class="form-select" nzShowSearch
+                                                        nzAllowClear formControlName="sellTerm"
+                                                        [ngClass]="{'is-invalid': submitted && row?.get('sellTerm')?.errors}">
+                                                        <nz-option *ngFor="let data of chargeTermList"
+                                                            [nzLabel]="data.typeName"
+                                                            [nzValue]="data.typeName"></nz-option>
+                                                    </nz-select>
+                                                    <div *ngIf="submitted && row?.get('sellTerm')?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="row?.get('sellTerm')?.errors.required">{{
+                                                            'stolt.batch.charges.new.ChargeTerm' | translate }} is
+                                                            required</div>
+                                                    </div>
+                                                </td>
+                                                <td class="sellEstimate">
+                                                    <input formControlName="remarks" type="text"
+                                                        class="form-control custom-input"
+                                                        [ngClass]="{'is-invalid': submitted && row?.get('remarks')?.errors}">
+                                                    <div *ngIf="submitted && row?.get('remarks')?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="row?.get('remarks')?.errors.required">remarks
+                                                            is required</div>
+                                                    </div>
+                                                </td>
+
+
+                                                <td class="buyEstimate">
+                                                    <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                        formControlName="currencyBuy"
+                                                        [ngClass]="{'is-invalid': submitted && row?.get('currencyBuy')?.errors}"
+                                                        (ngModelChange)="buyCurrChange(i)">
+                                                        <nz-option
+                                                            *ngFor="let data of  sort(currencyList ,'currencyShortName')"
+                                                            [nzLabel]="data.currencyShortName"
+                                                            [nzValue]="data.currencyId"></nz-option>
+                                                    </nz-select>
+
+                                                    <div *ngIf="submitted && row?.get('currencyBuy')?.errors"
+                                                        class="error-msg">
+                                                        <div *ngIf="row?.get('currencyBuy')?.errors.required">{{
+                                                            'stolt.batch.charges.new.Currency' | translate }} is
+                                                            required
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="buyEstimate"> <input appDecimalInput formControlName="buyRate" type="number"
+                                                        class="form-control custom-input"
+                                                        [ngClass]="{'is-invalid': submitted && row?.get('buyRate')?.errors}"
+                                                        (keyup)="calcBuyAMT(i)" (wheel)="$event.preventDefault()">
+                                                    <div *ngIf="submitted && row?.get('buyRate')?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="row?.get('buyRate')?.errors.required"> Rate
+                                                            is required</div>
+                                                    </div>
+                                                </td>
+                                                <td class="text-end buyEstimate"> {{row?.get('buyTotal').value | number
+                                                    : '1.2-2'}} </td>
+                                                <td class="buyEstimate"> <input appDecimalInput formControlName="buyExRate"
+                                                        type="number"
+                                                        [ngClass]="{'is-invalid': submitted && row?.get('buyExRate')?.errors}"
+                                                        class="form-control custom-input" (keyup)="calcBuyAMT(i)" (wheel)="$event.preventDefault()">
+                                                    <div *ngIf="submitted && row?.get('buyExRate')?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="row?.get('buyExRate')?.errors.required">Ex. Rate
+                                                            is required</div>
+                                                    </div>
+                                                </td>
+
+                                                <td class="text-end buyEstimate"> {{row?.get('buyTaxable').value |
+                                                    number : '1.2-2' |
+                                                    customCurrency:quoteForm?.value?.currencyShortName}} </td>
+                                                <td class="text-end buyEstimate"> {{row?.get('buyIgst').value | number :
+                                                    '1.2-2' | customCurrency:quoteForm?.value?.currencyShortName}} </td>
+                                                <ng-container *ngIf="gstType == 'cgst' && isIndian()">
+                                                    <td class="text-end buyEstimate"> {{row?.get('buyCgst').value |
+                                                        number : '1.2-2' |
+                                                        customCurrency:quoteForm?.value?.currencyShortName}} </td>
+                                                    <td class="text-end buyEstimate"> {{row?.get('buySgst').value |
+                                                        number : '1.2-2' |
+                                                        customCurrency:quoteForm?.value?.currencyShortName}} </td>
+                                                </ng-container>
+                                                <ng-container
+                                                    *ngIf="(gstType == 'igst' || gstType == 'tax') && isIndian()">
+                                                    <td class="text-end buyEstimate"> {{row?.get('buyIgst').value |
+                                                        number : '1.2-2' |
+                                                        customCurrency:quoteForm?.value?.currencyShortName}} </td>
+                                                </ng-container>
+
+
+                                                <td class="text-end red buyEstimate"> {{row?.get('buyTotalINR').value |
+                                                    number : '1.2-2' |
+                                                    customCurrency:quoteForm?.value?.currencyShortName}} </td>
+                                                <td class="buyEstimate"> <nz-select class="form-select" nzShowSearch
+                                                        nzAllowClear formControlName="buyTerm"
+                                                        [ngClass]="{'is-invalid': submitted && row?.get('buyTerm')?.errors}">
+                                                        <nz-option *ngFor="let data of chargeTermList"
+                                                            [nzLabel]="data.typeName"
+                                                            [nzValue]="data.typeName"></nz-option>
+                                                    </nz-select>
+                                                    <div *ngIf="submitted && row?.get('buyTerm')?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="row?.get('buyTerm')?.errors.required">{{
+                                                            'stolt.batch.charges.new.ChargeTerm' | translate }} is
+                                                            required</div>
+                                                    </div>
+                                                </td>
+                                                <td class="buyEstimate">
+                                                    <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                        formControlName="supplier"
+                                                        [ngClass]="{'is-invalid': submitted && row?.get('supplier')?.errors}">
+                                                        <nz-option *ngFor="let data of supplierList"
+
+                                                        nzLabel="{{data?.partyShortcode}}{{data?.partyShortcode ? '-': ''}}{{data.name}}"
+                                                        
+                                                            [nzValue]="data.partymasterId"></nz-option>
+                                                    </nz-select>
+                                                    <div *ngIf="submitted && row?.get('supplier')?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="row?.get('supplier')?.errors.required">{{
+                                                            'stolt.batch.charges.new.ChargeTerm'
+                                                            | translate }} is
+                                                            required</div>
+                                                    </div>
+                                                </td>
+
+
+
+                                                <td class="text-end "
+                                                    [ngStyle]="{'color': row?.get('margin').value < 0 ? 'red' : 'green'}">
+                                                    {{row?.get('margin').value | number : '1.2-2' |
+                                                    customCurrency:quoteForm?.value?.currencyShortName}} </td>
+
+                                                <td class="action-field">
+                                                    <span *ngIf="!isOnlyView" nz-tooltip
+                                                        nzTooltipTitle="{{ 'common.delete' | translate }}"
+                                                        (click)="deleteCharge(content1,row,i)" class="mtop"><a><em
+                                                                class="bi bi-trash color-pencil-red"></em></a>
+                                                    </span>
+                                                </td>
+                                            </tr>
+
+                                            <tr *ngIf="getChargeControlsLength() > 0">
+                                                <td class="commonFooter">Total</td>
+                                                <td class="commonFooter" style="background: transparent;"></td>
+                                                <td class="commonFooter" style="background: transparent;" colspan="3">
+                                                </td>
+
+                                                <td class="sellEstiTotal" *ngIf="gstType == 'cgst' && isIndian()"
+                                                    colspan="7"></td>
+                                                <td class="sellEstiTotal"
+                                                    *ngIf="(gstType == 'igst' || gstType == 'tax') && isIndian()"
+                                                    colspan="6"></td>
+                                                <td class="sellEstiTotal" *ngIf=" !isIndian()" colspan="6"></td>
+                                                <td class="font-weight-bold green text-end sellEstiTotal">{{sellTotal |
+                                                    number : '1.2-2' |
+                                                    customCurrency:quoteForm?.value?.currencyShortName}}</td>
+
+                                                <td class="sellEstiTotal" colspan="2"></td>
+
+
+                                                <td class="buyEstiTotal" *ngIf="gstType == 'cgst' && isIndian()"
+                                                    colspan="7"></td>
+                                                <td class="buyEstiTotal"
+                                                    *ngIf="(gstType == 'igst' || gstType == 'tax') && isIndian()"
+                                                    colspan="6"></td>
+                                                <td class="buyEstiTotal" *ngIf=" !isIndian()" colspan="6"></td>
+                                                <td class="font-weight-bold red text-end buyEstiTotal">{{buyTotal |
+                                                    number : '1.2-2' |
+                                                    customCurrency:quoteForm?.value?.currencyShortName}}</td>
+                                                <td class="buyEstiTotal" colspan="2"></td>
+
+
+                                                <td class="font-weight-bold text-end commonFooter"
+                                                    [ngStyle]="{'color': isNegative ? 'red' : 'green'}">{{sellTotal -
+                                                    buyTotal | number : '1.2-2' |
+                                                    customCurrency:quoteForm?.value?.currencyShortName}}</td>
+                                                <td class="commonFooter"> </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="no-data-availble" *ngIf="getChargeControlsLength() === 0">
+
+                                        <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+                                        <span *ngIf="!loaderService?.isLoadingcircle && !dataSource?.data?.length">No
+                                            data available</span>
+                                    </div>
+                                </div>
+                                <ngx-skeleton-loader count="{{totalCount}}" appearance="line"
+                                    *ngIf="loader"></ngx-skeleton-loader>
+                            </div>
+
+                        </form>
+
+                        <div class="wrap-form-field btn-onscreen mb-3" *ngIf="!loader">
+                            <div *ngIf="!isOnlyView">
+                                <button *ngIf="!isCloneQuote" class="btn btn-outline-primary float-end" type="submit"
+                                    (click)="onSave(false)">
+                                    <ng-container *ngIf="!isEditQoute">
+                                        <span style="font-weight: bold;">
+                                        Create Quotation
+                                    </span>
+                                    </ng-container>
+                                    <ng-container *ngIf="isEditQoute">
+                                        <span style="font-weight: bold;">
+                                        {{editQuoteDetails?.isRequotation ? 'Update & Submit Requotation': 'Update
+                                        Quotation'}}
+                                    </span>
+                                    </ng-container>
+                                </button>
+                                <button *ngIf="isCloneQuote" class="btn btn-outline-primary float-end" type="submit"
+                                    (click)="onSave(false)">
+                                    <ng-container>
+                                        <span style="font-weight: bold;">
+                                        Clone Quotation
+                                        </span>
+                                    </ng-container>
+                                </button>
+                                <button class="btn btn-outline-secondary float-end" type="submit" (click)="backbtn()">
+
+                                    <ng-container *ngIf="!isEditQoute">
+                                        <span style="font-weight: bold;">
+                                        Cancel
+                                    </span>
+                                    </ng-container>
+                                    <ng-container *ngIf="isEditQoute">
+                                        <span style="font-weight: bold;">
+                                        Back
+                                        </span>
+                                    </ng-container>
+                                </button>
+
+                                <button
+                                    *ngIf="editQuoteDetails?.quoteStatus != 'Quotation Created' && editQuoteDetails?.quoteStatus != 'Requotation Requested'"
+                                    class="btn btn-outline-primary float-end" type="submit" (click)="onSave(true)">
+
+                                    <ng-container>
+                                        <span style="font-weight: bold;">
+                                        Save as Draft
+                                         </span>
+                                    </ng-container>
+                                </button>
+                            </div>
+                            <div *ngIf="isOnlyView">
+
+                                <button class="btn btn-outline-secondary float-end" type="submit"
+                                    (click)="backbtn();isOnlyView =false">
+                                    <span style="font-weight: bold;">
+                                    Back
+                                     </span>
+                                </button>
+                                <button class="btn btn-outline-secondary float-end mr-1" type="submit"
+                                    (click)="printAll()">
+                                    <span style="font-weight: bold;">
+                                    Print
+                                     </span>
+                                </button>
+                            </div>
+                        </div>
+                    </ng-container>
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #content1 let-c="close" let-d="dismiss">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+            </button>
+        </div>
+        <div class="modal-body mt-4 d-flex align-items-center">
+            <em class="bi bi-question-circle text-danger fs-2 text-center float-start me-2"> </em> <span
+                class=" text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+        </div>
+        <div class="modal-footer">
+            <div class="text-center">
+                <button type="button" class="btn btn-secondary  btn-sm me-3" (click)="d('Cross click')">No</button>
+                <button type="button" class="btn btn-danger  btn-sm" (click)="c('yes')">Yes</button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+
+<ng-template #Views let-c="close" let-d="dismiss">
+    <div class="mt-3 d-flex justify-content-between">
+        <h6>View</h6>
+        <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="custom-modal wrap-form-field">
+        <div class="modal-body">
+            <div *ngFor="let row of quotationList">
+                <p *ngIf="row?.isRequotation">
+                    {{ row.remarks}}
+                </p>
+            </div>
+        </div>
+
+    </div>
+</ng-template>

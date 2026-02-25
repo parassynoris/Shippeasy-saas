@@ -1,0 +1,115 @@
+export interface Currency {
+    currencyId: string;
+    createdBy: string;
+    createdOn: string;
+    currencyName: string;
+    currencyShortName: string;
+    currencySymbol: string;
+    decimalName: string;
+    description: string;
+    isPopular: boolean;
+    orgId: string;
+    override_orgId: string;
+    status: boolean;
+    tenantId: string;
+    typeCategory: string;
+    typeCategoryName: string;
+    updatedBy: string;
+    updatedOn: string;
+    countryId: string;
+    countryName: string;
+    currencyPair: string;
+    updatedByUID: string;
+  }
+  export interface ShippingLine {
+    branchId: any;
+    batchId: any;
+    shippinglineId: string;
+    email :string;
+    containerType: string;
+    containerTypeId: string;
+    contractType: string;
+    country: string;
+    countryISOCode: string;
+    createdBy: string;
+    createdOn: string;
+    entryPortId: string;
+    entryPortName: string;
+    fromDate: string;
+    loadPortId: string;
+    loadPortName: string;
+    module: string;
+    name: string;
+    onCarriageId: string;
+    orgId: string;
+    preCarriageId: string;
+    preCarriageName: string;
+    typeCategory:string;
+    productType: string;
+    serviceName: string;
+    status: boolean;
+    tenantId: string;
+    toDate: string;
+    tsPortId: string;
+    updatedBy: string;
+    updatedOn: string;
+    updatedByUID: string;
+  }
+ export interface CostItem {
+    costitemId: string;
+    costitemCode: string;
+    costitemName: string;
+    costitemType: string;
+    createdBy: string;
+    createdOn: string;
+    isParent: boolean;
+    orgId: string;
+    override_orgId: string;
+    parentId: string;
+    prentitemName: string;
+    remarks: string;
+    status: boolean;
+    tenantId: string;
+    uom: string;
+    updatedBy: string;
+    updatedOn: string;
+    vmscode: string;
+    pendingverificationId: string;
+    verifyBy: string;
+    verifyOn: string;
+    chargeType:string;
+    accountCode:string;
+    hsnCode:string;
+  }
+ export interface NewData {
+    costItemId: string;
+    costitemGroup: string;
+    hsnCode: string;
+    accountBaseCode: string;
+    chargeType: string;
+    costItemName: string;
+    costHeadId: string;
+    costHeadName: string;
+    currency: string;
+    exchangeRate: string;
+    amount: string;
+    baseAmount: string;
+    tenantMargin: string;
+    tax: {
+      taxAmount: number;
+      taxRate: number;
+    }[];
+    quantity: number | string;
+    rate: number | string;
+    stcAmount: number;
+    jmbAmount: number;
+    payableAt: string;
+    gst: number;
+    totalAmount: number;
+    chargeTerm: string;
+    remarks: string;
+    containerNumber: string[];
+    isFreight: boolean;
+    shippingLine: string;
+  }
+  

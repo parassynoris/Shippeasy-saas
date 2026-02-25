@@ -1,0 +1,3379 @@
+<div class="report-table mat-table-with-gheading">
+  <div class="wrapper">
+    <div [class]="financeModule ? '' : 'container-fluid'">
+      <div [class]="financeModule ? '' :'wrap-content'">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="page-title-box"  *ngIf="!financeModule">
+              <div class="btn-group mt-3">
+                <ol class="breadcrumb hide-phone p-0 m-0">
+                  <li class="breadcrumb-item">{{financeModule ? "Finance" : "Report"}}</li>
+                  <li class="breadcrumb-item active color-red">{{financeModule ? currentUrl !=  'bankStatement' ? 'Bank Statement' : 'GST Reports' : "Report List"}} </li>
+                </ol>
+              </div>
+            </div>
+
+            <div class="row mt-3 mb-3">
+
+              <div class="col-md-3" *ngIf="isWarehouse || currentLogin === 'warehouse'">
+                <label class="form-label">Report Type</label>
+                <nz-select 
+                  class="form-select" 
+                  nzShowSearch 
+                  nzAllowClear 
+                  (ngModelChange)="onChangeReportType($event)" 
+                  [(ngModel)]="reportType" 
+                  [ngClass]="{'is-invalid': submitted && f.typeCategory.errors}" 
+                  nzPlaceHolder="Report Type">
+                  <nz-option 
+                    *ngFor="let data of sort(getFilteredReportData(),'name')" 
+                    [nzLabel]="data.name" 
+                    [nzValue]="data.id">
+                  </nz-option>
+                </nz-select>
+              </div>
+              
+              <div class="col-md-3"  *ngIf="isWarehouse || currentLogin === 'warehouse'">
+                <label class="form-label">
+                  {{ reportType === 'invoicereport' ? 'Invoice shippingLine Range' : 'Date Range' }}
+                </label>
+                <nz-range-picker style="height: 30px;" class="form-select custom-input" nzFormat="dd-MM-yyyy"
+                  [(ngModel)]="date" name="date" [nzDisabledDate]="disableFutureDates">
+                </nz-range-picker>
+              </div>
+
+              <div class="col-md-3" *ngIf="currentUrl != 'bankStatement'  && !isWarehouse && currentLogin !== 'warehouse' ">
+                <label class="form-label">Report Type</label> 
+                <nz-select class="form-select" nzShowSearch nzAllowClear (ngModelChange)="onChangeReportType($event)"
+                  [(ngModel)]="reportType" [ngClass]="{'is-invalid': submitted && f.typeCategory.errors}"
+                  nzPlaceHolder="Report Type">
+                  <nz-option *ngFor="let data of sort(getFilteredReportData(), 'name')" [nzLabel]="data.name"
+                    [nzValue]="data.id"></nz-option>
+                </nz-select>
+              </div>
+              <div class="col-md-3" *ngIf="currentUrl ==  'bankStatement'  && !isWarehouse && currentLogin !== 'warehouse' "></div>
+              <div class="col-md-3" *ngIf="reportType =='gstr3bReport'  && !isWarehouse && currentLogin !== 'warehouse'">
+                <label class="form-label">Select Month<span class="text-danger">*</span></label>
+                <nz-date-picker class="form-select custom-input"
+                  [ngClass]="{'is-invalid': submitted0 && monthSelected == ''}" style="height: 32px;" nzMode="month"
+                  [nzFormat]="monthFormat" [(ngModel)]="monthSelected"></nz-date-picker>
+                <div *ngIf="submitted0 && monthSelected == ''" class="error-color">
+                  This field is required.
+                </div>
+
+              </div>
+
+              <div class="col-md-3" *ngIf="reportType =='gstr9Report'  && !isWarehouse && currentLogin !== 'warehouse'">
+                <label class="form-label">Select Year<span class="text-danger">*</span></label>
+                <nz-select class="form-select custom-input"
+                  [ngClass]="{'is-invalid': submitted0 && !selectedFinancialYear}" [(ngModel)]="selectedFinancialYear"
+                  style="height: 32px">
+                  <nz-option *ngFor="let year of financialYears" [nzValue]="year" [nzLabel]="year"></nz-option>
+                </nz-select>
+
+                <div *ngIf="submitted0 && monthSelected == ''" class="error-color">
+                  This field is required.
+                </div>
+
+              </div>
+              <div class="col-md-3"
+                *ngIf="!(reportType ===  'telexDateWiseReport' || reportType === 'gstr1Report' || reportType === 'gstr9Report' || reportType === 'gstr2Report'||reportType ==='profitLossreport'|| reportType === 'gstr3bReport'|| reportType === 'gstr9Report' || reportType === 'telexReport' || reportType === 'gstReport' || reportType === 'partyReport' || reportType === 'VendorReport' || reportType === 'containerShippinglineReport'  || reportType === 'tdsReport' || reportType === 'hsnReport' || reportType === 'bankStatement' || reportType === 'containerAllocationDetailsReport')  && !isWarehouse && currentLogin !== 'warehouse'">
+                <label class="form-label">Select Group Company</label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear (ngModelChange)="onChangeReportType($event)"
+                  [(ngModel)]="groupOfComapny" nzPlaceHolder="Select Group Company">
+                  <nz-option *ngFor="let data of sort(groupOfComanyList,'name') " [nzLabel]="data.name"
+                    [nzValue]="data.partymasterId"></nz-option>
+                </nz-select>
+              </div>
+             <div class="col-md-1" *ngIf="reportType === 'dsrReport'  && !isWarehouse && currentLogin !== 'warehouse'" style="margin-top: 30px;">
+                        <label>
+                          <input type="checkbox" [(ngModel)]="sblChecked" />
+                          S-BL
+                        </label>
+                      </div>
+
+              <div class="col-md-3"
+                *ngIf="( !isWarehouse && currentLogin !== 'warehouse' &&reportType==='profitLossreport'||reportType === 'gstr1Report' || reportType === 'gstr2Report' ||reportType === 'telexReport' || reportType === 'gstReport' || reportType === 'partyReport' || reportType === 'VendorReport' || reportType === 'containerShippinglineReport'  || reportType === 'tdsReport' || reportType === 'hsnReport' || reportType === 'bankStatement' || reportType === 'containerAllocationDetailsReport')">
+              </div>
+              <div class="col-md-5 pl-4" >
+                <!-- <button class="btn btn-outline-primary float-end">
+                  Cancel Report
+                </button> -->
+
+                <!-- <button class="btn btn-outline-primary float-end" mat-button [matMenuTriggerFor]="menu">Schedule Report</button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item> Schedule recurring email for this report</button>
+                  <button mat-menu-item>Send a one-time email for this report</button>
+                </mat-menu>  -->
+
+                <button *ngIf="!financeModule" [disabled]="!customer || !reportType" class="btn btn-outline-primary float-end"
+                  (click)="openSchedule()">
+                  Schedule Report
+                </button>
+
+                <button *ngIf="!financeModule" class="btn btn-outline-primary float-end" (click)="gotoScheduleList()">
+                  My Scheduled Reports
+                </button>
+
+                <button class="btn btn-outline-primary float-end" (click)="openPDF(true)" title="Export to excel">
+                  <i class="bi bi-file-earmark-spreadsheet-fill"></i>
+                </button>
+
+                <button class="btn btn-outline-primary float-end" (click)="openPDF(false)" title="Print to PDF">
+                  <i class="bi bi-printer-fill"></i>
+                </button>
+
+                <!-- DOownload Functionality is pending to implement -->
+              </div>
+            </div>
+
+            <div class="row mt-3 mb-3" *ngIf="reportType!='gstr3bReport' && reportType!='gstr9Report'  && !isWarehouse && currentLogin !== 'warehouse'">
+              <div class="col-md-3 mt-2"
+                *ngIf="!(reportType === 'telexDateWiseReport' || reportType ==='profitLossreport'|| reportType === 'gstr1Report' || reportType === 'gstr2Report'|| reportType === 'gstr3bReport'|| reportType === 'gstr9Report' ||reportType === 'telexReport' || reportType === 'VendorReport' || reportType === 'bankStatement' || reportType === 'containerShippinglineReport' || reportType === 'hsnReport' || reportType === 'containerAllocationDetailsReport')">
+                <label class="form-label">Customer<span class="text-danger"
+                    *ngIf="(reportType === 'dsrReport' || reportType === 'customerDsrReport' || reportType === 'ledgerReport')">*</span></label>
+                <nz-select class="form-select" style="height: auto;" nzShowSearch nzAllowClear [(ngModel)]="customer" nzMode="multiple"
+                  [ngClass]="{'is-invalid': submitted0 && customer == '' && (reportType === 'dsrReport' || reportType === 'customerDsrReport' || reportType === 'ledgerReport')}"
+                  nzPlaceHolder="Customer">
+                  <nz-option *ngFor="let data of customerList" [nzLabel]="data.name"
+                    [nzValue]="data.partymasterId"></nz-option>
+                </nz-select>
+                <div
+                  *ngIf="submitted0 && customer == '' && (reportType === 'dsrReport' || reportType === 'customerDsrReport' || reportType === 'ledgerReport')"
+                  class="invalid-feedback">
+                  This field is required.
+                </div>
+              </div>
+
+              <div class="col-md-3 pt-2" *ngIf="reportType === 'bankStatement'">
+                <div class="d-flex justify-content-between">
+                  <label class="form-label">
+                    Bank<span class="text-danger">*</span>
+                  </label>
+                  <span [ngClass]="{
+                      'red-text': totalBankBalance < 0,
+                      'green-text': totalBankBalance > 0
+                      }"> Bal : {{(totalBankBalance || 0) | number : '1.2-2' | customCurrency:
+                    currentAgent?.currency?.currencyCode}}</span>
+                </div>
+
+                <nz-select class="form-select" nzShowSearch nzAllowClear [(ngModel)]="bankName"
+                  [ngClass]="{'is-invalid': submitted0 && bankName == ''}" nzPlaceHolder="Bank">
+                  <nz-option *ngFor="let data of  bankList" [nzLabel]="data.bankName"
+                    [nzValue]="data.bankId"></nz-option>
+                </nz-select>
+                <div *ngIf="submitted0 && bankName == ''" class="invalid-feedback">
+                  This field is required.
+                </div>
+              </div>
+
+              <div class="col-md-3 pt-2" *ngIf="reportType === 'telexReport'">
+                <label class="form-label">Job No.</label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear [(ngModel)]="bookingNo"
+                  [ngClass]="{'is-invalid': submitted && f.typeCategory.errors}" nzPlaceHolder="Job No">
+                  <nz-option *ngFor="let data of batchList" [nzLabel]="data?.batchNo"
+                    [nzValue]="data.batchNo"></nz-option>
+                </nz-select>
+              </div>
+
+              <div class="col-md-3 mt-2" *ngIf="reportType === 'telexReport'">
+                <label for="typeDescription " class="form-label">DEPO Name</label>
+                <nz-select class="form-select " nzShowSearch nzAllowClear [(ngModel)]="depoName"
+                  nzPlaceHolder="Depo Name">
+                  <nz-option *ngFor="let yard of  yardList" [nzLabel]="yard.locationName"
+                    [nzValue]="yard.locationId"></nz-option>
+                </nz-select>
+              </div>
+
+              <div class="col-md-3 mt-2"
+                *ngIf="(  reportType === 'invoicereport' ||reportType === 'containerreport' || reportType === 'bookingreport' || reportType === 'containerAllocationDetailsReport' || reportType === 'containerShippinglineReport'  ) ||reportType === 'inquiryreport'">
+                <label class="form-label">Freight Type</label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear (ngModelChange)="updatePortLabel($event)"
+                  [(ngModel)]="freightTerms" [ngClass]="{'is-invalid': submitted && f.typeCategory.errors}"
+                  nzPlaceHolder="Freight Type">
+                  <nz-option *ngFor="let test of shipmentTypes" [nzLabel]="test?.typeName"
+                    [nzValue]="test?.systemtypeId"></nz-option>
+                </nz-select>
+              </div>
+
+              <div class="col-md-3 mt-2" *ngIf="reportType === 'inquiryreport'  || reportType === 'bookingreport'  ">
+                <label class="form-label">Invoicing Party</label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear [(ngModel)]="invoicingParty"
+                  [ngClass]="{'is-invalid': submitted && f.typeCategory.errors}" nzPlaceHolder="Invoicing Party">
+                  <nz-option *ngFor="let data of customerList" [nzLabel]="data.name"
+                    [nzValue]="data.partymasterId"></nz-option>
+                </nz-select>
+              </div>
+
+              <div class="col-md-3 mt-2" *ngIf="reportType === 'profitLossreport'">
+                <label class="form-label">Shipper</label>
+
+                <nz-select class="form-select" nzShowSearch nzAllowClear [(ngModel)]="shipper"
+                  [ngClass]="{'is-invalid': submitted && f.shipper?.errors}" nzPlaceHolder="Shipper ">
+                  <nz-option *ngFor="let shipper of shipperList" [nzLabel]="shipper?.name"
+                    [nzValue]="shipper?.partymasterId">
+                  </nz-option>
+                </nz-select>
+              </div>
+
+              <div class="col-md-3 mt-2" *ngIf="reportType === 'inquiryreport' || reportType === 'profitLossreport'">
+                <label class="form-label">Consignee</label>
+
+                <nz-select class="form-select" nzShowSearch nzAllowClear [(ngModel)]="cosignee"
+                  [ngClass]="{'is-invalid': submitted && f.cosignee?.errors}" nzPlaceHolder="Consignee ">
+                  <nz-option *ngFor="let shipper of consigneeList" [nzLabel]="shipper?.name"
+                    [nzValue]="shipper?.partymasterId">
+                  </nz-option>
+                </nz-select>
+              </div>
+
+              <div class="col-md-3 mt-2" *ngIf="reportType === 'telexDateWiseReport'">
+                <label class="form-label">Shipper</label>
+
+                <nz-select class="form-select" nzShowSearch nzAllowClear [(ngModel)]="shipper"
+                  [ngClass]="{'is-invalid': submitted && f.shipper?.errors}" nzPlaceHolder="Shipper ">
+                  <nz-option *ngFor="let shipper of shipperList"
+                  nzLabel="{{shipper?.partyShortcode}}{{shipper?.partyShortcode ? '-': ''}}{{shipper.name}}"
+                  [nzValue]="shipper.partymasterId"></nz-option>
+                </nz-select>
+              </div>
+
+              <div class="col-md-3 mt-2" *ngIf="reportType === 'telexDateWiseReport'">
+                <label class="form-label">Consignee</label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear nzMode="multiple" [(ngModel)]="cosignee"
+                  [ngClass]="{'is-invalid': submitted && f.cosignee?.errors}" nzPlaceHolder="Select Consignee(s)">
+                  <nz-option *ngFor="let shipper of consigneeList  "
+                  nzLabel="{{shipper?.partyShortcode}}{{shipper?.partyShortcode ? '-': ''}}{{shipper.name}}"
+                  [nzValue]="shipper.partymasterId"></nz-option>
+                </nz-select>
+              </div>
+
+              <div class="col-md-3 mt-2" *ngIf="reportType === 'VendorReport'">
+                <label class="form-label">Vendor</label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear [(ngModel)]="vendor"
+                  [ngClass]="{'is-invalid': submitted && f.typeCategory.errors}" nzPlaceHolder="Vendor">
+                  <nz-option *ngFor="let data of vendorList" [nzLabel]="data.name"
+                    [nzValue]="data.partymasterId"></nz-option>
+                </nz-select>
+              </div>
+
+              <div class="col-md-3 mt-2"
+                *ngIf="!(reportType ===  'telexDateWiseReport' ||reportType==='profitLossreport'||reportType === 'pendingHBLTelex' || reportType === 'gstr1Report' ||  reportType === 'ledgerReport' || reportType === 'gstr2Report'|| reportType === 'gstr3bReport'|| reportType === 'gstr9Report' || reportType === 'expenseReport' || reportType === 'gstReport' || reportType === 'partyReport' ||reportType === 'telexReport' || reportType === 'bookingDetailReport'|| reportType === 'jobReport' || reportType === 'dsrReport' || reportType === 'customerDsrReport' || reportType === 'containerShippinglineReport'  || reportType === 'tdsReport' || reportType === 'hsnReport' || reportType === 'bankStatement' ||reportType === 'containerAllocationDetailsReport' || reportType === 'VendorReport')">
+                <label class="form-label">Branch</label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear [(ngModel)]="branch"
+                  [ngClass]="{'is-invalid': submitted && f.typeCategory.errors}" nzPlaceHolder="Branch">
+                  <nz-option *ngFor="let data of branchList" [nzLabel]="data.branchName"
+                    [nzValue]="data.branchId"></nz-option>
+                </nz-select>
+              </div>
+
+
+              <div class="col-md-3 mt-2"
+                *ngIf='!(["profitLossreport","telexDateWiseReport","endingHBLTelex","ledgerReport","gstr9Report","gstr3bReport","gstr2Report","gstr1Report","expenseReport","gstReport","partyReport","dsrReport","customerDsrReport","telexReport","bookingDetailReport","jobReport","tdsReport","hsnReport","bankStatement","containerShippinglineReport", "p&lreport","containerAllocationDetailsReport", "paymentreport","VendorReport"].includes(reportType))'>
+
+                <label class="form-label">Country</label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear (ngModelChange)="onChangeCountry($event)"
+                  [(ngModel)]="country" [ngClass]="{'is-invalid': submitted && f.typeCategory.errors}"
+                  nzPlaceHolder="Country">
+                  <nz-option *ngFor="let data of countryData" [nzLabel]="data?.countryName"
+                    [nzValue]="data?.countryId"></nz-option>
+                </nz-select>
+              </div>
+
+              <div class="col-md-3 mt-2"
+                *ngIf='!(["profitLossreport","telexDateWiseReport","pendingHBLTelex","ledgerReport","gstr9Report","gstr3bReport","gstr2Report","gstr1Report","gstReport","expenseReport","telexReport","partyReport","bookingDetailReport","jobReport","tdsReport","hsnReport","bankStatement","containerShippinglineReport","p&lreport" ,"containerAllocationDetailsReport", "paymentreport","VendorReport"].includes(reportType))'>
+
+                <label class="form-label">{{portLabel}}</label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear [(ngModel)]="port"
+                  [ngClass]="{'is-invalid': submitted && f.typeCategory.errors}" nzPlaceHolder="{{portLabel}}">
+                  <nz-option *ngFor="let data of portData" [nzLabel]="data?.portDetails?.portName"
+                    [nzValue]="data.portId"></nz-option>
+                </nz-select>
+              </div>
+
+              <!-- <div class="col-md-3 pt-2">
+                <label class="form-label">{{ reportType === 'invoicereport' ? 'Invoice shippingLinenge' : 'Date Range'
+                  }}</label>
+                <nz-range-picker style="height: 30px;" class="form-select custom-input" nzFormat="dd-MM-yyyy" [(ngModel)]="date"
+                  name="date"></nz-range-picker>
+              </div> -->
+              <div class="col-md-3 pt-2" *ngIf='!(["jobReport","bookingDetailReport"].includes(reportType))'>
+                <label class="form-label">
+                  {{ reportType === 'invoicereport' ? 'Invoice shippingLine Range' : 'Date Range' }}
+                </label>
+                <nz-range-picker style="height: 30px;" class="form-select custom-input" nzFormat="dd-MM-yyyy"
+                  [(ngModel)]="date" name="date" [nzDisabledDate]="disableFutureDates">
+                </nz-range-picker>
+              </div>
+
+              <div class="col-md-3 pt-2" *ngIf="reportType === 'telexReport'">
+                <label class="form-label">Valid Till Date</label>
+                <nz-range-picker style="height: 30px;" class="form-select custom-input" nzFormat="dd-MM-yyyy"
+                  [(ngModel)]="dateValidTill" name="dateValidTill"></nz-range-picker>
+              </div>
+              <div class="col-md-4 pt-2" *ngIf="reportType === 'p&lreport'">
+                <label class="form-label">Select Quarterly</label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Select Quarterly"
+                  [(ngModel)]="quotarlyDate" (ngModelChange)="onDateRangeChange($event)">
+                  <nz-option nzLabel="Current Month" nzValue="current_month"></nz-option>
+                  <nz-option nzLabel="Last 3 Months" nzValue="last_3_months"></nz-option>
+                  <nz-option nzLabel="Last 6 Months" nzValue="last_6_months"></nz-option>
+                  <nz-option nzLabel="1 Year" nzValue="last_year"></nz-option>
+                </nz-select>
+              </div>
+
+
+              <div class="col-md-3 pt-2" *ngIf="reportType === 'jobReport' || reportType === 'bookingDetailReport'">
+                <label for="vehicleType" class="form-label">Job Filter
+                </label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Job Filter"
+                  [(ngModel)]="selectedMilestone">
+                  <nz-option ng *ngFor="let test of milestoneType" [nzLabel]="test?.mileStoneName"
+                    [nzValue]="test.mileStoneName"></nz-option>
+                </nz-select>
+
+              </div>
+              <div class="col-md-3 pt-2" *ngIf="reportType === 'jobReport' || reportType === 'bookingDetailReport'">
+                <label for="vehicleType" class="form-label"> Sort By
+                </label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="SortBy"
+                  [(ngModel)]="selectedDate">
+                  <nz-option ng *ngFor="let test of ['ATA','ATD']" [nzLabel]="test" [nzValue]="test"></nz-option>
+                </nz-select>
+
+              </div>
+              <div class="col-md-3 pt-2" *ngIf="reportType === 'inquiryreport'">
+                <label class="form-label">Status</label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear [(ngModel)]="inquiryStatus"
+                  [ngClass]="{'is-invalid': submitted && f.typeCategory.errors}" nzPlaceHolder="Status">
+                  <nz-option *ngFor="let data of inquiryStatusTypes" [nzLabel]="data?.typeName"
+                    [nzValue]="data?.typeName"></nz-option>
+                </nz-select>
+              </div>
+
+
+
+              <div class="col-md-3 pt-2"
+                *ngIf="!(reportType ===  'telexDateWiseReport' || reportType === 'pendingHBLTelex' || reportType === 'ledgerReport' || reportType === 'gstr1Report' ||reportType === 'gstr1Report' || reportType === 'gstr2Report'|| reportType === 'gstr3bReport'|| reportType === 'gstr9Report' ||reportType === 'gstReport' || reportType === 'partyReport' || reportType === 'dsrReport' || reportType === 'customerDsrReport'  || reportType === 'bookingDetailReport' || reportType === 'jobReport' || reportType === 'telexReport' || reportType === 'inquiryreport' || reportType === 'bookingreport' || reportType === 'containerShippinglineReport'  || reportType === 'tdsReport' || reportType === 'hsnReport' || reportType === 'containerAllocationDetailsReport' || reportType === 'containerShippinglineReport'  || reportType === 'bankStatement')">
+                <label class="form-label">Job No.</label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear [(ngModel)]="bookingNo"
+                  [ngClass]="{'is-invalid': submitted && f.typeCategory.errors}" nzPlaceHolder="Job No">
+                  <nz-option *ngFor="let data of batchList" [nzLabel]="data?.batchNo"
+                    [nzValue]="data.batchNo"></nz-option>
+                </nz-select>
+              </div>
+
+              <div class="col-md-3 pt-2" *ngIf="reportType === 'invoicereport'">
+                <!-- <label class="form-label">Due Date Range</label> -->
+                <label class="form-label">{{ reportType === 'invoicereport' ? 'Invoice Due Date Range' : 'Due Date
+                  Range' }}</label>
+
+                <nz-range-picker style="height: 30px;" class="form-select custom-input" nzFormat="dd-MM-yyyy"
+                  [(ngModel)]="dueDate" name="date"></nz-range-picker>
+              </div>
+
+              <div class="col-md-3 pt-2" *ngIf="reportType === 'invoicereport' ">
+                <label class="form-label">Invoice Status</label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear [(ngModel)]="invoiceStatus"
+                  [ngClass]="{'is-invalid': submitted && f.typeCategory.errors}">
+                  <nz-option *ngFor="let data of allInvoiceStatus" [nzLabel]="data" [nzValue]="data"></nz-option>
+                </nz-select>
+              </div>
+
+              <div class="col-md-3 pt-2" *ngIf="reportType === 'invoicereport' ">
+                <label class="form-label">Payment Status</label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear [(ngModel)]="paymentStatus"
+                  [ngClass]="{'is-invalid': submitted && f.typeCategory.errors}">
+                  <nz-option *ngFor="let data of allPaymentStatus" [nzLabel]="data" [nzValue]="data"></nz-option>
+                </nz-select>
+              </div>
+
+              <div class="col-md-3 pt-2" *ngIf="reportType === 'containerreport'">
+                <label class="form-label">Container Status</label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear [(ngModel)]="containerreport"
+                  [ngClass]="{'is-invalid': submitted && f.typeCategory.errors}">
+                  <!-- <nz-option *ngFor="let data of reportData" [nzLabel]="data.typeDescription" [nzValue]="data.typeDescription"></nz-option> -->
+                </nz-select>
+              </div>
+              <div class="col-md-3 pt-2"
+                *ngIf="reportType === 'containerShippinglineReport'|| reportType === 'containerAllocationDetailsReport' || reportType === 'bookingreport'">
+                <label class="form-label">{{portLabel3}}</label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear [(ngModel)]="shippingLine"
+                  [ngClass]="{'is-invalid': submitted && f.typeCategory.errors}">
+                  <nz-option *ngFor="let data of shippinglineData" [nzLabel]="data.name"
+                    [nzValue]="data.shippinglineId"></nz-option>
+                </nz-select>
+              </div>
+              <div class="col-md-3 pt-2"
+                *ngIf="reportType === 'bookingreport' || reportType === 'containerAllocationDetailsReport'">
+                <label class="form-label">{{portLabel4}}</label>
+                <!-- <nz-select class="form-select" nzShowSearch nzAllowClear 
+                [(ngModel)]="vessel"
+                [ngClass]="{'is-invalid': submitted && f.typeCategory.errors}">
+                <nz-option *ngFor="let data of vesselData" [nzLabel]="data.vesselName" (ngModelChange)="setVoyage($event)"[nzValue]="data.vesselId"></nz-option>
+                </nz-select> -->
+                <nz-select class="form-select" [(ngModel)]="vessel" nzShowSearch nzAllowClear
+                  nzPlaceHolder="{{portLabel4}}" [ngClass]="{'is-invalid': submitted && f.final_vessel.errors}"
+                  (ngModelChange)="setVoyage($event)">
+                  <nz-option *ngFor="let vessel of  vesselList" [nzLabel]="vessel?.vesselName"
+                    [nzValue]="vessel.vesselId"></nz-option>
+                </nz-select>
+              </div>
+
+              <div class="col-md-3 pt-2"
+                *ngIf="reportType === 'bookingreport' && selectedTypeData?.typeName === 'Ocean'">
+                <label class="form-label">Voyage</label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear [(ngModel)]="voyageNo"
+                  [ngClass]="{'is-invalid': submitted && f.typeCategory.errors}">
+                  <nz-option *ngFor="let data of voyageListData" [nzLabel]="data.voyage_number"
+                    [nzValue]="data.voyage_number"></nz-option>
+                </nz-select>
+              </div>
+
+
+
+              <div class="col-md-3 pt-2" *ngIf="reportType === 'bookingreport'">
+                <label class="form-label">Booking Status</label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear [(ngModel)]="bookingStatus"
+                  [ngClass]="{'is-invalid': submitted && f.typeCategory.errors}">
+                  <nz-option *ngFor="let data of allBatchStatus" [nzLabel]="data" [nzValue]="data"></nz-option>
+                </nz-select>
+              </div>
+
+<div class="col-md-2"  style="margin-top: 13px;" *ngIf="!(reportType ===  'telexDateWiseReport')">
+  <label for="isJobClose" class="form-label" style="margin-right: 10px;">Job Close</label>
+  <span class="form-check form-switch mx-1">
+    <input
+      class="form-check-input"
+      type="checkbox"
+      role="switch"
+      id="isJobClose"
+      [(ngModel)]="isJobClose"
+     
+    />
+    <label class="form-check-label" for="jobCloseToggle"></label>
+  </span>
+</div>
+
+
+
+            </div>
+
+
+            <div class="row mb-3">
+              <div class="col-md-12">
+                <button class="btn btn-outline-primary float-end" (click)="onGenerateReport()">
+                  Generate Report
+                </button>
+              </div>
+            </div>
+
+            <div class="row mb-2" *ngIf="reportType === 'tdsReport'  && !isWarehouse && currentLogin !== 'warehouse'">
+              <div class="col-md-9"> </div>
+              <div class="col-md-3">
+                <nz-select class="form-select" nzShowSearch nzAllowClear (ngModelChange)="openModal($event,Addtds)"
+                  nzPlaceHolder="Deposit/Withdrawal" [(ngModel)]="selectBankTransfer">
+                  <nz-option nzDisabled nzLabel="Deposit/Withdrawal" nzValue=""></nz-option>
+                  <nz-option nzLabel="TDS Bank to Cash Transfer" nzValue="tdstocash"></nz-option>
+                  <nz-option nzLabel="TDS Bank to Bank Transfer" nzValue="tdstobank"></nz-option>
+
+                </nz-select>
+              </div>
+            </div>
+
+
+            <div class="table-card "
+              *ngIf="reportType !== '' && reportType != 'gstr9Report' && reportType != 'gstr3bReport' && displayedColumns.length > 0">
+              <div class="table-design example-container mat-elevation-z8">
+                <div class="text-end" *ngIf="reportType == 'ledgerReport'">
+                  Openning Balance <span
+                    [ngClass]="{'red-text': ledgerOpeningBalance < 0,'green-text': ledgerOpeningBalance > 0}">
+                    {{(ledgerOpeningBalance || 0) | number : '1.2-2' | customCurrency:
+                    currentAgent?.currency?.currencyCode}} </span>
+                </div>
+                <table mat-table [dataSource]="dataSource" matSort class="" summary="agreement">
+
+                  <ng-container matColumnDef="#">
+                    <th scope="col" mat-header-cell *matHeaderCellDef>
+                      #
+                    </th>
+                    <td mat-cell *matCellDef="let element;let i = index">
+                      {{element?.id}}
+                    </td>
+                  </ng-container>
+
+                
+
+
+                  <ng-container matColumnDef="enquiryNo">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Inquiry Number
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.enquiryNo }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="enquiryStatus">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Status
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.enquiryStatus }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="basicDetails.enquiryDate">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Inquiry Date
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.basicDetails?.enquiryDate | date : 'dd-MM-yyyy' }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="basicDetails.ShipmentTypeName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Freight Type
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.basicDetails?.ShipmentTypeName }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="basicDetails.shipperName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+
+                      Customer
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+
+                      {{ element?.basicDetails?.shipperName }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="basicDetails.invoicingPartyName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+
+                      Invoicing Party
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+
+                      {{ element?.basicDetails?.invoicingPartyName }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="basicDetails.consigneeName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+
+                      Consignee
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+
+                      {{ element?.basicDetails?.consigneeName }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="productName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Cargo
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.productName }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="routeDetails.loadPortName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      {{portLabel1}}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.routeDetails?.loadPortName}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="routeDetails.destPortName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      {{portLabel2}}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.routeDetails?.destPortName}}
+                    </td>
+                  </ng-container>
+
+
+                  <!-- #tdsAccount -->
+                  <ng-container matColumnDef="transactionId">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Transaction Id
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.transactionId }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="createdOn">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Date
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.createdOn  | date : 'dd-MM-YYYY'}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="partyName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Party Name </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.partyName }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="tdsAmount">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      TDS Amount
+                    </th>
+                    <td mat-cell *matCellDef="let element" style="text-align: end !important;">
+                      {{ (element?.tdsAmount || 0) | number : '1.2-2' | customCurrency:
+                      currentAgent?.currency?.currencyCode}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="tdsType">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Amount Type
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="{
+                      'red-text': element?.tdsType === 'Debit',
+                      'green-text': element?.tdsType === 'Credit'
+                      }">
+                      {{ element?.tdsType }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="invoiceData.invoiceNo">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Invoice No.
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.invoiceData?.[0]?.invoiceNo }}</td>
+                  </ng-container>
+
+
+                  <ng-container matColumnDef="transactionType">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Transaction Type
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.transactionType }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="netAmount">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Amount IN/OUT
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="{
+                      'red-text': element?.tdsType === 'Debit',
+                      'green-text': element?.tdsType === 'Credit'
+                      }">
+                      <i *ngIf="element?.tdsType === 'Debit'" class="bi bi-dash"></i>
+                      <i *ngIf="element?.tdsType === 'Credit'" class="bi bi-plus"></i>
+                      {{ (element?.netAmount || 0) | number : '1.2-2' | customCurrency:
+                      currentAgent?.currency?.currencyCode }}
+                    </td>
+                  </ng-container>
+
+
+                  // #hsnReport
+
+                  <ng-container matColumnDef="hsnCode">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      HSN Code
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.hsnCode }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="costItemName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Item Name
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.costItemName }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="quantity">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Quantity
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.quantity }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="totalValue">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Total Value
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.hsnCode }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="taxableAmount">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Taxable Value
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.taxableAmount }}
+                    </td>
+                  </ng-container>
+                 
+                
+                
+                  <ng-container matColumnDef="invoiceToName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Name
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.invoiceToName }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="invoiceDate">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Invoice Date Range
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.invoiceDate | date:'dd-MM-yyyy'}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="invoiceDueDate">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Invoice Due Date
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element?.invoiceDueDate ? (element?.invoiceDueDate | date:'dd-MM-yyyy'):'' }}
+                    </td>
+                  </ng-container>
+
+                  
+
+                  <ng-container matColumnDef="invoiceStatus">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Invoice Status
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.invoiceStatus }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="paymentStatus">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Payment Status
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.paymentStatus }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="loadPortName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      POL
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.loadPortName }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="destPortName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      POD
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.destPortName }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="locationName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Destination
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.locationName }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="finalDestination">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Final Destination Arrival
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.locationName }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="NOC">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      NOC
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element?.noc }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="containersName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      CNTR
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element?.containersName}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="containersNo">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      CNTR No.
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element?.containerNos}}
+                    </td>
+                  </ng-container>
+
+
+                  <ng-container matColumnDef="customerName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Customer
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.customerName }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="beneficiary_bankName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Beneficiary Bank
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.beneficiary_bankName }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="payementNo">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Payment No.
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.payementNo }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="paymentMode">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Payment Type
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.paymentMode }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="remitance_bank">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Remitance Bank.
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.remitance_bank }}
+                    </td>
+                  </ng-container>
+
+                 
+
+                  <ng-container matColumnDef="shipper">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Shipper
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.shipper }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="bankInstrumentDate">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Bank Instrument Date
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.bankInstrumentDate }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="received_from">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Received From.
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.received_from }}
+                    </td>
+                  </ng-container>
+
+               
+
+                  <ng-container matColumnDef="billNo">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Bill No.
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.billNo }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="amount">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Amount
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.amount }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="containerNumber">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Container Number
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.containerNumber }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="containerStatus">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Container Status
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.containerStatus }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="yardName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Yard Name
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.yardName }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="loadType">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Load Type
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.loadType }}
+                    </td>
+                  </ng-container>
+
+
+
+                  <ng-container matColumnDef="containerType">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Container Type
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.containerTypeName }}
+                    </td>
+                  </ng-container>
+ 
+
+                  <ng-container matColumnDef="tankStatus">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Tank Status
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.tankStatus }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="cargoType">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Cargo Type
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.cargoType }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="batchNo">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Job No
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.batchNo }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="blStatus">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Bl Status
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.blStatus }}
+                    </td>
+                  </ng-container>
+
+                  
+                  <ng-container matColumnDef="blType">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Bl Type
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.blType }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="telexDate">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Telex Date
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.telexDate | date : 'dd-MM-yyyy' }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="blNumber">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Bl Number
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.blNumber }}
+                    </td>
+                  </ng-container>
+                  
+                  
+
+                  <ng-container matColumnDef="batchDate">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                     Date
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.batchDate }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="selEstimates.igst">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Tax Amount
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="text-end">
+                      {{ element?.selEstimates?.igst || element?.buyEstimates?.igst }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="selEstimates.totalAmount">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Amount
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="text-end">
+                      {{ element?.selEstimates?.totalAmount || element?.buyEstimates?.totalAmount }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="createdBy">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Created By
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.createdBy }}
+                    </td>
+                  </ng-container>
+
+               
+
+                
+ 
+
+                  <ng-container matColumnDef="containerBooked">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Container Booked
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.containerBooked }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="containerAllocated">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Container Allocated
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.containerAllocated }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="containerPending">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Container Pending
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.containerPending }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="ETD">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      ETD
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.ETD | date : 'dd-MM-yyyy' }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="etd">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      ETD
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.etd | date : 'dd-MM-yyyy'}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="eta">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      ETA
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.eta | date : 'dd-MM-yyyy'}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="atd">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      ATD
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.atd | date : 'dd-MM-yyyy'}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="ata">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      ATA
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.ata | date : 'dd-MM-yyyy'}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="railETD">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Rail Out
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.railETD | date : 'dd-MM-yyyy'}}
+                    </td>
+                  </ng-container>
+
+
+
+                  <ng-container matColumnDef="originPortName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Origin Port Name
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.originPortName }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="bookingNumber">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Booking No.
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.bookingNumber }}
+                    </td>
+                  </ng-container>
+
+             
+
+                
+
+                  <ng-container matColumnDef="jobNo">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Job No.
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.jobNo }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="inquiryNo">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Inquiry No.
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.inquiryNo }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="status">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Status
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.status }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="chaName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Cha Name
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.chaName }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="nocDate">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Noc Date
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.nocDate | date:'dd-MM-yyyy' }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="boe">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      BILL OF ENTRY
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.boe }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="blNo">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Bl No
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.blNo }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="inDutyAmt">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      In Duty Amt
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.inDutyAmt }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="containerNo">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Container No
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.containerNo }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="containerSize">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Container Size
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.containerSize }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="containerInWardCount">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Container InWardCount
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.containerInWardCount }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="balancePackage">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Balance Package
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.balancePackage }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="exbondDutyAmount">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Ex bond Duty Amount
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.exbondDutyAmount }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="balanceDuty">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Balance Duty
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.balanceDuty }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="inWardDate">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Inward Date
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.inWardDate| date:'dd-MM-yyyy' }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="vehicleNumber">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Vehicle Number
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.vehicleNumber }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="qty">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Qty
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.qty }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="packageType">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      PackageType
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.packageType }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="cargo">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Cargo
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.cargo }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="dispatchDate">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Dispatch Date
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.dispatchDate| date:'dd-MM-yyyy' }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="blNoInWard">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Bl No Inward
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.blNoInWard }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="location">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Location
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.location }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="supervisor">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Supervisor
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.supervisor }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="balanceInWarehouse">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Balance Inwarehouse
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.balanceInWarehouse }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="numOfContainer">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Num Of Container
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.numOfContainer }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="inBondPackage">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      In Bond Package
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.inBondPackage }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="exBondBoe">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Ex BondBoe
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.exBondBoe }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="exBondPackage">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Ex Bond Package
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.exBondPackage }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="bondNo">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Bond No
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.bondNo }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="BOE">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      BOE
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.BOE }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="receivedDate">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Received Date
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.receivedDate | date:'dd-MM-yyyy'  }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="dutyPaid">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Duty Paid
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.dutyPaid }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="dutyStatus">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Duty Status
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.dutyStatus }}
+                    </td>
+                  </ng-container>
+                  
+                  <ng-container matColumnDef="dispatchRemarks">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Dispatch Remarks
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.dispatchRemarks }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="inPackages">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      In Packages
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.inPackages }}
+                    </td>
+                  </ng-container>
+                  
+                  <ng-container matColumnDef="outPackages">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Out Packages
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.outPackages }}
+                    </td>
+                  </ng-container>
+                  
+                  <ng-container matColumnDef="inWarehouse">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      In Warehouse
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.inWarehouse }}
+                    </td>
+                  </ng-container>
+                  
+                  <ng-container matColumnDef="inwardLocation">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Inward Location
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.inwardLocation }}
+                    </td>
+                  </ng-container>
+                  
+                  <ng-container matColumnDef="locationInward">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Location Inward
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.locationInward }}
+                    </td>
+                  </ng-container>
+                  
+                  <ng-container matColumnDef="labour">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Labour
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.labour }}
+                    </td>
+                  </ng-container>
+                  
+                  <ng-container matColumnDef="equipment">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Equipment
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.equipment }}
+                    </td>
+                  </ng-container>
+                   
+                  <ng-container matColumnDef="inbondBoe">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      In bond Boe
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.inbondBoe }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="exBoe">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Ex Boe
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.exBoe }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="inBondBoe">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      In Bond Boe
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.inBondBoe }}
+                    </td>
+                  </ng-container>
+
+                   <ng-container matColumnDef="warehouseName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Warehouse Name
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.warehouseName }}
+                    </td>
+                  </ng-container>
+                  
+                  <ng-container matColumnDef="code">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      code
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.code }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="itemDesciption">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                     Item Desciption
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.itemDesciption }}
+                    </td>
+                  </ng-container> 
+                  
+                  <ng-container matColumnDef="qtyStored">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Qty Stored
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.qtyStored }}
+                    </td>
+                  </ng-container> 
+
+                  <ng-container matColumnDef="storageType">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Storage Type
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.storageType }}
+                    </td>
+                  </ng-container>
+
+                   <ng-container matColumnDef="duration">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Duration
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.duration }}
+                    </td>
+                  </ng-container>
+                  
+                  <ng-container matColumnDef="totalCapacity">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Total Capacity
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.totalCapacity }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="spaceOccupied">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Space Occupied
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.spaceOccupied }}
+                    </td>
+                  </ng-container> 
+                  
+                  <ng-container matColumnDef="availableCapacity">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Available Capacity
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.availableCapacity }}
+                    </td>
+                  </ng-container> 
+                  
+                  <ng-container matColumnDef="occupiedCapacity">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Occupied Capacity
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.occupiedCapacity }}
+                    </td>
+                  </ng-container> 
+
+                  <ng-container matColumnDef="jobDate">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Job Date
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.jobDate | date:'dd-MM-yyyy' }}
+                    </td>
+                  </ng-container>
+                  
+                  <ng-container matColumnDef="packedBy">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Packed By
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.packedBy }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="boeDate">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Boe Date
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.boeDate | date:'dd-MM-yyyy'  }}
+                    </td>
+                  </ng-container> 
+                  
+                  <ng-container matColumnDef="bondDate">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                     Bond Date
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.bondDate | date:'dd-MM-yyyy' }}
+                    </td>
+                  </ng-container> 
+                  
+                  <ng-container matColumnDef="section">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                     Section
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.section }}
+                    </td>
+                  </ng-container> 
+
+                   <ng-container matColumnDef="goods">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Goods
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.goods  }}
+                    </td>
+                  </ng-container> 
+                  
+                  <ng-container matColumnDef="dateofexpiryofinitialbondingPeriod">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Date of expiry of initial bonding Period
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.dateofexpiryofinitialbondingPeriod | date:'dd-MM-yyyy' }}
+                    </td>
+                  </ng-container> 
+                  
+                  <ng-container matColumnDef="detailsofExtensions">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                     Details of Extensions
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.detailsofExtensions | date:'dd-MM-yyyy'}}
+                    </td>
+                  </ng-container> 
+
+                  <ng-container matColumnDef="balanceQty">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                     Balance Qty
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.balanceQty }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="inwardDate">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Inward Date
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.inwardDate | date:'dd-MM-yyyy'  }}
+                    </td>
+                  </ng-container> 
+                  
+                  <ng-container matColumnDef="nocNo">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                     Noc No
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.nocNo }}
+                    </td>
+                  </ng-container> 
+                  
+                  <ng-container matColumnDef="pkg">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                     pkg
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.pkg }}
+                    </td>
+                  </ng-container> 
+                   
+                   <ng-container matColumnDef="dispatchQty">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Dispatch Qty
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.dispatchQty }}
+                    </td>
+                  </ng-container> 
+                  
+                  <ng-container matColumnDef="storageDuration">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Storage Duration
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.storageDuration }}
+                    </td>
+                  </ng-container> 
+                  
+                  <ng-container matColumnDef="packingList">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Packing List
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.packingList  }}
+                    </td>
+                  </ng-container> 
+                  
+                  <ng-container matColumnDef="billOfLanding">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Bill Of Landing
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.billOfLanding }}
+                    </td>
+                  </ng-container> 
+                  
+                  <ng-container matColumnDef="commercialInvoice">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Commercial Invoice
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.commercialInvoice }}
+                    </td>
+                  </ng-container> 
+
+                  <ng-container matColumnDef="billOfEntry">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Bill Of Entry
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.billOfEntry }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="outOfCharge">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Out Of Charge
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.outOfCharge  }}
+                    </td>
+                  </ng-container> 
+                  
+                  <ng-container matColumnDef="gatepass">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Gatepass
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.gatepass }}
+                    </td>
+                  </ng-container> 
+                  
+                  <ng-container matColumnDef="bond">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Bond
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.bond }}
+                    </td>
+                  </ng-container> 
+                   
+                   <ng-container matColumnDef="permission">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Permission
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.permission  }}
+                    </td>
+                  </ng-container> 
+                  
+                  <ng-container matColumnDef="deliveryOrder">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      DeliveryOrder
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.deliveryOrder  }}
+                    </td>
+                  </ng-container> 
+                  
+
+                  <ng-container matColumnDef="sealIntact">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Seal Intact
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.sealIntact }}
+                    </td>
+                  </ng-container> 
+                  
+                  <ng-container matColumnDef="exBillOfEntry">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Ex Bill Of Entry
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.exBillOfEntry }}
+                    </td>
+                  </ng-container> 
+
+                  <ng-container matColumnDef="form6">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Form 6
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.form6 }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="header-kycdocs">
+                    <th mat-header-cell *matHeaderCellDef [attr.colspan]="2" class="group-header">
+                      KYC DOCS
+                    </th>
+                  </ng-container>
+
+                  <ng-container matColumnDef="kycdocsImporter">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      kyc docs Importer
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.kycdocsImporter }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="kycdocsCha">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      kyc docs Cha
+                     </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.kycdocsCha }}
+                    </td>
+                  </ng-container>
+                  
+                  <ng-container matColumnDef="exbondBOE">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      exbondBOE
+                     </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.exbondBOE }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="exbondOOC">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      exbondOOC
+                     </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.exbondOOC }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="exbondGatepass">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      exbondGatepass
+                     </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.exbondGatepass }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="exbondDutyChallan">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      exbondDutyChallan
+                     </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.exbondDutyChallan }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="exbondGateInReqLetter">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      exbondGateInReqLetter
+                     </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.exbondGateInReqLetter }}
+                    </td>
+                  </ng-container>
+                  
+
+
+
+
+                  
+
+                  
+                  
+                  
+                  <ng-container matColumnDef="exOutOfCharge">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Ex Out Of Charge
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.exOutOfCharge  }}
+                    </td>
+                  </ng-container> 
+                  
+                  <ng-container matColumnDef="exGatepass">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Ex Gate pass
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.exGatepass }}
+                    </td>
+                  </ng-container> 
+                  
+                  <ng-container matColumnDef="dutyChallan">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Duty Challan
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.dutyChallan }}
+                    </td>
+                  </ng-container> 
+                   
+                   <ng-container matColumnDef="gateInReqLetter">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Gate In Req Letter
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.gateInReqLetter  }}
+                    </td>
+                  </ng-container> 
+                  
+                  <ng-container matColumnDef="freightType">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Freight Type
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.freightType }}
+                    </td>
+                  </ng-container>
+
+               
+
+                  
+
+                  <ng-container matColumnDef="consigneeName" style="width: 30%;">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Consignee Name
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ dsrReport ? element?.multiConsigneeCS : element?.consigneeName }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="agentName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Agent Name
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.agentName }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="totalDays">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Total Days since DO Released
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.totalDays }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="shippinglineName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      {{portLabel3}}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.shippingLineName || element?.shippinglineName}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="vesselName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      {{portLabel4}}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.vesselName }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="voyageNumber">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Voyage
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.voyageNumber }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="shipperName" style="width: 30%;">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Shipper
+                    </th>
+                  
+                    <td mat-cell *matCellDef="let element">
+                      <span class="white-space-br">
+                        {{ dsrReport ? element?.multiShipperCS : element?.shipperName }}
+                      </span>
+                    </td>
+                  </ng-container>                  
+
+                  <ng-container matColumnDef="forwarderName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Forwarder
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.forwarderName }}
+                    </td>
+                  </ng-container>
+
+
+              <ng-container matColumnDef="totalLabel">
+  <td mat-footer-cell *matFooterCellDef colspan="4" class="text-end fw-bold">
+    Total
+  </td>
+</ng-container>
+                  <ng-container  matColumnDef="buyEstimateAmount">
+                    
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Buy Amount
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.buyEstimateAmount | number : '1.2-2' }}
+                    </td>
+                     <td mat-footer-cell *matFooterCellDef> 
+    {{this.totalPLBuy}} 
+  </td>
+                  </ng-container>
+                  <ng-container matColumnDef="sellEstimateAmount">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Sell Amount
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.sellEstimateAmount | number : '1.2-2'}}
+                    </td>
+                      <td mat-footer-cell *matFooterCellDef> 
+    {{this.totalPLSell}} 
+  </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="commission">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Commission
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ (element?.sellEstimateAmount-element?.buyEstimateAmount) | number : '1.2-2'}}
+                    </td>
+                  </ng-container>
+            
+                  <ng-container matColumnDef="invoiceNo">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Invoice No.
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.invoiceNo }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="invoiceTaxAmount">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Invoice Tax Amount
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.invoiceTaxAmount | number : '1.2-2'}}
+                    </td>
+                  </ng-container>
+               
+                  <ng-container matColumnDef="profitLoss">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Profit/Loss
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.profitLoss }}
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef> 
+    {{this.totalPL}} 
+  </td>
+                  </ng-container>
+                  <ng-container matColumnDef="deliveryOrderNo">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Delivery Order No.
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.deliveryOrderNo }}
+                    </td>
+                  </ng-container>
+
+              
+
+                  <ng-container matColumnDef="depoName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Depo Name
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.depoName }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="releaseType">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Release Type
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.releaseType }}
+                    </td>
+                  </ng-container>
+
+
+
+                  <ng-container matColumnDef="deliveryDate">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Delivery Date
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.deliveryDate| date :'dd-MM-yyyy' }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="validTill">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Valid Till
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.validTill | date :'dd-MM-yyyy'}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="extendedValidTill">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Extended Valid Till
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.extendedValidTill| date :'dd-MM-yyyy' }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="containerNos">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Container Nos
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      <span *ngFor="let data of element?.containerNos">{{data}},&nbsp;</span>
+                    </td>
+                  </ng-container>
+
+
+                  <ng-container matColumnDef="hblNumber">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      HBL No.
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element?.hblNumber}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="totalPackages">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Total Packages
+                    </th>
+                    <td mat-cell *matCellDef="let element"
+                    [matTooltip]="formatPackageHBL(element)"
+                    matTooltipClass="package-tooltip"
+                    matTooltipPosition="above">
+                  {{ element?.totalPackages }}
+                </td>
+                  </ng-container>
+                  
+
+                  <ng-container matColumnDef="mblNumber">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      MBL No.
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element?.mblNumber}}
+                    </td>
+                    <ng-container matColumnDef="SoNo">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                     SO No.
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element?.bookingRef}}
+                    </td>
+                  </ng-container>
+                  </ng-container>
+                  <ng-container matColumnDef="departureTime">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Departure Date
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element?.departureTime | date : 'dd-MM-yyyy'}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="arrivalTime">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Arrival Date
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element?.arrivalTime | date : 'dd-MM-yyyy'}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="stuffingDate">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Stuffing Date
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element?.stuffingDate | date : 'dd-MM-yyyy'}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="statusOfBatch">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      {{(reportType === 'customerDsrReport' || reportType == 'dsrReport') ? 'Curr Pend Milestone': 'Status'}}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element?.statusOfBatch}}
+                    </td>
+                  </ng-container>
+
+
+
+                  <ng-container matColumnDef="purchaseTax">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Purchase Tax
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element?.purchaseTax}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="sellTax">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Sale Tax
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element?.sellTax}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="taxNumber">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      GSTIN
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element?.taxNumber}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="receivable">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Receivable Balance
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element?.receivable}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="payable">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Payable Balance
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element?.payable}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="invoiceAmount">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Total Amount
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="text-end">
+                      {{ element?.invoiceAmount | number : '1.2-2'}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="paidAmount">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Received/Paid Amount
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="text-end">
+                      {{ element?.paidAmount | number : '1.2-2' }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="balanceAmount">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Balance Amount
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="text-end">
+                      {{ element?.balanceAmount | number : '1.2-2'}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="remarks">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Description
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.remarks }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="hbl">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      MBL/HBL
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.mbl }} / {{ element?.hbl }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="packagesNo">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Package No.
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.packagesNo }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="invoiceFromName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Party Name
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.invoiceFromName }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="gstNumber">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      GSTIN
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.gstNumber }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="rate">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Rate
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="text-center">
+                      {{ (element?.rate || 0) | number : '1.0-0'}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="cessRate">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Cess Rate
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="text-center">
+                      {{( element?.cessRate || 0) | number : '1.0-0'}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="taxableValue">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Taxable Amount
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="text-end">
+                      {{ (element?.taxableValue || 0)| number : '1.2-2'}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="reverseCharge">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Reverse Charge
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="text-center">
+                      {{ element?.reverseCharge || 'N'}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="igst">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Integrated Tax
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="text-end">
+                      {{ (element.gstType != 'cgst' ? element?.invoiceTaxAmount || 0 : 0) | number : '1.2-2' }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="cgst">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Central Tax
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="text-end">
+                      {{ (element.gstType == 'cgst' ? element?.invoiceTaxAmount / 2|| 0 : 0) | number : '1.2-2' }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="sgst">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      State/UT Tax
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="text-end">
+                      {{ (element.gstType == 'cgst' ? element?.invoiceTaxAmount/2 || 0 : 0) | number : '1.2-2'}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="cess">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Cess
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="text-end">
+                      {{ (element?.cess|| 0) | number : '1.2-2' }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="stateOfSupplyName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      {{ reportType == 'gstr1Report' ? "Place Of Supply Name" : "State Of Supply Name"}}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.stateOfSupplyName }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="debit">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Debit
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="text-end">
+                      {{ (element?.amountType == 'Debit' ? element?.invoiceAmount|| 0 : 0) | number : '1.2-2' }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="credit">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Credit
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="text-end">
+                      {{ (element?.amountType != 'Debit' ? element?.invoiceAmount|| 0 : 0) | number : '1.2-2' }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="runningBalance">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Running Balance
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="text-end">
+                      {{ (element?.runningBalance || 0) | number : '1.2-2'}}
+                    </td>
+                  </ng-container>
+
+
+                  <ng-container matColumnDef="refNo">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Payment REF No.
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.paymentRefNo }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="type">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      TXN Type
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.transactionType }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="paymentNo">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Payment No.
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.paymentNo }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="paymentType">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Payment Type
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.paymentType }}
+                    </td>
+                  </ng-container>
+
+
+                  <ng-container matColumnDef="doDate">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      DO Date
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.doDate | date :"dd-MM-yyyy"}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="containers">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Containers
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ telexDateWiseReport ? element?.containers?.join(', ') : element?.containers }}
+                    </td>
+                  </ng-container>
+
+
+                  <ng-container *ngFor="let milestone of milestoneColumns" [matColumnDef]="milestone">
+                    <th mat-header-cell *matHeaderCellDef> {{ milestone }} </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ getMilestoneData(element.milestones, milestone) }}
+                    </td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                  
+                  <ng-container  *ngIf="reportType === 'profitLossreport'">
+<tr 
+  mat-footer-row 
+  *matFooterRowDef="footerColumns; sticky: false" 
+  [hidden]="reportType !== 'profitLossreport'">
+</tr>
+</ng-container>
+
+                  <tr class="mat-row" *matNoDataRo>
+                    <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+                      <span *ngIf="loaderService?.getloadingcircle()">{{_gc?.LOADER_TEXT}}</span>
+                      <span *ngIf="!loaderService?.getloadingcircle() && !dataSource?.data?.length">No data
+                        available</span>
+                    </td>
+                  </tr>
+                </table>
+
+              </div>
+              <div [ngClass]="{'display-none' : dataSource.filteredData.length < 10}">
+                <mat-paginator [pageSizeOptions]="pagenation" showFirstLastButtons aria-label="Select page">
+                </mat-paginator>
+              </div>
+            </div>
+
+            <div class="gst-report mb-5" *ngIf="reportType == 'gstr3bReport'">
+              <div class="col-md-12 wrap-table-area">
+                <div class="table-responsive">
+
+                  <!-- Section 1: Outward Supplies -->
+                  <span class="title">1. Details of outward supplies and inward supplies liable to reverse charge</span>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Nature Of Supplies</th>
+                        <th>Total Taxable Value</th>
+                        <th>Integrated Tax</th>
+                        <th>Central Tax</th>
+                        <th>State/UT Tax</th>
+                        <th>Cess</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let supply of gstData?.outwardSuppliesTable">
+                        <td>{{ supply.nature }}</td>
+                        <td class="text-end">{{ supply.totalTaxableValue | number: '1.2-2' }}</td>
+                        <td class="text-end">{{ supply.integratedTax | number: '1.2-2' }}</td>
+                        <td class="text-end">{{ supply.centralTax | number: '1.2-2' }}</td>
+                        <td class="text-end">{{ supply.stateTax | number: '1.2-2' }}</td>
+                        <td class="text-end">{{ 0 | number: '1.2-2' }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <!-- Section 2: Inter-State Supplies -->
+                  <span class="title">2. Details of inter-State supplies made to unregistered persons, composition
+                    dealer and UIN
+                    holders
+                  </span>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Place Of Supply (State/UT)</th>
+                        <th colspan="2">Supplies Made To Unregistered Persons</th>
+                        <th colspan="2">Supplies Made To Composition Taxable Persons</th>
+                        <th colspan="2">Supplies Made To UIN Holders</th>
+                      </tr>
+                      <tr>
+                        <th></th>
+                        <th>Total Taxable Value</th>
+                        <th>Amount Of Integrated Tax</th>
+                        <th>Total Taxable Value</th>
+                        <th>Amount Of Integrated Tax</th>
+                        <th>Total Taxable Value</th>
+                        <th>Amount Of Integrated Tax</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let supply of gstData?.interStateSuppliesTable">
+                        <td>{{ supply.place }}</td>
+                        <td class="text-end">{{ supply.unregisteredTaxable | number: '1.2-2' }}</td>
+                        <td class="text-end">{{ supply.unregisteredTax | number: '1.2-2' }}</td>
+                        <td class="text-end">{{ supply.compositionTaxable | number: '1.2-2' }}</td>
+                        <td class="text-end">{{ supply.compositionTax | number: '1.2-2' }}</td>
+                        <td class="text-end">{{ supply.uinTaxable | number: '1.2-2' }}</td>
+                        <td class="text-end">{{ supply.uinTax | number: '1.2-2' }}</td>
+                      </tr>
+                      <tr *ngIf="gstData?.interStateSuppliesTable?.length == 0">
+                        No Data Available
+                        </tr>
+                    </tbody>
+                  </table>
+
+                  <!-- Section 3: Input Tax Credit -->
+                  <span class="title">3. Details of eligible Input Tax Credit</span>
+ 
+                  <table class="custom-table">
+                    <thead>
+                      <tr>
+                        <th>Details</th>
+                        <th>Integrated tax</th>
+                        <th>Central tax</th>
+                        <th>State/UT tax</th>
+                        <th>Cess</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let row of gstData?.inputTaxCredit1">
+                        <td [attr.colspan]="row.isHeader ? 5 : 1" class="{{ row.isHeader ? 'header-row' : '' }}">{{
+                          row.details }}</td>
+                        <ng-container *ngIf="!row.isHeader">
+                          <td  class="text-end">{{ row.integratedTax | number: '1.2-2' }}</td>
+                          <td  class="text-end">{{ row.centralTax | number: '1.2-2' }}</td>
+                          <td  class="text-end">{{ row.stateTax | number: '1.2-2' }}</td>
+                          <td  class="text-end">{{ row.cess | number: '1.2-2' }}</td>
+                        </ng-container>
+                      </tr>
+                    </tbody>
+                  </table>
+
+
+
+
+                  <span class="title">4. Details of exempt, nil-rated, and non-GST inward supplies</span>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Nature Of Supplies</th>
+                        <th>Inter-State Supplies</th>
+                        <th>Intra-State Supplies</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let supply of gstData?.exemptSuppliesTable">
+                        <td>{{ supply.nature }}</td>
+                        <td class="text-end">{{ supply.interState | number: '1.2-2' }}</td>
+                        <td class="text-end">{{ supply.intraState | number: '1.2-2' }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <span class="title">5.1 Interest and Late fee for previous tax period</span>
+                  <table class="custom-table">
+                    <thead>
+                      <tr>
+                        <th>Details</th>
+                        <th>Integrated tax</th>
+                        <th>Central tax</th>
+                        <th>State/UT tax</th>
+                        <th>Cess</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let row of gstData?.InterestLatefee">
+                        <td  >{{ row.details }}</td>
+                        <td class="text-end">{{ row.integratedTax | number: '1.2-2' }}</td>
+                        <td class="text-end">{{ row.centralTax | number: '1.2-2' }}</td>
+                        <td class="text-end">{{ row.stateTax | number: '1.2-2' }}</td>
+                        <td class="text-end">{{ row.cess | number: '1.2-2' }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <span class="title">6.1 Payment of tax</span>
+                  <table class="custom-table">
+                    <thead>
+                      <tr>
+                        <th rowspan="2">Description</th>
+                        <th rowspan="2">Total tax payable</th>
+                        <th colspan="4">Tax paid through ITC</th>
+                        <th rowspan="2">Tax paid in cash</th>
+                        <th rowspan="2">Interest paid in cash</th>
+                        <th rowspan="2">Late fee paid in cash</th>
+                      </tr>
+                      <tr>
+                        <th >Integrated tax</th>
+                        <th >Central tax</th>
+                        <th >State/UT tax</th>
+                        <th >Cess</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let row of gstData?.Paymentoftx">
+                        <td [attr.colspan]="row.isHeader ? 9 : 1" class="{{ row.isHeader ? 'header-row' : '' }}">{{
+                          row.description }}</td>
+                        <ng-container *ngIf="!row.isHeader">
+                          <td class="text-end">{{ row.totalTaxPayable | number: '1.2-2' }}</td>
+                          <td class="text-end">{{ row.integratedTax | number: '1.2-2' }}</td>
+                          <td class="text-end">{{ row.centralTax | number: '1.2-2' }}</td>
+                          <td class="text-end">{{ row.stateTax | number: '1.2-2' }}</td>
+                          <td class="text-end">{{ row.cess | number: '1.2-2' }}</td>
+                          <td class="text-end">{{ row.taxPaidInCash | number: '1.2-2' }}</td>
+                          <td class="text-end">{{ row.interestPaidInCash | number: '1.2-2' }}</td>
+                          <td class="text-end">{{ row.lateFeePaidInCash | number: '1.2-2' }}</td>
+                        </ng-container>
+                      </tr>
+                    </tbody>
+                  </table>
+
+
+                  <span class="title">Breakup of tax liability declared (for interest computation) </span>
+                  <table class="custom-table">
+                    <thead>
+                      <tr>
+                        <th>Period</th>
+                        <th>Integrated tax</th>
+                        <th>Central tax</th>
+                        <th>State/UT tax</th>
+                        <th>Cess</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let row of gstData?.Breakupoftax">
+                        <td>{{ row.period }}</td>
+                        <td class="text-end">{{ row.integratedTax }}</td>
+                        <td class="text-end">{{ row.centralTax }}</td>
+                        <td class="text-end">{{ row.stateTax }}</td>
+                        <td class="text-end">{{ row.cess }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+
+                </div>
+              </div>
+            </div>
+
+
+            <div class="gstr9-container mb-5" *ngIf="reportType == 'gstr9Report'">
+              <div class="heading">Pt. I - Basic Details</div>
+              <table>
+                <tbody>
+                  <tr>
+                    <th>1</th>
+                    <td>Financial Year</td>
+                    <td>{{selectedFinancialYear}}</td>
+                  </tr>
+                  <tr>
+                    <th>2</th>
+                    <td>GSTIN</td>
+                    <td>{{this.currentUser?.taxId}}</td>
+                  </tr>
+                  <tr>
+                    <th>3A</th>
+                    <td>Legal Name</td>
+                    <td>{{this.currentUser?.agentName}}</td>
+                  </tr>
+                  <tr>
+                    <th>3B</th>
+                    <td>Trade Name (if any)</td>
+                    <td>---</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="heading">Pt. II - Details of Outward and Inward Supplies</div>
+              <div class="sub-heading">4. Details of advances, inward and outward supplies on which tax is payable as
+                declared in returns filed during the financial year</div>
+              <table class="supply-details">
+                <thead>
+                  <tr>
+                    <th>Nature of Supplies</th>
+                    <th>Taxable Value</th>
+                    <th>Central Tax</th>
+                    <th>State Tax/UT Tax</th>
+                    <th>Integrated Tax</th>
+                    <th>Cess</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of supplies">
+                    <td>{{ item.description }}</td>
+                    <td class="text-end">{{ item.taxableValue | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.centralTax | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.stateTax | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.integratedTax | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ 0 | number: '1.2-2' }}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="sub-heading">5.Details of Outward supplies on which tax is not payable as declared in returns
+                filed during the
+                financial year</div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Description</th>
+                    <th>Taxable Value</th>
+                    <th>Central Tax</th>
+                    <th>State Tax/UT Tax</th>
+                    <th>Integrated Tax</th>
+                    <th>Cess</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of outwardSupplies">
+                    <td>{{ item.code }}</td>
+                    <td>{{ item.description }}</td>
+                    <td class="text-end">{{ item.taxableValue | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.centralTax | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.stateTax | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.integratedTax | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ 0 | number: '1.2-2' }}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <!-- Section Pt. III -->
+              <div class="heading">Pt. III Details Of ITC As Declared In Returns Filed During The Financial Year</div>
+              <div class="sub-heading">6. Details of ITC availed as declared in returns</div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Description</th>
+                    <th>Type</th>
+                    <th>Central Tax</th>
+                    <th>State Tax/UT Tax</th>
+                    <th>Integrated Tax</th>
+                    <th>Cess</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of itcDetails;let i=index">
+
+                    <td *ngIf="!item?.hideTD" [attr.rowspan]="item?.rowspan">{{ item.code }}</td>
+                    <td *ngIf="!item?.hideTD" [attr.rowspan]="item?.rowspan">{{ item.description }}</td>
+                    <td>{{ item.type }}</td>
+                    <td class="text-end">{{ item.centralTax | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.stateTax | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.integratedTax | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ 0 | number: '1.2-2' }}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+
+
+              <table>
+                <tbody>
+                  <tr>
+                    <td class="p-0" colspan="2">
+                      <div class="sub-heading">7. Details of ITC Reversed and Ineligible ITC as declared in returns
+                        filed
+                        during
+                        the financial year</div>
+                    </td>
+                  </tr>
+                  <tr *ngFor="let item of itcReversed">
+                    <td style="width:10%">{{ item.code }}</td>
+                    <td>{{ item.description }}</td>
+                  </tr>
+                  <tr>
+                    <td class="p-0" colspan="2">
+                      <div class="sub-heading">8. Other ITC related information</div>
+                    </td>
+
+                  </tr>
+                  <tr *ngFor="let item of otherItcDetails">
+                    <td style="width:10%">{{ item.code }}</td>
+                    <td>{{ item.description }}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="heading">Pt. IV - Details Of Tax Paid As Declared In Returns Filed During The Financial
+                Year</div>
+              <table>
+                <thead>
+                  <tr>
+                    <th rowspan="2">9.</th>
+                    <th rowspan="2">Description</th>
+                    <th rowspan="2">Tax Payable</th>
+                    <th rowspan="2">Paid through Cash</th>
+                    <th colspan="4" class="text-center">Paid through ITC</th>
+                  </tr>
+                  <tr>
+                    <th>Central Tax</th>
+                    <th>State Tax/UT Tax</th>
+                    <th>Integrated Tax</th>
+                    <th>Cess</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of taxPaidDetails">
+                    <td>{{ item.code }}</td>
+                    <td>{{ item.description }}</td>
+                    <td class="text-end">{{ item.taxPayable | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.paidCash | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.centralTax | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.stateTax | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.integratedTax | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ 0 | number: '1.2-2' }}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="heading">Pt. V - Particulars Of The Transactions For The Previous FY Declared In Returns Of
+                April To
+                September Of Current FY</div>
+              <table>
+                <thead>
+
+                  <tr>
+                    <th>#</th>
+                    <th>Description</th>
+                    <th>Tax Payable</th>
+                    <th>Central Tax</th>
+                    <th>State Tax/UT Tax</th>
+                    <th>Integrated Tax</th>
+                    <th>Cess</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of previousFyTransactions">
+                    <td>{{ item.code }}</td>
+                    <td>{{ item.description }}</td>
+                    <td class="text-end">{{ item.taxPayable | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.centralTax | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.stateTax | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.integratedTax | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ 0 | number: '1.2-2' }}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="sub-heading">14. Differential Tax Paid On Account Of Declaration In 10 & 11 Above</div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Description</th>
+                    <th>Payable</th>
+                    <th>Paid</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of differentialTax">
+                    <td>{{ item.description }}</td>
+                    <td class="text-end">{{ item.payable | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.paid | number: '1.2-2' }}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+
+              <div class="heading">Pt. VI - Other Information</div>
+              <table>
+                <thead>
+                  <tr>
+                    <th rowspan="2">15</th>
+                    <th rowspan="2">Details</th>
+                    <th colspan="7" class="text-center">Particulars of Demands and Refunds</th>
+                  </tr>
+                  <tr>
+                    <th>Central Tax</th>
+                    <th>State Tax/UT Tax</th>
+                    <th>Integrated Tax</th>
+                    <th>Cess</th>
+                    <th>Interest</th>
+                    <th>Penalty</th>
+                    <th>Late Fee/Others</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of demandsRefunds">
+                    <td>{{ item.code }}</td>
+                    <td>{{ item.details }}</td>
+                    <td class="text-end">{{ item.centralTax | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.stateTax | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.integratedTax | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ 0 | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.interest | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.penalty | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.lateFee | number: '1.2-2' }}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="sub-heading">16. Information On Supplies Received From Composition Taxpayers, Deemed Supply
+                Under Section 143 And Goods Sent On Approval Basis</div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Details</th>
+                    <th>Taxable Value</th>
+                    <th>Central Tax</th>
+                    <th>State/UT Tax</th>
+                    <th>Integrated Tax</th>
+                    <th>Cess</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of section16Data">
+                    <td>{{ item.code }}</td>
+                    <td>{{ item.details }}</td>
+                    <td class="text-end">{{ item.taxableValue | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.centralTax | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.stateUTTax | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.integratedTax | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ 0 }}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="sub-heading">17. HSN Wise Summary Of Outward Supplies</div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>HSN Code</th>
+                    <th>UQC</th>
+                    <th>Total Quantity</th>
+                    <th>Taxable Value</th>
+                    <th>Rate of Tax</th>
+                    <th>Central Tax</th>
+                    <th>State/UT Tax</th>
+                    <th>Integrated Tax</th>
+                    <th>Cess</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of section17Data">
+                    <td>{{ item.hsnCode }}</td>
+                    <td>{{ item.uqc }}</td>
+                    <td>{{ item.totalQuantity }}</td>
+                    <td class="text-end">{{ item.taxableValue | number: '1.2-2' }}</td>
+                    <td>{{ item.rateOfTax }}</td>
+                    <td class="text-end">{{ item.centralTax | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.stateUTTax | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.integratedTax | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ 0 }}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+
+              <div class="sub-heading">18. HSN Wise Summary Of Inward Supplies</div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>HSN Code</th>
+                    <th>UQC</th>
+                    <th>Total Quantity</th>
+                    <th>Taxable Value</th>
+                    <th>Rate of Tax</th>
+                    <th>Central Tax</th>
+                    <th>State/UT Tax</th>
+                    <th>Integrated Tax</th>
+                    <th>Cess</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of section18Data">
+                    <td>{{ item.hsnCode }}</td>
+                    <td>{{ item.uqc }}</td>
+                    <td>{{ item.totalQuantity }}</td>
+                    <td class="text-end">{{ item.taxableValue | number: '1.2-2' }}</td>
+                    <td>{{ item.rateOfTax }}</td>
+                    <td class="text-end">{{ item.centralTax | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.stateUTTax | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.integratedTax | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ 0 }}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="sub-heading">19. Late Fee Payable And Paid</div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Description</th>
+                    <th>Payable</th>
+                    <th>Paid</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of section19Data">
+                    <td>{{ item.code }}</td>
+                    <td class="text-end">{{ item.description }}</td>
+                    <td class="text-end">{{ item.payable | number: '1.2-2' }}</td>
+                    <td class="text-end">{{ item.paid | number: '1.2-2' }}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #deleteproduct let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body mt-4">
+      <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2">
+      </em>
+      <span class="text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+          {{ 'common.no' | translate }}
+        </button>
+        <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+          {{ 'common.yes' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #check let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+      </button>
+    </div>
+    <div class="modal-body mt-4">
+      <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2"> </em> <span
+        class=" text-dark fs-6"> {{ "error.you_sure" | translate }}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary  btn-sm me-3"
+          (click)="d('Cross click')">{{'common.no'|translate}}</button>
+        <button type="button" class="btn btn-danger  btn-sm" (click)="c('yes')">{{'common.yes'|translate}}</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #AddClause let-modal>
+  <div class="modal-content">
+    <div class="modal-headers mt-2">
+      <h4 class="modal-title">
+        <ng-container *ngIf="!this.systemIdToUpdate; else countryUpdate">
+          {{ 'common.add' | translate }} {{
+          "stolt.masters.COUNTRY_MASTER.report"
+          | translate
+          }}
+        </ng-container>
+        <ng-template #countryUpdate>
+
+        </ng-template>
+      </h4>
+      <button type="button" class="btn-close shadow-none float-end" (click)="onSave()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <div class="wrap-form-field padding-space">
+        <form class="row g-3 wrap-modal-autosearch" [formGroup]="addCountryForm">
+          <div class="col-md-6">
+            <label class="form-label">Report Name</label><span class="text-danger">*</span>
+            <input type="text" class="form-control custom-input" formControlName="reportName" id=" " placeholder=""
+              [ngClass]="{ 'is-invalid': submitted && f.reportName.errors }" />
+            <div *ngIf="submitted && f.reportName.errors" class="invalid-feedback">
+              <div *ngIf="f.reportName.errors.required">
+                This field is required.
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Report Id</label><span class="text-danger">*</span>
+            <input oninput="this.value = this.value === ' ' ? '' : this.value ; this.value = this.value?.trim()"
+              type="text" class="form-control custom-input" id=" " formControlName="reportId" placeholder=""
+              [ngClass]="{ 'is-invalid': submitted && f.reportId.errors }" />
+            <div *ngIf="submitted && f.reportId.errors" class="invalid-feedback">
+              <div *ngIf="f.reportId.errors.required">
+                This field is required.
+              </div>
+            </div>
+          </div>
+          <div class="form-group wrap-form-action mt-4">
+            <button class="btn1 btn-lg float-end" (click)="onSave()" type="submit">
+              {{ "common.cancel" | translate }}
+            </button>
+            <button (click)="countryMasters()" class="btn btn-outline-primary btn-lg float-end" type="submit">
+              <ng-container *ngIf="!this.systemIdToUpdate; else commoditymst">
+                {{ 'common.save' | translate }}
+              </ng-container>
+              <ng-template #commoditymst>
+                {{ 'common.update' | translate }}
+              </ng-template>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #Addtds let-modal>
+  <div class="modal-content nz-allSelect">
+    <div class="modal-headers mt-2">
+      <h4 class="modal-title">
+        <ng-container>
+          Bank To Bank Transfer
+        </ng-container>
+      </h4>
+      <button type="button" class="btn-close shadow-none float-end" (click)="cancel()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <div class="wrap-form-field padding-space">
+        <form class="row g-2" [formGroup]="addtdsform">
+
+          <div class="col-md-6">
+            <label for="" class="form-label">From<span class="text-danger">*</span></label>
+            <nz-select nzDisabled class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="From"
+              formControlName="from" [ngClass]="{ 'is-invalid': submitted1 && f1.from.errors }">
+              <nz-option nzLabel="TDS Bank" nzValue="TDS Bank"></nz-option>
+            </nz-select>
+            <div *ngIf="submitted1 && f1.from.errors" class="invalid-feedback">
+              <div *ngIf="f1.from.errors.required">
+                This field is required.
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="" class="form-label">TO<span class="text-danger">*</span></label>
+            <nz-select [nzDisabled]="selectBankTransfer == 'banktocash'" class="form-select" nzShowSearch nzAllowClear
+              nzPlaceHolder="TO" formControlName="to" [ngClass]="{ 'is-invalid': submitted1 && f1.to.errors }">
+              <nz-option nzLabel="Cash" nzValue="Cash"></nz-option>
+              <nz-option *ngFor="let data of  bankList" [nzLabel]="data.bankName" [nzValue]="data.bankId"></nz-option>
+            </nz-select>
+            <div *ngIf="submitted1 && f1.to.errors" class="invalid-feedback">
+              <div *ngIf="f1.to.errors.required">
+                This field is required.
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Amount<span class="text-danger">*</span></label>
+            <input class="form-control custom-input" type="number" formControlName="amount" placeholder="Enter Amount"
+              [ngClass]="{ 'is-invalid': submitted1 && f1.amount.errors }" />
+            <div *ngIf="submitted1 && f1.amount.errors" class="invalid-feedback">
+              <div *ngIf="f1.amount.errors.required">
+                This field is required.
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Date<span class="text-danger">*</span></label>
+            <mat-form-field appearance="outline" class="custom-date-picker">
+              <input matInput [matDatepicker]="datePicker" formControlName="date" placeholder="Select Date" />
+              <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+              <mat-datepicker #datePicker></mat-datepicker>
+            </mat-form-field>
+            <mat-error>
+              <div class="set-error-msg" *ngIf="submitted1 && f1?.date?.errors?.required">Date is required</div>
+            </mat-error>
+          </div>
+
+          <!-- <div class="col-md-12">
+              <div class="upload-btn-wrapper">
+                <div class="btns">Click or drag files to upload Document
+                  <input class="form-control custom-input" type="file" id=""
+                    (change)="onFileSelected($event)">
+                </div>
+              </div>
+          </div> -->
+
+          <div class="form-group wrap-form-action mt-4">
+            <button class="btn1 btn-lg float-end" (click)="transferBankAmount()" type="button">
+              {{ "common.save" | translate }}
+            </button>
+
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>

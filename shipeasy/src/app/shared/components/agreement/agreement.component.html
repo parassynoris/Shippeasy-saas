@@ -1,0 +1,157 @@
+<ng-container *ngIf="currentUrl === 'agreement'">
+  <div class="table-with-gheading">
+    <div class="wrap-table-area">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2">
+            <div class="mt-2">
+              <span>
+                <a routerLink=""><em class="ti-export" style="margin-right: 15px"></em></a>
+                <a routerLink=""><em class="ti-printer"></em></a>
+              </span>
+            </div>
+            <div class="mt-2">
+              <span>
+                <h5>{{ fromSize }}-{{ count }} of {{ toalLength }}</h5>
+              </span>
+            </div>
+            <div class="mt-2">
+              <span class="prv" [class.disable-arrow-sign]="fromSize === 1" (click)="prev()"><em
+                  class="typcn typcn-chevron-left"></em></span>
+              <span class="prv" [class.disable-arrow-sign]="count === toalLength" (click)="next()"><em
+                  class="typcn typcn-chevron-right"></em></span>
+            </div>
+            <div class="mt-2">
+              <select class="form-select form-select-sm" (change)="filter($event)">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+              </select>
+            </div>
+            <div class="mt-2">
+              <a (click)="onOpenNew()" class="new-action">{{
+                "smartagent.principal.agreement.addnewAgreement" | translate
+                }}</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="table-responsive">
+            <table aria-describedby="mytable" class="gfg">
+              <thead>
+                <tr class="field-name">
+                  <th scope="col" [appSort]="agreementData" data-order="desc" data-name="AgreementTitle">
+                    {{
+                    "smartagent.principal.agreement.agreementName" | translate
+                    }}
+                     <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col" [appSort]="agreementData" data-order="desc" data-name="Port"
+                    data-keys='[0,"portName"]'>
+                    {{ "smartagent.principal.agreement.port" | translate
+                    }} <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col" [appSort]="agreementData" data-order="desc" data-name="country"
+                    data-keys='["countryName"]'>
+                    {{
+                    "smartagent.principal.agreement.country" | translate
+                    }}
+                     <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col" [appSort]="agreementData" data-order="desc" data-name="agreementDate">
+                    {{
+                    "smartagent.principal.agreement.startDate" | translate
+                    }}
+                     <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col" [appSort]="agreementData" data-order="desc" data-name="validTill">
+                    {{ "smartagent.principal.agreement.endDate" | translate }}
+                     <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col"></th>
+                </tr>
+                <tr>
+                  <th scope="col">
+                    <input type="text" class="form-control" id="" [(ngModel)]="name" />
+                  </th>
+                  <th scope="col">
+                    <input type="text" class="form-control" id="" [(ngModel)]="port" />
+                  </th>
+                  <th scope="col">
+                    <input type="text" class="form-control" id="" [(ngModel)]="country" />
+                  </th>
+                  <th scope="col">
+                    <input type="date" class="form-control" id="" [(ngModel)]="startdate" />
+                  </th>
+                  <th scope="col">
+                    <input type="date" class="form-control" id="" [(ngModel)]="enddate" />
+                  </th>
+                  <th scope="col" class="wrap-table-btn">
+                    <button type="button" class="btn btn-outline-primary" (click)="search()">
+                      {{ "common.search_btn" | translate }}
+                    </button>
+                    <a routerLink="#" class="clearbtn" (click)="clear()">{{
+                      "common.clear" | translate
+                      }}</a>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let agreement of agreementData">
+                  <td class="uppercase">
+                    {{ agreement._source?.AgreementTitle }}
+                  </td>
+                  <td>{{ agreement?._source?.Port[0]?.portName }}</td>
+                  <td>{{ agreement?._source?.country?.countryName }}</td>
+                  <td>{{ agreement?._source?.agreementDate }}</td>
+                  <td>{{ agreement?._source?.validTill }}</td>
+                  <td class="action-field">
+                    <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop"><a
+                        (click)="onOpenEdit(agreement._source.agreementId)" class="new-action"><em
+                          class="bi bi-pencil color-pencil-red"></em></a>
+                    </span>
+                  
+
+                    <span class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                        (change)="changeStatus(agreement)" [checked]="agreement?._source?.status" />
+                      <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="no-data-availble" *ngIf="agreementData.length === 0">
+            {{ "common.no_data" | translate }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<ng-container *ngIf="currentUrl === 'addagreement' || currentUrl === 'editagreement'">
+  <app-addagreement [isFiledVisiable]="prentPath" [editData]="agreementEditData"></app-addagreement>
+</ng-container>
+<ng-template #deleteagreement let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body mt-4">
+      <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2">
+      </em>
+      <span class="text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+          {{ "common.no" | translate }}
+        </button>
+        <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+          {{ "common.yes" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>

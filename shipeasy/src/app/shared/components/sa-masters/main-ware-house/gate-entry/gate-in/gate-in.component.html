@@ -1,0 +1,354 @@
+<div class="container-fluid">
+  <div style="margin-top: 130px;" [formGroup]="gateInForm">
+
+    <div class="row mt-3">
+      <div class="col-md-3">
+        <label class="form-label">Gate Pass Number</label>
+        <input type="text" class="form-control" formControlName="gatePassNumber" placeholder="Auto Generated"
+          [readonly]="isEditMode" />
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Purchaser <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="purchaser"
+          [ngClass]="{ 'is-invalid': isFieldInvalid('purchaser') }"
+          placeholder="Enter Purchaser Name" />
+        <div *ngIf="isFieldInvalid('purchaser')" class="invalid-feedback">
+          Purchaser is required
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Warehouse Number <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="warehouseNumber"
+          [ngClass]="{ 'is-invalid': isFieldInvalid('warehouseNumber') }"
+          placeholder="Warehouse Number" />
+        <div *ngIf="isFieldInvalid('warehouseNumber')" class="invalid-feedback">
+          Warehouse Number is required
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Product Description <span class="text-danger">*</span></label>
+        <textarea class="form-control" formControlName="productDescription" rows="2"
+          [ngClass]="{ 'is-invalid': isFieldInvalid('productDescription') }"
+          placeholder="Auto fetched from Space Certificate"></textarea>
+        <div *ngIf="isFieldInvalid('productDescription')" class="invalid-feedback">
+          Product Description is required
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-md-3">
+        <label class="form-label">Vessel</label>
+        <input type="text" class="form-control" formControlName="vessel" />
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">CHA Name <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="chaName"
+          [ngClass]="{ 'is-invalid': isFieldInvalid('chaName') }" />
+        <div *ngIf="isFieldInvalid('chaName')" class="invalid-feedback">
+          CHA Name is required
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">WH B/E Number <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="whBeNumber"
+          [ngClass]="{ 'is-invalid': isFieldInvalid('whBeNumber') }" />
+        <div *ngIf="isFieldInvalid('whBeNumber')" class="invalid-feedback">
+          WH B/E Number is required
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Ex. B/E Number <span class="text-danger">*</span></label>
+        <input type="number" class="form-control" formControlName="exBeNumber"
+          [ngClass]="{ 'is-invalid': isFieldInvalid('exBeNumber') }"
+          placeholder="Ex. B/E Number" />
+        <div *ngIf="isFieldInvalid('exBeNumber')" class="invalid-feedback">
+          Ex. B/E Number is required
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-md-3">
+        <label class="form-label">Truck Number <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="truckNumber"
+          [ngClass]="{ 'is-invalid': isFieldInvalid('truckNumber') }" placeholder="Truck Number" />
+        <div *ngIf="isFieldInvalid('truckNumber')" class="invalid-feedback">
+          Truck Number is required
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Container Number <span class="text-danger">*</span></label>
+        <nz-select class="nz-form-select nz-select-width" style="width: 100% !important;"
+          formControlName="containerNumber" nzShowSearch nzAllowClear
+          [ngClass]="{'is-invalid': isFieldInvalid('containerNumber')}">
+          <nz-option *ngFor="let container of containerList" [nzLabel]="container.number"
+            [nzValue]="container.number"></nz-option>
+        </nz-select>
+        <div *ngIf="isFieldInvalid('containerNumber')" class="invalid-feedback">
+          Container Number is required
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Transporter <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="transporter"
+          [ngClass]="{ 'is-invalid': isFieldInvalid('transporter') }"
+          placeholder="Transporter Name" />
+        <div *ngIf="isFieldInvalid('transporter')" class="invalid-feedback">
+          Transporter is required
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">L.R. Number <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="lrNumber"
+          [ngClass]="{ 'is-invalid': isFieldInvalid('lrNumber') }" placeholder="L.R. Number" />
+        <div *ngIf="isFieldInvalid('lrNumber')" class="invalid-feedback">
+          L.R. Number is required
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-md-2 pr-1">
+        <label class="form-label">Packages <span class="text-danger">*</span></label>
+        <input type="text" class="form-control custom-input" formControlName="packages"
+          [ngClass]="{ 'is-invalid': isFieldInvalid('packages') }" placeholder="Packages" />
+        <div *ngIf="isFieldInvalid('packages')" class="invalid-feedback">
+          Packages is required
+        </div>
+      </div>
+
+      <div class="col-md-1 pl-0">
+        <label class="form-label">Unit <span class="text-danger">*</span></label>
+        <div class="form-field-section">
+          <nz-select class="nz-form-select nz-select-width"
+            style="border-bottom: none !important; width: 100% !important;" formControlName="unit" nzShowSearch
+            nzAllowClear [ngClass]="{ 'is-invalid': isFieldInvalid('unit') }">
+            <nz-option *ngFor="let enquiryType of weighthData" [nzLabel]="enquiryType.uomShort"
+              [nzValue]="enquiryType.uomId"></nz-option>
+          </nz-select>
+          <div *ngIf="isFieldInvalid('unit')" class="invalid-feedback">
+            Unit is required
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Gross Weight <span class="text-danger">*</span></label>
+        <input type="number" class="form-control" formControlName="grossWeight"
+          [ngClass]="{ 'is-invalid': isFieldInvalid('grossWeight') }" placeholder="Gross Weight" />
+        <div *ngIf="isFieldInvalid('grossWeight')" class="invalid-feedback">
+          Gross Weight is required
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Tare Weight <span class="text-danger">*</span></label>
+        <input type="number" class="form-control" formControlName="tareWeight"
+          [ngClass]="{ 'is-invalid': isFieldInvalid('tareWeight') }" placeholder="Tare Weight" />
+        <div *ngIf="isFieldInvalid('tareWeight')" class="invalid-feedback">
+          Tare Weight is required
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Net Weight <span class="text-danger">*</span></label>
+        <input type="number" class="form-control"
+          [ngClass]="{ 'is-invalid': isFieldInvalid('netWeight') }" formControlName="netWeight"
+          placeholder="Auto Calculated" readonly />
+        <div *ngIf="isFieldInvalid('netWeight')" class="invalid-feedback">
+          Net Weight is required
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-md-3">
+        <label class="form-label">DO Number <span class="text-danger">*</span></label>
+        <input type="number" class="form-control" formControlName="doNumber"
+          [ngClass]="{ 'is-invalid': isFieldInvalid('doNumber') }" placeholder="DO Number" />
+        <div *ngIf="isFieldInvalid('doNumber')" class="invalid-feedback">
+          DO Number is required
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">DO Validity <span class="text-danger">*</span></label>
+        <nz-date-picker class="form-control custom-input" nzFormat="dd-MM-yyyy" formControlName="doValidity"
+          [ngClass]="{ 'is-invalid': isFieldInvalid('doValidity') }"></nz-date-picker>
+        <div *ngIf="isFieldInvalid('doValidity')" class="invalid-feedback">
+          DO Validity is required
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Warehousing Under Section <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="warehousingUnderSection"
+          [ngClass]="{ 'is-invalid': isFieldInvalid('warehousingUnderSection') }"
+          placeholder="Section Details" />
+        <div *ngIf="isFieldInvalid('warehousingUnderSection')" class="invalid-feedback">
+          Section details are required
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Bond Expiry <span class="text-danger">*</span></label>
+        <nz-date-picker class="form-control custom-input" nzFormat="dd-MM-yyyy" formControlName="bondExpiry"
+          [ngClass]="{ 'is-invalid': isFieldInvalid('bondExpiry') }"></nz-date-picker>
+        <div *ngIf="isFieldInvalid('bondExpiry')" class="invalid-feedback">
+          Bond Expiry is required
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-md-3">
+        <label class="form-label">Entry Date & Time <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="entryDateTime"
+          [ngClass]="{ 'is-invalid': isFieldInvalid('entryDateTime') }" />
+        <div *ngIf="isFieldInvalid('entryDateTime')" class="invalid-feedback">
+          Entry Date & Time is required
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Remarks</label>
+        <input type="text" class="form-control" formControlName="remarks" placeholder="Enter Remarks" />
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <h5 class="section-subheader">CFS/Port Weighment Details</h5>
+      </div>
+    </div>
+
+    <div class="row mt-3" formGroupName="cfsPortWeighment">
+      <div class="col-md-3">
+        <label class="form-label">CFS Slip No <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="cfsSlipNo"
+          [ngClass]="{ 'is-invalid': isNestedFieldInvalid('cfsPortWeighment', 'cfsSlipNo') }"
+          placeholder="CFS Slip No" />
+        <div *ngIf="isNestedFieldInvalid('cfsPortWeighment', 'cfsSlipNo')" class="invalid-feedback">
+          CFS Slip No is required
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">CFS Gross Weight <span class="text-danger">*</span></label>
+        <input type="number" class="form-control" formControlName="cfsGross"
+          [ngClass]="{ 'is-invalid': isNestedFieldInvalid('cfsPortWeighment', 'cfsGross') }"
+          placeholder="CFS Gross" />
+        <div *ngIf="isNestedFieldInvalid('cfsPortWeighment', 'cfsGross')" class="invalid-feedback">
+          CFS Gross weight is required
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">CFS Tare Weight <span class="text-danger">*</span></label>
+        <input type="number" class="form-control" formControlName="cfsTare"
+          [ngClass]="{ 'is-invalid': isNestedFieldInvalid('cfsPortWeighment', 'cfsTare') }"
+          placeholder="CFS Tare" />
+        <div *ngIf="isNestedFieldInvalid('cfsPortWeighment', 'cfsTare')" class="invalid-feedback">
+          CFS Tare weight is required
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">CFS Net Weight <span class="text-danger">*</span></label>
+        <input type="number" class="form-control" formControlName="cfsNet"
+          [ngClass]="{ 'is-invalid': isNestedFieldInvalid('cfsPortWeighment', 'cfsNet') }"
+          placeholder="CFS Net" />
+        <div *ngIf="isNestedFieldInvalid('cfsPortWeighment', 'cfsNet')" class="invalid-feedback">
+          CFS Net weight is required
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <h5 class="section-subheader">Warehouse Weighment Details</h5>
+      </div>
+    </div>
+
+    <div class="row mt-3" formGroupName="warehouseWeighment">
+      <div class="col-md-3">
+        <label class="form-label">Weighbridge Name <span class="text-danger">*</span></label>
+        <nz-select style="width: 100%" formControlName="weighbridgeName" nzShowSearch nzAllowClear
+          [ngClass]="{ 'is-invalid': isNestedFieldInvalid('warehouseWeighment', 'weighbridgeName') }">
+          <nz-option *ngFor="let option of weighbridgeList" [nzLabel]="option.name" [nzValue]="option.id"></nz-option>
+        </nz-select>
+        <div *ngIf="isNestedFieldInvalid('warehouseWeighment', 'weighbridgeName')" class="invalid-feedback">
+          Weighbridge name is required
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Warehouse Slip No <span class="text-danger">*</span></label>
+        <input type="number" class="form-control" formControlName="warehouseSlipNo"
+          [ngClass]="{ 'is-invalid': isNestedFieldInvalid('warehouseWeighment', 'warehouseSlipNo') }"
+          placeholder="Warehouse Slip No" />
+        <div *ngIf="isNestedFieldInvalid('warehouseWeighment', 'warehouseSlipNo')" class="invalid-feedback">
+          Warehouse Slip No is required
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Warehouse Gross Weight <span class="text-danger">*</span></label>
+        <input type="number" class="form-control" formControlName="warehouseGross"
+          [ngClass]="{ 'is-invalid': isNestedFieldInvalid('warehouseWeighment', 'warehouseGross') }"
+          placeholder="Warehouse Gross" />
+        <div *ngIf="isNestedFieldInvalid('warehouseWeighment', 'warehouseGross')" class="invalid-feedback">
+          Warehouse Gross weight is required
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Warehouse Tare Weight <span class="text-danger">*</span></label>
+        <input type="number" class="form-control" formControlName="warehouseTare"
+          [ngClass]="{ 'is-invalid': isNestedFieldInvalid('warehouseWeighment', 'warehouseTare') }"
+          placeholder="Warehouse Tare" />
+        <div *ngIf="isNestedFieldInvalid('warehouseWeighment', 'warehouseTare')" class="invalid-feedback">
+          Warehouse Tare weight is required
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-3" formGroupName="warehouseWeighment">
+      <div class="col-md-3">
+        <label class="form-label">Warehouse Net Weight <span class="text-danger">*</span></label>
+        <input type="number" class="form-control" formControlName="warehouseNet"
+          [ngClass]="{ 'is-invalid': isNestedFieldInvalid('warehouseWeighment', 'warehouseNet') }"
+          placeholder="Warehouse Net" />
+        <div *ngIf="isNestedFieldInvalid('warehouseWeighment', 'warehouseNet')" class="invalid-feedback">
+          Warehouse Net weight is required
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="btn-onscreen wrap-form-action mb-3">
+      <button type="button" class="btn1 float-end" (click)="onSubmit()">
+        {{ isEditMode ? 'Update' : 'Save' }}
+      </button>
+      <button type="button" class="btn btn-outline-primary float-end" (click)="onPreview()" *ngIf="!isEditMode">
+         Print
+      </button>
+      <button type="button" class="btn btn-outline-primary float-end" (click)="goBack()">
+        Cancel
+      </button>
+      
+      
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,119 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h5 class="modal-title">Split BL</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="onClose()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body"  *ngIf="blData.length>0">
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="form-field-section">
+            <label class="form-label">{{ 'stolt.batch.bl.bl_no' | translate }}</label>
+            <input class="form-control custom-input" type="text" [value]="blNo" disabled
+              >
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-field-section">
+            <label class="form-label">{{ 'stolt.batch.bl.bl_type' | translate }}</label>
+            <input class="form-control custom-input" type="text" [value]="blType" disabled
+              >
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-field-section">
+            <label class="form-label">BL Date</label>
+            <input class="form-control custom-input" type="text" [value]="blDate" disabled
+              >
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-field-section">
+            <label class="form-label">Shipper</label>
+            <input class="form-control custom-input" type="text" [value]="shipperName" disabled
+              >
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-field-section">
+            <label class="form-label">Consignee</label>
+            <input class="form-control custom-input" type="text" [value]="consigneeName" disabled
+              >
+          </div>
+        </div>
+
+
+        
+      </div>
+    <div class="wrap-table-area wrap-form-field ">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="table-responsive">
+            <table aria-describedby="mytable" class="gfg">
+              <thead>
+                <ng-container *ngIf="!container?.isAssigned">
+                <tr class="field-name">
+                  <th scope="col"><input type="checkbox" (change)="allSelect()"
+                       id="all"><label for="all">&nbsp;All</label></th>
+                  <th scope="col">Container No</th>
+                  <th scope="col">Container Type</th>
+                  <th scope="col">IMO Type</th>
+                 </tr>
+                </ng-container>
+              </thead>
+              <tbody>
+                <tr *ngFor="let bill of blData; let i = index">
+                  <td><input type="checkbox" [checked]="isSelected" (change)="selectContainer(bill,$event,i)"></td>
+                  <td>{{bill.containerNumber}}</td>
+                  <td>{{bill.containerType}}</td>
+                  <td>{{bill.imoType}}</td>
+                 
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-body"  *ngIf="blData.length === 0">
+    <div class="no-data-availble">
+      No Container available for this BL
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="wrap-form-field">
+      <div class="form-group wrap-form-action">
+        <button class="btn1 btn-lg float-end" data-bs-dismiss="modal" (click)="onClose()"
+          type="submit">
+          {{ 'common.cancel' | translate }}
+        </button>
+        <button class="btn btn-outline-primary btn-lg float-end" data-bs-dismiss="modal" *ngIf="blData.length>0"
+          type="submit" (click)="onSplitBatch()">
+          Split BL
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #content1 let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body mt-4">
+      <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2"> </em> <span
+        class=" text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary  btn-sm me-3" (click)="d('Cross click')">No</button>
+        <button type="button" class="btn btn-danger  btn-sm" (click)="c('yes')">Yes</button>
+      </div>
+    </div>
+  </div>
+  <div>
+    <app-dummy></app-dummy>
+  </div>
+</ng-template>
+

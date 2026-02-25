@@ -1,0 +1,1353 @@
+<form [formGroup]="addShippingBill">
+
+  <div class="text-end mt-2">
+    <button *ngIf="!callapseALL" (click)="callapseALL = !callapseALL" #expand class="btn btn-outline-primary px-0"
+      type="button" data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded="false"
+      [attr.aria-controls]="expandKeys">Expand All</button>
+
+
+    <button *ngIf="callapseALL" (click)="callapseALL = !callapseALL" class="btn1  px-0" type="button"
+      data-bs-toggle="collapse" data-bs-target="#demo" aria-expanded="true" aria-controls="demo">
+      Collapse All
+    </button>
+  </div>
+  <div class="accordion form-accordian  " id="accordionPanelsStayOpenExample">
+    <div class="accordion-item">
+      <h2 class="accordion-header mt-2" id="shipping instruction">
+        <button class="accordion-button" [class.collapsed]="!isBookingPanelOpen" type="button"
+          (click)="toggleButton('booking')" aria-expanded="isBookingPanelOpen" aria-controls="shippingDetails">
+          Basic Details
+        </button>
+
+      </h2>
+      <div id="shippingDetails" class=" multi-collapse accordion-collapse collapse show"
+        aria-labelledby="shipping instruction" data-bs-parent="#accordionPanelsStayOpenExample"
+        [class.show]="isBookingPanelOpen">
+        <div class="accordion-body">
+          <div class="wrap-form-field">
+            <div class="row">
+              <div class="col-md-3 pt-2">
+                <div class="form-field-section">
+                  <label class="form-label">Customs House Agent (CHA)
+                  </label>
+                  <input formControlName="CHA" type="text" class="form-control custom-input rounded-0" id="Principal "
+                    placeholder="CHA" [ngClass]="{
+                        'is-invalid':
+                          submitted && f.CHA.errors
+                      }" />
+                  <div *ngIf="submitted && f.CHA.errors" class="invalid-feedback">
+                    <div *ngIf="f.CHA.errors.required">
+                      CHA is required
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <div class="form-field-section">
+                  <label class="form-label">Custom Stn
+                  </label>
+                  <input formControlName="Stn" type="text" class="form-control custom-input rounded-0" id="Principal "
+                    placeholder="Custom Stn" [ngClass]="{
+                        'is-invalid':
+                          submitted && f.Stn.errors
+                      }" />
+                  <div *ngIf="submitted && f.Stn.errors" class="invalid-feedback">
+                    <div *ngIf="f.Stn.errors.required">
+                      CHA is required
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label">Job No</label>
+                <nz-select class="form-select" nzDisabled="true" nzShowSearch nzAllowClear nzPlaceHolder="Job Number"
+                  formControlName="jobNo">
+                  <nz-option *ngFor="let data of  batchData" [nzLabel]="data?.batchNo"
+                    [nzValue]="data?.batchId"></nz-option>
+                </nz-select>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label">Job Date</label>
+                <input type="text" class="form-control custom-input" disabled formControlName="jobDate"
+                  [ngClass]="{ 'is-invalid': submitted && f.jobDate.errors }">
+              </div>
+
+              <div class="col-md-3  pt-2">
+                <label class="form-label">Shipper</label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="shipper"
+                  nzPlaceHolder="Shipper" [ngClass]="{'is-invalid': submitted && f.shipper.errors}"
+                  (ngModelChange)="setShipper($event)">
+                  <nz-option *ngFor="let shipper of shipperList" [nzLabel]="shipper?.name"
+                    [nzValue]="shipper?.partymasterId"></nz-option>
+                </nz-select>
+                <div *ngIf="submitted && f?.shipper.errors" class="invalid-feedback">
+                  <div *ngIf="f?.shipper.errors.required">Shipper is required
+                  </div>
+                </div>
+              </div>
+
+              <!-- <div class="col-md-3  pt-2">
+                <label class="form-label">Shipper Branch </label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="address"
+                  nzPlaceHolder="Shipper Branch" [ngClass]="{'is-invalid': submitted && f.address.errors}"
+                  (ngModelChange)="setTax()">
+                  <nz-option *ngFor="let shipper of billingBranchList" [nzLabel]="shipper.branch_name"
+                    [nzValue]="shipper.branch_name"></nz-option>
+                </nz-select>
+                <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
+                  <div *ngIf="f.address.errors.required"> Shipper address is required
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-3  pt-2">
+                <label class="form-label">Shipper Address</label>
+                <textarea class="form-control" formControlName="shipper_address" rows="3" cols="30"
+                  PlaceHolder="Shipper Address">
+                    </textarea>
+              </div> -->
+
+              <div class="col-md-3  pt-2">
+                <label class="form-label">Shipper Branch</label>
+                <nz-select 
+                  class="form-select" 
+                  nzShowSearch 
+                  nzAllowClear  
+                  formControlName="address"
+                  nzPlaceHolder="Shipper Branch" 
+                  [ngClass]="{'is-invalid': submitted && f.address.errors}"
+                  (ngModelChange)="onBranchSelect($event)">
+                  <nz-option *ngFor="let shipper of billingBranchList" 
+                    [nzLabel]="shipper.branch_name"
+                    [nzValue]="shipper.branch_name">
+                  </nz-option>
+                </nz-select>
+                <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
+                  <div *ngIf="f.address.errors.required"> Shipper address is required </div>
+                </div>
+              </div>
+              
+              <div class="col-md-3  pt-2">
+                <label class="form-label">Shipper Address</label>
+                <textarea 
+                  class="form-control" 
+                  formControlName="shipper_address" 
+                  rows="3" 
+                  cols="30"
+                  PlaceHolder="Shipper Address">
+                </textarea>
+              </div>
+              
+
+              <div class="col-md-3 pt-2">
+                <label for="code" class="form-label">GSTIN</label>
+                <input type="text" class="form-control custom-input" formControlName="GSTIN" id="code"
+                  placeholder="GSTIN" [ngClass]="{ 'is-invalid': submitted && f.GSTIN.errors }">
+                <div *ngIf="submitted && f.GSTIN.errors" class="invalid-feedback">
+                  <div *ngIf="f.GSTIN.errors.required">GSTIN Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 nz-select pt-2">
+                <label for="State" class="form-label">State</label>
+                <nz-select nzAutocomplete="off" class="form-select" nzDisabled="true" nzShowSearch nzAllowClear
+                  formControlName="state" [ngClass]="{'is-invalid': submitted && f.state.errors}">
+                  <nz-option *ngFor="let state of stateData" [nzLabel]="state?.stateName"
+                    [nzValue]="state?.stateId"></nz-option>
+                </nz-select>
+                <div *ngIf="submitted && f.state.errors" class="invalid-feedback">
+                  <div *ngIf="f.state.errors.required">State Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label for="code" class="form-label">AD. Code</label>
+                <input type="number" maxlength="6"
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  class="form-control custom-input" formControlName="adCode" id="code " placeholder="AD. Code" value=""
+                  [ngClass]="{ 'is-invalid': submitted && f.adCode.errors }">
+                <div *ngIf="submitted && f.adCode.errors" class="invalid-feedback">
+                  <div *ngIf="f.adCode.errors.required">Code Is Required</div>
+                </div>
+              </div>
+
+              <div class="col-md-3 pt-2">
+                <label class="form-label">Exp.Category / Class Type</label>
+                <input type="text" class="form-control custom-input" formControlName="ClassType" placeholder="Type"
+                  value="" [ngClass]="{ 'is-invalid': submitted && f.ClassType.errors }">
+                <div *ngIf="submitted && f.ClassType.errors" class="invalid-feedback">
+                  <div *ngIf="f.ClassType.errors.required">Exp.Category / ClassType Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label">Category NFEI</label>
+                <input type="text" class="form-control custom-input" formControlName="NFEI" placeholder="Category NFEI"
+                  value="" [ngClass]="{ 'is-invalid': submitted && f.NFEI.errors }">
+                <div *ngIf="submitted && f.NFEI.errors" class="invalid-feedback">
+                  <div *ngIf="f.NFEI.errors.required"> NFEI Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label">RBI No</label>
+                <input type="text" class="form-control custom-input" formControlName="RBINo" placeholder="RBI No"
+                  value="" [ngClass]="{ 'is-invalid': submitted && f.RBINo.errors }">
+                <div *ngIf="submitted && f.RBINo.errors" class="invalid-feedback">
+                  <div *ngIf="f.RBINo.errors.required"> NFEI Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <div class="form-field-section">
+                  <label class="form-label">RBI Date
+                  </label>
+                  <nz-date-picker class="form-select custom-input" nzFormat="dd-MM-yyyy"
+                    formControlName="rbiDate"></nz-date-picker>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label">Party Ref</label>
+                <input type="text" class="form-control custom-input" formControlName="partyRef" placeholder="Party Ref"
+                  value="" [ngClass]="{ 'is-invalid': submitted && f.partyRef.errors }">
+                <div *ngIf="submitted && f.partyRef.errors" class="invalid-feedback">
+                  <div *ngIf="f.partyRef.errors.required"> NFEI Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <div class="form-field-section">
+                  <label class="form-label">Party Ref Date
+                  </label>
+                  <nz-date-picker class="form-select custom-input" nzFormat="dd-MM-yyyy"
+                    formControlName="partyRefDate"></nz-date-picker>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label">Forex Acc No</label>
+                <input type="text" class="form-control custom-input" formControlName="forexAccNo"
+                  placeholder="Forex Acc No" value="" [ngClass]="{ 'is-invalid': submitted && f.forexAccNo.errors }">
+                <div *ngIf="submitted && f.forexAccNo.errors" class="invalid-feedback">
+                  <div *ngIf="f.forexAccNo.errors.required"> Forex Acc No Is Required</div>
+                </div>
+              </div>
+
+              <div class="col-md-3 pt-2">
+                <label class="form-label">SB No</label>
+                <input type="text" class="form-control custom-input" formControlName="SBNo" placeholder="SB No" value=""
+                  [ngClass]="{ 'is-invalid': submitted && f.SBNo.errors }">
+                <div *ngIf="submitted && f.SBNo.errors" class="invalid-feedback">
+                  <div *ngIf="f.SBNo.errors.required"> SB No/Date Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <div class="form-field-section">
+                  <label class="form-label">SB Date
+                  </label>
+                  <nz-date-picker class="form-select custom-input" nzFormat="dd-MM-yyyy"
+                    formControlName="SBDate"></nz-date-picker>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label">Invoice INR</label>
+                <input type="text" class="form-control custom-input" formControlName="invoice" placeholder="Invoice INR"
+                  value="" [ngClass]="{ 'is-invalid': submitted && f.invoice.errors }">
+                <div *ngIf="submitted && f.invoice.errors" class="invalid-feedback">
+                  <div *ngIf="f.invoice.errors.required"> Invoice INR Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label">FOB Value (INR)</label>
+                <input type="text" class="form-control custom-input" formControlName="fOBValue" placeholder="FOB Value"
+                  value="" [ngClass]="{ 'is-invalid': submitted && f.fOBValue.errors }">
+                <div *ngIf="submitted && f.fOBValue.errors" class="invalid-feedback">
+                  <div *ngIf="f.fOBValue.errors.required"> FOB Value Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label">Total PMV Value</label>
+                <input type="text" class="form-control custom-input" formControlName="PMVValue"
+                  placeholder="Total PMV Value" value="" [ngClass]="{ 'is-invalid': submitted && f.PMVValue.errors }">
+                <div *ngIf="submitted && f.PMVValue.errors" class="invalid-feedback">
+                  <div *ngIf="f.PMVValue.errors.required"> Total PMV Value Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label">Total DBK Amt</label>
+                <input type="text" class="form-control custom-input" formControlName="DBKAmt"
+                  placeholder="Total DBK Amt" value="" [ngClass]="{ 'is-invalid': submitted && f.DBKAmt.errors }">
+                <div *ngIf="submitted && f.DBKAmt.errors" class="invalid-feedback">
+                  <div *ngIf="f.DBKAmt.errors.required"> Total DBK Amt Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label">DBK AccNo</label>
+                <input type="text" class="form-control custom-input" formControlName="DBKAccNo" placeholder="DBK AccNo"
+                  value="" [ngClass]="{ 'is-invalid': submitted && f.DBKAccNo.errors }">
+                <div *ngIf="submitted && f.DBKAccNo.errors" class="invalid-feedback">
+                  <div *ngIf="f.DBKAccNo.errors.required"> DBK AccNo Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label">Taxable Amt</label>
+                <input type="text" class="form-control custom-input" formControlName="Taxable" placeholder="Taxable Amt"
+                  value="" [ngClass]="{ 'is-invalid': submitted && f.Taxable.errors }">
+                <div *ngIf="submitted && f.Taxable.errors" class="invalid-feedback">
+                  <div *ngIf="f.Taxable.errors.required"> Taxable Amt Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label">Total IGST Amt </label>
+                <input type="text" class="form-control custom-input" formControlName="IGSTAmt"
+                  placeholder="Total IGST Amt" value="" [ngClass]="{ 'is-invalid': submitted && f.IGSTAmt.errors }">
+                <div *ngIf="submitted && f.IGSTAmt.errors" class="invalid-feedback">
+                  <div *ngIf="f.IGSTAmt.errors.required"> Total IGST Amt Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label">Total No Invoice</label>
+                <input type="text" class="form-control custom-input" formControlName="invoiceNo"
+                  placeholder="Total No Invoice" value="" [ngClass]="{ 'is-invalid': submitted && f.invoiceNo.errors }">
+                <div *ngIf="submitted && f.invoiceNo.errors" class="invalid-feedback">
+                  <div *ngIf="f.invoiceNo.errors.required"> Total No Invoice Is Required</div>
+                </div>
+              </div>
+
+              <div class="col-md-3 pt-2">
+                <label class="form-label">{{ 'stolt.enquiry.new.consignee' | translate }}</label>
+
+                <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="consignee"
+                  nzPlaceHolder="Consignee" [ngClass]="{'is-invalid': submitted && f.consignee?.errors}"
+                  (ngModelChange)="setconsinee($event)">
+                  <nz-option *ngFor="let shipper of consigneeList" [nzLabel]="shipper?.name"
+                    [nzValue]="shipper?.partymasterId">
+                  </nz-option>
+                </nz-select>
+
+                <div *ngIf="submitted && f.consignee?.errors" class="invalid-feedback">
+                  <div *ngIf="f.consignee?.errors?.required">{{ 'stolt.enquiry.new.consignee' | translate }} is
+                    required</div>
+                </div>
+              </div>
+              <div class="col-md-3 mt-2">
+                <label class="form-label">Consignee Branch </label>
+                <nz-select  (ngModelChange)="onBranchSelect1($event)" class="form-select" nzShowSearch nzAllowClear formControlName="Caddress"
+                  nzPlaceHolder="Consignee Branch" [ngClass]="{'is-invalid': submitted && f.Caddress.errors}">
+                  <nz-option *ngFor="let shipper of billingBranchLists" [nzLabel]="shipper.branch_name"
+                    [nzValue]="shipper.branch_name"></nz-option>
+                </nz-select>
+                <div *ngIf="submitted && f.Caddress.errors" class="invalid-feedback">
+                  <div *ngIf="f.Caddress.errors.required">Consignee Branch is required
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3  pt-2">
+                <label class="form-label">Consignee Address</label>
+                <textarea class="form-control" formControlName="consignee_address" rows="3" cols="30"
+                  PlaceHolder="Shipper Address">
+                    </textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="siCust">
+        <button class="accordion-button" [class.collapsed]="!isSIproductPanelOpen" type="button"
+          (click)="toggleButton('siproduct')" aria-expanded="isSIproductPanelOpen" aria-controls="siDetails">
+          Shipment Details
+        </button>
+
+      </h2>
+      <div id="siDetails" class=" multi-collapse accordion-collapse collapse " aria-labelledby="siCust"
+        data-bs-parent="#accordionPanelsStayOpenExample" [class.show]="isSIproductPanelOpen">
+        <div class="accordion-body">
+          <div class="wrap-form-field">
+            <div class="row">
+              <div class="col-md-3">
+                <label class="form-label">Port Of Destination</label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="destination"
+                  nzPlaceHolder="Destination" [ngClass]="{'is-invalid': submitted && f.destination.errors}"
+                  (ngModelChange)="setCountry($event)">
+                  <nz-option *ngFor="let port of locationList" [nzLabel]="port?.portDetails?.portName"
+                    [nzValue]="port?.portId"></nz-option>
+                </nz-select>
+                <div *ngIf="submitted && f.destination.errors" class="invalid-feedback">
+                  <div *ngIf="f.destination.errors.required">Destination is
+                    required</div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="Country" class="form-label">{{ 'stolt.party-master.country' |
+                  translate }} Of Dest</label>
+                <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Country"
+                  formControlName="country" [ngClass]="{'is-invalid': submitted && f.country.errors}">
+                  <nz-option *ngFor="let country of countryList" [nzLabel]="country?.countryName"
+                    [nzValue]="country?.countryId"></nz-option>
+                </nz-select>
+
+                <div *ngIf="submitted && f.country.errors" class="invalid-feedback">
+                  <div *ngIf="f.country.errors.required">{{
+                    'smartagent.smartAgent.AllformAddedit.countryisrequired' |
+                    translate }}</div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Gross Weight</label>
+                <input type="text" class="form-control custom-input" formControlName="grossWeight"
+                  placeholder="Gross Weight" [ngClass]="{ 'is-invalid': submitted && f.grossWeight.errors }">
+                <div *ngIf="submitted && f.grossWeight.errors" class="invalid-feedback">
+                  <div *ngIf="f.grossWeight.errors.required"> Gross Weight Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3" *ngIf="this.batchData[0]?.enquiryDetails?.looseCargoDetails">
+                <label class="form-label">Total Packages</label>
+                <input type="text" class="form-control custom-input" formControlName="packages" placeholder="Packages"
+                  [ngClass]="{ 'is-invalid': submitted && f.packages.errors }">
+                <div *ngIf="submitted && f.packages.errors" class="invalid-feedback">
+                  <div *ngIf="f.packages.errors.required"> Packages Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3" *ngIf="!this.batchData[0]?.enquiryDetails?.looseCargoDetails">
+                <label class="form-label">No of Containers</label>
+                <input type="text" class="form-control custom-input" formControlName="noOfContainer"
+                  placeholder="No of Containers" [ngClass]="{ 'is-invalid': submitted && f.noOfContainer.errors }">
+                <div *ngIf="submitted && f.noOfContainer.errors" class="invalid-feedback">
+                  <div *ngIf="f.noOfContainer.errors.required"> No of Containers Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label">Master BL No</label>
+                <input type="text" class="form-control custom-input" formControlName="masterBLNo"
+                  placeholder="Master BL No" value="" [ngClass]="{ 'is-invalid': submitted && f.masterBLNo.errors }">
+                <div *ngIf="submitted && f.masterBLNo.errors" class="invalid-feedback">
+                  <div *ngIf="f.masterBLNo.errors.required"> Master BL No Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <div class="form-field-section">
+                  <label class="form-label">MBL Date
+                  </label>
+                  <nz-date-picker class="form-select custom-input" nzFormat="dd-MM-yyyy"
+                    formControlName="mblDate"></nz-date-picker>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label"> House BL No</label>
+                <input type="text" class="form-control custom-input" formControlName="houseBLNo" placeholder="FOB Value"
+                  value="" [ngClass]="{ 'is-invalid': submitted && f.houseBLNo.errors }">
+                <div *ngIf="submitted && f.houseBLNo.errors" class="invalid-feedback">
+                  <div *ngIf="f.houseBLNo.errors.required"> FOB Value Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <div class="form-field-section">
+                  <label class="form-label">HBL Date
+                  </label>
+                  <nz-date-picker class="form-select custom-input" nzFormat="dd-MM-yyyy"
+                    formControlName="hblDate"></nz-date-picker>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label"> Nature of Cargo </label>
+                <input type="text" class="form-control custom-input" formControlName="cargo"
+                  placeholder="Nature of Cargo" [ngClass]="{ 'is-invalid': submitted && f.cargo.errors }">
+                <div *ngIf="submitted && f.cargo.errors" class="invalid-feedback">
+                  <div *ngIf="f.cargo.errors.required"> Nature of Cargo Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label">Net Weight</label>
+                <input type="text" class="form-control custom-input" formControlName="netWeight"
+                  placeholder="Net Weight" [ngClass]="{ 'is-invalid': submitted && f.netWeight.errors }">
+                <div *ngIf="submitted && f.netWeight.errors" class="invalid-feedback">
+                  <div *ngIf="f.netWeight.errors.required"> Net Weight Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label"> Rotation No </label>
+                <input type="text" class="form-control custom-input" formControlName="rotationNo"
+                  placeholder="Rotation No" [ngClass]="{ 'is-invalid': submitted && f.rotationNo.errors }">
+                <div *ngIf="submitted && f.rotationNo.errors" class="invalid-feedback">
+                  <div *ngIf="f.rotationNo.errors.required"> Rotation No Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <div class="form-field-section">
+                  <label class="form-label">Rotation Date
+                  </label>
+                  <nz-date-picker class="form-select custom-input" nzFormat="dd-MM-yyyy"
+                    formControlName="rotationDate"></nz-date-picker>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label"> Marks & Nos</label>
+                <input type="text" class="form-control custom-input" formControlName="marksNos"
+                  placeholder="Marks & Nos" [ngClass]="{ 'is-invalid': submitted && f.marksNos.errors }">
+                <div *ngIf="submitted && f.marksNos.errors" class="invalid-feedback">
+                  <div *ngIf="f.marksNos.errors.required"> Marks & Nos Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <div class="form-field-section">
+                  <label class="form-label"> Seal Type</label>
+                  <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="sealType"
+                    nzPlaceHolder="Seal Type" [ngClass]="{'is-invalid': submitted && f.sealType.errors}">
+                    <nz-option [nzLabel]="'Yes'" [nzValue]="'Yes'">
+                    </nz-option>
+                    <nz-option [nzLabel]="'No'" [nzValue]="'No'">
+                    </nz-option>
+                  </nz-select>
+                  <div *ngIf="submitted && f.sealType.errors" class="invalid-feedback">
+                    <div *ngIf="f.sealType.errors?.required">
+                      This field is required
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <div class="form-field-section">
+                  <label class="form-label"> Factory Stuffed</label>
+                  <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="factoryStuffed"
+                    nzPlaceHolder="Factory Stuffed" [ngClass]="{'is-invalid': submitted && f.factoryStuffed.errors}">
+                    <nz-option [nzLabel]="'Yes'" [nzValue]="'Yes'">
+                    </nz-option>
+                    <nz-option [nzLabel]="'No'" [nzValue]="'No'">
+                    </nz-option>
+                  </nz-select>
+                  <div *ngIf="submitted && f.factoryStuffed.errors" class="invalid-feedback">
+                    <div *ngIf="f.factoryStuffed.errors?.required">
+                      This field is required
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label"> EOU IEC</label>
+                <input type="text" class="form-control custom-input" formControlName="EOUIEC" placeholder="EOU IEC"
+                  [ngClass]="{ 'is-invalid': submitted && f.EOUIEC.errors }">
+                <div *ngIf="submitted && f.EOUIEC.errors" class="invalid-feedback">
+                  <div *ngIf="f.EOUIEC.errors.required"> EOU IEC Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label"> Factory Address </label>
+                <input type="text" class="form-control custom-input" formControlName="factoryAddress"
+                  placeholder="Factory Address" [ngClass]="{ 'is-invalid': submitted && f.factoryAddress.errors }">
+                <div *ngIf="submitted && f.factoryAddress.errors" class="invalid-feedback">
+                  <div *ngIf="f.factoryAddress.errors.required"> Factory Address Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label"> EOU Branch Sno</label>
+                <input type="text" class="form-control custom-input" formControlName="EOUBranchSno" placeholder="Branch"
+                  value="" [ngClass]="{ 'is-invalid': submitted && f.EOUBranchSno.errors }">
+                <div *ngIf="submitted && f.EOUBranchSno.errors" class="invalid-feedback">
+                  <div *ngIf="f.EOUBranchSno.errors.required"> Branch Is Required</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="volume">
+        <button class="accordion-button" [class.collapsed]="!isVolumePanelOpen" type="button"
+          (click)="toggleButton('volume')" aria-expanded="isVolumePanelOpen" aria-controls="volumedetails">
+          Invoice Details
+        </button>
+
+      </h2>
+      <div id="volumedetails" class=" multi-collapse accordion-collapse collapse " aria-labelledby="volume"
+        data-bs-parent="#accordionPanelsStayOpenExample" [class.show]="isVolumePanelOpen">
+        <div class="accordion-body">
+          <div class="wrap-form-field">
+            <div class="table-design example-container mat-elevation-z8 d-none">
+              <table mat-table [dataSource]="dataSource" summary="agreement">
+
+                <ng-container matColumnDef="#">
+                  <th scope="col" mat-header-cell *matHeaderCellDef>
+                    SLNo
+                  </th>
+                  <td mat-cell *matCellDef="let element;let i = index">
+                    {{ element?.id}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="invoiceNo">
+                  <th class="invoice" scope="col" mat-header-cell *matHeaderCellDef>
+                    Invoice No.
+                  </th>
+                  <td class="text-end" mat-cell *matCellDef="let element" class="invoice">
+                    <span class="d-flex align-items-center">
+                      <spna>{{ element?.invoiceNo }}</spna>
+                    </span>
+
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="invoice_date">
+                  <th scope="col" mat-header-cell *matHeaderCellDef>
+                    Invoice Date
+                  </th>
+                  <td class="text-end" mat-cell *matCellDef="let element">
+                    {{ element?.invoice_date | date : 'dd-MM-yyyy' }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="invoiceAmount">
+                  <th scope="col" mat-header-cell *matHeaderCellDef>
+                    Invoice Amount
+                  </th>
+                  <td class="text-end" mat-cell *matCellDef="let element">
+                    {{ element?.invoiceAmount | number : '1.2-2' }}
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+                    <span *ngIf="!dataSource?.data?.length">No data available</span>
+                  </td>
+                </tr>
+              </table>
+
+            </div>
+            <div class="row mt-3">
+              <div class="col-md-3">
+                <label class="form-label">Inv.SlNo</label>
+                <input type="text" class="form-control custom-input" formControlName="slNumber" placeholder="Inv.SlNo"
+                  value="" [ngClass]="{ 'is-invalid': submitted && f.slNumber.errors }">
+                <div *ngIf="submitted && f.slNumber.errors" class="invalid-feedback">
+                  <div *ngIf="f.slNumber.errors.required"> SlNumber Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Invoice No</label>
+                <input type="text" class="form-control custom-input" formControlName="invoicesNo"
+                  placeholder="Invoice No" [ngClass]="{ 'is-invalid': submitted && f.invoicesNo.errors }">
+                <div *ngIf="submitted && f.invoicesNo.errors" class="invalid-feedback">
+                  <div *ngIf="f.invoicesNo.errors.required"> Invoice No Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Invoice Date</label>
+                <mat-form-field appearance="outline" class="custom-date-picker">
+                  <div class="d-flex align-items-center  w-100">
+                    <input matInput [matDatepicker]="pickerEta5" formControlName="invoic_date" class="h-0" />
+                    <mat-datepicker-toggle matSuffix [for]="pickerEta5"></mat-datepicker-toggle>
+                  </div>
+                  <mat-datepicker #pickerEta5></mat-datepicker>
+                </mat-form-field>
+                <mat-error>
+                  <div class="set-error-msg" *ngIf="submitted && f?.invoic_date?.errors?.required">Invoice Date Is
+                    Required</div>
+                </mat-error>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Actual Invoice Amount(INR)</label>
+                <input type="text" class="form-control custom-input" formControlName="invoiceAmount"
+                  placeholder="Invoice Amount" [ngClass]="{ 'is-invalid': submitted && f.invoiceAmount.errors }">
+                <div *ngIf="submitted && f.invoiceAmount.errors" class="invalid-feedback">
+                  <div *ngIf="f.invoiceAmount.errors.required"> Invoice No Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label">AEO Registration No</label>
+                <input type="text" class="form-control custom-input" formControlName="registrationNo"
+                  placeholder="AEO Registration No" value=""
+                  [ngClass]="{ 'is-invalid': submitted && f.registrationNo.errors }">
+                <div *ngIf="submitted && f.registrationNo.errors" class="invalid-feedback">
+                  <div *ngIf="f.registrationNo.errors.required"> AEO Registration No Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label">AEO Role</label>
+                <input type="text" class="form-control custom-input" formControlName="AEORole" placeholder="AEO Role"
+                  value="" [ngClass]="{ 'is-invalid': submitted && f.AEORole.errors }">
+                <div *ngIf="submitted && f.AEORole.errors" class="invalid-feedback">
+                  <div *ngIf="f.AEORole.errors.required"> AEO Role Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label">AEO Code</label>
+                <input type="text" class="form-control custom-input" formControlName="AEOCode" placeholder="AEO Code"
+                  value="" [ngClass]="{ 'is-invalid': submitted && f.AEOCode.errors }">
+                <div *ngIf="submitted && f.AEOCode.errors" class="invalid-feedback">
+                  <div *ngIf="f.AEOCode.errors.required"> AEO Code Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label">Inco Terms </label>
+
+                <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="incoTerm"
+                  [ngClass]="{'is-invalid': submitted && f.incoTerm.errors}">
+                  <nz-option *ngFor="let shipmentTerm of incotermList" [nzLabel]="shipmentTerm.typeName"
+                    [nzValue]="shipmentTerm.systemtypeId"></nz-option>
+                </nz-select>
+                <div *ngIf="submitted && f.incoTerm.errors" class="invalid-feedback">
+                  <div *ngIf="f.incoTerm.errors.required">Inco Term is
+                    required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label">PONo</label>
+                <input type="text" class="form-control custom-input" formControlName="PONo" placeholder="PONo" value=""
+                  [ngClass]="{ 'is-invalid': submitted && f.PONo.errors }">
+                <div *ngIf="submitted && f.PONo.errors" class="invalid-feedback">
+                  <div *ngIf="f.PONo.errors.required"> PONo Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <div class="form-field-section">
+                  <label class="form-label">PO Date
+                  </label>
+                  <nz-date-picker class="form-select custom-input" nzFormat="dd-MM-yyyy"
+                    formControlName="poDate"></nz-date-picker>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label">Invoice FOB(INR)</label>
+                <input type="text" class="form-control custom-input" formControlName="invFob" placeholder="Invoice FOB"
+                  value="" [ngClass]="{ 'is-invalid': submitted && f.PONo.errors }">
+                <div *ngIf="submitted && f.PONo.errors" class="invalid-feedback">
+                  <div *ngIf="f.PONo.errors.required"> PONo Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3 pt-2">
+                <label class="form-label">Unit Price Include</label>
+                <input type="text" class="form-control custom-input" formControlName="unitPrice"
+                  placeholder="Unit Price Includee" value=""
+                  [ngClass]="{ 'is-invalid': submitted && f.unitPrice.errors }">
+                <div *ngIf="submitted && f.unitPrice.errors" class="invalid-feedback">
+                  <div *ngIf="f.unitPrice.errors.required"> Unit Price Include Is Required</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 mt-3 p-0">
+              <div class="table-design example-container mat-elevation-z8">
+                <table>
+                  <thead>
+                    <tr class="field-name">
+                      <th scope="col">Charges</th>
+                      <th scope="col">Rate</th>
+                      <th scope="col">Currency</th>
+                      <th scope="col">Ex. Rate</th>
+                      <th scope="col">Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container formArrayName="invoiceCharges"
+                      *ngFor="let group of getinvoiceChargeControls.controls; let i = index">
+                      <tr [formGroupName]="i" class="collapse-ui">
+                        <td>
+                          <ng-container>
+                            <nz-select class="form-select" nzShowSearch nzDisabled formControlName="chargeType"
+                              nzPlaceHolder="Charges">
+                              <nz-option [nzLabel]="'Insurance'" [nzValue]="'insurance'">
+                              </nz-option>
+                              <nz-option [nzLabel]="'Commission'" [nzValue]="'commission'">
+                              </nz-option>
+                              <nz-option [nzLabel]="'Freight'" [nzValue]="'freight'">
+                              </nz-option>
+                              <nz-option [nzLabel]="'Discount'" [nzValue]="'discount'">
+                              </nz-option>
+                              <nz-option [nzLabel]="'Packing Charges'" [nzValue]="'packing charges'">
+                              </nz-option>
+                            </nz-select>
+                          </ng-container>
+                        <td>
+                          <ng-container>
+                            <div class="">
+                              <input type="text" class="form-control custom-input" formControlName="invoicRate"
+                                placeholder="Rate" value=""
+                                [ngClass]="{ 'is-invalid': submitted && getinvoiceChargeControls.controls[i]?.get('invoicRate')?.errors }">
+                              <div *ngIf="submitted && getinvoiceChargeControls.controls[i]?.get('invoicRate')?.errors"
+                                class="invalid-feedback">
+                                <div *ngIf="getinvoiceChargeControls.controls[i]?.get('invoicRate')?.errors.required">
+                                  FOB
+                                  Value Is Required</div>
+                              </div>
+                            </div>
+                          </ng-container>
+                        </td>
+
+                        <td>
+                          <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="currency"
+                            nzPlaceHolder="Currency"
+                            [ngClass]="{'is-invalid': submitted && getinvoiceChargeControls.controls[i]?.get('currency')?.errors  }"
+                            (ngModelChange)="sellCurrChange(i)">
+                            <nz-option *ngFor="let data of   currencyList " [nzLabel]="data.currencyShortName"
+                              [nzValue]="data.currencyId"></nz-option>
+                          </nz-select>
+
+                          <div *ngIf="submitted && getinvoiceChargeControls.controls[i]?.get('currency')?.errors"
+                            class="error-msg">
+                            <div *ngIf="getinvoiceChargeControls.controls[i]?.get('currency')?.errors?.required">{{
+                              'stolt.batch.charges.new.Currency' | translate }} is
+                              required
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <input appDecimalInput formControlName="exchRate" type="number" placeholder="EX. Rate"
+                            class="form-control custom-input"
+                            [ngClass]="{'is-invalid': submitted && getinvoiceChargeControls.controls[i]?.get('exchRate')?.errors}">
+                          <div *ngIf="submitted && getinvoiceChargeControls.controls[i]?.get('exchRate')?.errors"
+                            class="invalid-feedback">
+                            <div *ngIf="row?.getinvoiceChargeControls.controls[i]?.get('exchRate')?.errors.required">Ex.
+                              Rate
+                              is required</div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="">
+                            <input type="text" class="form-control custom-input" formControlName="amount"
+                              placeholder="Amount"
+                              [ngClass]="{ 'is-invalid': submitted && getinvoiceChargeControls.controls[i]?.get('amount')?.errors }">
+                            <div *ngIf="submitted && getinvoiceChargeControls.controls[i]?.get('amount')?.errors"
+                              class="invalid-feedback">
+                              <div *ngIf="getinvoiceChargeControls.controls[i]?.get('amount')?.errors?.required"> FOB
+                                Amount Is Required</div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-md-3">
+                <label class="form-label"> Contract No</label>
+                <input type="text" class="form-control custom-input" formControlName="contractNo"
+                  placeholder="Contract No" value="" [ngClass]="{ 'is-invalid': submitted && f.contractNo.errors }">
+                <div *ngIf="submitted && f.contractNo.errors" class="invalid-feedback">
+                  <div *ngIf="f.contractNo.errors.required"> Contract No Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label"> Buyer's Details</label>
+                <input type="text" class="form-control custom-input" formControlName="buyerDetails"
+                  placeholder="Buyer's Details" value=""
+                  [ngClass]="{ 'is-invalid': submitted && f.buyerDetails.errors }">
+                <div *ngIf="submitted && f.buyerDetails.errors" class="invalid-feedback">
+                  <div *ngIf="f.buyerDetails.errors.required"> Buyer's Details Is Required</div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label"> Nature of Payment</label>
+                <input type="text" class="form-control custom-input" formControlName="Payment"
+                  placeholder="Nature of Payment" value="" [ngClass]="{ 'is-invalid': submitted && f.Payment.errors }">
+                <div *ngIf="submitted && f.Payment.errors" class="invalid-feedback">
+                  <div *ngIf="f.Payment.errors.required"> Nature of Payment Is Required</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="Declaration">
+        <button class="accordion-button" [class.collapsed]="!isDeclarationPanelOpen" type="button"
+          (click)="toggleButton('declaration')" aria-expanded="isDeclarationPanelOpen"
+          aria-controls="Declarationdetails">
+          Product Details
+        </button>
+
+      </h2>
+      <div id="Declarationdetails" class=" multi-collapse accordion-collapse collapse " aria-labelledby="Declaration"
+        data-bs-parent="#accordionPanelsStayOpenExample" [class.show]="isDeclarationPanelOpen">
+        <div class="accordion-body">
+          <div class="wrap-form-field">
+            <div class="">
+              <div class="wrap-add-btn wrap-size" style="display: flex; justify-content: flex-start;">
+                <a class="btn btn-outline-primary" (click)="addNewproduct()">
+                  Add Product
+                </a>
+              </div>
+              <ng-container formArrayName="product">
+                <ng-container *ngFor="let productForm of product.controls; let i = index">
+                  <div class="row g-3 align-items-center mt-3" [formGroupName]="i">
+                    <div class="new-action ">
+                      <a class="wrap-text">Product {{ i + 1 }}</a>
+                      <a *ngIf="i > 0" class="wrap-btn" (click)="deleteproduct(i)">
+                        <i class="bi bi-trash color-pencil-red"></i>
+                      </a>
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label">Inv.SlNo</label>
+                      <input type="text" class="form-control custom-input" formControlName="invslNo"
+                        placeholder="Inv.SlNo"
+                        [ngClass]="{ 'is-invalid': submitted && product?.controls[i]?.get('invslNo')?.errors }">
+                      <div *ngIf="submitted && product?.controls[i]?.get('invslNo')?.errors" class="invalid-feedback">
+                        <div *ngIf="product?.controls[i]?.get('invslNo')?.errors.required"> Inv.SlNo Is Required</div>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label">Item SlNo</label>
+                      <input type="text" class="form-control custom-input" formControlName="itemSlNo"
+                        placeholder="Item SlNo"
+                        [ngClass]="{ 'is-invalid': submitted && product?.controls[i]?.get('itemSlNo')?.errors }">
+                      <div *ngIf="submitted && product?.controls[i]?.get('itemSlNo')?.errors" class="invalid-feedback">
+                        <div *ngIf="product?.controls[i]?.get('itemSlNo')?.errors.required"> Item SlNo Is Required</div>
+                      </div>
+                    </div>
+                    <div class="col-md-3 pt-2 mt-0">
+                      <label class="form-label">FOB-INR</label>
+                      <input type="text" class="form-control custom-input" formControlName="fOBINR"
+                        placeholder="FOB-INR"
+                        [ngClass]="{ 'is-invalid': submitted && product?.controls[i]?.get('fOBINR')?.errors }">
+                      <div *ngIf="submitted && product?.controls[i]?.get('fOBINR')?.errors" class="invalid-feedback">
+                        <div *ngIf="product?.controls[i]?.get('fOBINR')?.errors.required"> FOB-INR Is Required</div>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label">FOB-FC</label>
+                      <input type="text" class="form-control custom-input" formControlName="HSCD" placeholder="FOB-FC"
+                        [ngClass]="{ 'is-invalid': submitted && product?.controls[i]?.get('HSCD')?.errors }">
+                      <div *ngIf="submitted && product?.controls[i]?.get('HSCD')?.errors" class="invalid-feedback">
+                        <div *ngIf="product?.controls[i]?.get('HSCD')?.errors.required"> HS CD Is Required</div>
+                      </div>
+                    </div>
+                    <div class="col-md-3 pt-2 mt-0">
+                      <label class="form-label">Quantity</label>
+                      <input type="text" class="form-control custom-input" formControlName="quantity"
+                        placeholder="Quantity"
+                        [ngClass]="{ 'is-invalid': submitted && product?.controls[i]?.get('quantity')?.errors }">
+                      <div *ngIf="submitted && product?.controls[i]?.get('quantity')?.errors" class="invalid-feedback">
+                        <div *ngIf="product?.controls[i]?.get('quantity')?.errors.required"> Quantity Is Required</div>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label">Description</label>
+                      <input type="text" class="form-control custom-input" formControlName="description"
+                        placeholder="Description"
+                        [ngClass]="{ 'is-invalid': submitted && product?.controls[i]?.get('description')?.errors }">
+                      <div *ngIf="submitted && product?.controls[i]?.get('description')?.errors"
+                        class="invalid-feedback">
+                        <div *ngIf="product?.controls[i]?.get('description')?.errors.required"> Description Is Required
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3 pt-2 mt-0">
+                      <label class="form-label">Unit</label>
+                      <input type="text" class="form-control custom-input" formControlName="UQC" placeholder="Unit"
+                        [ngClass]="{ 'is-invalid': submitted && product?.controls[i]?.get('UQC')?.errors }">
+                      <div *ngIf="submitted && product?.controls[i]?.get('UQC')?.errors" class="invalid-feedback">
+                        <div *ngIf="product?.controls[i]?.get('UQC')?.errors.required"> Unit Is Required</div>
+                      </div>
+                    </div>
+                    <div class="col-md-3 pt-2 mt-0">
+                      <label class="form-label">Unit Price</label>
+                      <input type="text" class="form-control custom-input" formControlName="unitPrice"
+                        placeholder="Unit Price"
+                        [ngClass]="{ 'is-invalid': submitted && product?.controls[i]?.get('unitPrice')?.errors }">
+                      <div *ngIf="submitted && product?.controls[i]?.get('unitPrice')?.errors" class="invalid-feedback">
+                        <div *ngIf="product?.controls[i]?.get('unitPrice')?.errors.required"> Unit Is Required</div>
+                      </div>
+                    </div>
+                    <div class="col-md-3 pt-2 mt-0">
+                      <label class="form-label">RITC</label>
+                      <input type="text" class="form-control custom-input" formControlName="rate" placeholder="RITC"
+                        [ngClass]="{ 'is-invalid': submitted && product?.controls[i]?.get('rate')?.errors }">
+                      <div *ngIf="submitted && product?.controls[i]?.get('rate')?.errors" class="invalid-feedback">
+                        <div *ngIf="product?.controls[i]?.get('rate')?.errors.required"> RITC Is Required</div>
+                      </div>
+                    </div>
+                    <div class="col-md-3 pt-2 mt-0">
+                      <label class="form-label">Total Value (FC)</label>
+                      <input type="text" class="form-control custom-input" formControlName="valueFC"
+                        placeholder="Total Value (FC)"
+                        [ngClass]="{ 'is-invalid': submitted && product?.controls[i]?.get('valueFC')?.errors }">
+                      <div *ngIf="submitted && product?.controls[i]?.get('valueFC')?.errors" class="invalid-feedback">
+                        <div *ngIf="product?.controls[i]?.get('valueFC')?.errors.required"> Value (FC) Is Required</div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3 pt-2 mt-0">
+                      <label class="form-label">Item PMV</label>
+                      <input type="text" class="form-control custom-input" formControlName="PMV" placeholder="Item PMV"
+                        [ngClass]="{ 'is-invalid': submitted && product?.controls[i]?.get('PMV')?.errors }">
+                      <div *ngIf="submitted && product?.controls[i]?.get('PMV')?.errors" class="invalid-feedback">
+                        <div *ngIf="product?.controls[i]?.get('PMV')?.errors.required"> PMV Is Required</div>
+                      </div>
+                    </div>
+                    <div class="col-md-3 pt-2 mt-0">
+                      <label class="form-label">IGST PayStatus</label>
+                      <input type="text" class="form-control custom-input" formControlName="igstPayStatus"
+                        placeholder="IGST PayStatus" [ngClass]="{ 'is-invalid': submitted && f.igstPayStatus.errors }">
+                      <div *ngIf="submitted && f.igstPayStatus.errors" class="invalid-feedback">
+                        <div *ngIf="f.igstPayStatus.errors.required"> IGST PayStatus Is Required</div>
+                      </div>
+                    </div>
+                    <div class="col-md-3 pt-2 mt-0">
+                      <label class="form-label">IGST Rate</label>
+                      <input type="text" class="form-control custom-input" formControlName="igstRate"
+                        placeholder="IGST Rate" [ngClass]="{ 'is-invalid': submitted && f.igstRate.errors }">
+                      <div *ngIf="submitted && f.igstRate.errors" class="invalid-feedback">
+                        <div *ngIf="f.igstRate.errors.required"> IGST Rate Is Required</div>
+                      </div>
+                    </div>
+                    <div class="col-md-3 pt-2 mt-0">
+                      <label class="form-label">Duty Amt</label>
+                      <input type="text" class="form-control custom-input" formControlName="dutyAmt"
+                        placeholder="Duty Amt"
+                        [ngClass]="{ 'is-invalid': submitted && product?.controls[i]?.get('dutyAmt')?.errors }">
+                      <div *ngIf="submitted && product?.controls[i]?.get('dutyAmt')?.errors" class="invalid-feedback">
+                        <div *ngIf="product?.controls[i]?.get('dutyAmt')?.errors.required"> Duty Amt Is Required</div>
+                      </div>
+                    </div>
+                    <div class="col-md-3 pt-2 mt-0">
+                      <label class="form-label">Taxable Value</label>
+                      <input type="text" class="form-control custom-input" formControlName="cessRT"
+                        placeholder="Cess RT"
+                        [ngClass]="{ 'is-invalid': submitted && product?.controls[i]?.get('cessRT')?.errors }">
+                      <div *ngIf="submitted && product?.controls[i]?.get('cessRT')?.errors" class="invalid-feedback">
+                        <div *ngIf="product?.controls[i]?.get('cessRT')?.errors.required"> Cess RT Is Required</div>
+                      </div>
+                    </div>
+                    <div class="col-md-3 pt-2 mt-0">
+                      <label class="form-label">Reward Benefit</label>
+                      <input type="text" class="form-control custom-input" formControlName="reward" placeholder="Reward"
+                        [ngClass]="{ 'is-invalid': submitted && f.reward.errors }">
+                      <div *ngIf="submitted && f.reward.errors" class="invalid-feedback">
+                        <div *ngIf="f.reward.errors.required"> Reward Is Required</div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3 pt-2 mt-0">
+                      <label class="form-label">Total PMV</label>
+                      <input type="text" class="form-control custom-input" formControlName="cesAmt"
+                        placeholder="Total PMV"
+                        [ngClass]="{ 'is-invalid': submitted && product?.controls[i]?.get('cesAmt')?.errors }">
+                      <div *ngIf="submitted && product?.controls[i]?.get('cesAmt')?.errors" class="invalid-feedback">
+                        <div *ngIf="product?.controls[i]?.get('cesAmt')?.errors.required"> Ces Amt Is Required</div>
+                      </div>
+                    </div>
+                    <div class="col-md-3 pt-2 mt-0">
+                      <label class="form-label">IGST Amount</label>
+                      <input type="text" class="form-control custom-input" formControlName="igstAmount"
+                        placeholder="IGST Amount" [ngClass]="{ 'is-invalid': submitted && f.igstAmount.errors }">
+                      <div *ngIf="submitted && f.igstAmount.errors" class="invalid-feedback">
+                        <div *ngIf="f.igstAmount.errors.required"> IGST Amount Is Required</div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3 pt-2 mt-0">
+                      <label class="form-label">Comp. Cess</label>
+                      <input type="text" class="form-control custom-input" formControlName="compCess"
+                        placeholder="Comp. Cess" [ngClass]="{ 'is-invalid': submitted && f.compCess.errors }">
+                      <div *ngIf="submitted && f.compCess.errors" class="invalid-feedback">
+                        <div *ngIf="f.compCess.errors.required"> Comp. Cess Is Required</div>
+                      </div>
+                    </div>
+                    <div class="col-md-3 pt-2 mt-0">
+                      <label class="form-label">Scheme Description</label>
+                      <input type="text" class="form-control custom-input" formControlName="schemeDescription"
+                        placeholder="Scheme Description"
+                        [ngClass]="{ 'is-invalid': submitted && f.schemeDescription.errors }">
+                      <div *ngIf="submitted && f.schemeDescription.errors" class="invalid-feedback">
+                        <div *ngIf="f.schemeDescription.errors.required"> Scheme Description Is Required</div>
+                      </div>
+                    </div>
+                    <div class="col-md-3 pt-2 mt-0">
+                      <label class="form-label">Lut No.</label>
+                      <input type="text" class="form-control custom-input" formControlName="lutNo" placeholder="Lut No"
+                        [ngClass]="{ 'is-invalid': submitted && f.lutNo.errors }">
+                      <div *ngIf="submitted && f.lutNo.errors" class="invalid-feedback">
+                        <div *ngIf="f.lutNo.errors.required"> lutNo Is Required</div>
+                      </div>
+                    </div>
+                    <div class="col-md-3 pt-2 mt-0">
+                      <label class="form-label">Std Qty.</label>
+                      <input type="text" class="form-control custom-input" formControlName="stdQty"
+                        placeholder="Standard Quantity" [ngClass]="{ 'is-invalid': submitted && f.stdQty.errors }">
+                      <div *ngIf="submitted && f.stdQty.errors" class="invalid-feedback">
+                        <div *ngIf="f.stdQty.errors.required"> Std Qty Is Required</div>
+                      </div>
+                    </div>
+                    <div class="col-md-3 pt-2 mt-0">
+                      <label class="form-label">SCH Code</label>
+                      <input type="text" class="form-control custom-input" formControlName="schCode"
+                        placeholder="SCH Code" [ngClass]="{ 'is-invalid': submitted && f.schCode.errors }">
+                      <div *ngIf="submitted && f.schCode.errors" class="invalid-feedback">
+                        <div *ngIf="f.schCode.errors.required"> SCH Code Is Required</div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3 pt-2 mt-0">
+                      <label class="form-label">SQC</label>
+                      <input type="text" class="form-control custom-input" formControlName="sqcMSR" placeholder="SQC"
+                        [ngClass]="{ 'is-invalid': submitted && f.sqcMSR.errors }">
+                      <div *ngIf="submitted && f.sqcMSR.errors" class="invalid-feedback">
+                        <div *ngIf="f.sqcMSR.errors.required"> SQC Is Required</div>
+                      </div>
+                    </div>
+                    <div class="col-md-3 nz-select pt-2 mt-0">
+                      <label for="State" class="form-label">State Of Origin</label>
+                      <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear
+                        formControlName="stateOrigin" [ngClass]="{ 'is-invalid': submitted && f.stateOrigin.errors }">
+                        <nz-option *ngFor="let state of stateData" [nzLabel]="state?.stateName"
+                          [nzValue]="state?.stateId"></nz-option>
+                      </nz-select>
+                      <div *ngIf="submitted && f.stateOrigin.errors" class="invalid-feedback">
+                        <div *ngIf="f.stateOrigin.errors.required"> State Origin Is Required</div>
+                      </div>
+                    </div>
+                    <div class="col-md-3 pt-2 mt-0">
+                      <label class="form-label">District</label>
+                      <input type="text" class="form-control custom-input" formControlName="district"
+                        placeholder="District" [ngClass]="{ 'is-invalid': submitted && f.district.errors }">
+                      <div *ngIf="submitted && f.district.errors" class="invalid-feedback">
+                        <div *ngIf="f.district.errors.required"> District Is Required</div>
+                      </div>
+                    </div>
+                    <div class="col-md-3 pt-2 mt-0">
+                      <label class="form-label">PTA/FTA Code</label>
+                      <input type="text" class="form-control custom-input" formControlName="ptAbroad"
+                        placeholder="PTA/FTA Code" [ngClass]="{ 'is-invalid': submitted && f.ptAbroad.errors }">
+                      <div *ngIf="submitted && f.ptAbroad.errors" class="invalid-feedback">
+                        <div *ngIf="f.ptAbroad.errors.required"> PTA/FTA Code Is Required</div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3 pt-2 mt-0">
+                      <label class="form-label">RoDTEP</label>
+                      <input type="text" class="form-control custom-input" formControlName="endUse" placeholder="RoDTEP"
+                        [ngClass]="{ 'is-invalid': submitted && f.endUse.errors }">
+                      <div *ngIf="submitted && f.endUse.errors" class="invalid-feedback">
+                        <div *ngIf="f.endUse.errors.required"> RoDTEP Is Required</div>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="masterbl">
+        <button class="accordion-button" [class.collapsed]="!isMasterBLDraftPanelOpen" type="button"
+          (click)="toggleButton('masterBLDraft')" aria-expanded="isMasterBLDraftPanelOpen"
+          aria-controls="masterbldetails">
+          End Use Information
+        </button>
+      </h2>
+      <div id="masterbldetails" class=" multi-collapse accordion-collapse collapse " aria-labelledby="masterbl"
+        data-bs-parent="#accordionPanelsStayOpenExample" [class.show]="isMasterBLDraftPanelOpen">
+        <div class="accordion-body">
+          <div class="wrap-form-field">
+            <div class="col-md-12">
+              <div class="mb-2 d-flex justify-content-end">
+                <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="addContainerRow()">Add </a>
+              </div>
+              <div class="table-design example-container mat-elevation-z8">
+                <table aria-describedby="mytable" class="gfg">
+                  <thead>
+                    <tr class="field-name">
+                      <th scope="col" class="w-25">Inv.SlNo</th>
+                      <th scope="col">Item SlNo </th>
+                      <th scope="col">Code</th>
+                      <th scope="col">Description</th>
+                      <th scope="col">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody formArrayName="containerItems">
+                    <tr class="collapse-ui" *ngFor="let row of getContainerControls?.controls; let i=index"
+                      [formGroupName]="i">
+                      <td>
+                        <div class="">
+                          <input type="text" class="form-control custom-input" formControlName="invSlNo"
+                            placeholder="Inv SlNo"
+                            [ngClass]="{ 'is-invalid': submitted && getContainerControls.controls[i]?.get('invSlNo')?.errors }">
+                          <div *ngIf="submitted && getContainerControls.controls[i]?.get('invSlNo')?.errors"
+                            class="invalid-feedback">
+                            <div *ngIf="getContainerControls.controls[i]?.get('invSlNo')?.errors?.required"> Inv SlNo
+                              Value Is Required</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="">
+                          <input type="text" class="form-control custom-input" formControlName="itemSlNo"
+                            placeholder="Item SlNo"
+                            [ngClass]="{ 'is-invalid': submitted && getContainerControls.controls[i]?.get('itemSlNo')?.errors }">
+                          <div *ngIf="submitted && getContainerControls.controls[i]?.get('itemSlNo')?.errors"
+                            class="invalid-feedback">
+                            <div *ngIf="getContainerControls.controls[i]?.get('itemSlNo')?.errors?.required"> Item SlNo
+                              Value Is Required</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="">
+                          <input type="text" class="form-control custom-input" formControlName="code" placeholder="Code"
+                            [ngClass]="{ 'is-invalid': submitted && getContainerControls.controls[i]?.get('code')?.errors }">
+                          <div *ngIf="submitted && getContainerControls.controls[i]?.get('code')?.errors"
+                            class="invalid-feedback">
+                            <div *ngIf="getContainerControls.controls[i]?.get('code')?.errors?.required"> Code
+                              Value Is Required</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="">
+                          <input type="text" class="form-control custom-input" formControlName="description"
+                            placeholder="Description"
+                            [ngClass]="{ 'is-invalid': submitted && getContainerControls.controls[i]?.get('description')?.errors }">
+                          <div *ngIf="submitted && getContainerControls.controls[i]?.get('description')?.errors"
+                            class="invalid-feedback">
+                            <div *ngIf="getContainerControls.controls[i]?.get('description')?.errors?.required">
+                              Description
+                              Value Is Required</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="action-field">
+                        <span *ngIf="getContainerControls?.controls?.length > 1" nz-tooltip
+                          nzTooltipTitle="{{ 'common.delete' | translate }}" (click)="deleteRow(i)" class="mtop"><a><em
+                              class="bi bi-trash color-pencil-red"></em></a>
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="masterbl1">
+        <button class="accordion-button" [class.collapsed]="!isMasterBLOriginalPanelOpen" type="button"
+          (click)="toggleButton('masterBLOriginal')" aria-expanded="isMasterBLOriginalPanelOpen"
+          aria-controls="masterbl1details">
+          Supporting Documents
+        </button>
+      </h2>
+      <div id="masterbl1details" class=" multi-collapse accordion-collapse collapse " aria-labelledby="masterbl1"
+        data-bs-parent="#accordionPanelsStayOpenExample" [class.show]="isMasterBLOriginalPanelOpen">
+        <div class="accordion-body">
+          <div class="wrap-form-field">
+            <div class="modal-content nz-allSelect">
+              <div class="modal-body">
+                <form [formGroup]="docForm">
+                  <div class="row g-4">
+                    <div class="col-md-3">
+                      <div class="form-field-section">
+                        <label class="form-label">Document Name</label>
+                        <input class="form-control custom-input" type="text" formControlName="documentName"
+                          placeHolder="Document Name">
+                      </div>
+                    </div>
+                    <div class="col-md-3 nz-select">
+                      <div class="form-field-section">
+                        <label class="form-label">Document Type</label>
+                        <input class="form-control custom-input" formControlName="documentType" type="text"
+                          placeholder="Document Type">
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-field-section">
+                        <label class="form-label">Upload Document</label>
+                        <input class="form-control custom-input" type="file" id="formFileMultiple"
+                          (change)="onFileSelected($event)" formControlName="Doc">
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="wrap-form-field">
+                        <div class="form-group wrap-form-action">
+                          <button class="btn btn-outline-primary btn-lg float-end" type="submit" *ngIf="docForm?.valid"
+                            (click)="addDocument()">Add Document
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </form>
+                <div class="wrap-table-area wrap-form-field ">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="table-design example-container mat-elevation-z8">
+                        <table>
+                          <thead>
+                            <tr class="field-name">
+                              <th scope="col">Document Type</th>
+                              <th scope="col">Document Name</th>
+
+                              <th scope="col">Date</th>
+                              <th scope="col">Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let doc of documentTableData; let i = index">
+                              <td>{{doc?.documentType}}</td>
+                              <td>{{doc?.documentName}}</td>
+
+                              <td>{{doc?.uploadDate | date:"dd/MM/YYYY"}}</td>
+                              <td class="action-field">
+                                <span class="mtop ml-1" nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}"><a>
+                                    <em class="bi bi-eye globally-change-icon-color"
+                                      (click)="documentPreview(doc)"></em></a>
+                                </span>
+                                <span class="mtop ml-1" nz-tooltip
+                                  nzTooltipTitle="{{ 'common.download' | translate }}"><a>
+                                    <em class="bi bi-download" (click)="downloadFile(doc)"></em></a>
+                                </span>
+                                <span class="mtop ml-1" nz-tooltip
+                                  nzTooltipTitle="{{ 'common.delete' | translate }}"><a>
+                                    <em class="bi bi-trash color-pencil-red" (click)="deleteFile(i)"></em></a>
+                                </span>
+                              </td>
+
+                            </tr>
+                            <tr>
+                              <td colspan="4">
+                                <div class="w-100 text-center">
+                                  <span *ngIf="!documentTableData?.length" class="text-center ">No data available</span>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item display-none">
+    <h2 class="accordion-header" id="demo1">
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#demo" aria-expanded="false" aria-controls="demo">
+      </button>
+    </h2>
+    <div id="demo" aria-labelledby="demo1" data-bs-parent="#accordionPanelsStayOpenExample">
+      <div class="accordion-body">
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer mt-5">
+    <div class="text-center">
+      <button type="button" class="btn1 mr-1" *ngIf="isEdit || isType === 'edit'" (click)="print(shippingbillId)">
+        Print
+      </button>
+      <button type="button" class="btn btn-outline-primary mr-1" (click)="SaveShippingBill();">
+        {{shippingbillId? 'Update':'Save'}}
+      </button>
+      <button type="button" class="btn1" (click)="close()">
+        Cancel
+      </button>
+
+    </div>
+  </div>
+</form>

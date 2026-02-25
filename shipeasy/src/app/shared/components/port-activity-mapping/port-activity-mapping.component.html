@@ -1,0 +1,187 @@
+<div class="table-with-gheading">
+    <div class="wrap-table-area">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="float-clear-mobile-view d-flex flex-column flex-sm-row gap-3 float-start search-section">
+            <div class="input-group custom-input">
+              <input type="text" class="form-control" placeholder="Search" aria-label="Search" />
+            </div>
+          </div>
+          <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2">
+            <div class="mt-2">
+              <span>
+                <h5>{{ fromSize }}-{{ count }} of {{ toalLength }}</h5>
+              </span>
+            </div>
+            <div class="mt-2">
+              <span class="prv" [class.disable-arrow-sign]="fromSize === 1" (click)="prev()"
+              ><em class="typcn typcn-chevron-left"></em
+            ></span>
+            <span class="prv" [class.disable-arrow-sign]="count === toalLength" (click)="next()"
+              ><em class="typcn typcn-chevron-right"></em
+            ></span>
+            </div>
+            <div class="mt-2">
+              <select class="form-select form-select-sm" (change)="filter($event)">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+              </select>
+            </div>
+            <div class="mt-2">
+              <a class="new-action" (click)="open()">{{ "common.add" | translate }} {{ "stolt.masters.PortMapping.AddPortActivityMap" | translate }}</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="table-responsive">
+            <table aria-describedby="mytable" class="gfg">
+              <thead>
+                <tr class="field-name">
+                  <th scope="col"
+                  [appSort]="PortData"
+                  data-order="desc"
+                  data-name="portName"
+                  >
+                    {{ "stolt.masters.PortMapping.PortName" | translate }}
+                    
+                     <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col"
+                  [appSort]="PortData"
+                  data-order="desc"
+                  data-name="portName"
+                  >
+                  {{ "stolt.masters.PortMapping.activity" | translate }}
+                    
+                     <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col"
+                  [appSort]="PortData"
+                  data-order="desc"
+                  data-name="portMappingName"
+                  >
+                    {{ "stolt.masters.PortMapping.MapName" | translate }}
+                    
+                     <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col"
+                  [appSort]="PortData"
+                  data-order="desc"
+                  data-name="country"
+                  data-keys='["countryName"]'
+                  >
+                    {{ "stolt.masters.PortMapping.Country" | translate }}
+                     <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col"
+                  [appSort]="PortData"
+                  data-order="desc"
+                  data-name="principalCode"
+                  >
+                    {{ "stolt.masters.PortMapping.PrincipalCode" | translate }}
+                     <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col"
+                  [appSort]="PortData"
+                  data-order="desc"
+                  data-name="cargoType"
+                  >
+                    {{ "stolt.masters.PortMapping.CargoType" | translate }}
+                     <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col"></th>
+                </tr>
+                <tr>
+                  <th scope="col">
+                    <input type="text" class="form-control" id="" [(ngModel)]="port_name" />
+                  </th>
+                  <th scope="col">
+                    <input type="text" class="form-control" id="" [(ngModel)]="activity_name" />
+                  </th>
+                  <th scope="col">
+                    <input type="text" class="form-control" id="" [(ngModel)]="map_name" />
+                  </th>
+                  <th scope="col">
+                    <input type="text" class="form-control" id="" [(ngModel)]="country" />
+                  </th>
+                  <th scope="col">
+                    <input type="text" class="form-control" id="" [(ngModel)]="principal_code" />
+                  </th>
+                  <th scope="col">
+                    <input type="text" class="form-control" id="" [(ngModel)]="cargo_type" />
+                  </th>
+                  <th scope="col"  class="wrap-table-btn">
+                    <button type="button" class="btn btn-outline-primary" (click)="search()">
+                      {{ "common.search_btn" | translate }}
+                    </button>
+                    <a routerLink="#" class="clearbtn" (click)="clear()">
+                      {{ "common.clear" | translate }}</a>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let port of PortData; let i = index">
+                  <td class="uppercase">{{ port._source?.portName }}</td>
+                  <td class="uppercase">{{ port._source?.activity }}</td>
+                  <td class="uppercase">{{ port._source?.portMappingName }}</td>
+                  <td class="uppercase">{{ port._source?.country?.countryName }}</td>
+                  <td class="uppercase">{{ port._source?.principalCode }}</td>
+                  <td class="uppercase">{{ port._source?.cargoType }}</td>
+  
+                  <td class="action-field">
+                    <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop"><a
+                        (click)="open(port,port.portId)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                    </span>
+                   
+                    <span class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                          (change)="changeStatus(port)" [checked]="port?._source?.status" />
+                      <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                  </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="no-data-availble" *ngIf="PortData.length === 0">
+            {{'common.no_data' | translate}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #deleteport let-c="close" let-d="dismiss">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="btn-close shadow-none"
+          aria-label="Close"
+          (click)="d('Cross click')"
+        ></button>
+      </div>
+      <div class="modal-body mt-4">
+        <em
+          class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2"
+        >
+      </em>
+        <span class="text-dark fs-6">{{ "error.msg_delete" | translate }}</span>
+      </div>
+      <div class="modal-footer">
+        <div class="text-center">
+          <button
+            type="button"
+            class="btn btn-secondary btn-sm me-3"
+            (click)="d('Cross click')"
+          >
+          {{ "common.no" | translate }}
+          </button>
+          <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+            {{ "common.yes" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-template>

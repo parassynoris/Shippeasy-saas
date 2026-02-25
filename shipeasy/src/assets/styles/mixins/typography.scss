@@ -1,0 +1,816 @@
+@use "../mixins/breakpoint.scss";
+
+
+body{
+  font-family: "Roboto" !important;
+}
+@mixin heading-3 {
+  font-size: 30px;
+  line-height: 30px;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+  font-weight: 500;
+}
+
+@mixin heading-4 {
+  font-size: 12px;
+  line-height: 30px;
+  font-weight: 600;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+  letter-spacing: 0px;
+}
+
+@mixin heading-4-medium {
+  font-size: 12px;
+  line-height: 30px;
+  font-weight: 600;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+  letter-spacing: 0px;
+}
+
+@mixin heading-4-bold {
+  font-size: 12px;
+  line-height: 30px;
+  font-weight: 700;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+  letter-spacing: 0px;
+}
+
+@mixin text-md {
+  font-size: 12px;
+  line-height: 22px;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+  font-weight: 500;
+}
+
+@mixin text-md-medium {
+  font-size: 12px;
+  line-height: 22px;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+  font-weight: 500;
+}
+
+@mixin text-md-bold {
+  font-size: 12px;
+  line-height: 25px;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+  font-weight: 600;
+}
+
+@mixin normal-13 {
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: 400;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+}
+
+@mixin normal-13-medium {
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: 500;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+}
+
+@mixin normal-13-bold {
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: 600;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+}
+
+@mixin normal-14 {
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: 400;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+}
+
+@mixin normal-14-medium {
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: 500;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+}
+
+@mixin normal-13-bold {
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: 600;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+}
+
+@mixin font-12 {
+  font-size: 12px;
+  line-height: 16px;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+  font-weight: 400;
+}
+
+@mixin normal-12 {
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: 500;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+}
+
+@mixin normal-12-bold {
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 600;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+}
+
+@mixin normal-16 {
+  font-size: 12px;
+  line-height: 22px;
+  font-weight: 400;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+}
+
+@mixin normal-16-medium {
+  font-size: 12px;
+  line-height: 22px;
+  font-weight: 500;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+}
+
+@mixin normal-16-bold {
+  font-size: 12px;
+  line-height: 22px;
+  font-weight: 600;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+}
+
+@mixin normal-20 {
+  font-size: 12px;
+  line-height: 30px;
+  font-weight: 400;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+}
+
+@mixin normal-24 {
+  font-size: 12px;
+  line-height: 30px;
+  font-weight: 400;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+}
+
+@mixin normal-32 {
+  font-size: 32px;
+  line-height: 42px;
+  font-weight: 400;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+}
+
+@mixin normal-32-medium {
+  font-size: 32px;
+  line-height: 42px;
+  font-weight: 500;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+}
+
+@mixin normal-32-bold {
+  font-size: 32px;
+  line-height: 42px;
+  font-weight: 600;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+}
+
+@mixin new-heading-1 {
+  font-size: 32px;
+  line-height: 44px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;
+  letter-spacing: 0px !important;
+}
+
+@mixin new-heading-22 {
+  font-size: 12px;
+  line-height: 32px;
+  font-weight: 600;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+}
+
+@mixin new-heading-20 {
+  font-size: 12px;
+  line-height: 30px;
+  font-weight: 600;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+}
+
+@mixin new-heading-12 {
+  font-size: 12px;
+  line-height: 20px;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+  font-weight: 500;
+}
+
+@mixin new-heading-14 {
+  font-size: 12px;
+  line-height: 24px;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+  font-weight: 500;
+}
+
+@mixin new-heading-16 {
+  font-size: 12px;
+  line-height: 24px;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0px !important;
+  font-weight: 500;
+}
+
+
+@import "node_modules/bootstrap/scss/mixins/_breakpoints";
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px,
+);
+$fontSizes: (
+  boldtitle:(
+    14px,
+    14px
+  ),
+  h1main: (
+    30px,
+    40px,
+  ),
+  h1: (
+    22px,
+    38px,
+  ),
+  h1heading:(
+    20px,
+    36px
+  ),
+  same20:(
+    20px,
+    20px
+  ),
+  h2: (
+    22px,
+    30px,
+  ),
+  h2mulish:(
+    22px,
+    30px
+  ),
+  h3: (
+    22px,
+    24px
+  ),
+
+  h3companytitle: (
+    24px,
+    24px
+  ),
+  h3heading:(
+    16px,
+    24px
+  ),
+  h3subheading: (
+    16px,
+    24px,
+  ),
+  h4: (
+    16px,
+    20px,
+  ),
+  h4subheading: (
+    14px,
+    20px,
+  ),
+  h5: (
+    14px,
+    18px,
+  ),
+  h5-roboto: (
+    16px,
+    18px,
+  ),
+  h6: (
+    16px,
+    16px,
+  ),
+  title:(
+    14px,
+    16px
+  ),
+  title2:(
+    14px,
+    16px
+  ),
+  title3:(
+    14px,
+    12px
+  ),
+  smalltitle:(
+    12px,
+    12px
+  ),
+  small-title-roboto:(
+    14px,
+    12px,
+  ),
+  button:(
+    14px,
+    14px
+  ),
+  button1:(
+    14px,
+    14px
+  ),
+  formlabel:(
+    10px,
+    10px
+  ),
+  smalllabel:(
+    10px,
+    10px
+  ),
+  label:(
+    14px,
+    14px
+  ),
+  labelsmall:(
+    12px,
+    12px
+  ),
+  labelbold:(
+    12px,
+    14px
+  ),
+
+  labelsemibold:(
+    14px,
+    14px
+  ),
+  normal:(
+    14px,
+    16px
+  ),
+  smalltext:(
+    14px,
+    14px
+  ),
+  input:(
+    16px,
+    16px
+  ),
+  subtitle:(
+    16px,
+    16px
+  ),
+  subtitle2:(
+    12px,
+    14px
+  ),
+  subtitle3:(
+    16px,
+    18px
+  ),
+  subtitle4:(
+    14px,
+    18px
+  ),
+  subtext:(
+    12px,
+    12px
+  ),
+
+  footer:(
+    14px,
+    14px
+  ),
+  common-txt:(
+    14px,
+    16px
+  )
+);
+$fontfamily: (
+  boldtitle:(
+      'Jost', sans-serif,
+      'Jost', sans-serif
+  ),
+  h1main: (
+      'Jost', sans-serif,
+      'Jost', sans-serif
+  ),
+  h1: (
+      'Jost', sans-serif,
+      'Jost', sans-serif,
+  ),
+
+  h1heading:(
+      'Jost', sans-serif,
+      'Jost', sans-serif
+  ),
+  same20:(
+      'Jost', sans-serif,
+      'Jost', sans-serif
+  ),
+  h2: (
+      'Jost', sans-serif,
+      'Jost', sans-serif,
+  ),
+  h2mulish:(
+      'Jost', sans-serif,
+      'Jost', sans-serif
+  ),
+  h3: (
+      'Jost', sans-serif,
+      'Jost', sans-serif,
+  ),
+  h3companytitle: (
+      'Jost', sans-serif,
+      'Jost', sans-serif,
+  ),
+  h3heading:(
+      'Jost', sans-serif,
+      'Jost', sans-serif
+  ),
+  h3subheading: (
+      'Jost', sans-serif,
+      'Jost', sans-serif,
+  ),
+  h4: (
+      'Jost', sans-serif,
+      'Jost', sans-serif,
+  ),
+  h4subheading: (
+      'Jost', sans-serif,
+      'Jost', sans-serif,
+  ),
+  h5: (
+      'Jost', sans-serif,
+      'Jost', sans-serif,
+  ),
+  h5-roboto: (
+      'Jost', sans-serif,
+      'Jost', sans-serif,
+  ),
+  h6: (
+      'Jost', sans-serif,
+      'Jost', sans-serif,
+  ),
+  title:(
+      'Jost', sans-serif,
+      'Jost', sans-serif
+  ),
+  title2:(
+      'Jost', sans-serif,
+      'Jost', sans-serif
+  ),
+  title3:(
+      'Jost', sans-serif,
+      'Jost', sans-serif
+  ),
+  smalltitle:(
+     'Jost', sans-serif,
+     'Jost', sans-serif
+  ),
+  small-title-roboto:(
+      'Jost', sans-serif,
+      'Jost', sans-serif
+  ),
+  button:(
+      'Jost', sans-serif,
+      'Jost', sans-serif
+  ),
+  button1:(
+      'Jost', sans-serif,
+      'Jost', sans-serif
+  ),
+  formlabel:(
+      'Jost', sans-serif,
+      'Jost', sans-serif
+  ),
+  input:(
+      'Jost', sans-serif,
+      'Jost', sans-serif
+  ),
+  smalllabel:(
+      'Jost', sans-serif,
+      'Jost', sans-serif
+  ),
+  label:(
+      'Jost', sans-serif,
+      'Jost', sans-serif
+  ),
+  labelsmall:(
+      'Jost', sans-serif,
+      'Jost', sans-serif
+  ),
+  labelbold:(
+     'Jost', sans-serif,
+     'Jost', sans-serif
+  ),
+  labelsemibold:(
+      'Jost', sans-serif,
+      'Jost', sans-serif
+  ),
+  normal:(
+      'Jost', sans-serif,
+      'Jost', sans-serif
+  ),
+  smalltext:(
+      'Jost', sans-serif,
+      'Jost', sans-serif
+  ),
+  subtext:(
+      'Jost', sans-serif,
+      'Jost', sans-serif
+  ),
+  subtitle:(
+      'Jost', sans-serif,
+      'Jost', sans-serif
+  ),
+  subtitle2:(
+      'Jost', sans-serif,
+      'Jost', sans-serif
+  ),
+  subtitle3:(
+      'Jost', sans-serif,
+      'Jost', sans-serif
+  ),
+  subtitle4:(
+      'Jost', sans-serif,
+      'Jost', sans-serif
+  ),
+  footer:(
+      'Jost', sans-serif,
+      'Jost', sans-serif
+  ),
+  common-txt:(
+      'Jost', sans-serif,
+      'Jost', sans-serif
+  ),
+  mulish-semi:(
+    'Jost', sans-serif,
+    'Jost', sans-serif
+  )
+);
+$typeLineHeights: (
+  boldtitle:(
+    140%,
+    140%
+  ),
+  h1main:(
+    120%,
+    120%
+  ),
+  h1: (
+    140%,
+    120%,
+  ),
+  h1heading:(
+    140%,
+    120%
+  ),
+  same20:(
+    140%,
+    140%
+  ),
+  h2mulish:(
+    140%,
+    140%
+  ),
+  h2: (
+    140%,
+    140%,
+  ),
+  h3: (
+    140%,
+    120%,
+  ),
+  h3companytitle: (
+    120%,
+    120%,
+  ),
+  h3heading:(
+    140%,
+    140%
+  ),
+  h3subheading: (
+    140%,
+    120%,
+  ),
+  h4: (
+    140%,
+    24px,
+  ),
+  h4subheading: (
+    140%,
+    24px,
+  ),
+  h5: (
+    140%,
+    24px,
+  ),
+  h5-roboto: (
+    140%,
+    24px,
+  ),
+  h6: (
+    140%,
+    140%,
+  ),
+  title:(
+    140%,
+    140%
+  ),
+  title2:(
+    140%,
+    140%
+  ),
+  title3:(
+    140%,
+    140%
+  ),
+  smalltitle:(
+    140%,
+    140%
+  ),
+  small-title-roboto:(
+    140%,
+    140%
+  ),
+  button:(
+    140%,
+    140%
+  ),
+  button1:(
+    140%,
+    140%
+  ),
+  formlabel:(
+    140%,
+    140%
+  ),
+  input:(
+    140%,
+    140%
+  ),
+  smalllabel:(
+    140%,
+    140%
+  ),
+  label:(
+    140%,
+    140%
+  ),
+  labelsmall:(
+    140%,
+    140%
+  ),
+  labelbold:(
+    140%,
+    140%
+  ),
+  labelsemibold:(
+    150%,
+    140%
+  ),
+  normal:(
+      140%,
+      22px
+  ),
+  smalltext:(
+    140%,
+    20px
+  ),
+  subtitle:(
+    140%,
+    140%
+  ),
+  subtitle2:(
+    140%,
+    140%
+  ),
+  subtitle3:(
+    140%,
+    150%
+  ),
+  subtitle4:(
+    140%,
+    150%
+  ),
+  subtext:(
+    140%,
+    140%
+  ),
+  footer:(
+    140%,
+    140%
+  ),
+  common-txt:(
+    140%,
+    140%
+  )
+);
+
+$typography: (
+  extrabold:(
+    800,
+    (boldtitle,formlabel, button,subtitle2,smalltitle)
+  ),
+  heading: (
+    700,
+    (h1main,footer,subtitle,h1,button1,label,smalltitle,subtitle3,boldtitle,h1heading,same20,title,labelsemibold, h2,h2mulish, h3, h3companytitle, h3heading,h3subheading, h4, h4subheading, h5,h5-roboto, h6,title,title2,title3,subtitle2,smalltitle,label,labelsmall,labelbold,button,formlabel,smalllabel,small-title-roboto),
+  ),
+  bold:(
+    600,
+    (labelsemibold,smalllabel, h5-roboto, smalltitle,h3heading,labelsmall, title2)
+  ),
+  semibold:(
+    500,
+    (label,labelbold,formlabel,same20,subtitle,smalllabel, button,smalltitle,h3heading,title,subtitle2,smalltext, small-title-roboto,title2)
+  ),
+  text:(
+    400,
+    (normal,label, common-txt,h5,same20,button,button1,h4subheading,h3heading,formlabel,labelbold,labelsemibold,common-txt,h4,smalltext,subtitle,subtitle2,subtitle3,subtitle4 ,input ,subtext,footer,smalllabel, smalltitle)
+  )
+);
+
+
+@mixin attr-x($attr, $attr-count: 50, $unit: 'px') {
+  $attr-list: null;
+  @for $i from 1 through $attr-count {
+
+      .#{$attr}--#{$i} {
+          #{$attr}: #{$i}#{$unit} !important;
+      }
+  }
+
+}
+
+@include attr-x('border-radius');
+
+
+@mixin getStyle($font, $size, $bold: false, $italic: false) {
+  $styleName: map-get($typography, $font);
+  $allowedSizes: nth($styleName, 2);
+
+  // Validate if the font-size is allowed
+  $i: index($allowedSizes, $size);
+
+  @if $i {
+    $fontSizes: map-get($fontSizes, $size);
+    $lineHeights: map-get($typeLineHeights, $size);
+    $fontFamily: map-get($fontfamily, $size);
+    font-family: nth($fontFamily, 1);
+    font-size: nth($fontSizes, 1);
+    line-height: nth($lineHeights, 1);
+    font-weight: nth($styleName, 1);
+    letter-spacing: 0px;
+
+    @if length($fontSizes) > 1 {
+      @include media-breakpoint-up(sm) {
+        // font-size first
+        font-size: nth($fontSizes, 2);
+        font-family: nth($fontFamily, 2);
+
+        // Then line-height
+        @if length($lineHeights) > 1 {
+          line-height: nth($lineHeights, 2);
+        }
+      }
+    }
+  } @else {
+    @error "The style you are trying to use is not valid. Please refer to the styleguide (http://localhost:8080/style-guide/index.html#typography) for reference.";
+  }
+}
+
+
+

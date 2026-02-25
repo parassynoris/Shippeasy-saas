@@ -1,0 +1,63 @@
+::ng-deep {
+    .wrap-modal-autosearch {
+        nz-select {
+
+            input,
+            select {
+                padding: 0 0px !important;
+                border: 1px solid rgb(207 202 202) !important;
+            }
+        }
+
+        .nz-form-select.wrap-inline-select nz-select-top-control {
+            height: 32px !important;
+        }
+    }
+
+    .cdk-overlay-container,
+    .cdk-overlay-pane {
+        z-index: 2000 !important;
+    }
+}
+.pointer-events{
+    cursor: pointer;
+}
+
+.simple-text{
+    color: var(--change-theme);
+    font-weight: 600;
+    margin-right: 20px;
+    padding: 4px 6px;
+    border-radius: 4px;
+    background: #eeecec;
+    border: 1px solid #dfdfdf;
+}
+
+.invalid-feedback {
+    display: block !important;
+    width: 100% !important;
+    margin-top: 0.25rem !important;
+    font-size: .875em !important;
+    color: #dc3545 !important;
+  }
+
+    ::ng-deep .wrap-input input {
+        font-size: 14px;
+        box-sizing: border-box;
+        border: 1px solid #d9d9d9 !important;
+        box-shadow: none;
+        outline: none;
+        background-color: #fff;
+        color: #000000de;
+        width: 100%;
+        padding: 0 15px;
+        line-height: 40px;
+        height: 32px !important;
+        border: 1px solid #ccc; 
+        border-radius: 4px; 
+    }
+
+    .text-danger{
+        font-size: 10px;
+        color: #dc3545 !important;
+    }

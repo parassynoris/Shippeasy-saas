@@ -1,0 +1,441 @@
+<form [formGroup]="newenquiryForm">
+  <div class=" modal-dialog modal-lg custom-modal nz-allSelect">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title position-relative start-0">
+          <ng-container *ngIf="isAddMode">
+            {{ 'common.add' | translate }} {{ key }}
+          </ng-container>
+          <ng-container *ngIf="!isAddMode">
+            {{ 'common.edit' | translate }} {{ key }}
+          </ng-container>
+        </h5>
+        <button class="btn-close" (click)="onClose($event)" data-bs-dismiss="modal" type="submit"></button>
+      </div>
+      <div class="modal-body p-3" >
+        <div class="row g-3" *ngIf="key !== 'Freight'">
+          <div class="col-md-4 nz-select" *ngIf="false">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">{{ 'stolt.batch.charges.new.ChargeGroup' | translate }}<span
+                  class="text-danger">*</span></label>
+              <nz-select formControlName="chargeGroup" class="form-select border-0"
+                [ngClass]="{'is-invalid': submitted && f.chargeGroup.errors}">
+                <nz-option nzValue="AGENT" nzLabel="AGENT"></nz-option>
+                <nz-option nzValue="SHIPEASY " nzLabel="SHIPEASY"></nz-option>
+                <nz-option nzValue="AGENT/SHIPEASY" nzLabel="Both"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.chargeGroup.errors" class="invalid-feedback">
+                <div *ngIf="f.chargeGroup.errors.required">{{ 'stolt.batch.charges.new.ChargeGroup' | translate }} is
+                  required</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 nz-select">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">{{ 'stolt.batch.charges.new.ChargeName' | translate }}<span
+                  class="text-danger">*</span></label>
+
+              <nz-select [nzDisabled]="vendorEdit"  class="form-select border-0" nzShowSearch nzAllowClear formControlName="chargeName"
+                [ngClass]="{'is-invalid': submitted && f.chargeName.errors}" 
+                (ngModelChange)="setChargeQty($event); setGST($event)" >
+                <nz-option *ngFor="let data of  sort(costItemList ,'costitemName')" [nzLabel]="data?.costitemName"
+                  [nzValue]="data?.costitemId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.chargeName.errors" class="invalid-feedback">
+                <div *ngIf="f.chargeName.errors.required">{{ 'stolt.batch.charges.new.ChargeName' | translate }} is
+                  required</div>
+              </div>
+            </div>
+          </div> 
+          <div class="col-md-4" *ngIf="this.stoltCharge ">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label">{{ "stolt.batch.charges.column.STC_amount" | translate }}
+              </label>
+              <input [attr.disabled]="vendorEdit ? 'disabled' : null" (keyup)="changeJMB()" type="number" formControlName="stcAmount" class="form-control custom-input rounded-0"
+                placeholder="" value="" />
+            </div>
+          </div>
+          <div class="col-md-4" *ngIf="OATAB">
+            <div class="form-field-section">
+              <label class="form-label">{{
+                "stolt.batch.charges.column.JMB_amount" | translate
+                }}</label>
+              <input [attr.disabled]="vendorEdit ? 'disabled' : null" type="number" formControlName="jmbAmount" class="form-control custom-input rounded-0"
+                placeholder="" value="" />
+            </div>
+          </div>
+        
+          <div class="col-md-2 nz-select">
+            <div class="form-field-section">
+              <label class="form-label">{{ 'stolt.batch.charges.new.Currency' | translate }} <span
+                  class="text-danger">*</span></label>
+              <nz-select [nzDisabled]="vendorEdit" class="form-select" nzShowSearch nzAllowClear formControlName="currency"
+                [(ngModel)]="currencyData" (ngModelChange)="setCustExchange()"
+                [ngClass]="{'is-invalid': submitted && f.currency.errors}">
+                <nz-option *ngFor="let currency of  sort(currencyList ,'currencyShortName')" [nzLabel]=" currency?.currencyShortName"
+                  [nzValue]=" currency?.currencyId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.currency.errors" class="invalid-feedback">
+                <div *ngIf="f.currency.errors.required">{{ 'stolt.batch.charges.new.Currency' | translate }} is required
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-2">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">Ex.Rate <span class="text-danger">*</span></label>
+              <input [attr.disabled]="vendorEdit ? 'disabled' : null"  formControlName="exchangeRate" (keyup)="calcuTotal()" type="number"
+                class="form-control custom-input rounded-0t"
+                [ngClass]="{ 'is-invalid': submitted && f.exchangeRate.errors }">
+              <div *ngIf="submitted && f.exchangeRate.errors" class="invalid-feedback">
+                <div *ngIf="f.exchangeRate.errors.required">Exchange Rate is required
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4" *ngIf="this.stoltCharge">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">Container No <span class="text-danger">*</span></label>
+
+              <ng-multiselect-dropdown  [disabled]="vendorEdit" [settings]="settings" [data]="containerList"
+                [ngClass]="{ 'is-invalid': submitted && lisyOfContainer.length === 0 }"
+                [ngModelOptions]="{standalone: true}" (onDropDownClose)="calcuTotal()"  (onSelect)="calcuTotal();setChargeQty()" (onDeSelect)="calcuTotal();setChargeQty()" [(ngModel)]="lisyOfContainer">
+              </ng-multiselect-dropdown>
+              <div *ngIf="submitted && lisyOfContainer.length === 0" class="invalid-feedback">
+                <div>Container is required
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">{{ 'stolt.batch.charges.column.Quantity' | translate }} <span
+                  class="text-danger">*</span>
+              </label>
+              <input [attr.disabled]="vendorEdit ? 'disabled' : null"  formControlName="quantity" type="number" class="form-control custom-input rounded-0"
+                id="Principal " autocomplete="off"  disabled
+                [ngClass]="{ 'is-invalid': submitted && f.quantity.errors }">
+              <div *ngIf="submitted && f.quantity.errors" class="invalid-feedback">
+                <div *ngIf="f.quantity.errors.required">{{ 'stolt.batch.charges.column.Quantity' | translate }} is
+                  required
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">Rate <span class="text-danger">*</span></label>
+              <input [attr.disabled]="vendorEdit ? 'disabled' : null"  type="number" formControlName="rate" (keyup)="calcuTotal()"
+                class="form-control custom-input rounded-0t" [ngClass]="{ 'is-invalid': submitted && f.rate.errors }">
+              <div *ngIf="submitted && f.rate.errors" class="invalid-feedback">
+                <div *ngIf="f.rate.errors.required">Rate is required
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-field-section">
+              <label class="form-label">{{ 'stolt.batch.charges.column.amount' | translate }}</label>
+              <input [attr.disabled]="vendorEdit ? 'disabled' : null"  type="number" disabled formControlName="amount" class="form-control custom-input rounded-0t">
+            
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">{{ 'stolt.batch.charges.column.gst_percentage' | translate }}
+                <span class="text-danger">*</span>
+              </label>
+              <input [attr.disabled]="vendorEdit ? 'disabled' : null"  formControlName="gstPercentage" placeholder="%" (keyup)="calcuGST()" type="number"
+                class="form-control custom-input rounded-0" id="Principal " 
+                maxlength="2" max="100"
+                oninput="javascript: if (this.value > this.max) this.value = this.value.slice(0, this.maxLength);"
+                
+                [ngClass]="{ 'is-invalid': submitted && f.gstPercentage.errors }">
+              <div *ngIf="submitted && f.gstPercentage.errors" class="invalid-feedback">
+                <div *ngIf="f.gstPercentage.errors.required">{{ 'stolt.batch.charges.column.gst_percentage' | translate
+                  }} is required
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">GST Amount</label>
+              <input [attr.disabled]="vendorEdit ? 'disabled' : null"  type="text" disabled formControlName="gst" class="form-control custom-input rounded-0 "
+                id="Principal " placeholder="">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">{{ 'stolt.batch.charges.new.TotalAmount' | translate }}
+              </label>
+              <input [attr.disabled]="vendorEdit ? 'disabled' : null"  type="text" disabled formControlName="totalAmount" class="form-control custom-input rounded-0"
+                id="Principal " placeholder="">
+            </div>
+          </div>
+
+          <div class="col-md-4" *ngIf="this.key === 'Freight'">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label">Payable At
+              </label>
+              <input type="text" formControlName="payableAt" class="form-control custom-input rounded-0" placeholder=""
+                value="" />
+            </div>
+          </div>
+          <div class="col-md-4 nz-select">
+            <div class="form-field-section">
+              <label class="form-label">{{ 'stolt.batch.charges.new.ChargeTerm' | translate }}<span
+                  class="text-danger">*</span></label>
+
+              <nz-select [nzDisabled]="vendorEdit" class="form-select" nzShowSearch nzAllowClear formControlName="chargeTerm"
+                [ngClass]="{'is-invalid': submitted && f.chargeTerm.errors}">
+                <nz-option *ngFor="let data of  sort(chargeTermList ,'typeName')" [nzLabel]="data?.typeName"
+                  [nzValue]="data?.typeName"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.chargeTerm.errors" class="invalid-feedback">
+                <div *ngIf="f.chargeTerm.errors.required">{{ 'stolt.batch.charges.new.ChargeTerm' | translate }} is
+                  required</div>
+              </div>
+            </div>
+          </div>
+        
+          <div class="col-md-4 nz-select" *ngIf="!isExport">
+            <label class="form-label">Collect Port</label>
+            <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="load_port"
+              (ngModelChange)="loadportchange($event)" [ngClass]="{'is-invalid': submitted && f.load_port.errors}">
+              <nz-option *ngFor="let port of   sort(portList ,'portDetails.portName')" [nzLabel]="port.portDetails?.portName"
+                [nzValue]="port.portId"></nz-option>
+            </nz-select>
+            <div *ngIf="submitted && f.load_port.errors" class="invalid-feedback">
+              <div *ngIf="f.load_port.errors.required">{{ 'stolt.enquiry.new.loadPort' | translate }} is
+                required</div>
+            </div>
+          </div>
+          <div class="col-md-4" *ngIf="!isExport">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">Provision</label>
+              <input formControlName="provision" class="form-control custom-input rounded-0t">
+            </div>
+          </div>
+          <div class="col-md-4" *ngIf="!isExport">
+            <label class="form-label">Document</label>
+            <input type="file" class="form-control custom-input"
+              (change)="filechange($event, 'document')">
+            <span class="my-1" *ngFor="let doc of documents">{{doc.documentName}}</span>
+          </div>
+          <div class="col-md-4">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">Remarks</label>
+              <input [attr.disabled]="vendorEdit ? 'disabled' : null" formControlName="remarks" class="form-control custom-input rounded-0t">
+            </div>
+          </div>
+          
+          <div class="col-md-4 nz-select">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">Vendor Name</label>
+
+              <nz-select class="form-select border-0" nzShowSearch nzAllowClear formControlName="vendorName"
+                [ngClass]="{'is-invalid': submitted && f.vendorName.errors}" 
+                (ngModelChange)="setChargeQty($event)" >
+                <nz-option *ngFor="let data of  partyMasterList " [nzLabel]="data?.name"
+                  [nzValue]="data?.partymasterId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.vendorName.errors" class="invalid-feedback">
+                <div *ngIf="f.vendorName.errors.required">Vendor is
+                  required</div>
+              </div>
+            </div>
+          </div> 
+
+          <ng-container *ngIf="!this.isExport">
+            <div class="col-md-4">
+              <div class="form-field-section">
+                <label for="Principal" class="form-label ">Work Order No.</label>
+                <input  formControlName="workOrderNo" class="form-control custom-input rounded-0t">
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-field-section">
+                <label for="Principal" class="form-label ">Depot Code</label>
+                <input  formControlName="depotCode" class="form-control custom-input rounded-0t">
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-field-section">
+                <label for="Principal" class="form-label ">Rule No.</label>
+                <input  formControlName="ruleNo" class="form-control custom-input rounded-0t">
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-field-section">
+                <label for="Principal" class="form-label ">Modified</label>
+                <input  formControlName="modified" class="form-control custom-input rounded-0t">
+              </div>
+            </div>
+          </ng-container>
+
+          <div class="col-md-12">
+            <div class="wrap-form-field">
+              <div class=" wrap-form-action">
+                <button (click)="onClose($event)" class="btn1 btn-lg float-end"
+                  data-bs-dismiss="modal">
+                  {{ 'common.cancel' | translate }}
+                </button>
+                <button (click)="onSave()" class="btn btn-outline-primary btn-lg float-end" data-bs-dismiss="modal">
+                  <ng-container *ngIf="isAddMode">
+                    {{ 'common.add' | translate }}
+                  </ng-container>
+                  <ng-container *ngIf="!isAddMode">
+                    {{ 'common.update' | translate }}
+                  </ng-container>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3" *ngIf="key === 'Freight'">
+          <div class="col-md-4 nz-select">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">{{ 'stolt.batch.charges.new.ChargeName' | translate }}<span
+                  class="text-danger">*</span></label>
+
+              <nz-select [nzDisabled]="vendorEdit"  class="form-select border-0" nzShowSearch nzAllowClear formControlName="chargeName"
+                [ngClass]="{'is-invalid': submitted && f.chargeName.errors}" 
+                (ngModelChange)="setChargeQty($event); setGST($event)" >
+                <nz-option *ngFor="let data of  defaultCharge" [nzLabel]="data?.costitemName"
+                  [nzValue]="data?.costitemId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.chargeName.errors" class="invalid-feedback">
+                <div *ngIf="f.chargeName.errors.required">{{ 'stolt.batch.charges.new.ChargeName' | translate }} is
+                  required</div>
+              </div>
+            </div>
+          </div> 
+
+          <div class="col-md-4" *ngIf="this.stoltCharge ">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label">{{ "stolt.batch.charges.column.STC_amount" | translate }}
+              </label>
+              <input [attr.disabled]="vendorEdit ? 'disabled' : null" (keyup)="changeJMB();calcuGST($event);" type="number" formControlName="stcAmount" class="form-control custom-input rounded-0"
+                placeholder="" value="" />
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-field-section">
+              <label class="form-label">{{
+                "stolt.batch.charges.column.JMB_amount" | translate
+                }}</label>
+              <input [attr.disabled]="vendorEdit ? 'disabled' : null" type="number" formControlName="jmbAmount" class="form-control custom-input rounded-0"
+                placeholder="" value="" />
+            </div>
+          </div>
+
+          <div class="col-md-4 nz-select">
+            <div class="form-field-section">
+              <label class="form-label">{{ 'stolt.batch.charges.new.Currency' | translate }} <span
+                  class="text-danger">*</span></label>
+              <nz-select [nzDisabled]="vendorEdit" class="form-select" nzShowSearch nzAllowClear formControlName="currency"
+                [(ngModel)]="currencyData" (ngModelChange)="setCustExchange()"
+                [ngClass]="{'is-invalid': submitted && f.currency.errors}">
+                <nz-option *ngFor="let currency of  sort(currencyList ,'currencyShortName')" [nzLabel]=" currency?.currencyShortName"
+                  [nzValue]=" currency?.currencyId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.currency.errors" class="invalid-feedback">
+                <div *ngIf="f.currency.errors.required">{{ 'stolt.batch.charges.new.Currency' | translate }} is required
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">{{ 'stolt.batch.charges.column.gst_percentage' | translate }}
+                <span class="text-danger">*</span>
+              </label>
+              <input [attr.disabled]="vendorEdit ? 'disabled' : null"  formControlName="gstPercentage" placeholder="%" (keyup)="calcuGST()" type="number"
+                class="form-control custom-input rounded-0" id="Principal " 
+                maxlength="2" max="100"
+                oninput="javascript: if (this.value > this.max) this.value = this.value.slice(0, this.maxLength);"
+                
+                [ngClass]="{ 'is-invalid': submitted && f.gstPercentage.errors }">
+              <div *ngIf="submitted && f.gstPercentage.errors" class="invalid-feedback">
+                <div *ngIf="f.gstPercentage.errors.required">{{ 'stolt.batch.charges.column.gst_percentage' | translate
+                  }} is required
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">GST Amount</label>
+              <input [attr.disabled]="vendorEdit ? 'disabled' : null"  type="text" disabled formControlName="gst" class="form-control custom-input rounded-0 "
+                id="Principal " placeholder="">
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">{{ 'stolt.batch.charges.new.TotalAmount' | translate }}
+              </label>
+              <input [attr.disabled]="vendorEdit ? 'disabled' : null"  type="text" disabled formControlName="totalAmount" class="form-control custom-input rounded-0"
+                id="Principal " placeholder="">
+            </div>
+          </div>
+
+          <div class="col-md-4 nz-select">
+            <div class="form-field-section">
+              <label class="form-label">Freight Charge Term<span
+                  class="text-danger">*</span></label>
+
+              <nz-select [nzDisabled]="vendorEdit" class="form-select" nzShowSearch nzAllowClear formControlName="chargeTerm"
+                [ngClass]="{'is-invalid': submitted && f.chargeTerm.errors}">
+                <nz-option *ngFor="let data of  sort(freightChargeTermList ,'typeName')" [nzLabel]="data?.typeName"
+                  [nzValue]="data?.typeName"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.chargeTerm.errors" class="invalid-feedback">
+                <div *ngIf="f.chargeTerm.errors.required">{{ 'stolt.batch.charges.new.ChargeTerm' | translate }} is
+                  required</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">Remarks</label>
+              <input [attr.disabled]="vendorEdit ? 'disabled' : null" formControlName="remarks" class="form-control custom-input rounded-0t">
+            </div>
+          </div>
+
+          <div class="col-md-12">
+            <div class="wrap-form-field">
+              <div class=" wrap-form-action">
+                <button (click)="onClose($event)" class="btn1 btn-lg float-end"
+                  data-bs-dismiss="modal">
+                  {{ 'common.cancel' | translate }}
+                </button>
+                <button (click)="onSave()" class="btn btn-outline-primary btn-lg float-end" data-bs-dismiss="modal">
+                  <ng-container *ngIf="isAddMode">
+                    {{ 'common.add' | translate }}
+                  </ng-container>
+                  <ng-container *ngIf="!isAddMode">
+                    {{ 'common.update' | translate }}
+                  </ng-container>
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+       
+      </div>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,642 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body p-4">
+          <form [formGroup]="loanForm">
+
+            <!-- Existing Bankers Section -->
+            <div class="mb-4">
+              <h6 class="text-uppercase fw-bold mb-3" style="font-size: 13px; letter-spacing: 0.5px;">
+                EXISTING BANKERS <span class="text-danger">*</span>
+              </h6>
+              
+              <div class="row g-3" formGroupName="existingBankers">
+                <div class="col-md-3">
+                  <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                    Name(s) of all your Existing Accounts <span class="text-danger">*</span>
+                  </label>
+                  <input type="text" class="form-control" formControlName="accountNames"
+                    [class.is-invalid]="hasError('existingBankers.accountNames')" 
+                    placeholder="Enter account names">
+                  <div class="invalid-feedback" *ngIf="hasError('existingBankers.accountNames')">
+                    {{ getErrorMessage('existingBankers.accountNames') }}
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                    Mobile registered with Bank <span class="text-danger">*</span>
+                  </label>
+                  <input type="text" class="form-control" formControlName="mobileNumber"
+                    [class.is-invalid]="hasError('existingBankers.mobileNumber')" 
+                    placeholder="Enter mobile number" maxlength="10">
+                  <div class="invalid-feedback" *ngIf="hasError('existingBankers.mobileNumber')">
+                    {{ getErrorMessage('existingBankers.mobileNumber') }}
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                    Bank Branch
+                  </label>
+                  <input type="text" class="form-control" formControlName="bankBranch"
+                    placeholder="Enter bank branch">
+                </div>
+
+                <div class="col-md-3">
+                  <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                    Account Type
+                  </label>
+                  <nz-select class="w-100" formControlName="accountType" nzShowSearch nzAllowClear
+                    nzPlaceHolder="Select account type">
+                    <nz-option nzLabel="Current Account" nzValue="current"></nz-option>
+                    <nz-option nzLabel="Savings Account" nzValue="savings"></nz-option>
+                    <nz-option nzLabel="Overdraft" nzValue="overdraft"></nz-option>
+                  </nz-select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Loan Outstanding Section -->
+            <div class="mb-4">
+              <h6 class="text-uppercase fw-bold mb-3" style="font-size: 13px; letter-spacing: 0.5px;">
+                AMOUNT OF EXISTING LOAN OUTSTANDING <span class="text-danger">*</span>
+              </h6>
+              
+              <div class="row g-3" formGroupName="loanOutstanding">
+                <div class="col-md-3">
+                  <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                    Type 1 - Loan Amount
+                  </label>
+                  <input type="text" class="form-control" formControlName="type1Amount"
+                    placeholder="Amount (INR cr)">
+                </div>
+
+                <div class="col-md-3">
+                  <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                    Type 1 - Facility Type
+                  </label>
+                  <input type="text" class="form-control" formControlName="type1FacilityType"
+                    placeholder="Facility Type">
+                </div>
+
+                <div class="col-md-3">
+                  <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                    Type 2 - Loan Amount
+                  </label>
+                  <input type="text" class="form-control" formControlName="type2Amount"
+                    placeholder="Amount (INR cr)">
+                </div>
+
+                <div class="col-md-3">
+                  <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                    Type 2 - Facility Type
+                  </label>
+                  <input type="text" class="form-control" formControlName="type2FacilityType"
+                    placeholder="Facility Type">
+                </div>
+              </div>
+            </div>
+
+            <!-- Company Details Section -->
+            <div class="mb-4">
+              <h6 class="text-uppercase fw-bold mb-2" style="font-size: 13px; letter-spacing: 0.5px;">
+                COMPANY <span class="text-danger">*</span>
+              </h6>
+              <p class="text-muted mb-3" style="font-size: 11px; font-weight: 600; letter-spacing: 0.3px;">
+                CORPORATE DETAILS
+              </p>
+              
+              <div formGroupName="companyDetails">
+                <div class="row g-3 mb-3">
+                  <div class="col-md-3">
+                    <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                      Full Company Name <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" class="form-control" formControlName="fullCompanyName"
+                      [class.is-invalid]="hasError('companyDetails.fullCompanyName')" 
+                      placeholder="Enter company name">
+                    <div class="invalid-feedback" *ngIf="hasError('companyDetails.fullCompanyName')">
+                      {{ getErrorMessage('companyDetails.fullCompanyName') }}
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                      PAN Number <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" class="form-control" formControlName="panNumber"
+                      [class.is-invalid]="hasError('companyDetails.panNumber')" 
+                      placeholder="Enter PAN number">
+                    <div class="invalid-feedback" *ngIf="hasError('companyDetails.panNumber')">
+                      {{ getErrorMessage('companyDetails.panNumber') }}
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                      Company Address <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" class="form-control" formControlName="companyAddress"
+                      [class.is-invalid]="hasError('companyDetails.companyAddress')" 
+                      placeholder="Enter address">
+                    <div class="invalid-feedback" *ngIf="hasError('companyDetails.companyAddress')">
+                      {{ getErrorMessage('companyDetails.companyAddress') }}
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                      IEC Code
+                    </label>
+                    <input type="text" class="form-control" formControlName="iecCode"
+                      placeholder="Enter IEC code">
+                  </div>
+                </div>
+
+                <div class="row g-3">
+                  <div class="col-md-3">
+                    <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                      GST Number
+                    </label>
+                    <input type="text" class="form-control" formControlName="gstNumber"
+                      placeholder="Enter GST number">
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                      CIN Number
+                    </label>
+                    <input type="text" class="form-control" formControlName="cinNumber"
+                      placeholder="Enter CIN number">
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                      Incorporation Date
+                    </label>
+                    <nz-date-picker class="custom-input w-100" nzFormat="dd-MM-yyyy"
+                      formControlName="incorporationDate"
+                      nzPlaceHolder="Select date">
+                    </nz-date-picker>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                      Nature of Business
+                    </label>
+                    <input type="text" class="form-control" formControlName="businessNature"
+                      placeholder="Enter business nature">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Shareholders Section -->
+            <div class="mb-4">
+              <p class="text-muted mb-3" style="font-size: 11px; font-weight: 600; letter-spacing: 0.3px;">
+                SHAREHOLDERS & PARTNERS
+              </p>
+              
+              <div formArrayName="shareholders">
+                <div *ngFor="let shareholder of shareholders.controls; let i = index" [formGroupName]="i" class="row g-3 mb-3">
+                  <div class="col-md-3">
+                    <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                      Shareholder {{ i + 1 }} - Full Name
+                    </label>
+                    <input type="text" class="form-control" formControlName="fullName"
+                      placeholder="Enter full name">
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                      Mobile Number
+                    </label>
+                    <input type="text" class="form-control" formControlName="mobileNumber"
+                      placeholder="Enter mobile" maxlength="10">
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                      Email Address
+                    </label>
+                    <input type="email" class="form-control" formControlName="email"
+                      placeholder="Enter email">
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                      Shareholding %
+                    </label>
+                    <input type="text" class="form-control" formControlName="shareholding"
+                      placeholder="Enter percentage">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Business Type Section -->
+            <div class="mb-4">
+              <p class="text-muted mb-3" style="font-size: 11px; font-weight: 600; letter-spacing: 0.3px;">
+                BUSINESS TYPE
+              </p>
+              
+              <div formGroupName="businessType">
+                <div class="row g-3 mb-3">
+                  <div class="col-md-3">
+                    <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                      Select Business Type
+                    </label>
+                    <nz-select class="w-100" formControlName="type" nzShowSearch nzAllowClear
+                      nzPlaceHolder="Select type">
+                      <nz-option nzLabel="Importer" nzValue="importer"></nz-option>
+                      <nz-option nzLabel="Exporter" nzValue="exporter"></nz-option>
+                      <nz-option nzLabel="Both" nzValue="both"></nz-option>
+                    </nz-select>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                      Buyer's Name
+                    </label>
+                    <input type="text" class="form-control" formControlName="buyerName"
+                      placeholder="Enter buyer's name">
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                      Commodity Exported
+                    </label>
+                    <input type="text" class="form-control" formControlName="commodityExported"
+                      placeholder="Enter commodity">
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                      Destination Country
+                    </label>
+                    <input type="text" class="form-control" formControlName="destinationCountry"
+                      placeholder="Enter country">
+                  </div>
+                </div>
+
+                <div class="row g-3">
+                  <div class="col-md-12">
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" formControlName="lcTerms" id="lcTerms">
+                      <label class="form-check-label" for="lcTerms" style="font-size: 13px;">
+                        Exports are done on LC terms
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Buyer's Company Names -->
+            <div class="mb-4">
+              <p class="text-muted mb-3" style="font-size: 11px; font-weight: 600; letter-spacing: 0.3px;">
+                BUYER'S COMPANY NAME
+              </p>
+              
+              <div formArrayName="buyerCompanies">
+                <div *ngFor="let company of buyerCompanies.controls; let i = index" [formGroupName]="i" class="row g-3 mb-3">
+                  <div class="col-md-3">
+                    <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                      Company {{ i + 1 }} Name
+                    </label>
+                    <input type="text" class="form-control" formControlName="companyName"
+                      placeholder="Enter company name">
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                      Country
+                    </label>
+                    <input type="text" class="form-control" formControlName="country"
+                      placeholder="Enter country">
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                      Contact Person
+                    </label>
+                    <input type="text" class="form-control" formControlName="contactPerson"
+                      placeholder="Enter contact">
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                      Contact Email
+                    </label>
+                    <input type="email" class="form-control" formControlName="contactEmail"
+                      placeholder="Enter email">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Documents Section with Working Upload -->
+            <div class="mb-4">
+              <h6 class="text-uppercase fw-bold mb-2" style="font-size: 13px; letter-spacing: 0.5px;">
+                DOCUMENTS <span class="text-danger">*</span>
+              </h6>
+              <p class="text-muted mb-3" style="font-size: 12px;">
+                Drag and drop or Choose PDF files from your computer to upload them
+              </p>
+              
+              <div class="row g-3">
+                <!-- Bank Statement -->
+                <div class="col-md-6">
+                  <input type="file" id="file-bankStatement" accept=".pdf" 
+                         style="display: none;" 
+                         (change)="onFileSelect($event, 'bankStatement')">
+                
+                  <div class="document-upload-card p-3 border rounded" 
+                       [ngClass]="uploadedFiles['bankStatement'] ? 'bg-light' : 'bg-white'">
+                    <div class="d-flex align-items-center justify-content-between">
+                      
+                      <div class="d-flex align-items-center">
+                        <div class="icon-circle rounded-circle d-flex align-items-center justify-content-center me-3" 
+                             [ngClass]="uploadedFiles['bankStatement'] ? 'bg-primary text-white' : 'bg-secondary text-white'"
+                             style="width: 40px; height: 40px;">
+                          <i [ngClass]="uploadedFiles['bankStatement'] ? 'fas fa-check' : 'fas fa-upload'"></i>
+                        </div>
+                        <div>
+                          <h6 class="mb-0" style="font-size: 13px; font-weight: 600;">Bank Statement</h6>
+                          <small class="text-muted">(12 months)</small>
+                          <div *ngIf="fileNames['bankStatement']">
+                            <small class="text-success">
+                              {{ fileNames['bankStatement'] }}
+                              <em class="bi bi-eye ms-2 text-primary cursor-pointer"
+                                  (click)="documentPreview(fileNames['bankStatement'])"
+                                  title="View"></em>
+                            </small>
+                          </div>
+                        </div>
+                      </div>
+                
+                      <div>
+                        <button type="button" class="btn btn-sm btn-outline-primary"
+                        [disabled]="isEditMode && hasExistingDocument('bankStatement')"
+                                (click)="triggerFileInput('bankStatement')">
+                          {{ uploadedFiles['bankStatement'] ? 'Reupload' : 'Upload' }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+
+                <!-- Audited Balance Sheet 1 -->
+                <div class="col-md-6">
+                  <input type="file" id="file-balanceSheet1" accept=".pdf" 
+                         style="display: none;" 
+                         (change)="onFileSelect($event, 'balanceSheet1')">
+                
+                  <div class="document-upload-card p-3 border rounded" 
+                       [ngClass]="uploadedFiles['balanceSheet1'] ? 'bg-light' : 'bg-white'">
+                    <div class="d-flex align-items-center justify-content-between">
+                      
+                      <div class="d-flex align-items-center">
+                        <div class="icon-circle rounded-circle d-flex align-items-center justify-content-center me-3" 
+                             [ngClass]="uploadedFiles['balanceSheet1'] ? 'bg-primary text-white' : 'bg-secondary text-white'"
+                             style="width: 40px; height: 40px;">
+                          <i [ngClass]="uploadedFiles['balanceSheet1'] ? 'fas fa-check' : 'fas fa-upload'"></i>
+                        </div>
+                        <div>
+                          <h6 class="mb-0" style="font-size: 13px; font-weight: 600;">Audited Balance Sheet – 1</h6>
+                          <small class="text-muted">(2 years)</small>
+                          <div *ngIf="fileNames['balanceSheet1']">
+                            <small class="text-success">
+                              {{ fileNames['balanceSheet1'] }}
+                              <em class="bi bi-eye ms-2 text-primary cursor-pointer"
+                                  (click)="documentPreview(fileNames['balanceSheet1'])"
+                                  title="View"></em>
+                            </small>
+                          </div>
+                        </div>
+                      </div>
+                
+                      <div>
+                        <button type="button" class="btn btn-sm btn-outline-primary"
+                        [disabled]="isEditMode && hasExistingDocument('balanceSheet1')"
+                                (click)="triggerFileInput('balanceSheet1')">
+                          {{ uploadedFiles['balanceSheet1'] ? 'Reupload' : 'Upload' }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+
+                <!-- Audited Balance Sheet 2 -->
+                <div class="col-md-6">
+                  <input type="file" id="file-balanceSheet2" accept=".pdf" 
+                         style="display: none;" 
+                         (change)="onFileSelect($event, 'balanceSheet2')">
+                
+                  <div class="document-upload-card p-3 border rounded" 
+                       [ngClass]="uploadedFiles['balanceSheet2'] ? 'bg-light' : 'bg-white'">
+                    <div class="d-flex align-items-center justify-content-between">
+                      
+                      <div class="d-flex align-items-center">
+                        <div class="icon-circle rounded-circle d-flex align-items-center justify-content-center me-3" 
+                             [ngClass]="uploadedFiles['balanceSheet2'] ? 'bg-primary text-white' : 'bg-secondary text-white'"
+                             style="width: 40px; height: 40px;">
+                          <i [ngClass]="uploadedFiles['balanceSheet2'] ? 'fas fa-check' : 'fas fa-upload'"></i>
+                        </div>
+                        <div>
+                          <h6 class="mb-0" style="font-size: 13px; font-weight: 600;">Audited Balance Sheet – 2</h6>
+                          <small class="text-muted">(2 years)</small>
+                          <div *ngIf="fileNames['balanceSheet2']">
+                            <small class="text-success">
+                              {{ fileNames['balanceSheet2'] }}
+                              <em class="bi bi-eye ms-2 text-primary cursor-pointer"
+                                  (click)="documentPreview(fileNames['balanceSheet2'])"
+                                  title="View"></em>
+                            </small>
+                          </div>
+                        </div>
+                      </div>
+                
+                      <div>
+                        <button type="button" class="btn btn-sm btn-outline-primary me-2"
+                        [disabled]="isEditMode && hasExistingDocument('balanceSheet2')"
+                                (click)="triggerFileInput('balanceSheet2')">
+                          {{ uploadedFiles['balanceSheet2'] ? 'Reupload' : 'Upload' }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+
+                <!-- ITR 1 -->
+                <div class="col-md-6">
+                  <input type="file" id="file-itr1" accept=".pdf" 
+                         style="display: none;" 
+                         (change)="onFileSelect($event, 'itr1')">
+                
+                  <div class="document-upload-card p-3 border rounded" 
+                       [ngClass]="uploadedFiles['itr1'] ? 'bg-light' : 'bg-white'">
+                    <div class="d-flex align-items-center justify-content-between">
+                      
+                      <div class="d-flex align-items-center">
+                        <div class="icon-circle rounded-circle d-flex align-items-center justify-content-center me-3" 
+                             [ngClass]="uploadedFiles['itr1'] ? 'bg-primary text-white' : 'bg-secondary text-white'"
+                             style="width: 40px; height: 40px;">
+                          <i [ngClass]="uploadedFiles['itr1'] ? 'fas fa-check' : 'fas fa-upload'"></i>
+                        </div>
+                        <div>
+                          <h6 class="mb-0" style="font-size: 13px; font-weight: 600;">ITR – 1</h6>
+                          <small class="text-muted">(2 years)</small>
+                          <div *ngIf="fileNames['itr1']">
+                            <small class="text-success">
+                              {{ fileNames['itr1'] }}
+                              <em class="bi bi-eye ms-2 text-primary cursor-pointer"
+                                  (click)="documentPreview(fileNames['itr1'])"
+                                  title="View"></em>
+                            </small>
+                          </div>
+                        </div>
+                      </div>
+                
+                      <div>
+                        <button type="button" class="btn btn-sm btn-outline-primary"
+                        [disabled]="isEditMode && hasExistingDocument('itr1')"
+                                (click)="triggerFileInput('itr1')">
+                          {{ uploadedFiles['itr1'] ? 'Reupload' : 'Upload' }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+
+                <!-- ITR 2 -->
+                <div class="col-md-6">
+                  <input type="file" id="file-itr2" accept=".pdf" 
+                         style="display: none;" 
+                         (change)="onFileSelect($event, 'itr2')">
+                
+                  <div class="document-upload-card p-3 border rounded" 
+                       [ngClass]="uploadedFiles['itr2'] ? 'bg-light' : 'bg-white'">
+                    <div class="d-flex align-items-center justify-content-between">
+                      
+                      <div class="d-flex align-items-center">
+                        <div class="icon-circle rounded-circle d-flex align-items-center justify-content-center me-3" 
+                             [ngClass]="uploadedFiles['itr2'] ? 'bg-primary text-white' : 'bg-secondary text-white'"
+                             style="width: 40px; height: 40px;">
+                          <i [ngClass]="uploadedFiles['itr2'] ? 'fas fa-check' : 'fas fa-upload'"></i>
+                        </div>
+                        <div>
+                          <h6 class="mb-0" style="font-size: 13px; font-weight: 600;">ITR – 2</h6>
+                          <small class="text-muted">(2 years)</small>
+                          <div *ngIf="fileNames['itr2']">
+                            <small class="text-success">
+                              {{ fileNames['itr2'] }}
+                              <em class="bi bi-eye ms-2 text-primary cursor-pointer"
+                                  (click)="documentPreview(fileNames['itr2'])"
+                                  title="View"></em>
+                            </small>
+                          </div>
+                        </div>
+                      </div>
+                
+                      <div>
+                        <button type="button" class="btn btn-sm btn-outline-primary"
+                        [disabled]="isEditMode && hasExistingDocument('itr2')"
+                                (click)="triggerFileInput('itr2')">
+                          {{ uploadedFiles['itr2'] ? 'Reupload' : 'Upload' }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+
+            <!-- Finance Details Section -->
+            <div class="mb-4">
+              <h6 class="text-uppercase fw-bold mb-3" style="font-size: 13px; letter-spacing: 0.5px;">
+                FINANCE DETAILS <span class="text-danger">*</span>
+              </h6>
+              
+              <div formGroupName="financeDetails">
+                <div class="row g-3 mb-3">
+                  <div class="col-md-6">
+                    <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                      Expected F23 Turnover
+                    </label>
+                    <input type="text" class="form-control" formControlName="expectedF23Turnover"
+                      [class.is-invalid]="hasError('financeDetails.expectedF23Turnover')" 
+                      placeholder="User input">
+                    <div class="invalid-feedback" *ngIf="hasError('financeDetails.expectedF23Turnover')">
+                      {{ getErrorMessage('financeDetails.expectedF23Turnover') }}
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="mb-0 p-0 form-label" style="font-size: 12px;">
+                      Sanction Requirement
+                    </label>
+                    <input type="text" class="form-control" formControlName="sanctionRequirement"
+                      [class.is-invalid]="hasError('financeDetails.sanctionRequirement')" 
+                      placeholder="User input">
+                    <div class="invalid-feedback" *ngIf="hasError('financeDetails.sanctionRequirement')">
+                      {{ getErrorMessage('financeDetails.sanctionRequirement') }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row g-3">
+                  <div class="col-md-3" *ngIf="!showRemarks">
+                    <button 
+                      type="button" 
+                      class="btn btn-outline-primary w-100" 
+                      style="border-style: dashed;"
+                      (click)="showRemarks = true">
+                      + Add Remarks
+                    </button>
+                  </div>
+                </div>
+                
+                <div class="row g-3 mt-2" *ngIf="showRemarks">
+                  <div class="col-md-6">
+                    <textarea formControlName="remarks" class="form-control" placeholder="Enter your remarks"></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Terms & Conditions -->
+            <div class="mb-4 text-center">
+              <div class="form-check d-inline-block">
+                <input type="checkbox" class="form-check-input" formControlName="agreeToTerms" id="agreeToTerms"
+                  [class.is-invalid]="hasError('agreeToTerms')">
+                <label class="form-check-label" for="agreeToTerms" style="font-size: 13px;">
+                  By submitting, you agree to our <a href="#" class="text-primary">Terms & Conditions</a>
+                </label>
+                <div class="invalid-feedback d-block" *ngIf="hasError('agreeToTerms')">
+                  {{ getErrorMessage('agreeToTerms') }}
+                </div>
+              </div>
+            </div>
+
+          </form>
+        </div>
+        <div class="btn-onscreen wrap-form-action mb-3">
+          <button type="button" class="btn1 float-end" (click)="onSubmit()">
+            Save
+          </button>
+          <button type="button" class="btn btn-outline-primary float-end" (click)="onCancel()">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

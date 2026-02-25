@@ -1,0 +1,143 @@
+<div class="wrap-form-field">
+  <h1 class="main-h">New BL</h1>
+  <div class="row">
+    <div class="col-md-12">
+      <form class="row g-4">
+        <div class="col-md-4">
+          <label class="form-label">BL Type <span class="text-danger">*</span></label>
+          <select class="form-select custom-input">
+            <option selected>Master</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">BL No </label>
+          <select class="form-select custom-input">
+            <option selected>1234555</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Shipper <span class="text-danger">*</span></label>
+          <input type="text" class="form-control custom-input" placeholder="Shipper" value="SHIPEASY">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Consignee </label>
+          <select class="form-select custom-input">
+            <option selected>JM Bakshi</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Voyage <span class="text-danger">*</span></label>
+          <input type="text" class="form-control custom-input" placeholder="Voyage" value="9899HNGH7888">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Bill Of Loading No <span class="text-danger">*</span></label>
+          <input type="text" class="form-control custom-input" placeholder="Bill Of Loading No" value="9899HNGH7888">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Pre Carriage By <span class="text-danger">*</span></label>
+          <input type="text" class="form-control custom-input" placeholder="Pre Carriage By" value="Nhava Seva">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Place Of Receipt <span class="text-danger">*</span></label>
+          <input type="text" class="form-control custom-input" placeholder="Place Of Receipt" value="Corgo">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Freight to be Paid At </label>
+          <input type="text" class="form-control custom-input" placeholder="Freight to be Paid At" value="Corgo">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Number of Original Bill Of Lading <span class="text-danger">*</span></label>
+          <input type="text" class="form-control custom-input" placeholder="Number of Original Bill Of Lading"
+            value="Three (3)">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Vessel </label>
+          <input type="text" class="form-control custom-input" placeholder="Vessel" value="APL Orgon">
+        </div>
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Port Of Loading <span class="text-danger">*</span></label>
+          <input type="text" class="form-control custom-input" placeholder="Port Of Loading" value="Nansha">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Port Of Distance <span class="text-danger">*</span></label>
+          <input type="text" class="form-control custom-input" placeholder="Port Of Distance" value="Nansha">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Final Place Of Delivery</label>
+          <input type="text" class="form-control custom-input" placeholder="Final Place Of Delivery" value="Kandla">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Place Of Issue <span class="text-danger">*</span></label>
+          <input type="text" class="form-control custom-input" placeholder="Place Of Issue" value="Nansha">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Date Of Issue <span class="text-danger">*</span></label>
+          <div class="input-group date" id="datepicker">
+            <input type="date" class="form-control custom-input" id="date" />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Additional Clauses</label>
+          <input type="text" class="form-control custom-input" placeholder="Additional Clauses"
+            value="Digital supply chain">
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="wrap-table-area">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2 ">
+          <div class="mt-2">
+            <a class="new-action">Add Container</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="table-responsive">
+          <table aria-describedby="mytable" class="gfg">
+            <thead>
+              <tr class="field-name">
+                <th scope="col">Mark & NOS Container / Seals</th>
+                <th scope="col">No/Kind Of Package</th>
+                <th scope="col">Gross Weight Corgo</th>
+                <th scope="col">Tare</th>
+                <th scope="col">Messurement</th>
+                <th scope="col">Description</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let container of containerBillsData">
+                <td>{{container.seal}}</td>
+                <td>{{container.package}}</td>
+                <td>{{container.weight}}</td>
+                <td>{{container.tare}}</td>
+                <td>{{container.messurement}}</td>
+                <td>{{container.des}}</td>
+                <td class="action-field">
+                  <span class="mtop"><a><em class="bi bi-pencil color-pencil-red"></em></a>
+                  </span>
+                  <span class="mtop"><a><em class="bi bi-trash color-pencil-red"></em></a>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group wrap-form-action">
+    <button (click)="onCloseBill($event)" class="btn1 btn-lg float-end" type="submit">
+      Cancel
+    </button>
+    <button (click)="onCloseBill($event)" class="btn btn-outline-primary btn-lg float-end" type="submit">
+      Save
+    </button>
+  </div>
+</div>

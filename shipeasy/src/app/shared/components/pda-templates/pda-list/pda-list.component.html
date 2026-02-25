@@ -1,0 +1,230 @@
+<div class="table-with-gheading">
+  <div class="wrap-table-area">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="d-flex flex-column flex-sm-row gap-3 float-start">
+          <div class="input-group custom-input">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Search"
+              aria-label="Search"
+            />
+          </div>
+        </div>
+        <div
+          class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2 "
+        >
+          <div class="mt-2">
+            <span>
+              <h5>{{ fromSize }}-{{ count }} of {{ toalLength }}</h5>
+            </span>
+          </div>
+          <div class="mt-2">
+            <span class="prv" [class.disable-arrow-sign]="fromSize === 1" (click)="prev()"
+            ><em class="typcn typcn-chevron-left"></em
+          ></span>
+          <span class="prv" [class.disable-arrow-sign]="count === toalLength" (click)="next()"
+            ><em class="typcn typcn-chevron-right"></em
+          ></span>
+          </div>
+          <div class="mt-2">
+            <select class="form-select form-select-sm" (change)="filter($event)">
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+          <div class="mt-2">
+            <a
+              class="new-action"
+              data-bs-toggle="modal"
+              data-bs-target="#templateModal"
+              >{{
+                "stolt.masters.pda_template.pda_template_list.add_template"
+                  | translate
+              }}</a
+            >
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="table-responsive">
+          <table aria-describedby="mytable" class="gfg">
+            <thead>
+              <tr class="field-name">
+                <th scope="col">
+                  {{
+                    "stolt.masters.pda_template.pda_template_list.pda_template_name"
+                      | translate
+                  }} <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                </th>
+                <th scope="col">
+                  {{
+                    "stolt.masters.pda_template.pda_template_list.description"
+                      | translate
+                  }}
+                </th>
+                <th scope="col">
+                  {{
+                    "stolt.masters.pda_template.pda_template_list.port"
+                      | translate
+                  }}
+                   <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                </th>
+                <th scope="col"></th>
+              </tr>
+              <tr>
+                <th scope="col"><input type="text" class="form-control" id="" /></th>
+                <th scope="col"><input type="text" class="form-control" id="" /></th>
+                <th scope="col"><input type="text" class="form-control" id="" /></th>
+                <th scope="col"  class="wrap-table-btn">
+                  <button type="button" class="btn btn-outline-primary">
+                    {{ "common.search_btn" | translate }}
+                  </button>
+                  <a routerLink="#" class="clearbtn">{{
+                    "common.clear" | translate
+                  }}</a>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let pda of Data">
+                <td class="uppercase">{{ pda._source.template_name }}</td>
+                <td>{{ pda._source.description }}</td>
+                <td>{{ pda._source.port }}</td>
+                <td class="action-field">
+                  <span
+                    nz-tooltip
+                    nzTooltipTitle="{{ 'common.edit' | translate }}"
+                    class="mtop"
+                    ><a (click)="open(AddClause, pda)"
+                      ><em class="bi bi-pencil color-pencil-red"></em
+                    ></a>
+                  </span>
+                  <span
+                    nz-tooltip
+                    nzTooltipTitle="{{ 'common.delete' | translate }}"
+                    class="mtop"
+                    ><a routerLink="#"><em class="typcn typcn-trash"></em></a>
+                  </span>
+                  <span
+                   
+                    class="form-check form-switch"
+                  >
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      role="switch"
+                      id="flexSwitchCheckChecked"
+                      checked
+                    />
+                    <label
+                      class="form-check-label"
+                      for="flexSwitchCheckChecked"
+                    ></label>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="templateModal"
+  tabindex="-1"
+  aria-labelledby="templateModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-scrollable modal-lg custom-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="templateModalLabel">
+          {{
+            "stolt.masters.pda_template.pda_template_list.add_new_pda_template.add_new_pda_template"
+              | translate
+          }}
+        </h4>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <app-addnewtemplate></app-addnewtemplate>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #AddClause let-modal>
+  <div class="modal-content">
+    <div class="modal-headers mt-2">
+      <h4 class="modal-title"></h4>
+      <button
+        type="button"
+        class="btn-close shadow-none float-end"
+        (click)="onSave()"
+        aria-label="Close"
+      ></button>
+    </div>
+
+    <div class="modal-body gap-3">
+      <div class="wrap-form-field padding-space  modal-bottom-alignment-for-mobile-view">
+        <form class="row" [formGroup]="pdaForm">
+          <div class="col-md-4 label-content-modal-alignment">
+            <label class="form-label">PDA Template Name</label>
+            <input
+              type="text"
+              class="form-control custom-input"
+              placeholder="Item Name"
+              formControlName="pdaTemplateName"
+            />
+          </div>
+          <div class="col-md-4 label-content-modal-alignment">
+            <label class="form-label">Description</label>
+            <input
+              type="text"
+              class="form-control custom-input"
+              placeholder="Item Name"
+              formControlName="description"
+            />
+          </div>
+          <div class="col-md-4 label-content-modal-alignment">
+            <label class="form-label">Port</label>
+            <input
+              type="text"
+              class="form-control custom-input"
+              placeholder="Item Name"
+              formControlName="port"
+            />
+          </div>
+     
+          <div class="form-group wrap-form-action mt-4">
+            <button
+              class="btn1 btn-lg float-end"
+              (click)="onSave()"
+              type="submit"
+            >
+              {{ "common.cancel" | translate }}
+            </button>
+            <button
+              class="btn btn-outline-primary btn-lg float-end"
+              type="submit"
+            >
+              {{ "common.save" | translate }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>

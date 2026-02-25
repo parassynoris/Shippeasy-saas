@@ -1,0 +1,314 @@
+<div class="table-header-area mt-2" >
+  <div class="mat-table-with-gheading">
+    <div class="wrapper">
+      <div class="container-fluid">
+        <div class=" pt-2">
+          <div class="wrap-mat-table-area">
+            <div class="table-header-area pt-2">
+              <div>
+                <table-filters [TDP]="[false, false, true, true]" (filterInput)="applyFilter($event)" (onClickExport)="exportAsExcelFile()">
+                </table-filters>
+              </div>
+              <div class="header-right">
+                <a class="new-action btn btn-outline-primary btn-sm rounded-pill" appAccessControl
+                  featureCode="['STM016']" accessType="add" (click)="open(AddClause)">Add Rail details</a>
+              </div>
+            </div>
+          </div>
+          <div class="table-card">
+            <div class="table-design example-container mat-elevation-z8">
+              <table mat-table [dataSource]="dataSource" matSort class="full-width-table" summary="agreement">
+                <ng-container matColumnDef="#">
+                  <th scope="col" mat-header-cell *matHeaderCellDef style="width: 3%;">
+                    # <em class="custom-tooltip" [attr.title]="'Toggle Filters'"
+                      (click)="toggleFilters = !toggleFilters" class="bi bi-search"></em>
+                  </th>
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    {{ element?.id}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                  <th scope="col" id="action" class="charterersPdfHead" mat-header-cell
+                        *matHeaderCellDef style="width: 8%;">
+                      {{ 'Actions' }}
+                  </th>
+                  <td class="borderBottom" mat-cell *matCellDef="let element; let i = index">
+                    
+                          <div class="d-flex"  style="align-items: center;">
+                            <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop">
+                              <a routerLink="#" appAccessControl featureCode="['STM016']" accessType="update"
+                                (click)="open(AddClause, element)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                            </span>
+                              <span nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}" class="mx-1">
+                                  <a appAccessControl featureCode="['STM011']" accessType="view" (click)="open(AddClause, element,'show')">
+                                      <em class="bi bi-eye globally-change-icon-color"></em>
+                                  </a>
+                              </span>
+                              <span class="form-check form-switch mx1 mb-0 mt-1">
+                                  <input appAccessControl featureCode="['STM011']" accessType="update" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" (change)="changeStatus(element,i)" [checked]="element.status" />
+                                  <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                              </span>
+                          </div>
+                      </td>
+                  
+                  
+              </ng-container>
+                <ng-container matColumnDef="railCar">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Rail Carrier Name
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.railCar }}
+                  </td>
+                </ng-container>
+                 <ng-container matColumnDef="carrierCode">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Carrier Code
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.carrierCode}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="railCarrier">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Rail Car Type
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.railCarrier}}
+                  </td>
+                </ng-container> 
+
+                <ng-container matColumnDef="wagonNumber">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Wagon Number
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.wagonNumber}}
+                  </td>
+                </ng-container>  
+
+                <ng-container matColumnDef="Dimensions">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Dimensions
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.Dimensions}}
+                  </td>
+                </ng-container>  
+
+                <ng-container matColumnDef="Capacity">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Capacity
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.Capacity}}
+                  </td>
+                </ng-container>  
+
+                <ng-container matColumnDef="Cargo">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Cargo Volume Capacity
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.Cargo}}
+                  </td>
+                </ng-container>  
+                <ng-container matColumnDef="status">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Status
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.status? "Active" : "Inactive"}}
+                  </td>
+                </ng-container> 
+
+                <!-- <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index" [matColumnDef]="headersFilter">
+                  <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+                    <div class="filters-container" [class.animate]="!toggleFilters">
+                      <em *ngIf="i > 0 && i < displayedColumns1.length - 8" class="custom-tooltip" [attr.title]="'Clear Filters'"
+                        (click)="clearFilters();toggleFilters = !toggleFilters" class="bi bi-x-circle"></em>
+                      <div *ngIf="i > 1 && i < displayedColumns1.length - 0" appearance="outline">
+                        <input class="form-control input-txt" placeholder="Press 'Enter' to search" [(ngModel)]="filtersModel[i]"
+                          (keyup.enter)="searchColumns()">
+                      </div>
+                
+                    </div>
+                  </th>
+                </ng-container> -->
+                <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index" [matColumnDef]="headersFilter">
+                  <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+                    <div class="filters-container" [class.animate]="!toggleFilters">
+                      <em *ngIf="i > 0 && i < displayedColumns1.length - 2" class="custom-tooltip bi bi-x-circle"
+                        [attr.title]="'Clear Filters'" (click)="clearFilters(); toggleFilters = !toggleFilters">
+                      </em>
+                      <div *ngIf="i > 1 && i < displayedColumns1.length - 0" appearance="outline">
+                        <ng-container *ngIf="displayedColumns[i] === 'status'; else textInput">
+                          <select class="form-control" [(ngModel)]="filtersModel[i]" (change)="searchColumns()">
+                            <option value="">All</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                          </select>
+                        </ng-container>
+                        <ng-template #textInput>
+                          <input class="form-control input-txt" placeholder="Press 'Enter' to search" [(ngModel)]="filtersModel[i]"
+                            (keyup.enter)="searchColumns()">
+                        </ng-template>
+                      </div>
+                    </div>
+                  </th>
+                </ng-container>
+
+                <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumns">
+                </tr>
+                <tr mat-header-row class="no-default-height" *matHeaderRowDef="displayedColumns1"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns">
+                </tr>
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+                    <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+                    <span *ngIf="!loaderService?.isLoadingcircle && !dataSource?.data?.length">No data available</span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            <div [ngClass]="{'display-none' : toalLength < 10}">
+              <mat-paginator [length]="toalLength" [pageSize]="pageSize" [pageIndex]="pageNumber-1"
+                (page)="onPageChange($event)"  [pageSizeOptions]="_gc.PAGINATOR_OPTIONS" showFirstLastButtons></mat-paginator>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #AddClause let-modal>
+  <div class="modal-content nz-allSelect vessel-master-component">
+    <div class="modal-headers mt-2">
+      <h4 *ngIf="!vesselIdToUpdate" class="modal-title">
+        {{ "common.add" | translate }}
+        Rail details
+      </h4>
+      <h4 *ngIf="vesselIdToUpdate" class="modal-title">
+        {{ "common.edit" | translate }}
+        Rail details
+      </h4>
+      <button type="button" class="btn-close shadow-none float-end" (click)="onSave()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+        <form [formGroup]="addVesselForm">
+          <div class="row g-3 mt-3">
+            <div class="col-md-3">
+              <div class="form-field-section">
+                <label class="form-label">Rail Carrier Name<span class="text-danger">*</span></label>
+                <input type="text"
+                       class="form-control custom-input rounded-0"
+                       formControlName="railCar"
+                       placeholder="Rail Carrier Name"
+                       [ngClass]="{'is-invalid': submitted && f.railCar.errors}"  />
+                <div *ngIf="submitted && f.railCar.errors" class="invalid-feedback">
+                  <div *ngIf="f.railCar.errors.required">Rail Carrier Name is required</div>
+                </div>
+              </div>
+          </div>
+          
+          
+            <div class="col-md-3">
+              <div class="form-field-section">
+                <label class="form-label">Carrier Code<span class="text-danger">*</span></label>
+                <input type="text"
+                       class="form-control custom-input rounded-0"
+                       formControlName="carrierCode"
+                       placeholder="Carrier Code"
+                       [ngClass]="{'is-invalid': submitted && f.carrierCode.errors}" />
+                <div *ngIf="submitted && f.carrierCode.errors" class="invalid-feedback">
+                  <div *ngIf="f.carrierCode.errors.required">Carrier Code is required</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-field-section">
+                  <label class="form-label">Rail Car Type<span class="text-danger">*</span></label>
+                  <input type="text"
+                         class="form-control custom-input rounded-0"
+                         formControlName="railCarrier"
+                         placeholder="Rail Car Type"
+                         [ngClass]="{'is-invalid': submitted && f.railCarrier.errors}" />
+                  <div *ngIf="submitted && f.railCarrier.errors" class="invalid-feedback">
+                    <div *ngIf="f.railCarrier.errors.required">Rail Car Type is required</div>
+                  </div>
+                </div>
+              </div>
+ 
+            
+ 
+              <div class="col-md-3">
+                <div class="form-field-section">
+                  <label class="form-label">Wagon Number</label>
+                  <input type="number"
+                         class="form-control custom-input rounded-0"
+                         formControlName="wagonNumber"
+                         placeholder="Wagon Number" />
+                </div>
+              </div>
+ 
+            
+ 
+              <div class="col-md-3">
+                <div class="form-field-section">
+                  <label class="form-label">Dimensions</label>
+                  <input type="number"
+                         class="form-control custom-input rounded-0"
+                         formControlName="Dimensions"
+                         placeholder="Maximum Volume"/>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="form-field-section">
+                  <label class="form-label">Capacity</label>
+                  <input type="number"
+                         class="form-control custom-input rounded-0"
+                         formControlName="Capacity"
+                         placeholder="Capacity"/>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="form-field-section">
+                  <label class="form-label">Cargo Volume Capacity</label>
+                  <input type="number"
+                         class="form-control custom-input rounded-0"
+                         formControlName="Cargo"
+                         placeholder="Cargo Volume Capacitye"/>
+                </div>
+              </div>
+
+            </div>
+            
+
+          <div class="form-group wrap-form-action mt-4">
+            <button class="btn1 btn-lg float-end" (click)="onSave()" type="submit">
+              {{ "common.cancel" | translate }}
+            </button>
+            <!-- Save button for creating a new vessel -->
+            <button (click)="vesselMasters()" *ngIf="!isViewMode && !vesselIdToUpdate"
+              class="btn btn-outline-primary btn-lg float-end" type="submit">
+              {{ "common.save" | translate }}
+            </button>
+            
+            <!-- Update button for editing an existing vessel -->
+            <button (click)="vesselMasters()" *ngIf="!isViewMode && vesselIdToUpdate"
+              class="btn btn-outline-primary btn-lg float-end" type="submit">
+              {{ "common.update" | translate }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>

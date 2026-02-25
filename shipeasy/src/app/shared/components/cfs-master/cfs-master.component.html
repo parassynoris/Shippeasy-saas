@@ -1,0 +1,129 @@
+<div class="table-with-gheading">
+    <div class="wrap-table-area">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2 ">
+            <div class="mt-2">
+              <span>
+                <h5>{{ fromSize }}-{{ count }} of {{ toalLength }}</h5>
+              </span>
+            </div>
+            <div class="mt-2">
+  
+              <span class="prv" [class.disable-arrow-sign]="fromSize === 1" (click)="prev()"><em
+                  class="typcn typcn-chevron-left"></em></span>
+              <span class="prv" [class.disable-arrow-sign]="count === toalLength" (click)="next()"><em
+                  class="typcn typcn-chevron-right"></em></span>
+            </div>
+            <div class="mt-2">
+              <select class="form-select form-select-sm" (change)="filter($event)">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+              </select>
+            </div>
+            <div class="mt-2">
+              <a class="new-action" (click)="open()">
+                {{"smartagent.smartAgent.costHead.addCostHead" | translate}}
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="table-responsive">
+            <table aria-describedby="mytable" class="gfg">
+              <thead>
+                <tr class="field-name">
+                  <th scope="col"
+                  > {{ "smartagent.smartAgent.costHead.costCode" | translate}}<em
+                      class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col"  >{{ "smartagent.smartAgent.costHead.costName" | translate}}<em
+                      class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col"
+                  >{{ 'common.status' | translate}}
+                     <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col"></th>
+                </tr>
+                <tr>
+                  <th scope="col">
+                    <input type="text" class="form-control" id="" />
+                  </th>
+                  <th scope="col">
+                    <input type="text" class="form-control" id="" />
+                  </th>
+                  <th scope="col">
+                    <select class="form-control">
+                      <option value="true">Active</option>
+                      <option value="false">In Active</option>
+                    </select>
+                  </th>
+                  <th scope="col" class="wrap-table-btn text-center">
+                    <button type="button" class="btn btn-outline-primary" (click)="search()">
+                      {{ "common.search_btn" | translate }}
+                    </button>
+                    <a class="clearbtn" (click)="clear()"> {{ "common.clear" | translate }}</a>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let costhead of cfsList">
+                  <td>{{costhead?._source?.costHeadCode}}</td>
+                  <td>{{costhead?._source?.costheadName}}</td>
+                  <td>{{costhead?._source?.status ? "Active" : "In Active"}}</td>
+                  <td class="action-field">
+                    <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop"><a
+                        (click)="open('edit', costhead)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                    </span>
+                  
+                    <span class="form-check form-switch">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        id="flexSwitchCheckChecked"
+                        (change)="changeStatus(costhead)"
+                        [checked]="costhead?._source?.status"
+                      />
+                      <label
+                        class="form-check-label"
+                        for="flexSwitchCheckChecked"
+                      ></label>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="no-data-availble" *ngIf="cfsList?.length === 0">
+            {{'common.no_data' | translate}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <ng-template #deleteacostHead let-c="close" let-d="dismiss">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+      </div>
+      <div class="modal-body mt-4">
+        <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2">
+        </em>
+        <span class="text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+      </div>
+      <div class="modal-footer">
+        <div class="text-center">
+          <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+            {{ "common.no" | translate }}
+          </button>
+          <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+            {{ "common.yes" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-template>

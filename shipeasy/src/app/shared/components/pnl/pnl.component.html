@@ -1,0 +1,127 @@
+<div class="wrap-table-area">
+  <div class="row">
+   <div class="col-md-12" *ngIf="isTypePage === 'finance'">
+      <div class="wrap-feild-wrapper">
+        <div class="wrap-form-field">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="row">
+                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 form-bottom-alignment-mobile-devices">
+                  <label class="form-label">{{ 'smartagent.job.list.reciept.job_no' | translate }}</label>
+                  <select class="form-select custom-input" (change)="jobSelect($event)">
+                    <option selected disabled>Select Job</option>
+                    <option *ngFor="let job of jobData" [value]="job._source.jobId">{{ job._source.jobNo }}</option>
+                  </select>
+                </div>
+                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 form-bottom-alignment-mobile-devices">
+                  <label class="form-label">{{ 'stolt.finance.p&l.vessel_name' | translate }}</label>
+                  <input type="text" class="form-control custom-input" placeholder="Vessel Name" [value]="selectedJob?._source?.vesselDetails?.vesselName ? selectedJob?._source?.vesselDetails?.vesselName : ''" disabled>
+                </div>
+                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 form-bottom-alignment-mobile-devices">
+                  <label class="form-label">{{ 'stolt.finance.p&l.voyage_no' | translate }}</label>
+                  <input type="text" class="form-control custom-input" placeholder="Voyage No" [value]="selectedJob?._source?.vesselDetails?.voyageNo ? selectedJob?._source?.vesselDetails?.voyageNo : ''" disabled>
+                </div>
+                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 form-bottom-alignment-mobile-devices">
+                  <label class="form-label">{{ 'stolt.finance.p&l.port' | translate }}</label>
+                  <input type="text" class="form-control custom-input" placeholder="Port" [value]="selectedJob?._source?.portDetails?.portName ? selectedJob?._source?.portDetails?.portName : ''" disabled>
+                </div>
+                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 form-bottom-alignment-mobile-devices">
+                  <label class="form-label">{{ 'stolt.finance.p&l.eta' | translate }}</label>
+                  <div class="input-group date" id="datepicker">
+                    <input type="date" class="form-control custom-input" id="date" [value]="selectedJob?._source?.vesselDetails?.eta | date: 'dd-MM-yyyy' " disabled/>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="table-responsive">
+        <table aria-describedby="mytable" class="gfg">
+          <thead>
+            <tr class="field-name">
+             
+              <th scope="col">{{ 'smartagent.job.list.jobPl.chargeGroup' | translate }}</th>
+              <th scope="col">{{ 'smartagent.job.list.jobPl.chargeName' | translate }}</th>
+              <th scope="col">{{ 'common.status' | translate }}</th>
+             <th scope="col" class="text-end">Customer Invoice</th>
+              <th scope="col"  class="text-end">{{ 'smartagent.job.list.jobPl.vendorBills' | translate }}</th>
+            <th scope="col" class="text-end">Receipt</th>
+              <th scope="col" class="text-end">Payment</th>
+              <th scope="col" class="text-end">NetProfit</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let charge of costitemData">
+              <td>{{charge.costItemHead}}</td>
+              <td>{{charge.costItems[0].costItemName}}</td>
+              <td>Pending</td>
+              <td class="text-end">{{((charge.costItems[0].quantity * charge.costItems[0]?.agent?.unitPrice)*(1+(charge?.costItems[0]?.tax ? charge?.costItems[0]?.tax[0]?.taxRate : 18)/100)).toFixed(2)}}</td>
+              <td class="text-end">{{ 
+                ((charge?.costItems[0]?.quantity * charge?.costItems[0]?.rate)
+                *
+                (1+(charge?.costItems[0]?.tax ? charge?.costItems[0]?.tax[0]?.taxRate : 18)/100)
+                ).toFixed(2)
+              }} </td>
+              <td class="text-end">{{ totalAmtInr || 0 }}</td>
+              <td class="text-end">{{ totalPaymentAmount || 0 }}</td>
+              <td class="text-end">{{ 
+                (
+                ((charge.costItems[0].quantity * charge.costItems[0]?.agent?.unitPrice)*(1+(charge?.costItems[0]?.tax ? charge?.costItems[0]?.tax[0]?.taxRate : 18)/100)).toFixed(2)
+                -
+                ((charge?.costItems[0]?.quantity * charge?.costItems[0]?.rate)
+                *
+                (1+(charge?.costItems[0]?.tax ? charge?.costItems[0]?.tax[0]?.taxRate : 18)/100)
+                ).toFixed(2)
+                ).toFixed(2)
+              }}</td>
+            </tr>
+            <tr class="border">
+              <td class="border-0"></td>
+              <td class="border-0"></td>
+              <td class="border-0">{{ 'smartagent.job.list.jobPl.totalPayment' | translate }}</td>
+              <td class="border-0 text-end">{{ totalCustomerInvoice }}</td>
+              <td class="border-0 text-end">{{ vendorBills }}</td>
+              <td class="border-0 text-end">{{ totalAmtInr || 0 }}</td>
+              <td class="border-0 font-weight-bold text-end">{{ totalPaymentAmount || 0 }}</td>
+              <td class="border-0 text-end">{{ totalCustomerInvoice - vendorBills }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="wrap-form-field self-form">
+       
+        <div class="row align-items-end wrap-field-btn">
+          <div class="col-sm-12 col-md-6">
+            <div class="row d-flex justify-content-start align-items-end">
+              <div class="col-sm-12 col-md-6 remark-section">
+                <label class="form-label">{{ 'stolt.finance.p&l.remarks' | translate }}</label>
+                <input class="form-control custom-input" type="text" placeholder="Remarks"  [(ngModel)]="pnLRemarks">
+              </div>
+             
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-6">
+            <div class="d-flex justify-content-end justify-content-first-alignment">
+              <div class="form-group wrap-form-action p-t-12">
+                <button class="btn1 btn-lg float-end" (click)="onClose()">
+                  {{ 'common.cancel' | translate }}
+                </button>
+                <button *ngIf="isTypePage === 'finance'" class="btn btn-outline-primary btn-lg float-end" type="submit" (click)="closeJob()">
+                  {{ 'smartagent.job.list.jobPl.closeJob' | translate }}
+                </button>
+                <button *ngIf="isTypePage === 'batch'" class="btn btn-outline-primary btn-lg float-end" type="submit" (click)="closeJob()">
+                  {{ 'smartagent.job.list.jobPl.closeBatch' | translate }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

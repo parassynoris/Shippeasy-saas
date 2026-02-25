@@ -1,0 +1,231 @@
+<div class="">
+  <div class="">
+
+    <div class="p-4 app-dashboard-filter-modal-background">
+      <form [formGroup]="filterform" (ngSubmit)="submitfilter()" class="wrap-form">
+        <div class="row mb-3">
+          <div class="col-lg-3 mobile-rep d-flex align-items-center">
+            <div class="heading--button white-color text-uppercase">Freight Type</div>
+          </div>
+          <div class="col-lg-9">
+            <div class="card border-0 my-card"> 
+              <div class="" >
+                <div formGroupName="freightType">
+                  <div class="row">
+                    <div class="col-12 col-lg-3" *ngFor="let item of freightTypeTag; let i = index">
+                      <div class="form-check  d-flex align-items-center">
+                        <input class="mr-1" type="checkbox" [id]="i" [formControlName]="item.tag"
+                          name="tags" value="option1" />
+                        <label class="text--footer white-color mb-0" [for]="i">{{
+                          item.milestone
+                          }}</label>
+                      </div>
+                    </div>
+                  
+                  </div>
+                </div>
+                <!-- <div class="col-12 col-lg-4"  >
+                  <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" id="isActive" formControlName="isActive" />
+                    <label class="text--footer white-color" for="isActive">Active</label>
+                  </div>
+                </div> -->
+              </div> 
+             
+            </div>
+          </div>
+        </div>
+        <div class="row mb-3" >
+          <div class="col-lg-3 mobile-rep d-flex align-items-center">
+            <div class="heading--button white-color text-uppercase">STATUS</div>
+
+          </div>
+          <div class="col-lg-9">
+            <div class="card border-0 my-card"> 
+              <div class="" *ngIf="type === 'booking'" >
+                <div formGroupName="booking">
+                  <div class="row">
+                    <div class="col-12 col-lg-3" *ngFor="let item of bookingTag; let i = index">
+                      <div class="form-check d-flex align-items-center">
+                        <input class="mr-1" type="checkbox" [id]="i" [formControlName]="item.tag"
+                          name="tags" value="option1" />
+                        <label class="text--footer white-color mb-0" [for]="i">{{
+                          item.milestone
+                          }}</label>
+                      </div>
+                    </div>
+                  
+                  </div>
+                </div>
+                <!-- <div class="col-12 col-lg-4"  >
+                  <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" id="isActive" formControlName="isActive" />
+                    <label class="text--footer white-color" for="isActive">Active</label>
+                  </div>
+                </div> -->
+              </div> 
+              <div class="row" *ngIf="type === 'quotation'" formGroupName="quotation">
+           
+                <div>
+                  <div class="row">
+                   
+                    <div class="col-12 col-lg-3" *ngFor="let item of quotationTag; let i = index">
+                      <div class="form-check d-flex align-items-center">
+                        <input class="mr-1" type="checkbox" [id]="i" [formControlName]="item.tag"
+                          name="tags" [value]="checked" />
+                        <label class="text--footer white-color mb-0" [for]="i">{{
+                          item.milestone
+                          }}</label>
+                      </div> 
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="type === 'invoice'" formGroupName="invoice">
+                <div>
+                  <div class="row">
+                    <div class="col-12 col-lg-3" *ngFor="let item of InvoiceTag; let i = index">
+                      <div class="form-check align-items-center d-flex">
+                        <input class="mr-1" type="checkbox" [id]="i" [formControlName]="item.tag"
+                          name="tags" value="option1" />
+                        <label class="text--footer white-color mb-0" [for]="i">{{
+                          item.milestone
+                          }}</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row   align-items-center">
+          <div class="col-lg-3">
+            <span class="heading--labelbold white-color text-uppercase">Dates</span>
+          </div>
+          <div class="col-lg-9">
+            <div class="row p-1">
+              <div class="col-lg-6">
+                <div class="input-field float-label input-icon dropdown-icon">
+
+                  <label for="from" class="small-info datepicker-label">From</label>
+                  <mat-form-field appearance="outline" class="custom-date-picker">
+                    <div class="d-flex align-items-center  w-100">
+                      <input matInput [matDatepicker]="pickerEta1" formControlName="fromdate" class="h-0" />
+                      <mat-datepicker-toggle matSuffix [for]="pickerEta1"></mat-datepicker-toggle>
+                    </div>
+                    <mat-datepicker #pickerEta1></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="input-field float-label input-icon dropdown-icon">
+
+                  <label for="to" class="small-info datepicker-label">To</label>
+                  <mat-form-field appearance="outline" class="custom-date-picker">
+                    <div class="d-flex align-items-center  w-100">
+                      <input matInput [matDatepicker]="pickerEta2" formControlName="todate" class="h-0" />
+                      <mat-datepicker-toggle matSuffix [for]="pickerEta2"></mat-datepicker-toggle>
+                    </div>
+                    <mat-datepicker #pickerEta2></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="type != 'invoice'" class="row  align-items-center">
+          <div class="col-lg-3">
+            <span class="heading--labelbold white-color text-uppercase">Location</span>
+          </div>
+          <div class="col-lg-9">
+            <div class="row p-1">
+              <div class="col-lg-6">
+                <div class="input-field">
+                  <label class="small-info datepicker-label"
+                    for="fromlocation">Origin </label>
+                  <div class=" wrap-ngx-sets input-field  ">
+
+
+                    <div class="wrap-input  ">
+                      <ng-autocomplete [data]="locationData" [initialValue]="" [searchKeyword]="'portName'"
+                        formControlName="fromlocation" placeholder="Enter Port" [itemTemplate]="itemTemplate"
+                        [notFoundTemplate]="notFoundTemplate" (inputChanged)="onLocationSearch($event)">
+                      </ng-autocomplete>
+                      <ng-template #itemTemplate let-item>
+                        <a [innerHTML]="item.portName"></a>
+                      </ng-template>
+
+                      <ng-template #notFoundTemplate let-notFound>
+                        <div>No location Found</div>
+                      </ng-template>
+
+
+                    </div>
+
+                    <span *ngIf=" filterform.controls['fromlocation'].errors &&
+                              filterform.controls['fromlocation'].touched" class="invalid-error">
+                      <span *ngIf="filterform.controls['fromlocation'].errors.required">Please Select Port
+                      </span>
+                    </span>
+                  </div>
+                </div>
+
+              </div>
+              <div class="col-lg-6">
+                <div class="input-field">
+                  <label class="small-info datepicker-label"
+                    for="tolocation">Destination
+                    </label>
+                  <div class=" wrap-ngx-sets input-field  ">
+                    <div class="wrap-input ">
+                      <ng-autocomplete [data]="locationData" [initialValue]="" [searchKeyword]="'portName'"
+                        formControlName="tolocation" placeholder="Enter Port" [itemTemplate]="itemTemplate"
+                        [notFoundTemplate]="notFoundTemplate" (inputChanged)="onLocationSearch($event)">
+                      </ng-autocomplete>
+                      <ng-template #itemTemplate let-item>
+                        <a [innerHTML]="item.portName"></a>
+                      </ng-template>
+
+                      <ng-template #notFoundTemplate let-notFound>
+                        <div>No location Found</div>
+                      </ng-template>
+
+                    </div>
+                    <span *ngIf=" filterform.controls['tolocation'].errors &&
+                              filterform.controls['tolocation'].touched" class="invalid-error">
+                      <span *ngIf="filterform.controls['tolocation'].errors.required"> Please Select Port
+                      </span>
+                    </span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <hr>
+      <div class="custome-modal-footer ">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <button class="btn btn-primary-outline" (click)="reset()">
+              Clear all Filters
+            </button>
+          </div>
+          <div>
+            <button class="btn btn-primary-outline" (click)="onClose()">
+              Cancel
+            </button>
+            <button (click)="submitfilter()" 
+              class="btn btn-primary-outline">
+              Apply Filter
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  </div>
+</div>

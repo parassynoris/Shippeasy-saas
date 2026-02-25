@@ -1,0 +1,353 @@
+<ng-container *ngIf="!voucherScreen">
+    <div class="wrap-form-field table-with-gheading">
+        <form [formGroup]="postingForm" class="mb-5">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="wrap-feild-wrapper">
+                        <div class="wrap-form-field">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-md-3 form-bottom-alignment-mobile-devices">
+                                            <label class="form-label">Bill No.</label>
+                                            <input type="text" class="form-control custom-input"
+                                                [value]="this.billsList?.invoiceNo" disabled>
+                                        </div>
+                                        <div class="col-md-3 form-bottom-alignment-mobile-devices">
+                                            <label class="form-label">Vendor Name</label>
+                                            <input type="text" class="form-control custom-input"
+                                                [value]="this.billsList?.invoiceFromName" disabled>
+                                        </div>
+                                        <div class="col-md-3 form-bottom-alignment-mobile-devices">
+                                            <label class="form-label">Bill Date</label>
+                                            <nz-date-picker class="form-select custom-input" nzShowTime
+                                                formControlName="billDate" nzFormat="dd-MM-yyyy HH:mm:ss"
+                                                [nzDisabled]="true"></nz-date-picker>
+                                        </div>
+                                        <div class="col-md-3 form-bottom-alignment-mobile-devices">
+                                            <label class="form-label">Posting Date</label>
+                                            <nz-date-picker class="form-select custom-input" nzShowTime
+                                                [nzDisabled]="true" formControlName="TXNDate"
+                                                nzFormat="dd-MM-yyyy HH:mm:ss"></nz-date-picker>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="veselother my-2">
+                    <h2>Charges Details</h2>
+                </div>
+                <div class="col-md-12 ">
+                    <div class="table-responsive">
+                        <table aria-describedby="mytable" class="gfg">
+                            <thead>
+                                <tr class="field-name">
+                                    <th scope="col">Sr.No</th>
+                                    <th scope="col">{{ 'stolt.finance.debit.new_debit_note.batch_no' | translate }}</th>
+                                    <th scope="col">{{ 'stolt.finance.debit.new_debit_note.charge_name' | translate }}
+                                    </th>
+                                    <th scope="col">RCM Flag</th>
+                                    <th scope="col">{{ 'stolt.finance.debit.new_debit_note.chargable_amount' | translate
+                                        }}
+                                    </th>
+                                    <th scope="col">{{ 'stolt.finance.debit.new_debit_note.tax_amount' | translate }}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let invoice of costItemList; let index = index">
+                                    <td>{{index+1}}</td>
+                                    <td>{{invoice?.batchNo}}</td>
+                                    <td>{{invoice?.chargeItem}}</td>
+                                    <td>{{invoice?.RCM ? 'Y' :'N'}}</td>
+                                    <td class="text-end">{{invoice?.chargableAMT  | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td>
+                                    <td class="text-end">{{invoice?.totalTAX | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode }}</td>
+                                </tr>
+                                <tr class="footer-ui" *ngIf="costItemList?.length > 0">
+                                    <th scope="col " colspan="4" class="footer-heading text-end">Total</th>
+                                    <td colspan="1" class="text-end">{{totalAmount | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode }}</td>
+                                    <td colspan="1" class="text-end">{{ taxAmount | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode }}</td>
+                                 </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="no-data-availble" *ngIf="costItemList?.length === 0">
+                        {{'common.no_data' | translate}}
+                    </div>
+
+                </div>
+
+                <div class="veselother my-2">
+                    <h2>TDS Details</h2>
+                </div>
+                <div class="col-md-12 mb-5">
+                    <div class="table-responsive">
+                        <table aria-describedby="mytable" class="gfg">
+                            <thead>
+                                <tr class="field-name">
+                                    <th scope="col">Nature of TDS</th>
+                                    <th scope="col">TDS %</th>
+                                    <th scope="col">Amount(Taxable)</th>
+                                    <th scope="col">TDS Amount</th>
+                                    <th scope="col">Limit</th>
+                                    <th scope="col">Utilised</th>
+                                    <th scope="col">TDS Remarks</th>
+                                    <th scope="col">
+                                        <a title="Add New VGM" (click)="addNewRow()"
+                                            class="max-con new-action bi bi-plus-lg  btn btn-outline-primary btn-sm rounded-pill"></a>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container formArrayName="tdsArray">
+                                    <ng-container *ngFor="
+                            let tdsForm of tdsArray.controls;
+                            let i = index
+                          ">
+
+                                        <tr [formGroup]="tdsForm">
+                                            <td>
+                                              
+                                                <nz-select class="form-select" formControlName="tdsNature"
+                                                    (ngModelChange)="setTDSrow(i)">
+                                                    <nz-option *ngFor="let option of tdsList"
+                                                        nzLabel="{{option.tdsNature }}"
+                                                        [nzValue]="option.tdsId  "></nz-option>
+                                                </nz-select>
+                                            </td>
+
+                                            <td><input class="w-100 custom-input  text-end" formControlName="tdsPercent"
+                                                    type="number" disabled >
+                                            </td>
+                                            <td><input class="w-100 custom-input  text-end" formControlName="taxAmount"
+                                                    (keyup)="tdsAMT(tdsForm,i)" type="number"
+                                                    [ngClass]="{'is-invalid': submitted && f.taxAmount.errors}">
+                                                <div *ngIf="submitted && f.taxAmount.errors" class="invalid-feedback">
+                                                    <div *ngIf="f.taxAmount.errors.required">Amount is required</div>
+                                                </div>
+                                            </td>
+                                            <td><input class="w-100 custom-input  text-end" formControlName="tdsAmount"
+                                                    type="number" disabled >
+                                            </td>
+                                            <td><input class="w-100 custom-input  text-end" formControlName="limit" type="number"
+                                                    disabled >
+                                            </td>
+                                            <td><input class="w-100 custom-input  text-end" formControlName="utilised"
+                                                    type="number" disabled >
+                                            </td>
+                                            <td>
+                                                <nz-select class="form-select" formControlName="remark">
+                                                    <nz-option *ngFor="let option of tdsRemarkList"
+                                                        nzLabel="{{option.typeName  }}"
+                                                        [nzValue]="option.systemtypeId  "></nz-option>
+                                                </nz-select>
+                                            </td>
+                                         </tr>
+
+                                    </ng-container>
+                                </ng-container>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="no-data-availble" *ngIf="tdsArray.controls?.length === 0">
+                        {{'common.no_data' | translate}}
+                    </div>
+                </div>
+
+                <div class="col-md-12 mb-5">
+                    <div class="row my-4">
+                        <div class="col-md-2 chk">
+                            <input type="radio" (change)="changeComm()" [value]="true" formControlName="commission" />
+                            <label class="form-label">Commission </label>
+                        </div>
+                        <div class="col-md-2 chk">
+                            <input type="radio" (change)="changeComm()" [value]="false" formControlName="commission" />
+                            <label class="form-label">W/D Commission</label>
+                        </div>
+                    </div>
+                    <div class="row mb-5" *ngIf="showDiv">
+                        <div class="col-md-4">
+                            <label class="form-label">Commission Type</label>
+                            <nz-select class="form-select" (ngModelChange)="commisionChange()"
+                                formControlName="selectType"
+                                [ngClass]="{'is-invalid': submitted && f.selectType.errors}">
+                                <nz-option nzLabel="Percentage" nzValue="commission"></nz-option>
+                                <nz-option nzLabel="Lumpsum " nzValue="lumpsum"></nz-option>
+                            </nz-select>
+                            <div *ngIf="submitted && f.selectType.errors" class="invalid-feedback">
+                                <div *ngIf="f.selectType.errors.required">Commission Type is required</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Commission %</label>
+                            <input type="number" class="form-control custom-input  text-end" formControlName="commissionPer" 
+                            (keyup)="setTotalInvoice()"
+                                [ngClass]="{'is-invalid': submitted && f.commissionPer.errors}">
+                            <div *ngIf="submitted && f.commissionPer.errors" class="invalid-feedback">
+                                <div *ngIf="f.commissionPer.errors.required">Commission % is required</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Total Invoice Amount</label>
+                            <input type="number" class="form-control custom-input text-end" formControlName="totalInvoice"
+                                [ngClass]="{'is-invalid': submitted && f.totalInvoice.errors}">
+                            <div *ngIf="submitted && f.totalInvoice.errors" class="invalid-feedback">
+                                <div *ngIf="f.totalInvoice.errors.required">Amount is required</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="btn-onscreen ">
+                    <div class="form-group wrap-form-action">
+ 
+                        <!-- <button class="btn btn-outline-primary btn-lg float-end " appAccessControl featureCode="['STFBP01']" accessType="print">
+                            Print
+                        </button> -->
+                        <button class="btn btn-outline-primary btn-lg float-end " (click)="previewSave()">
+                            PreView Voucher
+                        </button>
+                        <button (click)="onCloseBill($event)" class="btn1 btn-lg float-end mb-3"
+                            type="submit">
+                            {{ 'common.cancel' | translate }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</ng-container>
+<ng-container *ngIf="voucherScreen">
+    <div class="table-with-gheading">
+        <div class="wrap-form-field">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="veselother my-2">
+                        <h2>BILL VOUCHERS</h2>
+                    </div>
+                    <div class="table-responsive">
+                        <div class="costtable">
+                            <table aria-describedby="mytable5">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" rowspan="6">
+                                            <strong>Being :</strong>BEING VENDOR POSTING FOR BILL NO :
+                                            {{this.billsList?.billNo}} / {{this.billsList?.invoiceDate | date : 'dd-MM-YYYY'}}
+                                        </th>
+                                        <th scope="col" rowspan="7"><strong>Transaction Date :</strong>
+                                            {{this.billsList?.invoiceDueDate | date : 'dd-MM-YYYY'}}</th>
+                                    </tr>
+                                </thead>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" rowspan="6">
+                                            <strong>Document Ref. No: </strong>
+                                        </th>
+                                        <th scope="col" rowspan="7"></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <table aria-describedby="mytable6">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" rowspan="2">A/C HEAD</th>
+                                        <th scope="col" rowspan="2">ACCOUNT HEAD / NARRATION</th>
+                                        <th scope="col" rowspan="2">CHARGE NAME</th>
+                                        <th scope="col" rowspan="2">DEPT NAME</th>
+                                        <th scope="col" rowspan="2">VOYAGE</th>
+                                        <th scope="col" rowspan="2">BATCH NO</th>
+                                        <th scope="col" rowspan="2">CURR</th>
+                                        <th scope="col" rowspan="2">Ex Rate</th>
+                                        <th scope="col" colspan="2" class="text-center text-primary">AMOUNT</th>
+                                        <!-- <th scope="col" rowspan="2">COST CENTER</th>
+                                        <th scope="col" colspan="2" class="text-center text-primary">INR</th> -->
+                                    </tr>
+                                    <tr>
+                                        <th scope="col">DEBIT</th>
+                                        <th scope="col">CREDIT</th>
+
+                                        <!-- <th scope="col">DEBIT</th>
+                                        <th scope="col">CREDIT</th> -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let invoice of costItemListFinal; let index = index">
+                                        <td class="text-center"><span
+                                                *ngFor="let x of billsList?.billPosting?.tdsArray">{{x.accountHead}}</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span
+                                                *ngFor="let x of billsList?.billPosting?.tdsArray">{{x.tdsNatureName}}</span>
+                                            
+                                        </td>
+                                        <td>{{invoice?.chargeItem}}</td>
+                                        <td>{{DeptName(invoice?.batchId)}}</td>
+                                        <td>{{findVoyoge(invoice?.batchId)}}</td>
+
+                                        <td>{{invoice?.batchNo}}</td>
+                                        <td>{{invoice?.currency || 'INR'}}</td>
+                                        <td>{{invoice?.exchangeRate || 1}}</td>
+                                        <td class="text-end">{{invoice?.invoiceAmount ||0.00 | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td>
+                                        <td class="text-end">{{invoice?.totalAMT|| 0.00 | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}} </td>
+                                        <!-- <td></td>
+                                        <td>{{invoice?.invoiceAmount ||0.00}}</td>
+                                        <td>{{invoice?.totalAMT|| 0.00}} </td> -->
+                                    </tr>
+                                </tbody>
+                                <tr>
+                                    <td colspan="8" class="text-end border-bottom-0 border-start-0">
+                                        Total
+                                    </td>
+                                    <td class="bnull text-end">{{billsList?.billPosting.invoiceAmount | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td>
+                                    <td class="text-end">{{finalChargeTotal || 0.00 | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}} </td>
+
+                                    <!-- <td colspan="1" class="text-end border-bottom-0"></td>
+                                    <td class="bnull">{{billsList?.billPosting.invoiceAmount}}</td>
+                                    <td>{{finalChargeTotal || 0.00}} </td> -->
+
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="btn-onscreen mb-3">
+                    <div class="form-group wrap-form-action">
+                        <button class="btn btn-outline-secondary  float-end mx-1"
+                            (click)="voucherScreen = !voucherScreen">
+                            Close
+                        </button>
+                        <button class="btn btn-outline-primary  float-end mx-1"
+                            [disabled]="this.billsList?.invoiceStatus === 'Completed'" (click)="billPost()">
+                            Confirm
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<ng-template #confirm let-modal>
+    <div class="custom-modal wrap-form-field">
+       
+        <div class="modal-body">
+            <form class="row g-3">
+                <div class="col-md-12 mb-5">
+                    <span>PLEASE FIND THE DETAILS OF THE POSTED VOUCHERS</span>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <div class="form-group wrap-form-action">
+                <button type="button" class="btn btn1  float-end"
+                    (click)="modal.close('Save click');confirmCharge(data)">Confirm</button>
+            </div>
+        </div>
+    </div>
+</ng-template>

@@ -1,0 +1,113 @@
+.inp-tag {
+	border: none;
+	border-bottom: 1px solid var(--theme-border-bottom-color);
+}
+
+@media only screen and (max-width: 600px),
+(min-device-width: 768px) and (max-device-width: 1024px) {
+
+	.input-group.custom-input {
+		display: inline-block;
+	}
+
+	/* Force table to not be like tables anymore */
+	table,
+	thead,
+	tbody,
+	th,
+	td,
+	tr {
+		display: block;
+	}
+
+	/* Hide table headers (but not display: none;, for accessibility) */
+	table {
+		thead tr {
+			position: absolute;
+			top: -9999px;
+			left: -9999px;
+		}
+
+		tr {
+			border: 1px solid var(--theme-gobally-border-color);
+			margin: 0 0 1rem 0;
+		}
+
+		td {
+			/* Behave  like a "row" */
+			border: none;
+			border-bottom: 1px solid #e0e0e0;
+			position: relative;
+			padding-left: 50%;
+		}
+
+		td:before {
+			/* Now like a table header */
+			position: absolute;
+			/* Top/left values mimic padding */
+			top: 6px;
+			left: 6px;
+			width: 45%;
+			padding-right: 10px;
+			white-space: nowrap;
+		}
+
+		.action-field {
+			text-align: left;
+		}
+	}
+
+	.mtop {
+		margin-top: -20px;
+	}
+
+	.mtop1 {
+		margin-top: -13px;
+	}
+
+	/*
+	Label the data
+	*/
+	td:nth-of-type(1):before {
+		content: "Terminal ID";
+	}
+
+	td:nth-of-type(2):before {
+		content: "Voyage ID";
+	}
+
+	td:nth-of-type(3):before {
+		content: "Sequence";
+	}
+
+	td:nth-of-type(4):before {
+		content: "ETA";
+	}
+
+	td:nth-of-type(5):before {
+		content: "ETD";
+	}
+
+	td:nth-of-type(6):before {
+		content: "ATA";
+	}
+
+	td:nth-of-type(7):before {
+		content: "ATD";
+	}
+
+	td:nth-of-type(8):before {
+		content: "Action";
+	}
+
+	.frm1 {
+		margin: 15px 0px 0px 0px;
+	}
+
+}
+.width5{
+    width: 5%;
+}
+.width10{
+    width: 10%;
+}

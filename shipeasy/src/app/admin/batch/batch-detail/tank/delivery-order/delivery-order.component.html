@@ -1,0 +1,116 @@
+<div class="modal-dialog custom-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="containerModalLabel">{{isForm ? 'Delivery Order' : 'Print Delivery Order'}}</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <ng-container *ngIf="isForm">
+        <div class="form-field-section">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">Delivery Order No.</label>
+              <input type="text" class="form-control custom-input" placeholder="Delivery Order No." value="000-000">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Delivery Date</label>
+              <div class="input-group date" id="datepicker">
+                <input type="date" class="form-control custom-input" id="date" />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Valid Till</label>
+              <div class="input-group date" id="datepicker">
+                <input type="date" class="form-control custom-input" id="date" />
+              </div>
+            </div>
+            <div class="col-md-12">
+              <label class="form-label">Remark</label>
+              <input type="text" class="form-control custom-input" placeholder="Remark" value="add remark here">
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table aria-describedby="mytable" class="gfg">
+            <thead>
+              <tr class="field-name">
+                <th scope="col"></th>
+                <th scope="col">Container No.</th>
+                <th scope="col">Container Type</th>
+                <th scope="col">Previous Corgo Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let inner of innerContainerData">
+                <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
+                <td>{{inner.no}}</td>
+                <td>{{inner.type}}</td>
+                <td>{{inner.corgo_type}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="!isForm">
+        <div id="print-section">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">Delivery Order No.</label>
+              <div>000-000</div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Delivery Date</label>
+              <div>0-01-22</div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Valid Till</label>
+              <div>20-01-22</div>
+            </div>
+            <div class="col-md-12">
+              <label class="form-label">Remark</label>
+              <div>add remark here</div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table aria-describedby="mytable1" class="gfg">
+              <thead>
+                <tr class="field-name">
+                  <th scope="col">Container No.</th>
+                  <th scope="col">Container Type</th>
+                  <th scope="col">Previous Corgo Type</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let inner of innerContainerData">
+                  <td>{{inner.no}}</td>
+                  <td>{{inner.type}}</td>
+                  <td>{{inner.corgo_type}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <div class="modal-footer">
+      <div class="wrap-form-field">
+        <div class="form-group wrap-form-action">
+          <button class="btn1 btn-lg float-end" data-bs-dismiss="modal" type="submit">
+            Cancel
+          </button>
+          <button *ngIf="!isForm" class="btn btn-outline-secondary btn-lg float-end" data-bs-dismiss="modal"
+            type="submit">
+            Email
+          </button>
+          <button *ngIf="!isForm" printSectionId="print-section" ngxPrint class="btn btn-outline-primary btn-lg float-end" data-bs-dismiss="modal"
+            type="submit">
+            Print
+          </button>
+          <button *ngIf="isForm" class="btn btn-outline-primary btn-lg float-end" (click)="onPrintOpen()" type="submit">
+            Select
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

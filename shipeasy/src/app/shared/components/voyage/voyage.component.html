@@ -1,0 +1,139 @@
+<ng-container *ngIf="currentUrl === 'voyage'">
+  <div class="table-with-gheading">
+
+    <div class="wrap-table-area">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="float-clear-mobile-view d-flex flex-column flex-sm-row gap-3 float-start search-section">
+            <div class="input-group custom-input">
+              <input type="text" class="form-control" placeholder="Search" aria-label="Search">
+            </div>
+          </div>
+          <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2 ">
+            <div class="mt-2">
+              <span>
+                <h5>1-10 of 80</h5>
+              </span>
+            </div>
+            <div class="mt-2">
+              <span class="prv"><em class="typcn typcn-chevron-left"></em></span>
+              <span class="prv"><em class="typcn typcn-chevron-right"></em></span>
+            </div>
+            <div class="mt-2"><select class="form-select form-select-sm ">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+              </select></div>
+            <div class="mt-2">
+              <a class="new-action" (click)="onOpenVoyage()"> Add Voyage </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="table-responsive">
+            <table aria-describedby="mytable" class="">
+              <thead>
+                <tr class="field-name">
+                  <th  scope="col"  class="width15">Voyage Id  <em class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                  <th  scope="col"  class="width15">Vessel ID  <em class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                  <th  scope="col"  class="width10">Vessel Type  <em class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                  <th  scope="col"  class="width15">Shipping Line  <em class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                  <th  scope="col"  class="width15">Birth Name  <em class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                  <th  scope="col"  class="width15">Terminal ID  <em class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                  <th  scope="col"  class="width15"> Vessel Owner <em class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+
+                </tr>
+                <tr>
+                  <th scope="col"><input type="text" class="form-control" id=""></th>
+                  <th scope="col"><input type="text" class="form-control" id=""></th>
+                  <th scope="col"><input type="text" class="form-control" id=""></th>
+                  <th scope="col"><input type="text" class="form-control" id=""></th>
+                  <th scope="col"><input type="text" class="form-control" id=""></th>
+                  <th scope="col"><input type="text" class="form-control" id=""></th>
+                  <th scope="col"><input type="text" class="form-control" id=""></th>
+                  <th scope="col"  class="wrap-table-btn ">
+                    <button type="button" class="btn btn-outline-primary">Searach</button>
+                    <a routerLink="#" class="clearbtn">Clear</a>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let voyage of voyageData ;  let i = index ">
+                  <td>{{voyage?._source?.vesselId}}</td>
+                  <td>{{voyage?._source?.vesselName}}</td>
+                  <td>{{voyage?._source?.vesselType}}</td>
+                  <td>{{voyage?._source?.shippingLine}}</td>
+                  <td>{{voyage.vesselFlag}}</td>
+                  <td>{{voyage.vesselOwner}}</td>
+                  <td>{{voyage.vesselSubType}}</td>
+                  <td class="action-field">
+                    <span class="mtop boot-icon"><a (click)="open(AddClause,voyage)"><em
+                          class="bi bi-pencil color-pencil-red"></em></a>
+                    </span>
+                    <span class="mtop"><a routerLink=""><em class="typcn typcn-trash"></em></a>
+                    </span>
+
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</ng-container>
+<ng-container *ngIf="currentUrl === 'add' || currentUrl === 'edit'">
+  <app-addvoyage (InvoiceSection)="onCloseNew()"></app-addvoyage>
+</ng-container>
+
+<ng-template #AddClause let-modal>
+  <div class="modal-content">
+    <div class="modal-headers mt-2">
+      <h4 class="modal-title"></h4>
+      <button type="button" class="btn-close shadow-none float-end btn1" (click)="onSave()" aria-label="Close">
+
+      </button>
+    </div>
+    <div class="modal-body gap-3">
+      <div class="wrap-form-field padding-space  modal-bottom-alignment-for-mobile-view">
+        <form class="row" [formGroup]="voyageForm">
+          <div class="col-md-4">
+            <label class="form-label ">Vessel Id</label>
+            <input type="text" class="form-control custom-input" placeholder="Item Name" formControlName="itemCategory">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Vessel Type</label>
+            <input type="text" class="form-control custom-input" placeholder="Item Name" formControlName="vesselType">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label ">Shipping Line</label>
+            <input type="text" class="form-control custom-input" placeholder="Item Name" formControlName="shippingLine">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Birth Name</label>
+            <input type="text" class="form-control custom-input" placeholder="Item Name" formControlName="birthName">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Terminal Id</label>
+            <input type="text" class="form-control custom-input" placeholder="Item Unit" formControlName="terminalId">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Vessel Owner</label>
+            <input type="text" class="form-control custom-input" placeholder="Item Image" formControlName="vesselOwner">
+          </div>
+
+          <div class="form-group wrap-form-action mt-4">
+            <button class="btn1 btn-lg float-end" (click)="onSave()" type="submit">
+              {{ 'common.cancel' | translate }}
+            </button>
+            <button (click)="voyageMasters()" class="btn btn-outline-primary btn-lg float-end" type="submit">
+              {{ 'common.save' | translate }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>

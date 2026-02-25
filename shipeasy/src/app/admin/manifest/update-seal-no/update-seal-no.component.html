@@ -1,0 +1,61 @@
+<div class="wrap-table-area">
+    <div class="row">
+      <div class="horz-bar mb-3">
+        <span>Vessel : {{vesseldata}} || </span>
+        <span>Voyage : {{voyageData}}</span>
+
+    </div>
+      <div class="col-md-12">
+          <div class="header">
+            Update Seal No
+          </div>
+      <div class="col-md-12">
+        <div class="table-responsive globally-table-design-fix">
+          <div class="wrap-table-area  wrap-table-design wrap-form-field costtable " id="htmlData">
+
+            <table aria-describedby="mytable" class="">
+              <thead>
+                <tr class="field-name">
+                 
+                  <th scope="col"  data-order="desc" data-name="basicDetails"
+                    data-keys='["uniqueRefNo"]'>Serial No. </th>
+                  <th scope="col"  data-order="desc" data-name="basicDetails"
+                    data-keys='["stcQutationNo"]'>BL No. </th>
+                  <th scope="col"  data-order="desc" data-name="basicDetails"
+                    data-keys='["stcReference"]'>Container No. </th>
+                  <th scope="col"  data-order="desc" data-name="basicDetails"
+                    data-keys='["tankType"]'>Seal No. </th>
+                </tr>
+                
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of houseBlList;let i=index">
+                  
+                  <td class="">{{i+1}}</td>
+                  <td class="">{{data?.blNumber}}</td>
+                  <td class=""><span *ngFor="let ctr of data?.containers">{{ctr?.containerNumber}}, </span></td>
+                  <td class="">
+                      <input type="text" class="form-control" [(ngModel)]="data.sealNo">
+                  </td>
+                  
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="no-data-availble" *ngIf="houseBlList.length === 0">
+          {{'common.no_data' | translate}}
+        </div>
+      </div>
+      <div class="btn-onscreen my-3">
+        <div class="form-group wrap-form-action">
+          <button  class="btn btn-outline-primary  float-end " (click)="updateBl()">
+            Update Seal No
+          </button>
+          <button  class="btn btn-outline-primary  float-end " (click)="back()">
+            Back
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

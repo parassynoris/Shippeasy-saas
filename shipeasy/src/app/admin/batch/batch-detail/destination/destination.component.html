@@ -1,0 +1,166 @@
+<div class="wrap-form-field padding-space  modal-bottom-alignment-for-mobile-view">
+    <div class="row my-4 align-items-center">
+        <div class="col-md-12">
+            <form [formGroup]="routeForm" class="row g-4 align-items-center">
+                <div class="col-md-4">
+                    <label class="mb-0 p-0 form-label">Storage In</label>
+                    <nz-date-picker 
+                        nzShowTime
+                        class="form-select custom-input" 
+                        nzFormat="dd-MM-yyyy HH:mm:ss"
+                        formControlName="storageIn"
+                        [ngClass]="{'is-invalid': submitted && f?.storageIn?.errors}"
+                        style="width: 100%;">
+                    </nz-date-picker>
+                    <ng-container *ngIf="submitted && f?.storageIn?.errors">
+                        <div class="set-error-msg">
+                            Storage In {{ 'common.isRequired' | translate }}
+                        </div>
+                    </ng-container>
+                </div>
+                
+                <!-- <div class="col-md-4">
+                    <label class="mb-0 p-0 form-label">ATA at Destination Port</label>
+                    <mat-form-field appearance="outline" class="custom-date-picker">
+                        <div class="d-flex align-items-center  w-100">
+                            <input matInput [ngxMatDatetimePicker]="picker" formControlName="atdPortDest"  placeholder="ATA Port">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <ngx-mat-datetime-picker [color]="color" [touchUi]="touchUi"
+                          [enableMeridian]="enableMeridian" #picker>
+                        </ngx-mat-datetime-picker>
+                        </div>
+                      </mat-form-field>
+                </div> -->
+                <div class="col-md-4">
+                    <label class="mb-0 p-0 form-label">ATA at Destination Port</label>
+                    <nz-date-picker 
+                        nzShowTime
+                        class="form-select custom-input" 
+                        nzFormat="dd-MM-yyyy HH:mm:ss"
+                        formControlName="atdPortDest"
+                        [ngClass]="{'is-invalid': submitted && f?.atdPortDest?.errors}"
+                        style="width: 100%;">
+                    </nz-date-picker>
+                    <ng-container *ngIf="submitted && f?.atdPortDest?.errors">
+                        <div class="set-error-msg">
+                            ATA Port {{ 'common.isRequired' | translate }}
+                        </div>
+                    </ng-container>
+                </div>
+                
+
+                <div class="col-md-4">
+                    <label class="form-label">On Carriage</label>
+                    <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="onCarriage"
+                        [ngClass]="{'is-invalid': submitted && f.onCarriage.errors}">
+                        <nz-option *ngFor="let data of onCarrigeList" [nzLabel]="data?.name"
+                            [nzValue]="data?.locationId"></nz-option>
+                    </nz-select>
+                    <div *ngIf="submitted && f.onCarriage.errors" class="invalid-feedback">
+                        <div *ngIf="f.onCarriage.errors.required">On carriage is required</div>
+                    </div>
+                </div>
+
+               
+                <!-- <div class="col-md-4">
+                    <label class="mb-0 p-0 form-label">Storage Out </label>
+                    <mat-form-field appearance="outline" class="custom-date-picker">
+                        <div class="d-flex align-items-center  w-100">
+                        <input matInput [ngxMatDatetimePicker]="picker2" formControlName="storageOut" placeholder="Storage Out">
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <ngx-mat-datetime-picker [color]="color" [touchUi]="touchUi"
+                          [enableMeridian]="enableMeridian" #picker2>
+                        </ngx-mat-datetime-picker>
+                    </div>
+                      </mat-form-field>
+                    
+                </div> -->
+                <div class="col-md-4">
+                    <label class="mb-0 p-0 form-label">Storage Out</label>
+                    <nz-date-picker 
+                        nzShowTime
+                        class="form-select custom-input" 
+                        nzFormat="dd-MM-yyyy HH:mm:ss"
+                        formControlName="storageOut"
+                        [ngClass]="{'is-invalid': submitted && f?.storageOut?.errors}"
+                        style="width: 100%;">
+                    </nz-date-picker>
+                    <div *ngIf="submitted && f?.storageOut?.errors" class="set-error-msg">
+                        Storage Out {{ 'common.isRequired' | translate }}
+                    </div>
+                </div>
+                
+
+
+                <!-- <div class="col-md-4">
+                    <label class="mb-0 p-0 form-label">Delivery Date </label>
+                    <mat-form-field appearance="outline" class="custom-date-picker">
+                        <div class="d-flex align-items-center  w-100">
+                        <input matInput [ngxMatDatetimePicker]="picker3" formControlName="deliveryDate" placeholder="Delivery Date">
+                        <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                        <ngx-mat-datetime-picker [color]="color" [touchUi]="touchUi"
+                          [enableMeridian]="enableMeridian" #picker3>
+                        </ngx-mat-datetime-picker>
+                    </div>
+                      </mat-form-field>
+                </div> -->
+
+                <div class="col-md-4">
+                    <label class="mb-0 p-0 form-label">Delivery Date</label>
+                    <nz-date-picker 
+                        nzShowTime
+                        class="form-select custom-input" 
+                        nzFormat="dd-MM-yyyy HH:mm:ss"
+                        formControlName="deliveryDate"
+                        [ngClass]="{'is-invalid': submitted && f?.deliveryDate?.errors}"
+                        style="width: 100%;">
+                    </nz-date-picker>
+                    <div *ngIf="submitted && f?.deliveryDate?.errors" class="set-error-msg">
+                        Delivery Date {{ 'common.isRequired' | translate }}
+                    </div>
+                </div>
+                
+
+                <!-- <div class="col-md-4">
+                    <label class="mb-0 p-0 form-label">Empty Return Date</label>
+                    <mat-form-field appearance="outline" class="custom-date-picker">
+                        <div class="d-flex align-items-center  w-100">
+                        <input matInput [ngxMatDatetimePicker]="picker4" formControlName="emptyReturnDate" placeholder="Return Date">
+                        <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                        <ngx-mat-datetime-picker [color]="color" [touchUi]="touchUi"
+                          [enableMeridian]="enableMeridian" #picker4>
+                        </ngx-mat-datetime-picker>
+                    </div>
+                      </mat-form-field>
+                </div> -->
+
+                <div class="col-md-4">
+                    <label class="mb-0 p-0 form-label">Empty Return Date</label>
+                    <nz-date-picker 
+                        nzShowTime
+                        class="form-select custom-input" 
+                        nzFormat="dd-MM-yyyy HH:mm:ss"
+                        formControlName="emptyReturnDate"
+                        [ngClass]="{'is-invalid': submitted && f?.emptyReturnDate?.errors}"
+                        style="width: 100%;">
+                    </nz-date-picker>
+                    <div *ngIf="submitted && f?.emptyReturnDate?.errors" class="set-error-msg">
+                        Return Date {{ 'common.isRequired' | translate }}
+                    </div>
+                </div>
+                
+
+                <div class="form-group wrap-form-action btn-onscreen">
+                    <button class="btn1 float-end " type="submit" (click)="onClose()">
+                        {{ 'common.cancel' | translate }}
+                    </button>
+                    <button *ngIf="!isShow" class="btn btn-outline-primary float-end " type="submit"
+                        (click)="onSave()">
+                        {{ 'common.save' | translate }}
+                    </button> 
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,208 @@
+<div class="row mt-2">
+  <div class="col-md-12 mb-5">
+    <div class="row mb-2">
+      <div class="col-md-3">
+        <div class="d-grid-2">
+          <span class="header">Prov. Income :</span>
+          <span class="text font-weight-bold green"> {{sellTotal || '0' | number : '1.2-2' |
+            customCurrency:batchData?.quotationDetails?.currencyShortName}} </span>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="d-grid-2">
+          <span class="header">Prov. Expense :</span>
+          <span class="text font-weight-bold red"> {{buyTotal || '0' | number : '1.2-2' |
+            customCurrency:batchData?.quotationDetails?.currencyShortName}} </span>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="d-grid-2">
+          <span class="header">Prov. Margin :</span>
+          <span class="text font-weight-bold" [ngStyle]="{'color': billAmount < 0 ? 'red' : 'green'}"> {{billAmount ||
+            '0' | number : '1.2-2' | customCurrency:batchData?.quotationDetails?.currencyShortName}}
+          </span>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="d-grid-2">
+        <!-- <label for="vehicleType" class="form-label"><span class="text-danger">*</span>
+        </label> -->
+        <nz-select
+        class="form-select"
+        nzShowSearch
+        nzPlaceHolder="MBL"
+        [(ngModel)]="selectedBlId">
+        <nz-option
+          *ngFor="let bl of blData"
+          [nzLabel]="bl.blLabels"
+          [nzValue]="bl.blId">
+        </nz-option>
+      </nz-select>
+
+      </div>
+      </div>
+      <div class="col-md-1">
+        <button
+          class="btn btn-outline-primary btn-lg float-end modiBtn"
+          (click)="downloadReport()"
+          [disabled]="isBlListEmpty">
+          Download Report
+        </button>
+      </div>
+    </div>
+    
+
+    <div class="table-design">
+      <table aria-describedby="mytable" class="gfg">
+        <thead>
+          <tr class="field-name">
+            <th scope="col" class="text-center"># </th>
+            <th scope="col" class="text-center">Job No. </th>
+            <th scope="col" class="text-center">Invoice No. </th>
+            <th scope="col" class="text-center">Type </th>
+            <th scope="col" class="text-center">Invoice Status</th>
+            <th scope="col" class="text-center">Payment Status</th>
+            <th scope="col" class="text-center">Invoice Tax Amount</th>
+            <th scope="col" class="text-center">Invoice Amount</th>
+            <!-- <th scope="col" class="text-center">Buy Estimated Total Amount</th>
+            <th scope="col" class="text-center">Sell Estimated Total Amount</th> -->
+            <!-- <th scope="col" class="text-center">P&L</th> -->
+            <th scope="col" class="text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let row of invoiceData; let i=index">
+          <tr class="collapse-ui" >
+            <td>{{i+1}} </td>
+            <td> {{row.batchNo}} </td>
+            <td> {{row?.invoiceNo}} </td>
+            <td> {{row?.type == 'buyerInvoice' ? 'Purchase' : 'Sale'}} </td>
+            <td class="text-center">
+              <span *ngIf="row?.statusOfinvoice" class="status-bar1 {{row?.statusOfinvoice}}">
+                {{row?.statusOfinvoice}}
+              </span>
+            </td>
+            <td class="text-center"> <span *ngIf="row?.paymentStatus" class="status-bar1 {{row?.paymentStatus}}">
+                {{row?.paymentStatus}}
+              </span>
+            </td>
+
+            <td class="text-end">
+              {{row.invoiceTaxAmount || '0' | number : '1.2-2' }}
+            </td>
+            <td class="text-end ">
+              {{row.invoiceAmount|| '0' | number : '1.2-2'}}
+            </td>
+
+            <!-- <td class="text-end red">
+              {{row.buyEstimates  || '0' | number : '1.2-2'}}
+            </td>
+            <td class="text-end green">
+              {{row.selEstimates  || '0' | number : '1.2-2' }}
+            </td>
+            <td class="text-end" [ngStyle]="{'color': (row?.selEstimates - row.buyEstimates < 0) ? 'red' : 'green'}">
+              {{(row?.selEstimates - row.buyEstimates || '0') | number : '1.2-2' }}
+            </td> -->
+            <td>
+              <em class="bi bi-three-dots dots-color-change cursor-pointer ml-2 border px-1" (click)="chargeIndex = chargeIndex == i ? null : i"></em>
+            </td>
+
+          </tr>
+
+          <ng-container *ngIf="i === chargeIndex" > 
+            <tr class="field-name">
+              <th colspan="5" class="border-0"></th>
+              <th   scope="col" class="text-center tableRow">Charge</th> 
+              <th scope="col" class="text-center tableRow">Tax Amount</th> 
+              <th scope="col" class="text-center tableRow"> Amount</th> 
+            </tr>
+
+            <tr class="collapse-ui" *ngFor="let cost of row?.costItems; let c=index"> 
+
+              <td colspan="5" class="border-0"></td>
+              <td> {{cost.costItemName}} </td>  
+              <td class="text-end">
+                {{(row?.type == 'sellerInvoice' ? cost?.selEstimates?.igst : cost?.buyEstimates?.igst )|| '0' | number : '1.2-2' }}
+              </td>
+              <td class="text-end ">
+                {{(row?.type == 'sellerInvoice' ? cost?.selEstimates?.totalAmount : cost?.buyEstimates?.totalAmount )|| '0' | number : '1.2-2' }}
+              </td> 
+
+            </tr>
+
+          </ng-container> 
+        </ng-container>
+        <!-- <tr *ngIf="invoiceData.length > 0">
+          <td colspan="3">Total</td>
+          <td class="text-end font-weight-bold">{{invoiceTaxTotal || '0' | number : '1.2-2'}}</td>
+          <td class="text-end font-weight-bold">{{invoiceTotal || '0' | number : '1.2-2'}}</td>
+          <td class="text-end font-weight-bold red">{{buyTotal|| '0' | number : '1.2-2'}}</td>
+          <td class="text-end font-weight-bold green">{{sellTotal|| '0' | number : '1.2-2'}}</td>
+          <td class="text-end font-weight-bold" [ngStyle]="{'color': billAmount < 0 ? 'red' : 'green'}">
+            {{billAmount|| '0' | number : '1.2-2'}}</td>
+        </tr> -->
+        </tbody>
+      </table>
+      <div class="no-data-availble" *ngIf="invoiceData?.length === 0">
+        {{'common.no_data' | translate}}
+      </div>
+    </div>
+
+
+
+  </div>
+</div>
+
+
+<ng-template #content1 let-c="close" let-d="dismiss" >
+  <div class="custom-modal-md">
+    <div class="modal-header">
+      <h4 class="modal-title">Close Job
+      </h4>
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+      </button>
+    </div>
+    <div class="modal-body ">
+      <span class="text-dark fs-6">
+        <!-- {{ (invoicePaymetStatus && chargeStatus) ? "Are you sure want to close this job?" : "First complete finance section then you will able to Close Job."  }} -->
+        Are you sure want to close this job?
+      </span>
+    </div>
+    <div class="modal-footer">
+      <!-- *ngIf="invoicePaymetStatus  && chargeStatus" -->
+      <div class="text-center"  >
+        <button type="button" class="btn btn-outline-primary btn-lg float-end" (click)="d('Cross click')">
+          {{ "common.no" | translate }}
+        </button>
+        <button    class="btn btn-outline-primary btn-lg float-end" (click)="c('yes')"  type="submit" >
+          {{ "common.yes" | translate }}
+        </button>
+      </div>
+      <!-- <div class="text-center" *ngIf="!(invoicePaymetStatus && chargeStatus)">
+        <button type="button" class="btn btn-outline-primary btn-lg float-end" (click)="d('Cross click')">
+          {{ "OK" | translate }}
+        </button>
+       
+      </div> -->
+    </div>
+  </div>
+  
+</ng-template>
+
+
+<div class="form-group wrap-form-action">
+  <button class="btn1 btn-lg float-end" type="button" (click)="onClose()">
+    {{ 'common.cancel' | translate }}
+  </button>
+
+  <!-- Uncommented button with additional condition -->
+  <!-- <button *ngIf="isShow && creditList?.length && batchData?.statusOfBatch != 'Job Closed'"
+    class="btn btn-outline-primary btn-lg float-end" type="submit" (click)="closeBatch()">
+    {{ 'stolt.batch.batchClose.closeBatch' | translate }}
+  </button> -->
+
+  <button  *ngIf="batchData?.statusOfBatch != 'Job Closed' && this.currentUrl !== 'show'&& isShow "  class="btn btn-outline-primary btn-lg float-end"
+    type="button" (click)="removeRow(content1)">
+    {{ 'stolt.batch.batchClose.closeBatch' | translate }}
+  </button>
+</div>

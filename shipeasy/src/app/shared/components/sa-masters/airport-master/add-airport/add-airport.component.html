@@ -1,0 +1,398 @@
+ <div class="modal-content padding1 border1 nz-allSelect vessel-master-component">
+      <div class="modal-headers mt-2">
+        <h4 *ngIf="!vesselIdToUpdate" class="modal-title">
+          {{ "common.add" | translate }}
+          AirPort
+        </h4>
+        <h4 *ngIf="vesselIdToUpdate" class="modal-title">
+          {{ "common.edit" | translate }}
+          AirPort
+        </h4>
+        <button type="button" class="btn-close shadow-none float-end" (click)="onSave()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+            <form [formGroup]="addVesselForm">
+                <!-- AirPort Name Input -->
+                <div class="row g-3 mt-3">
+                    <div class="col-md-4">
+                        <div class="form-field-section">
+                            <label class="form-label">AirPort Name<span class="text-danger">*</span></label>
+                            <input type="text"
+                                   class="form-control custom-input rounded-0"
+                                   formControlName="airPortname"
+                                   placeholder="AirPort Name"
+                                   [ngClass]="{'is-invalid': submitted && f.airPortname.errors}" />
+                            <div *ngIf="submitted && f.airPortname.errors" class="invalid-feedback">
+                                <div *ngIf="f.airPortname.errors.required">AirPort Name is required</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- AirPort Code Input -->
+                    <div class="col-md-4 ">
+                        <div class="form-field-section">
+                            <label class="form-label">AirPort Code<span class="text-danger">*</span></label>
+                            <input type="text"
+                                   class="form-control custom-input rounded-0"
+                                   formControlName="airPortcode"
+                                   placeholder="AirPort Code"
+                                   [ngClass]="{'is-invalid': submitted && f.airPortcode.errors}" />
+                            <div *ngIf="submitted && f.airPortcode.errors" class="invalid-feedback">
+                                <div *ngIf="f.airPortcode.errors.required">AirPort Code is required</div>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <!-- Country Select -->
+                    <!-- {{countryData}}cdsjnflje -->
+                    <div class="col-md-4 nz-select">
+                        <label class="form-label">Country<span class="text-danger">*</span></label>
+                        <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Country" formControlName="country"
+                                   [ngClass]="{'is-invalid': submitted && f.country.errors}">
+                            <nz-option *ngFor="let location of countryData" [nzLabel]="location.countryName"
+                                       [nzValue]="location.countryId"></nz-option>
+                        </nz-select>
+                        <div *ngIf="submitted && f.country.errors" class="invalid-feedback">
+                            <div *ngIf="f.country.errors.required">
+                                {{ "stolt.masters.PortMaster.portmastervalidation.countryvalidation" | translate }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Customs EDI Code </label>
+                        <input type="text" class="form-control custom-input" id=" " formControlName="CustEDICode" placeholder="Customs EDI Code"
+                          value="" [ngClass]="{ 'is-invalid': submitted && f.CustEDICode.errors }" />
+                        <div *ngIf="submitted && f.CustEDICode.errors" class="invalid-feedback">
+                          <div *ngIf="f.CustEDICode.errors.required">EDI Code is required</div>
+                        </div>
+                      </div>
+            
+                      <div class="col-md-4 nz-select">
+                        <label class="form-label">Agent Branch</label>
+                        <!-- <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Agent Branch"formControlName="agentBranch"
+                            [ngClass]="{'is-invalid': submitted && f.agentBranch.errors}">
+                            <nz-option *ngFor="let Branch of agentBranchList" [nzLabel]="Branch?.branchName"
+                                [nzValue]="Branch?.branchId"></nz-option>
+                        </nz-select> -->
+                        <input type="text" class="form-control custom-input" id=" " formControlName="agentBranch" placeholder="Agent Branch"
+                          value="" [ngClass]="{ 'is-invalid': submitted && f.agentBranch.errors }" />
+                        <div *ngIf="submitted && f.agentBranch.errors" class="invalid-feedback">
+                            <div *ngIf="f.agentBranch.errors.required">Agent Branch is required</div>
+                        </div>
+                      </div>
+                      <div class="col-md-4 nz-select">
+                        <label class="form-label">Finance sector Name</label>
+                          <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Finance Name"formControlName="financeSECname"
+                            [ngClass]="{'is-invalid': submitted && f.financeSECname.errors}">
+                            <nz-option *ngFor="let sector of financeSectorData" [nzLabel]="sector.typeName"
+                              [nzValue]="sector.typeName"></nz-option>
+                          </nz-select>
+                       
+                      </div>
+                     
+                      <div class="col-md-2 margin">
+                        <div class=" form-check ">
+                          <input  formControlName="isIcd" type="checkbox" id="icd">
+                          <label class="form-check-label" for="icd">Is ICD</label>
+                        </div>
+                      </div>
+                      <div class="col-md-2 margin">
+                        <div class=" form-check ">
+                          <input  formControlName="isSez" type="checkbox" id="sez">
+                          <label class="form-check-label" for="sez">Is SEZ</label>
+                        </div>
+                      </div>
+                      
+                     
+            
+                      <div class="col-md-4">
+                        <label class="form-label">Business Sector Name</label>
+                        <input type="text" class="form-control custom-input" id=" " formControlName="Sectorname" placeholder="Business Name"
+                          value="" [ngClass]="{ 'is-invalid': submitted && f.Sectorname.errors }" />
+                      </div>
+            
+                      <div class="col-md-4">
+                        <label class="form-label">Sub Sector Name</label>
+                        <input type="text" class="form-control custom-input" id=" " formControlName="Subsectorname" placeholder="Sub Name"
+                          value="" [ngClass]="{ 'is-invalid': submitted && f.Subsectorname.errors }" />
+                      </div>
+            
+                      <div class="form-group wrap-form-action" *ngIf="!isViewMode">
+                        <a class="btn btn-outline-primary  float-end" (click)="openTerminalModel(terminalModel)">{{
+                            "stolt.masters.PortMaster.add_terminal"
+                            |
+                            translate }}</a>
+                    </div>
+
+                      <div class="table-responsive">
+                        <div class="costtable">
+                          <table aria-describedby="mytable1">
+                            <thead>
+                              <tr>
+                                <th scope="col">Terminal Code</th>
+                                <th scope="col">{{
+                                  "stolt.masters.PortMaster.Terminal"
+                                  |
+                                  translate }}</th>
+                                  <th scope="col">Terminal EDI Code</th>
+                                <th scope="col" class=""></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let terminal of terminals">
+                                <td>{{ terminal.code }}</td>
+                                <td>{{ terminal.name }}</td>
+                                <td>{{ terminal.eidCode }}</td>
+                                <td class="text-center ">
+                                  <span *ngIf="!isViewMode" nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop"><a
+                                      (click)="openTerminalModel(terminalModel, terminal)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                                  </span>
+                                  <span nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}" class="mtop">
+                                    <a routerLink="" (click)="removeTerminal(deleteTerminal,terminal)">
+                                      <em class="typcn typcn-trash"></em>
+                                    </a>
+                                  </span>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <div class="no-data-availble" *ngIf="terminals?.length === 0">
+                          {{'common.no_data' | translate}}
+                        </div>
+                      </div>
+                      <div class="form-group wrap-form-action mt-4" *ngIf="!isViewMode">
+                        <a class="btn btn-outline-primary float-end" (click)="openBerthModal(berthModal)">{{
+                            "stolt.masters.PortMaster.add_berth"
+                            |
+                            translate }}</a>
+                    </div>
+                      <div class="table-responsive">
+                        <div class="costtable">
+                          <table aria-describedby="mytable1">
+                            <thead>
+                              <tr>
+                                <th scope="col">Berth Code</th>
+                                <th scope="col">{{
+                                  "stolt.masters.PortMaster.Berth"
+                                  |
+                                  translate }}</th>
+                                  <th scope="col">Berth EDI Code</th>
+                                <th scope="col">{{
+                                  "stolt.masters.PortMaster.Terminal"
+                                  |
+                                  translate }}</th>
+                                <th scope="col" class=""></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let berth of berths">
+                                <td>{{ berth.code }}</td>
+                                <td>{{ berth.name }}</td>
+                                <td>{{ berth.eidCode }}</td>
+                                <td>{{ berth.terminalName }}</td>
+                                <td class="text-center ">
+                                  <span *ngIf="!isViewMode" nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop"><a
+                                      (click)="openBerthModal(berthModal, berth)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                                  </span>
+                                  <span nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}" class="mtop">
+                                    <a routerLink="" (click)="removeBerth(deleteBerth,berth)">
+                                      <em class="typcn typcn-trash"></em>
+                                    </a>
+                                  </span>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+
+                      </div>
+                </div>
+                
+                <!-- Form Actions -->
+                <div class="form-group wrap-form-action mt-4">
+                    <button class="btn1 btn-lg float-end" (click)="onSave()" type="submit">
+                        {{ "common.cancel" | translate }}
+                    </button>
+                    <button (click)="vesselMasters()" class="btn btn-outline-primary btn-lg float-end" type="submit"
+                      *ngIf="!isViewMode &&  !vesselIdToUpdate">
+                      {{ "common.save" | translate }}
+                    </button>
+                    <button (click)="vesselMasters()" class="btn btn-outline-primary btn-lg float-end" type="submit"
+                      *ngIf="!isViewMode && vesselIdToUpdate">
+                      {{ "common.save" | translate }}
+                    </button>
+                </div>
+            </form>
+            
+        </div>
+      </div>
+    </div>
+ 
+
+  <ng-template #terminalModel let-modal>
+    <div class="modal-content border">
+      <div class="modal-headers">
+        <h4 class="modal-title" *ngIf="!isEdit">{{"stolt.masters.PortMaster.add_terminal" | translate}}</h4>
+        <h4 class="modal-title" *ngIf="isEdit">{{"stolt.masters.PortMaster.update_terminal" | translate}}</h4>
+        <button type="button" class="btn-close shadow-none float-end" aria-label="Close"
+          (click)="modal.dismiss('Cross click')"></button>
+      </div>
+      <div class="modal-body">
+        <div class="wrap-form-field padding-space pb-0">
+          <form class="row g-3">
+            <div class="col-md-12">
+              <label class="form-label">Terminal Code
+              </label>
+              <input type="text" class="form-control custom-input" placeholder="" [(ngModel)]="terminalcode"
+                [ngModelOptions]="{standalone: true}" />
+            </div>
+            <div class="col-md-12">
+              <label class="form-label">{{ "stolt.masters.PortMaster.terminal_name" | translate }}
+              </label>
+              <input type="text" class="form-control custom-input" placeholder="" [(ngModel)]="terminalName"
+                [ngModelOptions]="{standalone: true}" />
+            </div>
+            <div class="col-md-12">
+              <label class="form-label">Terminal EDI Code
+              </label>
+              <input type="text" class="form-control custom-input" placeholder="" [(ngModel)]="terminalEIDCode"
+                [ngModelOptions]="{standalone: true}" />
+            </div>
+            <div class=" wrap-form-action">
+              <button class="btn1 btn-lg float-end" (click)="modal.dismiss('Cross click')">
+                {{ "common.cancel" | translate }}
+              </button>
+              <button class="btn btn-outline-primary btn-lg float-end" *ngIf="!isEdit" (click)="addTerminal()">
+                {{ "common.save" | translate }}
+              </button>
+              <button class="btn btn-outline-primary btn-lg float-end" *ngIf="isEdit" (click)="addTerminal()">
+                {{ "common.update" | translate }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #deleteport let-c="close" let-d="dismiss">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+      </div>
+      <div class="modal-body mt-4">
+        <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2">
+        </em>
+        <span class="text-dark fs-6">{{'error.msg_delete' | translate}}</span>
+      </div>
+      <div class="modal-footer">
+        <div class="text-center">
+          <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+            {{ 'common.no' | translate }}
+          </button>
+          <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+            {{ 'common.yes' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #berthModal let-modal>
+    <div class="modal-content border">
+      <div class="modal-headers">
+        <h4 class="modal-title" *ngIf="!isEdit">{{"stolt.masters.PortMaster.add_berth" | translate}}</h4>
+        <h4 class="modal-title" *ngIf="isEdit">{{"stolt.masters.PortMaster.update_berth" | translate}}</h4>
+        <button type="button" class="btn-close shadow-none float-end" aria-label="Close"
+          (click)="modal.dismiss('Cross click')"></button>
+      </div>
+      <div class="modal-body">
+        <div class="wrap-form-field padding-space pb-0">
+          <form class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Berth Code
+              </label>
+              <input type="text" class="form-control custom-input" placeholder="" [(ngModel)]="berthCode"
+                [ngModelOptions]="{standalone: true}" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">{{ "stolt.masters.PortMaster.berth_name" | translate }}
+              </label>
+              <input type="text" class="form-control custom-input" placeholder="" [(ngModel)]="berthName"
+                [ngModelOptions]="{standalone: true}" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Berth EDI Code
+              </label>
+              <input type="text" class="form-control custom-input" placeholder="" [(ngModel)]="berthEIDCode"
+                [ngModelOptions]="{standalone: true}" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">{{ "stolt.masters.PortMaster.terminal_name" | translate }}
+              </label>
+              <select class="form-select custom-input" id=" " [(ngModel)]="terminalName"
+                [ngModelOptions]="{standalone: true}">
+                <option *ngFor="let terminal of terminals" [value]="terminal.name">{{ terminal.name }}</option>
+              </select>
+            </div>
+            <div class=" wrap-form-action">
+              <button class="btn1 btn-lg float-end" (click)="modal.dismiss('Cross click')">
+                {{ "common.cancel" | translate }}
+              </button>
+              <button class="btn btn-outline-primary btn-lg float-end" *ngIf="!isEdit" (click)="addBerth()">
+                {{ "common.save" | translate }}
+              </button>
+              <button class="btn btn-outline-primary btn-lg float-end" *ngIf="isEdit" (click)="addBerth()">
+                {{ "common.update" | translate }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #deleteTerminal let-c="close" let-d="dismiss">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+      </div>
+      <div class="modal-body mt-4">
+        <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2">
+        </em>
+        <span class="text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+      </div>
+      <div class="modal-footer">
+        <div class="text-center">
+          <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+            {{ "common.no" | translate }}
+          </button>
+          <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+            {{ "common.yes" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #deleteBerth let-c="close" let-d="dismiss">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+      </div>
+      <div class="modal-body mt-4">
+        <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2"></em>
+        <span class="text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+      </div>
+      <div class="modal-footer">
+        <div class="text-center">
+          <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+            {{ "common.no" | translate }}
+          </button>
+          <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+            {{ "common.yes" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-template>

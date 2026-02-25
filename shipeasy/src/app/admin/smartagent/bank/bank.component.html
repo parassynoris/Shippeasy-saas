@@ -1,0 +1,107 @@
+<ng-container *ngIf="currentUrl === 'bank'">
+  <div class="table-with-gheading">
+
+    <div class="wrap-table-area ">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2 ">
+            <div class="mt-2">
+              <span>
+                <a routerLink=""><em class="ti-export" style="margin-right: 15px;"></em></a>
+                <a routerLink=""><em class=" ti-printer "></em></a>
+              </span>
+            </div>
+
+            <div class="mt-2">
+              <span>
+                <h5>{{ fromSize }}-{{ count }} of {{ toalLength }}</h5>
+              </span>
+            </div>
+            <div class="mt-2">
+              <span class="prv" [class.disable-arrow-sign]="fromSize === 1" (click)="prev()"><em
+                  class="typcn typcn-chevron-left"></em></span>
+              <span class="prv" [class.disable-arrow-sign]="count === toalLength" (click)="next()"><em
+                  class="typcn typcn-chevron-right"></em></span>
+            </div>
+            <div class="mt-2"><select class="form-select form-select-sm" (change)="filter($event)">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+              </select></div>
+            <div class="mt-2">
+              <a class="new-action" (click)="onOpenNew()">{{ 'smartagent.smartAgent.bank.addNewAccount' | translate
+                }}</a>---
+
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="table-responsive">
+            <table aria-describedby="mytable" class="gfg">
+              <thead>
+                <tr class="field-name">
+                  <th scope="col">{{ 'smartagent.smartAgent.bank.bankName' | translate }} <em
+                      class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                  <th scope="col">{{ 'smartagent.smartAgent.bank.accountNo' | translate }}<em
+                      class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                  <th scope="col">{{ 'smartagent.smartAgent.bank.SWIFTCode' | translate }} <em
+                      class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                  <th scope="col">{{ 'smartagent.smartAgent.bank.currency' | translate }} <em
+                      class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                  <th scope="col">{{ 'smartagent.smartAgent.bank.bankBranch' | translate }} <em
+                      class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                  <th scope="col">{{ 'smartagent.smartAgent.bank.country' | translate }} <em
+                      class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                  <th scope="col">{{ 'common.status' | translate }} <em class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                  <th scope="col"></th>
+                </tr>
+                <tr>
+                  <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="bankName"></th>
+                  <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="accountNo"></th>
+                  <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="swiftCode"></th>
+                  <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="currency"></th>
+                  <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="branchName"></th>
+                  <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="countryName"></th>
+                  <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="status"></th>
+
+                  <th scope="col" class="wrap-table-btn">
+                    <button type="button" class="btn btn-outline-primary" (click)="search()">
+                      {{ "common.search_btn" | translate }}
+                    </button>
+                    <a (click)="clear()" class="clearbtn">{{"common.clear" | translate}}</a>
+                  </th>
+
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let bank of bankList">
+                  <td>{{bank._source?.bankName}}</td>
+                  <td>{{bank._source?.accountNo}}</td>
+                  <td>{{bank._source?.swiftCode}}</td>
+                  <td>{{bank._source?.currency}}</td>
+                  <td>{{bank._source?.branchName}}</td>
+                  <td>{{bank._source?.country?.countryName}}</td>
+                  <td>{{bank._source?.status}}</td>
+                  <td class="action-field">
+                    <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop"><a
+                        (click)="onOpenEdit(bank._source?.bankId)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                    </span>
+                    <span nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}" class="mtop"><a
+                        (click)="onDelete(bank._source?.bankId)"><em class="typcn typcn-trash"></em></a>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="no-data-availble" *ngIf="bankList.length === 0">
+            {{'common.no_data' | translate}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<ng-container *ngIf="currentUrl === 'add' || currentUrl === 'edit'">
+  <app-addaccout [isFiledVisiable]="prentPath"></app-addaccout>
+</ng-container>

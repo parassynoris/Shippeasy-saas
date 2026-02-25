@@ -1,0 +1,74 @@
+<div class="table-with-gheading">
+
+    <div class="add-new-recepit-title wrap-form-field my-5" *ngFor="let item of labelTag; index as i;">
+        <div class="accordion form-accordian" id="accordionPanelsStayOpenExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="{{item}}test">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        [attr.data-bs-target]="'#'+item" aria-expanded="true" [attr.aria-controls]="item">
+                        {{item}}
+                    </button>
+                </h2>
+                <div id="{{item}}" class="accordion-collapse collapse show" [attr.aria-labelledby]="item+'test'">
+                    <div class="accordion-body">
+                        <div class="receipt-input-grid">
+                            <div *ngFor="let label of allLabels[item] | keyvalue">
+                                <ng-template #normal>
+                                    <div class="custom-form-control py-3">
+                                        <label class="form-label">
+                                            {{ label.value }}</label>
+                                        <input class="form-control custom-input" (change)="handleLabel(label,item,$event)" type="text"
+                                            [value]="label.value" />
+                                    </div>
+                                </ng-template>
+                                <div *ngIf="doCheck(label); else normal">
+                                    <div *ngFor="let newLabel of label.value | keyvalue">
+                                        <div *ngIf="doCheck(newLabel); else goAhead">
+                                            <div *ngFor="let labelNew of newLabel.value | keyvalue">
+                                                <div *ngIf="doCheck(labelNew); else goDeep">
+                                                    <div *ngFor="let lastLabel of labelNew.value | keyvalue">
+                                                        <div class="custom-form-control  py-3">
+                                                            <label class="form-label">
+                                                                {{ lastLabel.value }}</label>
+                                                            <input class="form-control custom-input" type="text"
+                                                            (change)="handleLabelOfLastLabel(label,lastLabel,item,$event)" [value]="lastLabel.value" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <ng-template #goDeep>
+                                                    <div class="custom-form-control  py-3">
+                                                        <label class="form-label">
+                                                            {{ labelNew.value }}</label>
+                                                        <input class="form-control custom-input" (change)="handleLabelOfGoDeep(label,newLabel,labelNew,item,$event)" type="text" [value]="labelNew.value" />
+                                                    </div>
+                                                </ng-template>
+                                            </div>
+                                        </div>
+                                        <ng-template #goAhead>
+                                            <div class="custom-form-control py-3">
+                                                <label class="form-label">
+                                                    {{ newLabel.value }}</label>
+                                                <input class="form-control custom-input" (change)="handleLabelOfGoAhead(label,newLabel,item,$event)"  type="text" [value]="newLabel.value" />
+                                            </div>
+                                        </ng-template>
+                                    </div>
+                                </div>
+                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <button type="button" class="btn1 float-end mt-3"
+          type="submit">{{
+          'common.cancel' | translate
+          }}</button>
+        <button type="button"
+          (click)="onSave()" class="btn btn-outline-primary float-end mt-3" type="submit">{{ 'common.save' |
+          translate
+          }}</button>
+      </div>
+</div>

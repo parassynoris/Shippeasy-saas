@@ -1,0 +1,125 @@
+.form-accordian h2 button {
+  padding: 7px 15px !important;
+  box-shadow: none !important;
+  font-size: 14px !important;
+  color: var(--theme-black-320) !important;
+  background-color: var(--theme-light-bg) !important;
+}
+
+.form-accordian .accordion-button::after {
+  filter: none !important;
+}
+
+.form-accordian .accordion-item {
+  margin-bottom: 1px;
+  border: 0;
+}
+
+.form-accordian .accordion-item:last-child {
+  margin-bottom: 0px;
+}
+.accordion-item {
+  button {
+    width: 100% !important;
+    display: flex;
+    align-items: center;
+  }
+}
+.wrap-add-btn {
+  padding: 6px 0 10px 0;
+  text-align: right;
+  color: var(--theme-red-color);
+}
+::ng-deep {
+  .cdk-overlay-container,
+  .cdk-overlay-pane {
+    z-index: 2000 !important;
+  }
+}
+.font2 {
+  font-weight: 600 !important;
+  margin: 10px;
+}
+body {
+  line-height: 1.3em;
+  min-width: 920px;
+}
+.history-tl-container {
+  font-family: "Roboto", sans-serif;
+  /* width:50%;
+    margin:auto; */
+  display: block;
+  position: relative;
+}
+.history-tl-container ul.tl {
+  margin: 20px 0;
+  padding: 0;
+  display: inline-block;
+}
+.history-tl-container ul.tl li {
+  list-style: none;
+  /* margin:auto; */
+  margin-left: 20px;
+  min-height: 50px;
+  /*background: rgba(255,255,0,0.1);*/
+  border-left: 1px dashed #86d6ff;
+  padding: 0 0 50px 30px;
+  position: relative;
+}
+.history-tl-container ul.tl li:last-child {
+  border-left: 0;
+}
+.history-tl-container ul.tl li::before {
+  position: absolute;
+  left: -10.8px;
+  /* top: -5px; */
+  /* content: " "; */
+  /* border: 8px solid rgba(255, 255, 255, 0.74); */
+  border-radius: 500%;
+  background: #258cc7;
+  color: white;
+  height: 20px;
+  width: 20px;
+  transition: all 500ms ease-in-out;
+}
+.match-parent {
+  width: 100%;
+  height: 500px;
+}
+.history-tl-container ul.tl li:hover::before {
+  border-color: #258cc7;
+  transition: all 1000ms ease-in-out;
+}
+
+ul.tl li .item-detail {
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 12px;
+}
+ul.tl li .timestamp {
+  color: var(--theme-gray-800);
+  position: absolute;
+  width: 100px;
+  left: -50%;
+  text-align: right;
+  font-size: 12px;
+}
+li.tl-item:before {
+  content: "\F5EA" !important;
+  font-family: "BOOTSTRAP-ICONS";
+  display: inline-block;
+  margin-left: calc(var(--icon-space) * -1);
+  width: var(--icon-space);
+  padding: 1px 0px 0px 4px;
+}
+li.tll-item:before {
+  content: "\f21a" !important;
+  font-family: "FontAwesome";
+  display: inline-block;
+  margin-left: calc(var(--icon-space) * -1);
+  width: var(--icon-space);
+  padding: 0px 0px 0px 3px;
+}
+.overflow-y-scroll {
+  overflow-y: auto;
+  max-height: 500px; /* Adjust this value as needed */
+}

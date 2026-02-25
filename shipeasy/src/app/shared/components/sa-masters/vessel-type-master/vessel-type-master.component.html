@@ -1,0 +1,169 @@
+<div class="table-with-gheading">
+
+    <div class="wrap-table-area">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="float-clear-mobile-view d-flex flex-column flex-sm-row gap-3 float-start search-section">
+                    <div class="input-group custom-input">
+                        <input type="text" class="form-control" placeholder="Search" aria-label="Search">
+                    </div>
+                </div>
+                <div
+                    class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2 ">
+                    <div class="mt-2">
+                        <span>
+                            <h5>1-10 of 80</h5>
+                        </span>
+                    </div>
+                    <div class="mt-2">
+                        <span class="prv"><em class="typcn typcn-chevron-left"></em></span>
+                        <span class="prv"><em class="typcn typcn-chevron-right"></em></span>
+                    </div>
+                    <div class="mt-2"><select class="form-select form-select-sm ">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select></div>
+                    <div class="mt-2">
+                        <a class="new-action" (click)="open(AddClause)">{{"common.add"| translate}}
+                            {{ 'stolt.masters.TRAMP_VESSEL_TYPE_MASTER.TRAMP_VESSEL_TYPE_MASTER' | translate }}</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table aria-describedby="mytable" class="gfg">
+                        <thead>
+                            <tr class="field-name">
+                                <th scope="col">{{ 'stolt.masters.TRAMP_VESSEL_TYPE_MASTER.VESSEL_TYPE_ID' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_VESSEL_TYPE_MASTER.VESSEL_TYPE_NAME' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_VESSEL_TYPE_MASTER.LAST_UPDATE' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_VESSEL_TYPE_MASTER.LAST_UPATE_USERID' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_VESSEL_TYPE_MASTER.AUTOMATED_SOURCE' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_VESSEL_TYPE_MASTER.SEGMENT_ID' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                <th scope="col">{{ 'stolt.masters.TRAMP_VESSEL_TYPE_MASTER.SHORT_NAME' | translate }} <em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                              
+                                <th scope="col"></th>
+                            </tr>
+                            <tr>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                                <th scope="col"><input type="text" class="form-control" id=""></th>
+                               
+                                <th scope="col"  class="wrap-table-btn">
+                                    <button type="button" class="btn btn-outline-primary">{{ 'common.search_btn' |
+                                        translate }}</button>
+                                    <a routerLink="#" class="clearbtn"> {{ 'common.clear' | translate }}</a>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="">{{ 'stolt.masters.TRAMP_VESSEL_TYPE_MASTER.VESSEL_TYPE_ID' | translate }}</td>
+                                <td class="">{{ 'stolt.masters.TRAMP_VESSEL_TYPE_MASTER.VESSEL_TYPE_NAME' | translate }}</td>
+                                <td class="">{{ 'stolt.masters.TRAMP_VESSEL_TYPE_MASTER.LAST_UPDATE' | translate }}</td>
+                                <td class="">{{ 'stolt.masters.TRAMP_VESSEL_TYPE_MASTER.LAST_UPATE_USERID' | translate }}</td>
+                                <td class="">{{ 'stolt.masters.TRAMP_VESSEL_TYPE_MASTER.AUTOMATED_SOURCE' | translate }}</td>
+                                <td class="">{{ 'stolt.masters.TRAMP_VESSEL_TYPE_MASTER.SEGMENT_ID' | translate }}</td>
+                                <td class="">{{ 'stolt.masters.TRAMP_VESSEL_TYPE_MASTER.SHORT_NAME' | translate }}</td>
+                             
+
+                                <td class="action-field">
+                                    <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop"><a
+                                            (click)="open(AddClause)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                                    </span>
+                                    <span nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}"
+                                        class="mtop"><a><em class="typcn typcn-trash"></em></a>
+                                    </span>
+                                    <span
+                                        class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" role="switch"
+                                            id="flexSwitchCheckChecked" checked>
+                                        <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<ng-template #AddClause let-modal>
+    <div class="modal-content">
+        <div class="modal-headers mt-2">
+        <h4 class="modal-title"></h4>
+            <button type="button" class="btn-close shadow-none float-end" (click)="onSave()" aria-label="Close">
+
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="wrap-form-field padding-space">
+                <form class="row g-3" [formGroup]="locationForm">
+
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_VESSEL_TYPE_MASTER.VESSEL_TYPE_ID' | translate }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_VESSEL_TYPE_MASTER.VESSEL_TYPE_NAME' | translate }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_VESSEL_TYPE_MASTER.LAST_UPDATE' | translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_VESSEL_TYPE_MASTER.LAST_UPATE_USERID' | translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_VESSEL_TYPE_MASTER.AUTOMATED_SOURCE' | translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_VESSEL_TYPE_MASTER.SEGMENT_ID' | translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label ">{{ 'stolt.masters.TRAMP_VESSEL_TYPE_MASTER.SHORT_NAME' | translate
+                            }}</label>
+                        <input type="text" class="form-control custom-input" id=" " placeholder="" value="">
+                    </div>
+                   
+
+
+
+
+                    <div class="form-group wrap-form-action mt-4">
+                        <button class="btn1 btn-lg float-end" (click)="onSave()" type="submit">
+                            {{ 'common.cancel' | translate }}
+                        </button>
+                        <button (click)="locationsMasters()" class="btn btn-outline-primary btn-lg float-end"
+                            type="submit">
+                            {{ 'common.save' | translate }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-template>

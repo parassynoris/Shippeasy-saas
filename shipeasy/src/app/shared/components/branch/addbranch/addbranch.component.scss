@@ -1,0 +1,131 @@
+
+ .wrap-form-field.padding-space {
+  padding: 30px 0;
+}
+
+a.new-action {
+  cursor: pointer;
+}
+h1 {
+  font-size: 12px;
+  color: var(--link-text-color);
+  margin-bottom: 14px;
+  text-transform: capitalize;
+}
+.mrgn-l{
+  margin-right: 4px;
+}
+
+
+.menuright {
+    position: fixed;
+    right: 0;
+    top: 40%;
+    width: 10px;
+    margin: -2.5em 0 0 0;
+    z-index: 5;
+    background: var(--theme-white-background-color);
+    color: var(--link-text-color);
+    font-weight: bold;
+   
+    text-align: left;
+    
+    padding: 10px 30px 10px 0px;
+    box-shadow: var(--theme-shadow);
+
+    border-radius: 10px 0 0px 10px;
+  }
+  .menuright li{
+
+    width: 30px;
+    border-bottom: 1px solid var(--theme-border-color-light);
+    list-style: none;
+    padding: 0px 0 0px 3px;
+  }
+  .menuright li:last-child{
+
+    border-bottom:0;
+   
+  }
+  .menuright li i {
+    font-size: 21px;
+    color: var(--link-text-color);
+}
+
+nz-select {
+  height: calc(1.5em + .75rem + 2px); /* Adjust the height as needed */
+  border: none !important; /* Adjust the border radius as needed */
+}
+
+::ng-deep.ant-select-selector{
+  border-radius: 5px !important;
+}
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+  }
+  
+  .switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 3px;
+    background-color: var(--link-text-color);
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #ECEEF4;
+  }
+  
+  input:focus + .slider {
+    box-shadow: var(--theme-shadow);
+
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+  .input-group{
+    .col{
+        padding-right: 0px !important;
+        padding-left: 0px !important;
+    }
+}
+.text-color,.icons-clr{
+  color:#1a73e8 !important;
+}

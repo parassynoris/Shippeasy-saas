@@ -1,0 +1,21 @@
+<div class="table-with-gheading">
+  <div class="wrap-right mt-5 custome-tab">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item" role="presentation" *ngFor="let tab of tabs">
+        <button class="nav-link" [class.active]="holdControl === tab.key" id="{{tab.id}}" data-bs-toggle="tab"
+          data-bs-target="#{{tab.control}}" type="button" role="tab" aria-controls="{{tab.control}}"
+          aria-selected="true" (click)="onTab(tab)">{{tab.name}}</button>
+      </li>
+    </ul>
+  </div>
+  <div class="tab-content" id="myTabContent">
+    <div *ngIf="holdControl === 'pdatemplates' " [class.active]="holdControl === 'pdatemplates'" class="tab-pane fade show"
+      id="pdatemplates" role="tabpanel" aria-labelledby="pdatemplates-tab">
+      <app-pda-list></app-pda-list>
+    </div>
+    <div *ngIf="holdControl === 'costitem'" [class.active.]="holdControl === 'costitem'" class="tab-pane fade show"
+      id="costitem" role="tabpanel" aria-labelledby="costitem-tab">
+      <app-pdacost-list></app-pdacost-list>
+    </div>
+  </div>
+</div>

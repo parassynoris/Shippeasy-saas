@@ -1,0 +1,218 @@
+<div class="table-with-gheading">
+  <div class="wrapper">
+    <div class="container-fluid">
+      <div class="wrap-content">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="page-title-box">
+              <div class="btn-group mt-2">
+                <ol class="breadcrumb hide-phone p-0 m-0">
+                  <li class="breadcrumb-item">Manifest</li>
+                  <li class="breadcrumb-item active">{{ holdControl }}</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row my-3">
+          <ng-container *ngIf="currentUrl === 'manifest'">
+          <ng-container >
+            <form [formGroup]="manifestForm" >
+              <div class="mb-2">
+                <div class="row">
+                  <div class="col-md-3 nz-select">
+                    <label for="Country" class="form-label">Vessel</label>
+                    <nz-select [nzDisabled]="showList || currentUrl !== 'manifest'" class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Vessel"
+                      formControlName="vessel" [ngClass]="{ 'is-invalid': submitted && f.vessel.errors }"
+                      (ngModelChange)="vesselChange($event)">
+                      <nz-option *ngFor="let vessel of vesseldata" [nzLabel]="vessel.vesselName"
+                        [nzValue]="vessel.vesselId"></nz-option>
+                    </nz-select>
+
+                    <div *ngIf="submitted && f.vessel.errors" class="invalid-feedback">
+                      <div *ngIf="f.vessel.errors.required">Vessel is required</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3 nz-select">
+                    <label for="Country" class="form-label">Voyage</label>
+                    <nz-select [nzDisabled]="showList || currentUrl !== 'manifest'" class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Voyage"
+                      formControlName="voyage" [ngClass]="{ 'is-invalid': submitted && f.voyage.errors }">
+                      <nz-option *ngFor="let voyage of voyageList" [nzLabel]="voyage.voyageNumber"
+                        [nzValue]="voyage.voyageNumber"></nz-option>
+                    </nz-select>
+
+                    <div *ngIf="submitted && f.voyage.errors" class="invalid-feedback">
+                      <div *ngIf="f.voyage.errors.required">Voyage is required</div>
+                    </div>
+                  </div>
+                  <div class=" col-md-3">
+                    <label class="form-label"> Principal </label>
+                    <input disabled [ngClass]="{ 'is-invalid': submitted && f.principal.errors }"
+                      class="form-control custom-input" type="text" formControlName="principal" />
+                    <div *ngIf="submitted && f.principal.errors" class="invalid-feedback">
+                      <div *ngIf="f.principal.errors.required">
+                        Principal is required
+                      </div>
+                    </div>
+                  </div>
+                  <div class=" col-md-3">
+                    <label class="form-label"> BL No / Job No </label>
+                   
+                    <nz-select [nzDisabled]="showList || currentUrl !== 'manifest'" class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Number"
+                      formControlName="blbatchno" [ngClass]="{ 'is-invalid': submitted && f.blbatchno.errors }">
+                      <nz-option *ngFor="let batch of batchList" [nzLabel]="batch.batchNo"
+                        [nzValue]="batch.batchId"></nz-option>
+                    </nz-select>
+                 
+                  </div>
+                </div>
+              </div>
+            </form>
+            
+         
+          </ng-container>
+          <div class="btn-onscreen  my-3" >
+            <div class="form-group wrap-form-action ">
+              <ng-container *ngIf="!showList">
+                <button class="btn btn-outline-primary float-end" (click)="reset()">
+                  Reset </button>
+                <button class="btn btn-outline-primary float-end" type="button" (click)="getList()">
+                  Get List </button>
+              </ng-container>
+              <ng-container *ngIf="showList">
+                <button class="btn btn-outline-primary float-end" (click)="showList = !showList">
+                  Back </button>
+              </ng-container>
+            </div>
+          </div>
+          <ng-container *ngIf="false">
+
+            <div class="accordion form-accordian" id="accordionPanelsStayOpenExample">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="route">
+                  <button *ngIf="!callapseALL" (click)="callapseALL = !callapseALL" class="accordion-button"
+                    type="button" data-bs-toggle="collapse" data-bs-target="#raouteDetails" aria-expanded="true"
+                    aria-controls="raouteDetails">
+                    Manifest Details
+                  </button>
+
+                  <button *ngIf="callapseALL" (click)="callapseALL = !callapseALL" class="accordion-button"
+                    type="button" data-bs-toggle="collapse" data-bs-target="#demo" aria-expanded="true"
+                    aria-controls="demo">
+                    Manifest Details
+                  </button>
+                </h2>
+                <div id="raouteDetails" class="accordion-collapse collapse show" aria-labelledby="route"
+                  data-bs-parent="#accordionPanelsStayOpenExample">
+                  <div class="accordion-body">
+                    <div class="wrap-form-field">
+                      <ul class="nav nav-pills master-flow-body-content-alignment">
+                        <li class="" *ngFor="let man of manifest">
+                          <a class="" routerLink="{{man?.key}}">{{man?.name}}</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item display-none">
+                <h2 class="accordion-header" id="demo1">
+                  <button type="button" data-bs-toggle="collapse" data-bs-target="#demo" aria-expanded="false"
+                    aria-controls="demo">
+                  </button>
+                </h2>
+                <div id="demo" aria-labelledby="demo1" data-bs-parent="#accordionPanelsStayOpenExample">
+                  <div class="accordion-body">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="col-md-12 mb-5">
+              <div class="table-responsive ">
+                <div class="wrap-table-area wrap-table-design wrap-form-field" id="htmlData">
+                  <table aria-describedby="mytable" class="">
+                    <thead>
+                      <tr class="field-name">
+                        <th><input type="checkbox" /></th>
+                        <th scope="col" data-order="desc" data-name="basicDetails" data-keys='["stcQutationNo"]'>
+                          BL No.
+                        </th>
+                        <th scope="col" data-order="desc" data-name="basicDetails" data-keys='["stcQutationNo"]'>
+                          POL
+                        </th>
+                        <th scope="col" data-order="desc" data-name="basicDetails" data-keys='["stcQutationNo"]'>
+                          POD
+                        </th>
+                        <th scope="col" data-order="desc" data-name="basicDetails" data-keys='["stcQutationNo"]'>
+                          FPOD
+                        </th>
+                        <th scope="col" data-order="desc" data-name="basicDetails" data-keys='["stcQutationNo"]'>
+                          Consignee Name
+                        </th>
+                        <th scope="col" data-order="desc" data-name="basicDetails" data-keys='["stcQutationNo"]'>
+                          General Remarks
+                        </th>
+                        <th scope="col" data-order="desc" data-name="basicDetails" data-keys='["stcQutationNo"]'>
+                          POL Remarks
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let data of searchList">
+                        <td><input type="checkbox" /></td>
+                        <td class="">1276893</td>
+                        <td class="">Mundra</td>
+                        <td class="">Mundra</td>
+                        <td class="">Nahva Sheva</td>
+                        <td class="">Malav</td>
+                        <td class=""></td>
+                        <td class=""></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="no-data-availble" *ngIf="searchList?.length === 0">
+                  No data found
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+          <div class="row mt-3" *ngIf="false">
+            <div *ngIf="holdControl === 'view-master-bl'" [class.active]="holdControl === 'view-master-bl'"
+            class="tab-pane fade show" id="view-master-bl" role="tabpanel" aria-labelledby="view-master-bl-tab">
+            <app-house-bl></app-house-bl>
+          </div>
+            <div *ngIf="holdControl === 'update-sealNo'" [class.active]="holdControl === 'update-sealNo'"
+              class="tab-pane fade show" id="update-sealNo" role="tabpanel" aria-labelledby="update-sealNo-tab">
+              <app-update-seal-no></app-update-seal-no>
+            </div>
+            <div *ngIf="holdControl === 'igm-generation'" [class.active]="holdControl === 'igm-generation'"
+              class="tab-pane fade show" id="igm-generation" role="tabpanel" aria-labelledby="igm-generation-tab">
+              <app-igm-generation></app-igm-generation>
+            </div>
+            <div *ngIf="holdControl === 'update-master-bl'" [class.active]="holdControl === 'update-master-bl'"
+              class="tab-pane fade show" id="update-master-bl" role="tabpanel" aria-labelledby="update-master-bl-tab">
+              <app-update-master-bl></app-update-master-bl>
+            </div>
+            <div *ngIf="holdControl === 'update-bl-status'" [class.active]="holdControl === 'update-bl-status'"
+              class="tab-pane fade show" id="update-bl-status" role="tabpanel" aria-labelledby="update-bl-status-tab">
+              <app-update-bl-status></app-update-bl-status>
+            </div>
+            <div *ngIf="holdControl === 'update-cfs'" [class.active]="holdControl === 'update-cfs'"
+              class="tab-pane fade show" id="update-cfs" role="tabpanel" aria-labelledby="update-cfs-tab">
+              <app-update-cfs></app-update-cfs>
+            </div>
+            <div *ngIf="holdControl === 'update-bond'" [class.active]="holdControl === 'update-bond'"
+            class="tab-pane fade show" id="update-bond" role="tabpanel" aria-labelledby="update-bond-tab">
+            <app-update-bond></app-update-bond>
+          </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

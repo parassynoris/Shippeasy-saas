@@ -1,0 +1,49 @@
+@function color-type($color-use) {
+    @return map-get($colors , $color-use );
+}
+
+
+@function layout-type($layout-use) {
+    @return map-get($layout, $layout-use );
+}
+
+
+@function pixel-type($pixel-repeat) {
+    @return map-get($pixel, pixel-repeat );
+}
+
+
+
+@mixin flex-center {
+    display: map-get($layout, flex );
+    align-items: map-get($layout, center );
+}
+
+@mixin flex-between {
+    @include flex-center();
+    justify-content: space-between;
+}
+
+@mixin flex-around {
+    @include flex-center();
+    justify-content: space-around;
+}
+
+@mixin grid-layout {
+    display: map-get($layout, grid);
+}
+
+@mixin pointer {
+    cursor: pointer;
+}
+
+
+@mixin card-globally-sass {
+    box-shadow: 0 0 30px rgb(209 217 230 / 50%);
+    display: block;
+    position: relative;
+    padding: 16px;
+    border-radius: 6px;
+    font-family: "Roboto", sans-serif !important;
+    background: var(--theme-globally-background-color-white);
+}

@@ -1,0 +1,172 @@
+<div [formGroup]="inwardContainerForm">
+  <div class="row mt-3">
+    <div class="col-md-3">
+      <label class="form-label">Party Name <span class="text-danger">*</span></label>
+      <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="partyName"
+        [ngClass]="{'is-invalid': submitted && f['partyName'].errors}" nzPlaceHolder="Select Party Name">
+        <nz-option *ngFor="let party of WareHouseImporterList" [nzLabel]="party.name" [nzValue]="party.partymasterId">
+        </nz-option>
+      </nz-select>
+      <div *ngIf="submitted && f['partyName'].errors" class="invalid-feedback">
+        Party Name is required
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <label class="form-label">CHA Name <span class="text-danger">*</span></label>
+      <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="chaName"
+        [ngClass]="{'is-invalid': submitted && f['chaName'].errors}" nzPlaceHolder="Select CHA Name">
+        <nz-option *ngFor="let cha of WareHouseCHAList" [nzLabel]="cha.name" [nzValue]="cha.partymasterId">
+        </nz-option>
+      </nz-select>
+      <div *ngIf="submitted && f['chaName'].errors" class="invalid-feedback">
+        CHA Name is required
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <label class="form-label">Vessel Name</label>
+      <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="vesselName"
+        [ngClass]="{'is-invalid': submitted && f['vesselName'].errors}" nzPlaceHolder="Select Vessel Name">
+        <nz-option *ngFor="let vessel of vesselList" [nzLabel]="vessel.vesselName" [nzValue]="vessel.vesselName">
+        </nz-option>
+      </nz-select>
+      <div *ngIf="submitted && f['vesselName'].errors" class="invalid-feedback">
+        Vessel Name is required
+      </div>
+    </div>
+
+    <div class="col-md-3" *ngIf="type === 'Bonded'">
+      <label class="form-label">WareHouse Name <span class="text-danger" *ngIf="type === 'Bonded'">*</span></label>
+      <input type="text" class="form-control" formControlName="warehouseName"
+        [ngClass]="{ 'is-invalid': submitted && f['warehouseName'].errors }" placeholder="Enter WareHouse Name"
+        readonly />
+      <div *ngIf="submitted && f['warehouseName'].errors && type === 'Bonded'" class="invalid-feedback">
+        WareHouse Name is required
+      </div>
+    </div>
+  </div>
+
+  <!-- Second Row - Location, Bill of Entry, Container, Packing Type -->
+  <div class="row mt-3">
+    <div class="col-md-3">
+      <label class="form-label">Location <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" formControlName="location"
+        [ngClass]="{ 'is-invalid': submitted && f['location'].errors }" placeholder="Enter location" />
+      <div *ngIf="submitted && f['location'].errors" class="invalid-feedback">
+        Location is required
+      </div>
+    </div>
+
+    <div class="col-md-3" *ngIf="type === 'Bonded'">
+      <label class="form-label">Bill Of Entry No <span class="text-danger" *ngIf="type === 'Bonded'">*</span></label>
+      <input type="text" class="form-control" formControlName="billOfEntryNo"
+        [ngClass]="{ 'is-invalid': submitted && f['billOfEntryNo'].errors }" placeholder="Enter Bill Of Entry No"
+        readonly />
+      <div *ngIf="submitted && f['billOfEntryNo'].errors && type === 'Bonded'" class="invalid-feedback">
+        Bill Of Entry No is required
+      </div>
+    </div>
+
+    <div class="col-md-3" *ngIf="type === 'Bonded'">
+      <label class="form-label">Container No <span class="text-danger" *ngIf="type === 'Bonded'">*</span></label>
+      <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="constainerNo"
+        [ngClass]="{'is-invalid': submitted && f['constainerNo'].errors}" nzPlaceHolder="Select Container No"
+        (ngModelChange)="onContainerType($event)">
+        <nz-option *ngFor="let container of containerList" [nzLabel]="container.containerNo"
+          [nzValue]="container.containerNo">
+        </nz-option>
+      </nz-select>
+      <div *ngIf="submitted && f['constainerNo'].errors && type === 'Bonded'" class="invalid-feedback">
+        Container No is required
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <label class="form-label">Packing Type <span class="text-danger">*</span></label>
+      <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="packingType"
+        [ngClass]="{'is-invalid': submitted && f['packingType'].errors}" nzPlaceHolder="Select Packing Type">
+        <nz-option *ngFor="let weight of weighthData" [nzLabel]="weight.uomName" [nzValue]="weight.uomName">
+        </nz-option>
+      </nz-select>
+      <div *ngIf="submitted && f['packingType'].errors" class="invalid-feedback">
+        Packing Type is required
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-md-3">
+      <label class="form-label">No. of Empty Bags (Count)</label>
+      <input type="number" class="form-control" formControlName="noOfEmptyBags"
+        [ngClass]="{ 'is-invalid': submitted && f['noOfEmptyBags'].errors }" placeholder="Enter count" min="0"
+        (keydown)="blockInvalidInput($event)" />
+      <div *ngIf="submitted && f['noOfEmptyBags'].errors" class="invalid-feedback">
+        No. of Empty Bags is required
+      </div>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Date <span class="text-danger">*</span></label>
+      <nz-date-picker class="form-control custom-input" nzFormat="dd-MM-yyyy" formControlName="packingDate"
+        [ngClass]="{'is-invalid': submitted && f['packingDate'].errors}">
+      </nz-date-picker>
+      <div *ngIf="submitted && f['packingDate'].errors" class="invalid-feedback">
+        Date is required
+      </div>
+    </div>
+  
+    <div class="col-md-3">
+      <label class="form-label">Qty Packed from Total Stock <span class="text-danger">*</span></label>
+      <input type="number" class="form-control" formControlName="qtyPackedFromStock"
+        [ngClass]="{ 'is-invalid': submitted && f['qtyPackedFromStock'].errors }" placeholder="Enter quantity" min="0"
+        step="0.01" />
+      <div *ngIf="submitted && f['qtyPackedFromStock'].errors" class="invalid-feedback">
+        Qty Packed from Total Stock is required
+      </div>
+    </div>
+  
+    <div class="col-md-3">
+      <label class="form-label">Vendors/Labours <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" formControlName="vendorsLabours"
+        [ngClass]="{ 'is-invalid': submitted && f['vendorsLabours'].errors }" placeholder="Enter vendors/labours" />
+      <div *ngIf="submitted && f['vendorsLabours'].errors" class="invalid-feedback">
+        Vendors/Labours is required
+      </div>
+    </div>
+  </div>
+<div class="row mt-3">
+  <div class="col-md-3">
+    <label class="form-label">Surveyors <span class="text-danger">*</span></label>
+    <nz-select class="nz-form-select" style="width: 100%" formControlName="surveyors"
+      [ngClass]="{'is-invalid': submitted && f['surveyors'].errors}" nzShowSearch nzAllowClear
+      nzPlaceHolder="Select Surveyor">
+      <nz-option *ngFor="let item of surveyorList" [nzLabel]="item.name" [nzValue]="item.userId"></nz-option>
+    </nz-select>
+    <div *ngIf="submitted && f['surveyors'].errors" class="invalid-feedback">
+      Surveyors is required
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <label class="form-label">Remarks </label>
+    <textarea class="form-control" formControlName="remarks" rows="3"
+      [ngClass]="{ 'is-invalid': submitted && f['remarks'].errors }" placeholder="Enter remarks"></textarea>
+    <div *ngIf="submitted && f['remarks'].errors" class="invalid-feedback">
+      Remarks is required
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Fourth Row - Surveyors and Remarks -->
+
+
+<!-- Action Buttons -->
+<div class="btn-onscreen wrap-form-action mb-3 mt-4">
+  <button (click)="onSubmit()" class="btn btn-outline-primary btn-lg float-end" type="button">
+    {{ editIndex !== null ? 'Update' : 'Save' }}
+  </button>
+  <button class="btn1 btn-lg float-end me-2" type="button" (click)="onCancel()">
+    Cancel
+  </button>
+</div>

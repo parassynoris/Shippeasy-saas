@@ -1,0 +1,67 @@
+.page-title-box {
+    margin: 0;
+    padding: 0;
+}
+
+.button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.button-container button {
+    margin: 0 10px;
+}
+
+.green,
+.red {
+    margin: 5px;
+    padding: 10px;
+}
+
+.green {
+    background-color: #80D36D;
+    width: 55%;
+    height: 40px;
+    font-size: 15px;
+    color: white !important;
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.red {
+    background-color: #D56262;
+    width: 55%;
+    height: 40px;
+    font-size: 15px;
+    color: white !important;
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.button-description {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center
+}
+
+#accept-tooltip,
+#reject-tooltip {
+    display: none;
+    position: absolute;
+    padding: 5px;
+    background-color: #ddd;
+    border-radius: 3px;
+}
+
+#accept-button:hover+#accept-tooltip,
+#reject-button:hover+#reject-tooltip {
+    display: block;
+}

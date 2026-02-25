@@ -1,0 +1,92 @@
+<div class="table-with-gheading">
+    <div class="wrap-content">
+       
+        <div class="row">
+            <div class="horz-bar mb-3">
+                <span>Vessel : {{vesseldata}} || </span>
+                <span>Voyage : {{voyageData}}</span>
+        
+            </div>
+            <div class="col-md-12 table-with-gheading">
+                <div class="horz-bar">Update Item No </div>
+                <div class="table-responsive">
+                    <div class="wrap-table-area  wrap-table-design wrap-form-field"
+                        id="htmlData">
+                        <table aria-describedby="mytable">
+                            <thead>
+                                <tr class="field-name">
+                                    <th scope="col"></th>
+                                    <th scope="col">Master BL</th>
+                                    <th scope="col">POD</th>
+                                    <th scope="col">FPOD</th>
+                                    <th scope="col">Item Type</th>
+                                    <th scope="col">Sub Line No</th>
+                                    <th scope="col">Item No</th>
+                                </tr>
+                                <tr>
+                                    <th scope="col"> </th>
+                                    <th scope="col"> 
+                                        <input type="text" class="form-control" [(ngModel)]="blNo" 
+                                        [ngModelOptions]="{standalone: true}" (keydown.enter)="search()">
+                                    </th> 
+                                    <th scope="col">
+                                        <input type="text" class="form-control" [(ngModel)]="podName" 
+                                        [ngModelOptions]="{standalone: true}" (keydown.enter)="search()">
+                                    </th>
+                                    <th scope="col"><input type="text" class="form-control" [(ngModel)]="fpodName" 
+                                        [ngModelOptions]="{standalone: true}"(keydown.enter)="search()"
+                                        >
+                                    </th>
+                                    <th scope="col"><input type="text" class="form-control" [(ngModel)]="itemType" 
+                                        [ngModelOptions]="{standalone: true}"(keydown.enter)="search()"
+                                        >
+                                    </th>
+                                    <th scope="col"><input disabled type="text" class="form-control" [(ngModel)]="subLineNo" 
+                                        [ngModelOptions]="{standalone: true}"(keydown.enter)="search()"
+                                        >
+                                    </th>
+                                    <th scope="col"><input disabled type="text" class="form-control" [(ngModel)]="itemNo" 
+                                        [ngModelOptions]="{standalone: true}"(keydown.enter)="search()"
+                                        >
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let bl of houseBlList;let i =index">
+                                    <td>{{i+1}}</td>
+                                    <td>{{bl?.blNumber}}</td>
+                                    <td>{{bl?.importPodName}}</td>
+                                    <td>{{bl?.importFpodName}}</td>
+                                    <td>{{bl?.cargoStatus}}</td>
+                                    <td><input type="number" class="form-control" [(ngModel)]="bl.subLineNo"></td>
+                                    <td><input type="number" class="form-control" [(ngModel)]="bl.itemNo"></td>
+                                    <td *ngIf="i === 0" class="border-0"><button  class="btn btn-outline-primary" (click)="applyAllPlus()">Apply All +1</button></td>
+                                </tr>
+                                <tr *ngIf="houseBlList.length !== 0">
+                                    <td class="border-0" colspan="5"></td>
+                                    <td><input type="text" class="form-control" [(ngModel)]="subLineNoValue"></td>
+                                    <td class="border-0">
+                                        <button  class="btn btn-outline-primary" (click)="applyAll()">Apply All</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="no-data-availble mt-0" *ngIf="houseBlList.length === 0">
+                    {{'common.no_data' | translate}}
+                </div>
+            </div>
+        </div>
+        <div class="btn-onscreen my-3">
+            <div class="form-group wrap-form-action">
+              <button  class="btn btn-outline-primary  float-end " (click)="updateBl()">
+                Update Item No
+              </button>
+              <button  class="btn btn-outline-primary  float-end " (click)="back()">
+                Back
+              </button>
+            </div>
+          </div>
+    </div>
+</div>

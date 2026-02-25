@@ -1,0 +1,74 @@
+.wrap-form-field{
+  margin-top: 15px;
+}
+.tableRow{
+  font-size: 12px !important;
+    font-style: normal !important;
+    padding: 10px !important;
+    text-align: left !important;
+    line-height: normal !important;
+    font-weight: 600 !important;
+    border: 0.1px solid #e0e0e0 !important;
+    background-color: var(--theme-light-bg) !important;
+    white-space: nowrap !important;
+    text-align: left !important;
+    line-height: normal !important;
+    color: #3B3939 !important;
+    text-transform: capitalize !important;
+    letter-spacing: 0px !important;
+}
+@media only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px) {
+/*
+Label the data
+*/
+td:nth-of-type(1):before {
+  content: "Select";
+}
+td:nth-of-type(2):before {
+  content: "Job No.";
+}
+td:nth-of-type(3):before {
+  content: "Tank Type";
+}
+td:nth-of-type(4):before {
+  content: "Location";
+}
+td:nth-of-type(5):before {
+  content: "Shipper";
+}
+td:nth-of-type(6):before {
+  content: "Move On";
+}
+td:nth-of-type(7):before {
+  content: "Move Type";
+}
+td:nth-of-type(8):before {
+  content: "Shipment Type";
+}
+td:nth-of-type(9):before {
+  content: "Consignee";
+}
+td:nth-of-type(10):before {
+  content: "Notify Party";
+}
+td:nth-of-type(11):before {
+  content: "Invoice Party";
+}
+td:nth-of-type(12):before {
+  content: "Product";
+}
+td:nth-of-type(13):before {
+  content: "Shipping Line";
+}
+td:nth-of-type(14):before {
+  content: "Status";
+}
+}
+::ng-deep .custom-modal-md {
+  width: 100%; // Adjust as needed
+}
+.modiBtn{
+  width: 110px !important;
+  height: 100% !important;
+}

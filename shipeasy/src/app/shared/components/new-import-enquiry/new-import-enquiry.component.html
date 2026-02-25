@@ -1,0 +1,2773 @@
+<form [formGroup]="newenquiryForm" class="mb-5">
+    <div class="text-end mt-2 mb-2">
+        <button *ngIf="!callapseALL" (click)="toggleAll(true);callapseALL = !callapseALL" #expand class="btn btn-outline-primary px-0" type="button"
+          data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded="false"
+          [attr.aria-controls]="expandKeys">Expand All</button>
+    
+    
+        <button *ngIf="callapseALL" (click)="toggleAll(false);callapseALL = !callapseALL" class="btn btn-outline-primary px-0" type="button"
+          data-bs-toggle="collapse" data-bs-target="#demo" aria-expanded="true" aria-controls="demo">
+          Collapse All
+        </button>
+      </div>
+
+
+    <div class="accordion form-accordian mb-5" id="accordionPanelsStayOpenExample">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="datails">
+                <button class="accordion-button" [class.collapsed]="!isBasicDetailsPanelOpen" type="button"
+                    (click)="toggleButton('basicDetails')" aria-expanded="isBasicDetailsPanelOpen" aria-controls="panelsDetails">
+                    {{ 'stolt.enquiry.new.basic_details' | translate }}<span class="text-danger">*</span>
+                </button>
+            </h2>
+            <div id="panelsDetails" class=" multi-collapse accordion-collapse collapse show" aria-labelledby="datails"
+                data-bs-parent="#accordionPanelsStayOpenExample" [class.show]="isBasicDetailsPanelOpen">
+                <div class="accordion-body">
+                    <div class="wrap-form-field">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row g-4">
+                                    <div *ngIf="!isAddMode" class="col-md-3">
+                                        <label class="form-label">Inquiry No.</label>
+                                        <input formControlName="enquiry_number" disabled type="text"
+                                            class="form-control custom-input" placeholder="Inquiry No">
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">{{ 'stolt.enquiry.new.enquiryType' | translate }}
+                                            </label>
+                                        <nz-select nzDisabled class="form-select" nzShowSearch nzAllowClear
+                                            nzPlaceHolder="Enquiry Type" formControlName="enquiryType"
+                                            [ngClass]="{'is-invalid': submitted && f.enquiryType.errors}">
+                                            <nz-option *ngFor="let enquiryType of  sort(enquirytypeList ,'typeName')"
+                                                [nzLabel]="enquiryType.typeName"
+                                                [nzValue]="enquiryType.systemtypeId"></nz-option>
+                                        </nz-select>
+
+                                        <div *ngIf="submitted && f.enquiryType.errors" class="invalid-feedback">
+                                            <div *ngIf="f.enquiryType?.errors?.required">{{
+                                                'stolt.enquiry.new.enquiryType' | translate }} is
+                                                required</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Freight Type<span class="text-danger">*</span></label>
+
+                                        <nz-select
+                                            [nzDisabled]="agentAdviceDetails?.enquiryStatus == 'Inquiry Received'"
+                                            (ngModelChange)="shipmentType()" class="form-select" nzShowSearch
+                                            nzAllowClear formControlName="Shipment_Type"
+                                            [ngClass]="{'is-invalid': submitted && f.Shipment_Type.errors}">
+                                            <nz-option *ngFor="let test of sort(shipmentTypes,'typeName')"
+                                                [nzLabel]="test?.typeName" [nzValue]="test?.systemtypeId"></nz-option>
+                                        </nz-select>
+                                        <div *ngIf="submitted && f.Shipment_Type.errors" class="invalid-feedback">
+                                            <div *ngIf="f.Shipment_Type.errors.required">Freight Type is
+                                                required</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">Load Type <span class="text-danger">*</span></label>
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear
+                                            nzPlaceHolder="Load Type" formControlName="loadType"
+                                            (ngModelChange)="getTabs()"
+                                            [ngClass]="{'is-invalid': submitted && f.loadType.errors}">
+                                            <nz-option *ngFor="let enquiryType of  sort(loadTypeList ,'typeName')"
+                                                [nzLabel]="enquiryType.typeName"
+                                                [nzValue]="enquiryType.systemtypeId"></nz-option>
+                                        </nz-select>
+
+                                        <div *ngIf="submitted && f.loadType.errors" class="invalid-feedback">
+                                            <div *ngIf="f.loadType?.errors?.required">{{ 'stolt.enquiry.new.enquiryType'
+                                                |
+                                                translate }} is
+                                                required</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Shipment Type  <span class="text-danger">*</span></label>
+        
+                                        <nz-select  class="form-select" nzShowSearch nzAllowClear
+                                          formControlName="importShipmentType"
+                                          [ngClass]="{'is-invalid': submitted && f.importShipmentType.errors}">
+                                          <nz-option *ngFor="let shipper of  sort(activeFrightAir ? ImportShipmentTypelistAir : ImportShipmentTypelist ,'typeName')"
+                                            [nzLabel]="shipper?.typeName" [nzValue]="shipper?.systemtypeId"></nz-option>
+                                        </nz-select>
+                                      </div>
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">{{ 'stolt.enquiry.new.shipper' | translate }}</label>
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Shipper"
+                                            formControlName="shipper" [nzDisabled]="isShipperDisabled"
+                                            [ngClass]="{'is-invalid': submitted && f.shipper.errors}"
+                                            (ngModelChange)="setParty2($event)">
+                                            <nz-option *ngFor="let shipper of sort(shipperList , 'name')"
+                                            nzLabel="{{shipper?.partyShortcode}}{{shipper?.partyShortcode ? '-': ''}}{{shipper.name}}" [nzValue]="shipper.partymasterId"></nz-option>
+                                        </nz-select>
+                                        <div *ngIf="submitted && f.shipper.errors" class="invalid-feedback">
+                                            <div *ngIf="f.shipper?.errors?.required">{{ 'stolt.enquiry.new.shipper' |
+                                                translate }} is required
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">{{ 'stolt.enquiry.new.shipper' | translate }} Address
+                                        </label>
+                                        <!-- <input type="text" formControlName="shipperAddress"
+                                            class="form-control custom-input"  
+                                            [ngClass]="{'is-invalid': submitted && f.shipperAddress.errors}"
+                                            placeholder="Shipper Address" /> --> 
+
+                                            <nz-select   class="form-select" nzShowSearch nzAllowClear formControlName="shipperAddress"
+                                            [ngClass]="{'is-invalid': submitted && f.shipperAddress?.errors}" nzPlaceHolder="Shipper Address">
+                                            <nz-option *ngFor="let loadPlace of  billingBranchList2"
+                                              nzLabel="{{loadPlace.branch_address}},{{loadPlace.branch_city}}"
+                                              nzValue="{{loadPlace.branch_address}},{{loadPlace.branch_city}}"></nz-option>
+                                          </nz-select>
+
+                                        <div *ngIf="submitted && f.shipperAddress.errors" class="invalid-feedback">
+                                            <div *ngIf="f.shipperAddress?.errors?.required"> Shipper address is required
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">{{ 'stolt.enquiry.new.consignee' | translate }}</label>
+
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear
+                                            nzPlaceHolder="Consignee" formControlName="cosignee" (ngModelChange)="setParty1($event)" 
+                                            [ngClass]="{'is-invalid': submitted && f.cosignee.errors}">
+                                            <nz-option *ngFor="let shipper of sort(consigneeList ,'name') "
+                                            nzLabel="{{shipper?.partyShortcode}}{{shipper?.partyShortcode ? '-': ''}}{{shipper.name}}" [nzValue]="shipper.partymasterId"></nz-option>
+                                        </nz-select>
+                                        <div *ngIf="submitted && f.cosignee.errors" class="invalid-feedback">
+                                            <div *ngIf="f.cosignee?.errors?.required">{{ 'stolt.enquiry.new.consignee' |
+                                                translate }} is
+                                                required</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">{{ 'stolt.enquiry.new.consignee' | translate }}
+                                            Address </label>
+                                        <!-- <input type="text" formControlName="consigneeAddress"
+                                            class="form-control custom-input"
+                                            [ngClass]="{'is-invalid': submitted && f.consigneeAddress.errors}"
+                                            placeholder="Address" /> -->
+
+                                            <nz-select   class="form-select" nzShowSearch nzAllowClear formControlName="consigneeAddress"
+                                            [ngClass]="{'is-invalid': submitted && f.consigneeAddress?.errors}" nzPlaceHolder="Consignee Address">
+                                            <nz-option *ngFor="let loadPlace of  billingBranchList1"
+                                              nzLabel="{{loadPlace.branch_address}},{{loadPlace.branch_city}}"
+                                              nzValue="{{loadPlace.branch_address}},{{loadPlace.branch_city}}"></nz-option>
+                                          </nz-select>
+
+                                        <div *ngIf="submitted && f.consigneeAddress.errors" class="invalid-feedback">
+                                            <div *ngIf="f.consigneeAddress?.errors?.required">Customer address is
+                                                required
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">Customer/Billing Party<span
+                                                class="text-danger">*</span></label>
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear
+                                            nzPlaceHolder="Billing Party" formControlName="billingParty"
+                                            [ngClass]="{'is-invalid': submitted && f.billingParty.errors}"
+                                            (ngModelChange)="setParty($event)">
+                                            <nz-option *ngFor="let shipper of sort(partyMasterNameList , 'name')"
+                                            nzLabel="{{shipper?.partyShortcode}}{{shipper?.partyShortcode ? '-': ''}}{{shipper.name}}" [nzValue]="shipper.partymasterId"></nz-option>
+                                        </nz-select>
+                                        <div *ngIf="submitted && f.billingParty.errors" class="invalid-feedback">
+                                            <div *ngIf="f.billingParty?.errors?.required">Customer/Billing Party is
+                                                required
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Customer Address </label>
+                                        <!-- <input type="text" formControlName="billingAddress"
+                                            class="form-control custom-input"
+                                            [ngClass]="{'is-invalid': submitted && f.billingAddress.errors}"
+                                            placeholder="Customer Address" /> -->
+                                            <nz-select   class="form-select" nzShowSearch nzAllowClear formControlName="billingAddress"
+                                            [ngClass]="{'is-invalid': submitted && f.billingAddress?.errors}" nzPlaceHolder="Consignee Address">
+                                            <nz-option *ngFor="let loadPlace of  billingBranchList"
+                                              nzLabel="{{loadPlace.branch_address}},{{loadPlace.branch_city}}"
+                                              nzValue="{{loadPlace.branch_address}},{{loadPlace.branch_city}}"></nz-option>
+                                          </nz-select>
+
+                                        <div *ngIf="submitted && f.billingAddress.errors" class="invalid-feedback">
+                                            <div *ngIf="f.billingAddress?.errors?.required">Customer/Billing Party is
+                                                required
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Billing Branch</label>
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear
+                                            nzPlaceHolder="Billing Branch" formControlName="billingBranch"
+                                            [ngClass]="{'is-invalid': submitted && f.billingBranch.errors}">
+                                            <nz-option *ngFor="let shipper of billingBranchList"
+                                                [nzLabel]="shipper.branch_name"
+                                                [nzValue]="shipper.branch_name"></nz-option>
+                                        </nz-select>
+                                        <div *ngIf="submitted && f.billingBranch.errors" class="invalid-feedback">
+                                            <div *ngIf="f.billingBranch?.errors?.required">Billing Branch is required
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="col-md-3">
+                                        <label for="branch" class="form-label">Booked by Branch</label>
+                                        <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear
+                                            nzPlaceHolder="Booked by Branch" formControlName="bookedBranch"
+                                            [ngClass]="{'is-invalid': submitted && f.bookedBranch.errors}">
+
+                                            <nz-option *ngFor="let branch of branchList" [nzLabel]="branch?.branchName"
+                                                [nzValue]="branch?.branchId"></nz-option>
+                                        </nz-select>
+
+                                        <div *ngIf="submitted && f.bookedBranch.errors" class="invalid-feedback">
+                                            <div *ngIf="f.bookedBranch?.errors?.required">
+                                                Booked by Branch is required
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">{{ 'stolt.enquiry.new.salesPerson' | translate }}
+                                        </label>
+                                        <input [attr.disabled]="showQuotation? 'disabled' : null" type="text"
+                                            formControlName="sales_person" class="form-control custom-input"
+                                            placeholder="Sales Person" />
+
+                                        <div *ngIf="submitted && f.sales_person.errors" class="invalid-feedback">
+                                            <div *ngIf="f.sales_person?.errors?.required">{{
+                                                'stolt.enquiry.new.salesPerson' | translate }} is
+                                                required</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3" *ngIf="false">
+                                        <label class="form-label">Operational Coordinator (OPS) </label>
+                                        <input [attr.disabled]="showQuotation? 'disabled' : null" type="text"
+                                            formControlName="ops_coordinator" class="form-control custom-input"
+                                            placeholder="" />
+
+
+                                        <div *ngIf="submitted && f.ops_coordinator.errors" class="invalid-feedback">
+                                            <div *ngIf="f.ops_coordinator?.errors?.required">{{
+                                                'stolt.enquiry.new.opsCordinator' | translate }}
+                                                is required</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">Quotation Ref</label>
+                                        <input type="text" formControlName="quotationRef"
+                                            class="form-control custom-input"
+                                            [ngClass]="{'is-invalid': submitted && f.quotationRef.errors}"
+                                            placeholder="Quotation Ref" />
+                                        <div *ngIf="submitted && f.quotationRef.errors" class="invalid-feedback">
+                                            <div *ngIf="f.quotationRef?.errors?.required">Customer/Billing Party is
+                                                required
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">{{ 'stolt.enquiry.new.INCOTerm' | translate }} </label>
+
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear
+                                            nzPlaceHolder="INCO Term" formControlName="inco_term"
+                                            [ngClass]="{'is-invalid': submitted && f.inco_term.errors}">
+                                            <nz-option *ngFor="let shipmentTerm of sort(incotermList ,'typeName') "
+                                                [nzLabel]="shipmentTerm.typeName"
+                                                [nzValue]="shipmentTerm.systemtypeId"></nz-option>
+                                        </nz-select>
+                                        <div *ngIf="submitted && f.inco_term.errors" class="invalid-feedback">
+                                            <div *ngIf="f.inco_term?.errors?.required">{{
+                                                'stolt.enquiry.new.shippingTerm'
+                                                | translate }} is
+                                                required</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">{{ 'Agent' | translate }} </label>
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Agent" 
+                                          formControlName="agent" [ngClass]="{'is-invalid': submitted && f.agent.errors}">
+                                          <nz-option *ngFor="let shipper of agentList"  nzLabel="{{shipper?.partyShortcode}}{{shipper?.partyShortcode ? '-': ''}}{{shipper.name}}"
+                                            [nzValue]="shipper?.partymasterId"></nz-option>
+                                        </nz-select>
+                                        <div *ngIf="submitted && f.agent.errors" class="invalid-feedback">
+                                          <div *ngIf="f.agent.errors.required">{{ 'Agent' | translate }}
+                                            is
+                                            required
+                                          </div>
+                                        </div>
+                                      </div>
+
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="transport">
+                <button class="accordion-button" [class.collapsed]="!isRoutePanelOpen" type="button"
+                    (click)="toggleButton('route')" aria-expanded="isRoutePanelOpen"
+                    aria-controls="transportRoute">
+                    Route Details<span class="text-danger">*</span>
+                </button>
+            </h2>
+
+            <div id="transportRoute" class=" multi-collapse accordion-collapse collapse " aria-labelledby="transport"
+                [class.show]="isRoutePanelOpen" data-bs-parent="#accordionPanelsStayOpenExample">
+                <div class="accordion-body">
+                    <div class="wrap-form-field ">
+                        <div class="row mb-3 px-3" *ngIf="false">
+                            <div class="card-inquiry">
+                                <div class="header" *ngIf="!railandland">
+                                    <div class="col-md-2 px-0">
+                                        <div class=" form-check d-flex align-items-center px-0">
+                                            <input class="mx-1" [disabled]="railandland" formControlName="preCarriage"
+                                                type="checkbox" id="preCarriage" (change)="setValidationFromArray()">
+                                            <label class="form-check-label" for="preCarriage">Pre Carriage</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-trans" *ngIf="f.preCarriage.value">
+                                    <ng-container formArrayName="transport">
+                                        <ng-container *ngFor="let row of getTransportControls(); let i=index"
+                                            [formGroupName]="i">
+                                            <div class="row mb-3 ml-2"
+                                                *ngIf="this.getTransportControls().length === i+1 && this.currentUrl !== 'show'">
+                                                <a class="max-con new-action  btn btn-outline-primary-save btn-sm rounded-pill"
+                                                    (click)="addTransportRow()"><em class="bi bi-plus"></em> Add
+                                                    Transport Hub</a>
+                                                <a *ngIf="getTransportControls().length >= 3"
+                                                    class="max-con new-action  btn  btn-outline-primary btn-sm rounded-pill"
+                                                    (click)="deleteTransportRow(i-1)"><em class="bi bi-trash"></em>
+                                                    Delete
+                                                    Transport Hub</a>
+                                            </div>
+                                            <div class="row mb-3 relative-pos pl-3">
+                                                <div class="location-icon">
+                                                    <i class="bi bi-geo-alt-fill"></i>
+                                                    <div class="line"
+                                                        *ngIf="this.getTransportControls().length !== i+1"></div>
+                                                </div>
+                                                <div class="col-md-3 ">
+                                                    <label class="form-label">Location
+                                                        Type</label>
+                                                    <div
+                                                        class="taggle form-check form-switch  d-flex align-items-center">
+                                                        <input
+                                                            *ngIf="this.getTransportControls().length !== i+1 || railandland "
+                                                            type="radio" name="locationType{{i}}"
+                                                            formControlName="locationType" value="location"
+                                                            (change)="addTransPortValidation(i)">
+                                                        <label
+                                                            *ngIf="this.getTransportControls().length !== i+1 || railandland"
+                                                            for="Origin" class="pl-1 mb-0">CFS/ICD</label>
+                                                        <input
+                                                            *ngIf="this.getTransportControls().length !== i+1 || railandland"
+                                                            class="ml-4" type="radio" name="locationType{{i}}"
+                                                            formControlName="locationType" value="address"
+                                                            (change)="addTransPortValidation(i)">
+                                                        <label
+                                                            *ngIf="this.getTransportControls().length !== i+1 || railandland"
+                                                            for="Destination1" class="pl-1 mb-0">Address </label>
+                                                        <input
+                                                            *ngIf="!railandland && this.getTransportControls().length == i+1"
+                                                            disabled checked type="radio">
+                                                        <input *ngIf="railandland" class="ml-4" type="radio"
+                                                            name="locationType{{i}}" formControlName="locationType"
+                                                            value="port" (change)="addTransPortValidation(i)">
+                                                        <label
+                                                            *ngIf="!railandland && this.getTransportControls().length == i+1"
+                                                            for="Port" class="pl-1 mb-0">Port </label>
+                                                        <label *ngIf="railandland" for="Port" class="pl-1 mb-0">Port
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <ng-container *ngIf="!railandland">
+                                                    <ng-container
+                                                        *ngIf="row?.get('locationType')?.value == 'location' || row?.get('locationType')?.value == 'port'">
+                                                        <div class="col-md-3"
+                                                            *ngIf="this.getTransportControls().length !== i+1">
+                                                            <label class="form-label">{{getTransportControls().length
+                                                                !== i+1 ? 'Origin'
+                                                                :'Destination'
+                                                                }}
+                                                                <span class="text-danger">*</span></label>
+                                                            <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                                formControlName="location"
+                                                                [ngClass]="{'is-invalid': submitted && row?.get('location')?.errors}">
+                                                                <nz-option
+                                                                    *ngFor="let loadPlace of  sort(locationList ,'locationName')"
+                                                                    [nzLabel]="loadPlace.locationName "
+                                                                    [nzValue]="loadPlace.locationId"></nz-option>
+                                                            </nz-select>
+                                                            <div *ngIf="submitted && row?.get('location')?.errors"
+                                                                class="invalid-feedback">
+                                                                <div *ngIf="row?.get('location')?.errors.required">
+                                                                    {{getTransportControls().length !==
+                                                                    i+1
+                                                                    ?
+                                                                    'Origin' :'Destination'}}
+                                                                    is required</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3"
+                                                            *ngIf="this.getTransportControls().length === i+1">
+                                                            <label class="form-label">{{getTransportControls().length
+                                                                !== i+1 ? 'Origin'
+                                                                :'Destination'
+                                                                }}
+                                                                <span class="text-danger">*</span></label>
+                                                            <nz-select [nzDisabled]="!railandland" class="form-select"
+                                                                nzShowSearch nzAllowClear formControlName="location"
+                                                                [ngClass]="{'is-invalid': submitted && row?.get('location')?.errors}">
+                                                                <nz-option
+                                                                    *ngFor="let loadPlace of portList | filterByFlag: activeFrightAir"
+                                                                    [nzLabel]="loadPlace?.portName "
+                                                                    [nzValue]="loadPlace?.portId"></nz-option>
+                                                            </nz-select>
+                                                            <div *ngIf="submitted && row?.get('location')?.errors"
+                                                                class="invalid-feedback">
+                                                                <div *ngIf="row?.get('location')?.errors.required">
+                                                                    {{getTransportControls().length !==
+                                                                    i+1
+                                                                    ?
+                                                                    'Origin' :'Destination'}}
+                                                                    is required</div>
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                </ng-container>
+
+                                                <ng-container *ngIf="railandland">
+
+                                                    <div class="col-md-3"
+                                                        *ngIf="row?.get('locationType')?.value == 'location'">
+                                                        <label class="form-label">{{getTransportControls().length !==
+                                                            i+1 ? 'Origin' :'Destination'
+                                                            }}
+                                                            <span class="text-danger">*</span></label>
+                                                        <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                            formControlName="location"
+                                                            [ngClass]="{'is-invalid': submitted && row?.get('location')?.errors}">
+                                                            <nz-option
+                                                                *ngFor="let loadPlace of  sort(locationList ,'locationName')"
+                                                                [nzLabel]="loadPlace.locationName "
+                                                                [nzValue]="loadPlace.locationId"></nz-option>
+                                                        </nz-select>
+                                                        <div *ngIf="submitted && row?.get('location')?.errors"
+                                                            class="invalid-feedback">
+                                                            <div *ngIf="row?.get('location')?.errors.required">
+                                                                {{getTransportControls().length !== i+1
+                                                                ?
+                                                                'Origin' :'Destination'}}
+                                                                is required</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3"
+                                                        *ngIf="row?.get('locationType')?.value == 'port'">
+                                                        <label class="form-label">{{getTransportControls().length !==
+                                                            i+1 ? 'Origin' :'Destination'
+                                                            }}
+                                                            <span class="text-danger">*</span></label>
+                                                        <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                            formControlName="location"
+                                                            [ngClass]="{'is-invalid': submitted && row?.get('location')?.errors}">
+                                                            <nz-option
+                                                                *ngFor="let loadPlace of portList | filterByFlag: activeFrightAir"
+                                                                [nzLabel]="loadPlace?.portName "
+                                                                [nzValue]="loadPlace?.portId"></nz-option>
+                                                        </nz-select>
+                                                        <div *ngIf="submitted && row?.get('location')?.errors"
+                                                            class="invalid-feedback">
+                                                            <div *ngIf="row?.get('location')?.errors.required">
+                                                                {{getTransportControls().length !== i+1
+                                                                ?
+                                                                'Origin' :'Destination'}}
+                                                                is required</div>
+                                                        </div>
+                                                    </div>
+                                                </ng-container>
+
+
+
+
+                                                <ng-container *ngIf="row?.get('locationType')?.value == 'address'">
+                                                    <div class="col-md-3">
+                                                        <div>
+                                                            <label class="form-label">Company Address </label>
+                                                            <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                                formControlName="addressId"
+                                                                [ngClass]="{'is-invalid': submitted && row?.get('addressId')?.errors}">
+                                                                <nz-option *ngFor="let loadPlace of  billingBranchList"
+                                                                    nzLabel="{{loadPlace.branch_address}},{{loadPlace.branch_city}}"
+                                                                    nzValue="{{loadPlace.branch_address}},{{loadPlace.branch_city}}"></nz-option>
+                                                            </nz-select>
+                                                            <div *ngIf="submitted && row?.get('addressId')?.errors"
+                                                                class="invalid-feedback">
+                                                                <div *ngIf="row?.get('addressId')?.errors.required">
+                                                                    Company Address
+                                                                    is required</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2 h3--label color-pencil-red">
+                                                            <span (click)="addAddress(address,i===0 ? true : false)"> <em
+                                                                    class="bi bi-plus"></em> Add Address</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <label class="form-label">Address </label>
+                                                        <textarea class="form-control custom-input"
+                                                            formControlName="address" rows="3" cols="30">
+                              </textarea>
+                                                        <div *ngIf="submitted && row?.get('address')?.errors"
+                                                            class="invalid-feedback">
+                                                            <div *ngIf="row?.get('address')?.errors.required">Address
+                                                                is required</div>
+                                                        </div>
+                                                    </div>
+                                                </ng-container>
+
+                                                <div class="col-md-2"
+                                                    *ngIf="this.getTransportControls().length !== i+1">
+                                                    <label class="form-label">Mode of Transit</label>
+                                                    <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                        formControlName="transit"
+                                                        [ngClass]="{'is-invalid': submitted && row?.get('transit')?.errors}">
+                                                        <nz-option nzLabel="Truck" nzValue="Land"></nz-option>
+                                                        <nz-option nzLabel="Rail" nzValue="Rail"></nz-option>
+                                                    </nz-select>
+                                                    <div *ngIf="submitted && row?.get('transit')?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="row?.get('transit')?.errors.required">Transit is
+                                                            required</div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-2"
+                                                    *ngIf="this.getTransportControls().length !== i+1">
+                                                    <label class="form-label">Carrier</label>
+                                                    <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                        formControlName="carrier"
+                                                        [ngClass]="{'is-invalid': submitted && row?.get('carrier')?.errors}">
+                                                        <nz-option
+                                                            *ngFor="let shippingLine of sort(shippingLineList | filterByType : 'ShipmentTypeName': row?.get('transit')?.value ,'name')"
+                                                            [nzLabel]="shippingLine.name"
+                                                            [nzValue]="shippingLine.shippinglineId"></nz-option>
+                                                    </nz-select>
+                                                    <div *ngIf="submitted && row?.get('carrier')?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="row?.get('carrier')?.errors.required">Carrier is
+                                                            required</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3"
+                                                    *ngIf="row?.get('locationType')?.value == 'address' && this.getTransportControls().length !== i+1">
+                                                </div>
+                                                <div class="col-md-2" *ngIf="i!==0">
+                                                    <label class="mb-0 p-0 form-label">ETA</label>
+                                                    <nz-date-picker class="form-select custom-input" nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss" formControlName="eta"
+                                                        [nzDisabled]="bookingCancel" 
+                                          [nzDisabledDate]="disabledDate"
+                                                        [ngClass]="{'is-invalid': submitted && row?.get('eta')?.errors}"></nz-date-picker>
+                                                    <div *ngIf="submitted && row?.get('eta')?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf=" submitted && row?.get('eta')?.errors.required"
+                                                            class="set-error-msg">ETA is
+                                                            required
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3"
+                                                    *ngIf="i!==0 && !(row?.get('locationType')?.value == 'address')">
+                                                </div>
+                                                <div class="col-md-2"
+                                                    *ngIf="this.getTransportControls().length !== i+1">
+                                                    <label class="mb-0 p-0 form-label">ETD</label>
+                                                    <nz-date-picker class="form-select custom-input"
+                                                    nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss"  formControlName="etd"
+                                                        [nzDisabled]="bookingCancel" 
+                                          [nzDisabledDate]="disabledDate"
+                                                        [ngClass]="{'is-invalid': submitted && row?.get('etd')?.errors}"></nz-date-picker>
+                                                    <div *ngIf="submitted && row?.get('etd')?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf=" submitted && row?.get('etd')?.errors.required"
+                                                            class="set-error-msg">ETD is
+                                                            required
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </ng-container>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row my-2 px-3" *ngIf="!railandland">
+                            <div class="card-inquiry ">
+                              <div class="row card-trans">
+              
+                                <div class="col-md-3">
+                                  <label class="form-label"> {{activeFrightAir ? 'Airport' : 'Port'}} of Loading<span
+                                      class="text-danger">*</span></label>
+                                  <!-- <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="load_port"
+                                    (ngModelChange)="loadportchange($event)"
+                                    [ngClass]="{'is-invalid': submitted && f.load_port.errors}">
+                                    <nz-option *ngFor="let port of portList | filterByFlag: activeFrightAir"
+                                      [nzLabel]="port?.portName" [nzValue]="port.portId"></nz-option>
+                                  </nz-select>  -->
+
+                                  <nz-select class="form-select" nzShowSearch nzServerSearch nzPlaceHolder="Search {{activeFrightAir ? 'Airport' : 'Port'}}"
+                                    formControlName="load_port" [nzShowArrow]="false" (ngModelChange)="loadportchange($event)"
+                                    [ngClass]="{'is-invalid': submitted && f.load_port.errors}"
+                                      [nzFilterOption]="nzFilterOption" (nzOnSearch)="searchPort($event,'1')">
+                                      <nz-option *ngFor="let port of portList1  "
+                                        [nzLabel]="port.portName" [nzValue]="port.portId"></nz-option>
+                                    </nz-select>
+
+                                  <div *ngIf="submitted && f.load_port.errors" class="invalid-feedback">
+                                    <div *ngIf="f.load_port.errors.required">{{activeFrightAir ? 'Airport' : 'Port'}} Port of Loading
+                                      is
+                                      required</div>
+                                  </div>
+                                </div>
+                                <!-- <div class="col-md-3">
+                                    <label class="form-label">ETD<span class="text-danger">*</span></label>
+                                    <nz-date-picker class="form-select custom-input" nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss" formControlName="etd"
+                                        [nzDisabled]="bookingCancel" [ngClass]="{'is-invalid': submitted && f.etd.errors}"></nz-date-picker>
+                                    <div *ngIf="submitted && f.etd.errors" class="invalid-feedback">
+                                        <div *ngIf="f.etd.errors.required">ETD is required</div>
+                                    </div>
+                                </div> -->
+                                <div class="col-md-3">
+                                    <label class="form-label">ETD <span class="text-danger">*</span></label>
+                                    <nz-date-picker class="form-select custom-input" nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss" formControlName="etd"
+                                        [nzDisabled]="bookingCancel" (ngModelChange)="onETDChange($event)" [nzDisabledDate]="disabledETDDate"
+                                        [ngClass]="{'is-invalid': submitted && row?.get('etd')?.errors}">
+                                    </nz-date-picker>
+                                    <div *ngIf="submitted && f.etd.errors" class="invalid-feedback">
+                                        <div *ngIf="f.etd.errors.required">ETD is required</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                  <label class="form-label">{{activeFrightAir ? 'Airport' : 'Carrier'}}<span class="text-danger">*</span></label>
+                                  <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="shipping_line"
+                                    [ngClass]="{'is-invalid': submitted && f.shipping_line.errors}">
+                                    <nz-option
+                                      *ngFor="let shippingLine of sort(shippingLineList | filterByType : 'ShipmentTypeName': activeFright ,'name')"
+                                      [nzLabel]="shippingLine.name" [nzValue]="shippingLine.shippinglineId"></nz-option>
+                                  </nz-select>
+                                  <div *ngIf="submitted && f.shipping_line.errors" class="invalid-feedback">
+                                    <div *ngIf="f.shipping_line.errors.required">{{activeFrightAir ? 'Airport' : 'Carrier'}} is
+                                      required</div>
+                                  </div>
+                                </div>
+                                
+                                <div class="col-md-3" *ngIf="activeFright == 'air'">
+                                    <label class="form-label">Flight No.<span class="text-danger">*</span></label>
+
+                                    <nz-select class="form-select" nzShowSearch nzAllowClear
+                                        formControlName="flightNo"
+                                        [ngClass]="{'is-invalid': submitted && f.flightNo.errors}">
+                                        <nz-option *ngFor="let vessel of flightList | filterByType : 'airlineId' : f.shipping_line.value" [nzLabel]="vessel?.flight"
+                                            [nzValue]="vessel?.airId"></nz-option>
+                                    </nz-select>
+                                    <div *ngIf="submitted && f.flightNo.errors" class="invalid-feedback">
+                                        <div *ngIf="f.flightNo.errors.required">Flight No. is required</div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3" *ngIf="false">
+                                  <label class="form-label">{{activeFrightAir ? 'Airline' :'Backup Carrier'}} </label>
+                                  <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="backupShippingLine"
+                                    [ngClass]="{'is-invalid': submitted && f.backupShippingLine.errors}">
+                                    <nz-option
+                                      *ngFor="let shippingLine of  sort(shippingLineList | filterByType : 'ShipmentTypeName': activeFright ,'name')"
+                                      [nzLabel]="shippingLine.name" [nzValue]="shippingLine.shippinglineId"></nz-option>
+                                  </nz-select>
+                                  <div *ngIf="submitted && f.backupShippingLine.errors" class="invalid-feedback">
+                                    <div *ngIf="f.backupShippingLine.errors.required">{{ 'stolt.enquiry.new.shippingLine' | translate
+                                      }} is
+                                      required</div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row card-trans">
+              
+                                <div class="col-md-3">
+                                  <label class="form-label">{{activeFrightAir ? 'Airport' : 'Port'}} of Destination<span
+                                      class="text-danger">*</span></label>
+                                  <!-- <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="discharge_port"
+                                    [ngClass]="{'is-invalid': submitted && f.discharge_port.errors}"
+                                    >
+                                    <nz-option *ngFor="let port of  portList | filterByFlag: activeFrightAir"
+                                      [nzLabel]="port?.portName" [nzValue]="port.portId"></nz-option>
+                                  </nz-select> -->
+
+                                  <nz-select class="form-select" nzShowSearch nzServerSearch nzPlaceHolder="Search {{activeFrightAir ? 'Airport' : 'Port'}}"
+                                  formControlName="discharge_port" [nzShowArrow]="false"
+                                  [ngClass]="{'is-invalid': submitted && f.discharge_port.errors}" (ngModelChange)="desPortchange($event)"
+                                    [nzFilterOption]="nzFilterOption" (nzOnSearch)="searchPort($event,'2')">
+                                    <nz-option *ngFor="let port of portList2  "
+                                      [nzLabel]="port.portName" [nzValue]="port.portId"></nz-option>
+                                  </nz-select>
+
+                                  <div *ngIf="submitted && f.discharge_port.errors" class="invalid-feedback">
+                                    <div *ngIf="f.discharge_port.errors.required">{{activeFrightAir ? 'Airport' : 'Port'}} of
+                                      Destination is required</div>
+                                  </div>
+                                </div>
+                                <!-- <div class="col-md-3">
+                                    <label class="form-label">ETA<span class="text-danger">*</span></label>
+                                    <nz-date-picker class="form-select custom-input" nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss" formControlName="eta"
+                                        [nzDisabled]="bookingCancel" [ngClass]="{'is-invalid': submitted && row?.get('eta')?.errors}"></nz-date-picker>
+                                    <div *ngIf="submitted && f.eta.errors" class="invalid-feedback">
+                                        <div *ngIf="f.eta.errors.required">ETA is required</div>
+                                    </div>
+                                </div> -->
+                                <div class="col-md-3">
+                                    <label class="form-label">ETA</label>
+                                    <nz-date-picker class="form-select custom-input" nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss" formControlName="eta"
+                                        [nzDisabled]="bookingCancel" [nzDisabledDate]="disabledETADate"
+                                        [ngClass]="{'is-invalid': submitted && row?.get('eta')?.errors}">
+                                    </nz-date-picker>
+                                    <div *ngIf="submitted && f.eta.errors" class="invalid-feedback">
+                                        <div *ngIf="f.eta.errors.required">ETA is required</div>
+                                    </div>
+                                </div>
+                                 <div class="col-md-3">
+                                            <label class="form-label">Place of Delivery<span class="text-danger">*</span> </label>
+                                            <nz-select  class="form-select" nzShowSearch
+                                            formControlName="deliveryOfPlace" nzPlaceHolder="Search Place of Delivery" nzServerSearch
+                                            [nzFilterOption]="nzFilterOption" (nzOnSearch)="searchPortLocation($event)"
+                                            [ngClass]="{'is-invalid': submitted && f.deliveryOfPlace.errors}">
+                                            <nz-option *ngFor="let port of  sort(locationList ,'locationName')"
+                                                [nzLabel]="port.locationName" [nzValue]="port.locationId"></nz-option>
+                                            </nz-select>
+                                            <div *ngIf="submitted && f.deliveryOfPlace.errors" class="invalid-feedback">
+                                            <div *ngIf="f.deliveryOfPlace.errors.required">Place of Delivery is
+                                                required</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">{{ 'Free Time (Days)' | translate }}<span class="text-danger">*</span></label>
+
+                                            <nz-select class="form-select" nzShowSearch
+                                            nzAllowClear formControlName="freeDaysTime" nzMode="multiple"
+                                            [ngClass]="{'is-invalid': submitted && f.freeDaysTime.errors}">
+                                            <nz-option *ngFor="let num of numbers" [nzLabel]="num"
+                                                [nzValue]="num"></nz-option>
+                                            </nz-select>
+                                            <div *ngIf="submitted && f.freeDaysTime.errors" class="invalid-feedback">
+                                            <div *ngIf="f.freeDaysTime.errors.required">{{ 'Free Time (Days)' |
+                                                translate }}
+                                                is
+                                                required</div>
+                                            </div>
+                                        </div>
+                                <ng-container *ngIf="this.activeFright == 'ocean'">
+                                    <div class="col-md-3">
+                                        <label class="form-label">Vessel Name</label>
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear (ngModelChange)="setVoyage($event)"
+                                            formControlName="vessel">
+                                            <nz-option *ngFor="let vessel of vesselList "
+                                                [nzLabel]="vessel.vesselName"
+                                                [nzValue]="vessel.vesselId"></nz-option>
+                                        </nz-select>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">Voyage No.</label>
+                                        <input formControlName="voyageNumber" class="form-control custom-input"
+                                            type="text">
+                                    </div>
+                                </ng-container>
+                              </div>
+                            </div>
+                          </div>
+
+                        <div class="row mt-3 px-3">
+                            <div class="card-inquiry">
+                                <div class="header" *ngIf="!railandland">
+                                    <div class="col-md-2 px-0">
+                                        <div class=" form-check d-flex align-items-center px-0">
+                                            <input class="mx-1" [disabled]="railandland" formControlName="onCarriage"
+                                                type="checkbox" id="onCarriage" (change)="setValidationFromArray()">
+                                            <label class="form-check-label" for="onCarriage">On Carriage</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-trans" *ngIf="f.onCarriage.value">
+                                  <ng-container formArrayName="transport1">
+                                    <ng-container *ngFor="let row of getTransport1Controls(); let i=index"
+                                        [formGroupName]="i">
+                                        <div class="row mb-3 ml-2"
+                                            *ngIf="this.getTransport1Controls().length === i+1 && this.currentUrl !== 'show'">
+                                            <a class="max-con new-action  btn btn-outline-primary-save btn-sm rounded-pill"
+                                                (click)="addTransport1Row()"><em class="bi bi-plus"></em> Add
+                                                Transport Hub</a>
+                                            <a *ngIf="getTransport1Controls().length >= 3"
+                                                class="max-con new-action  btn  btn-outline-primary btn-sm rounded-pill"
+                                                (click)="deleteTransportRow1(i-1)"><em class="bi bi-trash"></em>
+                                                Delete
+                                                Transport Hub</a>
+                                        </div>
+                                        <div class="row mb-3 relative-pos pl-3">
+                                            <div class="location-icon">
+                                                <i class="bi bi-geo-alt-fill"></i>
+                                                <div class="line"
+                                                    *ngIf="this.getTransport1Controls().length !== i+1"></div>
+                                            </div>
+                                            <div class="col-md-3 ">
+                                                <label class="form-label">Location Type </label>
+                                                <div
+                                                    class="taggle form-check form-switch  d-flex align-items-center">
+                                                    <input *ngIf="i!==0 || railandland" type="radio"
+                                                        name="locationType{{i}}" formControlName="locationType"
+                                                        value="location" (change)="addTransPort1Validation(i)">
+                                                    <label *ngIf="i!==0 || railandland" for="Origin"
+                                                        class="pl-1 mb-0">CFS/ICD</label>
+                                                    <input *ngIf="i!==0 || railandland" class="ml-4" type="radio"
+                                                        name="locationType{{i}}" formControlName="locationType"
+                                                        value="address" (change)="addTransPort1Validation(i)">
+                                                    <label *ngIf="i!==0 || railandland" for="Destination1"
+                                                        class="pl-1 mb-0">Address </label>
+
+
+
+
+
+                                                    <ng-container *ngIf="i==0 && !railandland">
+                                                        <input disabled checked type="radio">
+                                                        <label for="Destination1" class="pl-1 mb-0">Port</label>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="railandland">
+                                                        <input class="ml-4" type="radio" name="locationType{{i}}"
+                                                            formControlName="locationType" value="port"
+                                                            (change)="addTransPort1Validation(i)">
+                                                        <label for="Port" class="pl-1 mb-0">Port </label>
+
+                                                    </ng-container>
+
+
+
+                                                </div>
+                                            </div>
+
+
+                                            <ng-container *ngIf="row?.get('locationType')?.value == 'location'">
+                                                <div class="col-md-3">
+                                                    <label class="form-label">{{getTransport1Controls().length !==
+                                                        i+1 ? 'Origin' :'Destination'
+                                                        }}
+                                                       </label>
+                                                    <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                        formControlName="location"
+                                                        [ngClass]="{'is-invalid': submitted && row?.get('location')?.errors}">
+                                                        <nz-option
+                                                            *ngFor="let loadPlace of  sort(locationList ,'locationName')"
+                                                            [nzLabel]="loadPlace.locationName "
+                                                            [nzValue]="loadPlace.locationId"></nz-option>
+                                                    </nz-select>
+                                                    <div *ngIf="submitted && row?.get('location')?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="row?.get('location')?.errors.required">
+                                                            {{getTransport1Controls().length !==
+                                                            i+1
+                                                            ?
+                                                            'Origin' :'Destination'}}
+                                                            is required</div>
+                                                    </div>
+                                                </div>
+                                            </ng-container>
+                                            <ng-container *ngIf="row?.get('locationType')?.value == 'port'">
+
+                                                <div class="col-md-3">
+                                                    <label class="form-label">{{getTransport1Controls().length !==
+                                                        i+1 ? 'Origin' :'Destination'
+                                                        }}
+                                                    </label>
+                                                    <nz-select [nzDisabled]="!railandland" class="form-select"
+                                                        nzShowSearch nzAllowClear formControlName="location"
+                                                        [ngClass]="{'is-invalid': submitted && row?.get('location')?.errors}">
+                                                        <nz-option
+                                                            *ngFor="let loadPlace of portList2 | filterByFlag: activeFrightAir"
+                                                            [nzLabel]="loadPlace?.portName "
+                                                            [nzValue]="loadPlace?.portId"></nz-option>
+                                                    </nz-select>
+                                                    <div *ngIf="submitted && row?.get('location')?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="row?.get('location')?.errors.required">
+                                                            {{getTransport1Controls().length !==
+                                                            i+1
+                                                            ?
+                                                            'Origin' :'Destination'}}
+                                                            is required</div>
+                                                    </div>
+                                                </div>
+                                            </ng-container>
+
+                                            <ng-container *ngIf="row?.get('locationType')?.value == 'address'">
+
+                                                <div class="col-md-3">
+                                                    <div>
+                                                        <label class="form-label">Company Address</label>
+                                                        <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                            formControlName="addressId"
+                                                            [ngClass]="{'is-invalid': submitted && row?.get('addressId')?.errors}">
+                                                            <nz-option *ngFor="let loadPlace of  billingBranchList"
+                                                                nzLabel="{{loadPlace.branch_address}},{{loadPlace.branch_city}}"
+                                                                nzValue="{{loadPlace.branch_address}},{{loadPlace.branch_city}}"></nz-option>
+                                                        </nz-select>
+
+                                                        <div *ngIf="submitted && row?.get('addressId')?.errors"
+                                                            class="invalid-feedback">
+                                                            <div *ngIf="row?.get('addressId')?.errors.required">
+                                                                Company Address
+                                                                is required</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-2 h3--label color-pencil-red">
+                                                        <span (click)="addAddress(address)"> <em
+                                                                class="bi bi-plus"></em> Add Address</span>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <label class="form-label">Address </label>
+                                                    <textarea class="form-control custom-input"
+                                                        formControlName="address" rows="3" cols="30">
+                          </textarea>
+                                                    <div *ngIf="submitted && row?.get('address')?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="row?.get('address')?.errors.required">Address
+                                                            is required</div>
+                                                    </div>
+                                                </div>
+
+                                            </ng-container>
+
+                                            <div class="col-md-2 "
+                                                *ngIf="this.getTransport1Controls().length !== i+1">
+                                                <label class="form-label">Mode of Transit</label>
+                                                <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                    formControlName="transit"
+                                                    [ngClass]="{'is-invalid': submitted && row?.get('transit')?.errors}">
+                                                    <nz-option nzLabel="Truck" nzValue="Land"></nz-option>
+                                                    <nz-option nzLabel="Rail" nzValue="Rail"></nz-option>
+                                                </nz-select>
+                                                <div *ngIf="submitted && row?.get('transit')?.errors"
+                                                    class="invalid-feedback">
+                                                    <div *ngIf="row?.get('transit')?.errors.required">Transit is
+                                                        required</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2"
+                                                *ngIf="this.getTransport1Controls().length !== i+1">
+                                                <label class="form-label">Transporter</label>
+                                                <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                    formControlName="carrier"
+                                                    [ngClass]="{'is-invalid': submitted && row?.get('carrier')?.errors}">
+                                                    <nz-option
+                                                        *ngFor="let shippingLine of sort(shippingLineList | filterByType : 'ShipmentTypeName': row?.get('transit')?.value ,'name')"
+                                                        [nzLabel]="shippingLine.name"
+                                                        [nzValue]="shippingLine.shippinglineId"></nz-option>
+                                                </nz-select>
+                                                <div *ngIf="submitted && row?.get('carrier')?.errors"
+                                                    class="invalid-feedback">
+                                                    <div *ngIf="row?.get('carrier')?.errors.required">Transporter is
+                                                        required</div>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="col-md-2" 
+                                                *ngIf="row?.get('locationType')?.value == 'address'"></div> -->
+                                            <div class="col-md-2" *ngIf="i!==0">
+                                                <label class="mb-0 p-0 form-label">ETA</label>
+                                                <nz-date-picker class="form-select custom-input"
+                                                nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss"  formControlName="eta"
+                                                    [nzDisabled]="bookingCancel" 
+                                      [nzDisabledDate]="disabledDate"
+                                                    [ngClass]="{'is-invalid': submitted && row?.get('eta')?.errors}"></nz-date-picker>
+                                                <div *ngIf="submitted && row?.get('eta')?.errors"
+                                                    class="invalid-feedback">
+                                                    <div *ngIf=" submitted && row?.get('eta')?.errors.required"
+                                                        class="set-error-msg">ETA is
+                                                        required
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3"
+                                                *ngIf="i!==0 && !(row?.get('locationType')?.value == 'address')">
+                                            </div>
+                                            <div class="col-md-2"
+                                                *ngIf="this.getTransport1Controls().length !== i+1">
+                                                <label class="mb-0 p-0 form-label">ETD</label>
+                                                <nz-date-picker class="form-select custom-input"
+                                                nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss"  formControlName="etd"
+                                                    [nzDisabled]="bookingCancel" 
+                                      [nzDisabledDate]="disabledDate"
+                                                    [ngClass]="{'is-invalid': submitted && row?.get('etd')?.errors}"></nz-date-picker>
+                                                <div *ngIf="submitted && row?.get('etd')?.errors"
+                                                    class="invalid-feedback">
+                                                    <div *ngIf=" submitted && row?.get('etd')?.errors.required"
+                                                        class="set-error-msg">ETD is
+                                                        required
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+
+                                    </ng-container>
+                                </ng-container>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="booking">
+                <button class="accordion-button" [class.collapsed]="!isBookingPanelOpen" type="button"
+                    (click)="toggleButton('booking')" aria-expanded="isBookingPanelOpen" aria-controls="panelBooking">
+                    Booking Details 
+                </button>
+
+            </h2>
+            <div id="panelBooking" class=" multi-collapse accordion-collapse collapse " aria-labelledby="booking"
+                data-bs-parent="#accordionPanelsStayOpenExample" [class.show]="isBookingPanelOpen">
+                <div class="accordion-body">
+                    <div class="wrap-form-field">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row g-4 align-items-center">
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">Booking No.</label>
+                                        <input type="text" formControlName="bookingNumber"
+                                            class="form-control custom-input" placeholder="Booking No" />
+
+                                        <div *ngIf="submitted && f.bookingNumber.errors" class="invalid-feedback">
+                                            <div *ngIf="f.bookingNumber?.errors?.required">Booking No. is
+                                                required</div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-3">
+                                        <label class="mb-0 p-0 form-label">Booking Date</label>
+                                        <mat-form-field appearance="outline" class="custom-date-picker">
+                                            <div class="d-flex align-items-center  w-100">
+                                                <input matInput [matDatepicker]="pickerEtaDate"
+                                                    formControlName="bookingDate" 
+                                                    class="h-0" placeholder="Booking Date" [(ngModel)]="fromdateValue"
+                                                     (click)="pickerEtaDate.open()"/>
+                                                <mat-datepicker-toggle matSuffix
+                                                    [for]="pickerEtaDate"></mat-datepicker-toggle>
+                                            </div>
+                                            <mat-datepicker #pickerEtaDate></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="mb-0 p-0 form-label">Booking Validity Date</label>
+                                        <mat-form-field appearance="outline" class="custom-date-picker">
+                                            <div class="d-flex align-items-center  w-100">
+                                                <input matInput [matDatepicker]="pickerEta8"
+                                                    formControlName="bookingValidityDate" [min]="todayDate" class="h-0"
+                                                    [(ngModel)]="todateValue" [min]="fromdateValue"
+                                                    placeholder="Booking Validity Date" (click)="pickerEta8.open()"/>
+                                                <mat-datepicker-toggle matSuffix
+                                                    [for]="pickerEta8"></mat-datepicker-toggle>
+                                            </div>
+                                            <mat-datepicker #pickerEta8></mat-datepicker>
+                                        </mat-form-field>
+                                        <mat-error>
+                                            <div *ngIf=" submitted && f?.bookingValidityDate?.errors?.required"
+                                                class="set-error-msg">{{
+                                                'stolt.enquiry.new.enquiryValidTo' |
+                                                translate }} is required
+                                            </div>
+                                        </mat-error>
+                                    </div>
+
+                                    <!-- for disable date picker first we have to select booking date than we select booking validity date -->
+                                    <!-- [disabled]="!this.newenquiryForm.controls.bookingDate.value || show" -->
+
+
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">{{ 'stolt.enquiry.new.shippingTerm' | translate }}
+                                           </label>
+
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear
+                                            nzPlaceHolder="Shipping Term" formControlName="shippping_term"
+                                            [ngClass]="{'is-invalid': submitted && f.shippping_term.errors}">
+                                            <nz-option *ngFor="let shippingTerm of  sort(shippingtermList ,'typeName')"
+                                                [nzLabel]="shippingTerm.typeName"
+                                                [nzValue]="shippingTerm.systemtypeId"></nz-option>
+                                        </nz-select>
+                                        <div *ngIf="submitted && f.shippping_term.errors" class="invalid-feedback">
+                                            <div *ngIf="f.shippping_term?.errors?.required">{{
+                                                'stolt.enquiry.new.shippingTerm' | translate }}
+                                                is required</div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="Product">
+                <button class="accordion-button" [class.collapsed]="!isCargoPanelOpen" type="button"
+                    (click)="toggleButton('cargo')" aria-expanded="isCargoPanelOpen" aria-controls="panelsProduct">
+                    Cargo Details
+                </button>
+
+            </h2>
+            <div id="panelsProduct" class=" multi-collapse accordion-collapse collapse " aria-labelledby="Product"
+                data-bs-parent="#accordionPanelsStayOpenExample" [class.show]="isCargoPanelOpen">
+                <div class="accordion-body">
+                    <div class="wrap-form-field">
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Commodity Description</label>
+
+                                        <textarea class="form-control custom-input"
+                                            formControlName="commodityDescription"
+                                            [ngClass]="{'is-invalid': submitted && f.commodityDescription.errors}"
+                                            rows="3" cols="30" placeholder="Description">
+
+                          </textarea>
+                                        <div *ngIf="submitted && f.commodityDescription.errors"
+                                            class="invalid-feedback">
+                                            <div *ngIf="f.commodityDescription?.errors?.required">Commodity Description
+                                                is
+                                                required
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wrap-table-field">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class=" d-flex flex-column flex-sm-row gap-3">
+                                    <div class="col-md-12 p-0">
+                                        <div
+                                            class="wrap-form-field  wrap-pagination  d-flex justify-content-end alignment">
+                                            <div class="mb-2">
+                                                <a *ngIf="!show"
+                                                    class="max-con new-action  btn btn-outline-primary btn-sm rounded-pill"
+                                                    (click)="onCommoidity(Addcommodity)">Add Cargo </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table aria-describedby="mytable" class="gfg">
+                                        <thead>
+                                            <tr class="field-name">
+                                                <th scope="col">Commodity </th>
+                                                <th scope="col">Commodity Type</th>
+                                                <th scope="col">HS Code</th>
+                                                <th scope="col">IMCO Class</th>
+                                                <th scope="col">UN No.</th>
+                                                <th scope="col">Gross Weight</th>
+                                                <!-- <th scope="col">Marine Pollution</th> -->
+                                                <th scope="col"> Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="collapse-ui"
+                                                *ngFor="let commodity of commodityArray; let i=index">
+                                                <td>{{commodity.productName}}</td>
+                                                <td>{{commodity.commodityTypeName | uppercase}}</td>
+                                                <td>{{commodity.hsCode}}</td>
+                                                <td><span
+                                                        *ngIf="commodity.commodityTypeName === 'HAZ' || commodity.commodityTypeName === 'Haz' || commodity.commodityTypeName === 'haz'">{{commodity.imcoClass}}</span>
+                                                </td>
+                                                <td><span
+                                                        *ngIf="commodity.commodityTypeName === 'HAZ' || commodity.commodityTypeName === 'Haz' || commodity.commodityTypeName === 'haz'">{{commodity.unNo}}</span>
+                                                </td>
+                                                <td>{{commodity.grossWeight}} {{commodity.unitName}}</td>
+                                                <!-- <td>{{commodity.marinePollutionId}}</td> -->
+                                                <td class="action-field" >
+                                                    <span *ngIf="this.currentUrl !== 'show'" nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}"
+                                                        class="mtop"><a data-bs-toggle="modal"><em
+                                                                (click)="editCommodity(commodity,Addcommodity,i)"
+                                                                class="bi bi-pencil color-pencil-red"></em> </a>
+                                                    </span>
+                                                    <span *ngIf="this.currentUrl !== 'show'" nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}"
+                                                        (click)="deleteCommodity(commodity,content1 )"
+                                                        class="mtop"><a><em
+                                                                class="bi bi-trash color-pencil-red"></em></a>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="no-data-availble" *ngIf="commodityArray?.length === 0">
+                                    {{'common.no_data' | translate}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item" *ngIf="showContainer">
+            <h2 class="accordion-header" id="Container">
+                <button class="accordion-button" [class.collapsed]="!isContainerPanelOpen" type="button"
+                    (click)="toggleButton('container')" aria-expanded="isContainerPanelOpen" aria-controls="Containers">
+                    Load Details
+                </button>
+
+            </h2>
+            <div id="Containers" class="multi-collapse accordion-collapse collapse " aria-labelledby="Container"
+                data-bs-parent="#accordionPanelsStayOpenExample" [class.show]="isContainerPanelOpen">
+                <div class="accordion-body">
+                    <div class="row">
+
+                        <div class="wrap-table-field">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="row g-4">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Container No</label>
+                                            <input 
+                                              type="text" 
+                                              class="form-control custom-input"
+                                              formControlName="containerNo"
+                                              placeholder="Enter Container No"
+                                              [disabled]="disableInput">
+                                          </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class=" d-flex flex-column flex-sm-row gap-3">
+                                        <div class="col-md-12 p-0">
+                                            <div
+                                                class="wrap-form-field  wrap-pagination  d-flex justify-content-end alignment">
+                                                <div class="mb-2" *ngIf="!show">
+                                                    <a class="max-con new-action  btn btn-outline-primary btn-sm rounded-pill"
+                                                        (click)="addContainerRow()">Add Container Details </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="table-responsive">
+                                        <table aria-describedby="mytable" class="gfg">
+                                            <thead>
+                                                <tr class="field-name">
+                                                    <th scope="col">{{typeOfWay}} Type </th>
+                                                    <th scope="col">No. of Container</th>
+                                                    <th scope="col">Gross Weight</th>
+                                                    <th scope="col">Unit</th>
+
+                                                    <th scope="col" *ngIf="!show"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody formArrayName="container">
+                                                <tr class="collapse-ui"
+                                                    *ngFor="let row of getContainerControls(); let i=index"
+                                                    [formGroupName]="i">
+                                                    <td>
+
+                                                        <ng-container *ngIf="typeOfWay=='Container'">
+                                                            <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                                formControlName="containerType"
+                                                                [ngClass]="{'is-invalid': submitted && row?.get('containerType')?.errors}">
+                                                                <nz-option
+                                                                    *ngFor="let data of  sort(containerTypeList ,'typeName')"
+                                                                    [nzLabel]="data?.typeName"
+                                                                    [nzValue]="data?.typeName"></nz-option>
+                                                            </nz-select>
+                                                            <div *ngIf="submitted && row?.get('containerType')?.errors"
+                                                                class="invalid-feedback">
+                                                                <div *ngIf="row?.get('containerType')?.errors.required">
+                                                                    Container Type is required</div>
+                                                            </div>
+                                                        </ng-container>
+                                                        <ng-container *ngIf="typeOfWay=='ULD Container'">
+                                                            <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                                formControlName="containerType"
+                                                                [ngClass]="{'is-invalid': submitted && row?.get('containerType')?.errors}">
+                                                                <nz-option
+                                                                    *ngFor="let data of  sort(ULDcontainerlist ,'typeName')"
+                                                                    [nzLabel]="data?.typeName"
+                                                                    [nzValue]="data?.typeName"></nz-option>
+                                                            </nz-select>
+                                                            <div *ngIf="submitted && row?.get('containerType')?.errors"
+                                                                class="invalid-feedback">
+                                                                <div *ngIf="row?.get('containerType')?.errors.required">
+                                                                    Container Type is required</div>
+                                                            </div>
+                                                        </ng-container>
+                                                        <ng-container *ngIf="typeOfWay=='Truck'">
+                                                            <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                                formControlName="truckType"
+                                                                [ngClass]="{'is-invalid': submitted && row?.get('truckType')?.errors}">
+                                                                <nz-option
+                                                                    *ngFor="let data of  sort(truckTypeList ,'typeName')"
+                                                                    [nzLabel]="data?.typeName"
+                                                                    [nzValue]="data?.typeName"></nz-option>
+                                                            </nz-select>
+                                                            <div *ngIf="submitted && row?.get('truckType')?.errors"
+                                                                class="invalid-feedback">
+                                                                <div *ngIf="row?.get('truckType')?.errors.required">
+                                                                    Truck Type is required</div>
+                                                            </div>
+                                                        </ng-container>
+                                                        <ng-container *ngIf="typeOfWay=='Wagon'">
+                                                            <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                                formControlName="wagonType"
+                                                                [ngClass]="{'is-invalid': submitted && row?.get('wagonType')?.errors}">
+                                                                <nz-option
+                                                                    *ngFor="let data of  sort(wagonTypeList ,'typeName')"
+                                                                    [nzLabel]="data?.typeName"
+                                                                    [nzValue]="data?.typeName"></nz-option>
+                                                            </nz-select>
+                                                            <div *ngIf="submitted && row?.get('wagonType')?.errors"
+                                                                class="invalid-feedback">
+                                                                <div *ngIf="row?.get('wagonType')?.errors.required">
+                                                                    Container Type is required</div>
+                                                            </div>
+                                                        </ng-container>
+
+                                                    </td>
+                                                    <td>
+                                                        <input formControlName="noOfContainer" type="number"
+                                                            class="form-control custom-input"
+                                                            placeholder="Container Number"
+                                                            [ngClass]="{'is-invalid': submitted && row?.get('noOfContainer')?.errors}">
+                                                        <div *ngIf="submitted && row?.get('noOfContainer')?.errors"
+                                                            class="invalid-feedback">
+                                                            <div *ngIf="row?.get('noOfContainer')?.errors?.required">No.
+                                                                Of Container
+                                                                is required</div>
+                                                        </div>
+                                                    </td>
+
+                                                    <td>
+                                                        <input formControlName="grossWeight" type="number"
+                                                            class="form-control custom-input"
+                                                            [ngClass]="{'is-invalid': submitted &&  row?.get('grossWeight')?.errors}">
+                                                        <div *ngIf="submitted &&  row?.get('grossWeight')?.errors"
+                                                            class="invalid-feedback">
+                                                            <div *ngIf=" row?.get('grossWeight')?.errors">Gross Weight is
+                                                                required</div>
+                                                        </div>
+                                                    </td>
+
+                                                    <td>
+
+                                                        <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                            formControlName="unit"
+                                                            [ngClass]="{'is-invalid': submitted &&  row?.get('unit')?.errors}">
+                                                            <nz-option *ngFor="let enquiryType of weighthData" [nzLabel]="enquiryType.uomShort"
+                                                            [nzValue]="enquiryType.uomId"></nz-option>
+                                                        </nz-select>
+
+                                                        <div *ngIf="submitted &&  row?.get('unit')?.errors"
+                                                            class="invalid-feedback">
+                                                            <div *ngIf=" row?.get('unit')?.errors.required">Unit is required</div>
+                                                        </div>
+
+                                                    </td>
+
+                                                    <td class="action-field" *ngIf="!show">
+                                                        <span *ngIf="i != 0" nz-tooltip
+                                                            nzTooltipTitle="{{ 'common.delete' | translate }}"
+                                                            (click)="deleteRow(i,'container')" class="mtop"><a><em
+                                                                    class="bi bi-trash color-pencil-red"></em></a>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="no-data-availble" *ngIf="getChargecontainerLength('container') === 0">
+                                        {{'common.no_data' | translate}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="showPallet" class="accordion-item">
+            <h2 class="accordion-header" id="LooseCargo">
+              <button class="accordion-button" [class.collapsed]="!isLooseCargoPanelOpen" type="button"
+                (click)="toggleButton('looseCargo')" aria-expanded="isLooseCargoPanelOpen" aria-controls="LooseCargos">
+                Loose Cargo Details
+              </button>
+      
+            </h2>
+            <div id="LooseCargos" class="multi-collapse accordion-collapse collapse " aria-labelledby="LooseCargo"
+              [class.show]="isLooseCargoPanelOpen" data-bs-parent="#accordionPanelsStayOpenExample">
+              <div class="accordion-body">
+                <form [formGroup]="empForm">
+                    <div class="mb-2 text-end">
+                      <a class="btn btn-outline-primary mt-3" (click)="addLooseCargo()">Add Another
+                        Load</a>
+                    </div>
+                    
+                    <div formArrayName="cargos">
+                      <div
+                        *ngFor="let cargo of empForm.get('cargos')?.controls; let empIndex=index ; first as isFirst">
+
+
+
+                        <div class="wrap-form-field d-flex">
+                          <div class="mt-4 mr-2"><span>{{empIndex+1}}.</span></div>
+                          <div formGroupName="{{ empIndex }}" class="w-100">
+                            <div class="row d-flex mb-3">
+
+                              <div class="col-md-2">
+                                <label class="form-label" title="Package type">Package Type</label>
+                                <nz-select formControlName="pkgname"
+                                  (ngModelChange)="radioButtonChange($event, empIndex)" class="d-flex">
+                                  <nz-option nzValue="Pallets" nzLabel="Pallets"></nz-option>
+                                  <nz-option nzValue="Boxes/Crates" nzLabel="Boxes/Crates"></nz-option>
+                                </nz-select>
+                              </div>
+
+                              <div class="col-md-1">
+                                <div class="form-field-section">
+                                  <label class="form-label">
+                                    No. of Pieces </label>
+                                  <input type="number" min="1" max="9999"
+                                    class="form-control custom-input rounded-0" formControlName="units"
+                                    placeholder=""
+                                    (keyup)="grossWeightselect($event,empIndex);selectTotalVolum($event,empIndex);"
+                                    [ngClass]="{'is-invalid': submitted && empForm?.get('cargos').controls[empIndex]?.get('units')?.errors}"
+                                    oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^0-9]/g,'').replace(/ +/g, ' ').replace(/\./g, '')" />
+                                  <div
+                                    *ngIf="submitted && empForm?.get('cargos').controls[empIndex]?.get('units')?.errors"
+                                    class="invalid-feedback">
+                                    <div
+                                      *ngIf="empForm?.get('cargos').controls[empIndex]?.get('units').errors?.required">
+                                      This field is required
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-2">
+                                <label class="form-label">Pallet Type</label>
+                                <nz-select class="form-select" nzShowSearch nzAllowClear
+                                  (ngModelChange)="radioButtonChange($event, empIndex);setDimensions($event,empIndex);selectTotalVolum($event,empIndex)"
+                                  formControlName="Pallettype" 
+                                  [ngClass]="{'is-invalid': submitted && empForm?.get('cargos').controls[empIndex]?.get('Pallettype')?.errors}">
+                                  <nz-option *ngFor="let data of  palletTypeslist" [nzLabel]="data?.typeName"
+                                    [nzValue]="data?.typeName"></nz-option>
+                                </nz-select>
+
+                                <div
+                                *ngIf="submitted && empForm?.get('cargos').controls[empIndex]?.get('Pallettype')?.errors"
+                                class="invalid-feedback">
+                                <div
+                                  *ngIf="empForm?.get('cargos').controls[empIndex]?.get('Pallettype').errors?.required">
+                                  This field is required
+                                </div>
+                              </div>
+                              </div>
+
+
+                              <div class=" col-md-6">
+                                <div class="row d-flex">
+                                  <div class="col-md-2 px-0">
+                                    <label class="form-label">Length</label>
+                                    <div class="form-field-section">
+                                      <input type="number" min="1" max="9999"  [readonly]="empForm?.get('cargos').controls[empIndex]?.get('Pallettype').value != 'Pallets (non specified size)'"
+                                        class="form-control custom-input rounded-0" formControlName="lengthp"
+                                        (keyup)="selectTotalVolum($event,empIndex)" placeholder="L"
+                                        [ngClass]="{'is-invalid': submitted && empForm?.get('cargos').controls[empIndex]?.get('lengthp')?.errors}" />
+                                      <div
+                                        *ngIf="submitted && empForm?.get('cargos').controls[empIndex]?.get('lengthp')?.errors"
+                                        class="invalid-feedback">
+                                        <div
+                                          *ngIf="empForm?.get('cargos').controls[empIndex]?.get('lengthp').errors?.required">
+                                          This field is required
+                                        </div>
+
+                                        <div
+                                        *ngIf="empForm?.get('cargos').controls[empIndex]?.get('lengthp')?.errors?.min">
+                                        The value must be at least {{
+                                        empForm?.get('cargos').controls[empIndex]?.get('lengthp')?.errors?.min?.min
+                                        }}.
+                                      </div>
+                                      <div
+                                        *ngIf="empForm?.get('cargos').controls[empIndex]?.get('lengthp')?.errors?.max">
+                                        The value must be no more than {{
+                                        empForm?.get('cargos').controls[empIndex]?.get('lengthp')?.errors?.max?.max
+                                        }}.
+                                      </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-md-2 px-0">
+                                    <label class="form-label">Width</label>
+                                    <div class="form-field-section">
+                                      <input type="number" min="1" max="9999" [readonly]="empForm?.get('cargos').controls[empIndex]?.get('Pallettype').value != 'Pallets (non specified size)'"
+                                        class="form-control custom-input rounded-0" formControlName="Weightp"
+                                        (keyup)="selectTotalVolum($event,empIndex)" placeholder="W"
+                                        [ngClass]="{'is-invalid': submitted && empForm?.get('cargos').controls[empIndex]?.get('Weightp')?.errors}" />
+                                      <div
+                                        *ngIf="submitted && empForm?.get('cargos').controls[empIndex]?.get('Weightp')?.errors"
+                                        class="invalid-feedback">
+                                        <div
+                                          *ngIf="empForm?.get('cargos').controls[empIndex]?.get('Weightp').errors?.required">
+                                          This field is required
+                                        </div>
+
+                                        <div
+                                        *ngIf="empForm?.get('cargos').controls[empIndex]?.get('Weightp')?.errors?.min">
+                                        The value must be at least {{
+                                        empForm?.get('cargos').controls[empIndex]?.get('Weightp')?.errors?.min?.min
+                                        }}.
+                                      </div>
+                                      <div
+                                        *ngIf="empForm?.get('cargos').controls[empIndex]?.get('Weightp')?.errors?.max">
+                                        The value must be no more than {{
+                                        empForm?.get('cargos').controls[empIndex]?.get('Weightp')?.errors?.max?.max
+                                        }}.
+                                      </div>
+
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <!-- Height Section -->
+                                  <div class="col-md-2 px-0">
+                                    <label class="form-label">Height</label>  
+                                        <div class="form-field-section">
+                                          <input type="number" min="1" max="9999"
+                                            class="form-control custom-input rounded-0" appDecimalInput
+                                            formControlName="heightselected"
+                                            (keyup)="selectTotalVolum($event,empIndex)" placeholder="H" 
+                                            [ngClass]="{'is-invalid': submitted && empForm?.get('cargos').controls[empIndex]?.get('heightselected')?.errors}" />
+
+
+                                            <div  *ngIf="submitted && empForm?.get('cargos').controls[empIndex]?.get('heightselected')?.errors"
+                                            class="invalid-feedback">
+                                            <div
+                                              *ngIf="empForm?.get('cargos').controls[empIndex]?.get('heightselected').errors?.required">
+                                              This field is required
+                                            </div>
+
+                                            <div
+                                          *ngIf="empForm?.get('cargos').controls[empIndex]?.get('heightselected')?.errors?.min">
+                                          The value must be at least {{
+                                          empForm?.get('cargos').controls[empIndex]?.get('heightselected')?.errors?.min?.min
+                                          }}.
+                                        </div>
+                                        <div
+                                          *ngIf="empForm?.get('cargos').controls[empIndex]?.get('heightselected')?.errors?.max">
+                                          The value must be no more than {{
+                                          empForm?.get('cargos').controls[empIndex]?.get('heightselected')?.errors?.max?.max
+                                          }}.
+                                        </div>
+
+                                          </div>
+
+                                        </div>
+                                    
+                                  </div>
+                                  <!-- Volume Section -->
+                                  <div class="col-md-3 px-0 mx-4">
+                                    <label class="form-label">Per Piece Weight (Kgs)</label>
+                                    <!-- <div class="row"> -->
+                                    <!-- <div class="col-md-6 pr-0"> -->
+                                    <div class="form-field-section">
+                                      <input type="number" min="1" max="9999"
+                                        class="form-control custom-input rounded-0" appDecimalInput
+                                        formControlName="Weightselected" placeholder=""
+                                        (keyup)="grossWeightselect($event,empIndex)"
+                                        [ngClass]="{'is-invalid': submitted && empForm?.get('cargos').controls[empIndex]?.get('Weightselected')?.errors}" />
+                                      <div
+                                        *ngIf="submitted && empForm?.get('cargos').controls[empIndex]?.get('Weightselected')?.errors"
+                                        class="invalid-feedback">
+                                        <div
+                                          *ngIf="empForm?.get('cargos').controls[empIndex]?.get('Weightselected').errors?.required">
+                                         Field is required
+                                        </div>
+
+                                        <div
+                                          *ngIf="empForm?.get('cargos').controls[empIndex]?.get('Weightselected')?.errors?.min">
+                                          The value must be at least {{
+                                          empForm?.get('cargos').controls[empIndex]?.get('Weightselected')?.errors?.min?.min
+                                          }}.
+                                        </div>
+                                        <div
+                                          *ngIf="empForm?.get('cargos').controls[empIndex]?.get('Weightselected')?.errors?.max">
+                                          The value must be no more than {{
+                                          empForm?.get('cargos').controls[empIndex]?.get('Weightselected')?.errors?.max?.max
+                                          }}.
+                                        </div>
+
+                                      </div>
+                                    </div>
+                                    <!-- </div> -->
+                                    <!-- <div class="col-md-6 px-0">
+                                        <div class="form-field-section">
+                                          <nz-select class="nz-form-select nz-select-width" nzShowSearch
+                                            nzAllowClear formControlName="selectedw"
+                                            (ngModelChange)="grossWeightselect($event,empIndex)"
+                                            style="border-bottom: none !important; width: 100% !important;">
+                                            <nz-option *ngFor="let enquiryType of weighthData"
+                                              [nzLabel]="enquiryType.uomShort"
+                                              [nzValue]="enquiryType.uomShort"></nz-option>
+                                          </nz-select>
+                                        </div>
+                                      </div> -->
+                                    <!-- <div class="pt-2">
+                                          <span  class="font-12">Total Volume:{{
+                                            empForm?.get('cargos').controls[empIndex]?.get('volumeselect').value |
+                                            number:'1.2-2' }} CBM</span>
+                                        </div> -->
+                                    <!-- </div> -->
+                                  </div>
+
+                                  <div class="col-md-2  ">
+                                    <label class="form-label">Unit </label>
+                                    <div class="form-field-section">
+                                      <nz-select class="nz-form-select nz-select-width"
+                                        style="border-bottom: none !important; width: 100% !important;"
+                                        formControlName="selectedh"
+                                        (ngModelChange)="selectTotalVolum($event,empIndex)" nzShowSearch
+                                        nzAllowClear 
+                                        [ngClass]="{'is-invalid': submitted && empForm?.get('cargos').controls[empIndex]?.get('selectedh')?.errors}" >
+                                        <nz-option *ngFor="let containerType of lengthData"
+                                          [nzLabel]="containerType?.uomShort"
+                                          [nzValue]="containerType?.uomShort"></nz-option>
+                                      </nz-select>
+                                      <div
+                                      *ngIf="submitted && empForm?.get('cargos').controls[empIndex]?.get('selectedh')?.errors"
+                                      class="invalid-feedback">
+                                      <div
+                                        *ngIf="empForm?.get('cargos').controls[empIndex]?.get('selectedh').errors?.required">
+                                       Field is required
+                                      </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div class="col-md-2 d-none">
+                                    <label class="form-label">Volume</label>
+                                    <div class="row">
+                                      <div class="col-md-6 pr-0">
+                                        <div class="form-field-section">
+                                          <input type="number" max="9999"
+                                            class="form-control custom-input rounded-0" appDecimalInput
+                                            formControlName="volumeselect" placeholder="" disabled
+                                            [ngClass]="{'is-invalid': submitted && empForm?.get('cargos').controls[empIndex]?.get('volumeselect')?.errors}" />
+                                          <div
+                                            *ngIf="submitted && empForm?.get('cargos').controls[empIndex]?.get('volumeselect')?.errors"
+                                            class="invalid-feedback">
+                                            <div
+                                              *ngIf="empForm?.get('cargos').controls[empIndex]?.get('volumeselect').errors?.required">
+                                              This field is required
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-6 px-0">
+                                        <div class="form-field-section">
+                                          <nz-select class="nz-form-select nz-select-width" nzShowSearch
+                                            nzAllowClear formControlName="volumebselecteds" [nzDisabled]="true"
+                                            style="border-bottom: none !important; width: 100% !important;">
+                                            <nz-option [nzLabel]="'CBM'" [nzValue]="'CBM'"></nz-option>
+                                          </nz-select>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                </div>
+
+                              </div>
+
+                              <div class="col-md-1 d-flex justify-content-center mt-4">
+                                <span><i (click)="removeLooseCargo(empIndex)"
+                                    class="fa-regular fa-trash-can"></i></span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                      <div class="row" class="text-end">
+                        <div class="footer-total">
+                          <span class="mr-5">No. of Pieces : {{totalPieces }}</span>
+                          <span class="mr-5">Gross Volume : {{totalVolume  | number:'1.2-2'}} cbm</span> 
+                          <span class="mr-5">Gross Weight : {{totalGrossWeight | number:'1.2-2'}} kgs</span> 
+                         
+                        </div>
+                       
+                      </div>
+                    </div>
+
+                  </form>
+              </div>
+            </div>
+          </div>
+          
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="Invoice">
+                <button class="accordion-button" [class.collapsed]="!isInvoicePanelOpen" type="button"
+                    (click)="toggleButton('invoice')" aria-expanded="isInvoicePanelOpen" aria-controls="panelsInvoice">
+                    Invoice Details 
+                </button>
+
+            </h2>
+            <div id="panelsInvoice" class=" multi-collapse accordion-collapse collapse " aria-labelledby="Invoice"
+                data-bs-parent="#accordionPanelsStayOpenExample" [class.show]="isInvoicePanelOpen">
+                <div class="accordion-body">
+                    <div class="wrap-form-field">
+                        <div class="row">
+                            <div class="wrap-table-field">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class=" d-flex flex-column flex-sm-row gap-3">
+                                            <div class="col-md-12 p-0">
+                                                <div
+                                                    class="wrap-form-field  wrap-pagination  d-flex justify-content-end alignment">
+                                                    <div class="mb-2" *ngIf="!show">
+                                                        <a class="max-con new-action  btn btn-outline-primary btn-sm rounded-pill"
+                                                            (click)="addInvoiceRow()">Add Invoice Details </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="table-responsive">
+                                            <table aria-describedby="mytable" class="gfg">
+                                                <thead>
+                                                    <tr class="field-name">
+                                                        <th scope="col">Invoice No.
+                                                        </th>
+                                                        <th scope="col">Invoice Date</th>
+                                                        <th scope="col" *ngIf="!show"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody formArrayName="invoices">
+                                                    <tr class="collapse-ui"
+                                                        *ngFor="let row of getInvoiceControls(); let i=index"
+                                                        [formGroupName]="i">
+
+                                                        <td>
+                                                            <input formControlName="invoiceNo" type="text"
+                                                                class="form-control custom-input"
+                                                                placeholder="Invoice No"
+                                                                [ngClass]="{'is-invalid': submitted && row?.get('invoiceNo')?.errors}">
+                                                            <div *ngIf="submitted && row?.get('invoiceNo')?.errors"
+                                                                class="invalid-feedback">
+                                                                <div *ngIf="row?.get('invoiceNo')?.errors?.required">
+                                                                    Invoice No.
+                                                                    is required</div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <mat-form-field appearance="outline"
+                                                                class="custom-date-picker">
+                                                                <div class="d-flex align-items-center  w-100">
+                                                                    <input matInput [matDatepicker]="pickerEta"
+                                                                        formControlName="invoiceDate"
+                                                                        placeholder="Invoice Date"
+                                                                        style="padding: 12px !important;" class="h-0" (click)="pickerEta.open()" />
+                                                                    <mat-datepicker-toggle matSuffix
+                                                                        [for]="pickerEta"></mat-datepicker-toggle>
+                                                                </div>
+                                                                <mat-datepicker #pickerEta></mat-datepicker>
+                                                            </mat-form-field>
+                                                        </td>
+
+                                                        <td class="action-field" *ngIf="!show">
+                                                            <span *ngIf="i != 0" nz-tooltip
+                                                                nzTooltipTitle="{{ 'common.delete' | translate }}"
+                                                                (click)="deleteRow(i,'invoices')" class="mtop"><a><em
+                                                                        class="bi bi-trash color-pencil-red"></em></a>
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="no-data-availble"
+                                            *ngIf="getChargecontainerLength('invoices') === 0">
+                                            {{'common.no_data' | translate}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="Service">
+                <button class="accordion-button" [class.collapsed]="!isServicePanelOpen" type="button"
+                    (click)="toggleButton('service')" aria-expanded="isServicePanelOpen" aria-controls="panelsService">
+                    Custom Clearence
+                </button>
+
+            </h2>
+            <div id="panelsService" class=" multi-collapse accordion-collapse collapse " aria-labelledby="Service"
+                data-bs-parent="#accordionPanelsStayOpenExample" [class.show]="isServicePanelOpen">
+                <div class="accordion-body">
+                    <div class="wrap-form-field">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row g-4 align-items-center">
+
+                                    <div class="col-md-3" *ngIF="false">
+                                        <label class="mb-0 p-0 form-label">Clearance Date</label>
+                                        <mat-form-field appearance="outline" class="custom-date-picker">
+                                            <div class="d-flex align-items-center  w-100">
+                                                <input matInput [matDatepicker]="pickerEta14"
+                                                    formControlName="clearanceDate" class="h-0"
+                                                    placeholder="Clearance Date" />
+                                                <mat-datepicker-toggle matSuffix
+                                                    [for]="pickerEta14"></mat-datepicker-toggle>
+                                            </div>
+                                            <mat-datepicker #pickerEta14></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-md-3" *ngIF="false">
+                                        <label class="form-label mb-3">Destination Services</label>
+                                        <div class="d-flex">
+                                            <input class="" type="checkbox" formControlName="clearanceDestination">
+                                            <label class="form-label mx-1 mt-1">Clearance</label>
+
+                                            <input class="" type="checkbox" formControlName="transportDestination">
+                                            <label class="form-label mx-1 mt-1">Transport</label>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="taggle form-check form-switch d-flex align-items-center mt-2">
+                                            <input class="ml-4" type="checkbox" id="Destination" name="Destination"
+                                                formControlName="customDestination">
+                                            <label for="Destination1" class="pl-1 mb-0">Custom Clearance
+                                                Destination</label><br>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-3 mt-2" *ngIf="f.customDestination.value">
+                                        <label class="form-label" style="margin-top: 20px;" >Destination Custom Clearance </label>
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear
+                                            formControlName="customDestinationLocation"
+                                            [ngClass]="{'is-invalid': submitted && f.customDestinationLocation.errors}">
+                                            <nz-option *ngFor="let loadPlace of  sort(locationList ,'locationName')"
+                                                [nzLabel]="loadPlace.locationName "
+                                                [nzValue]="loadPlace.locationId"></nz-option>
+                                        </nz-select>
+                                        <div *ngIf="submitted && f.customDestinationLocation.errors"
+                                            class="invalid-feedback">
+                                            <div *ngIf="f.customDestinationLocation.errors.required">Origin is
+                                                required</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3" *ngIF="false">
+                                        <label class="form-label">ISF Filed By <span
+                                                class="text-danger">*</span></label>
+
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear
+                                            nzPlaceHolder="ISF Filed By" formControlName="ISFFiledBy"
+                                            [ngClass]="{'is-invalid': submitted && f.ISFFiledBy.errors}">
+                                            <nz-option *ngFor="let shippingTerm of  sort(ISFList ,'typeName')"
+                                                [nzLabel]="shippingTerm.typeName"
+                                                [nzValue]="shippingTerm.systemtypeId"></nz-option>
+                                        </nz-select>
+                                        <div *ngIf="submitted && f.ISFFiledBy.errors" class="invalid-feedback">
+                                            <div *ngIf="f.ISFFiledBy?.errors?.required">ISF
+                                                is required</div>
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item" *ngIf="!railandland">
+            <h2 class="accordion-header" id="Services">
+                <button class="accordion-button" [class.collapsed]="!isServicesPanelOpen" type="button"
+                    (click)="toggleButton('Services')" aria-expanded="isServicesPanelOpen"
+                    aria-controls="pannelServices">
+                    Value Added Services
+                </button>
+
+            </h2>
+            <div id="pannelServices" class="multi-collapse accordion-collapse collapse " aria-labelledby="Services"
+                [class.show]="isServicesPanelOpen" data-bs-parent="#accordionPanelsStayOpenExample">
+                <div class="accordion-body">
+                    <div class="wrap-table-field">
+                        <div class="row">
+                            <div class="col-md-2 ">
+                                <div class=" form-check d-flex align-items-center ">
+                                    <input class="mx-1" formControlName="cargo" type="checkbox" id="cargo">
+                                    <label class="form-check-label" for="cargo">Cargo Insurance</label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 ">
+                                <div class=" form-check d-flex align-items-center ">
+                                    <input class="mx-1" formControlName="emptyContainer" type="checkbox"
+                                        id="emptyContainer">
+                                    <label class="form-check-label" for="emptyContainer">Empty Container
+                                        Insurance</label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 ">
+                                <div class=" form-check d-flex align-items-center ">
+                                    <input class="mx-1" formControlName="palletization" type="checkbox"
+                                        id="palletization">
+                                    <label class="form-check-label" for="palletization">Palletization</label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 ">
+                                <div class=" form-check d-flex align-items-center ">
+                                    <input class="mx-1" formControlName="fumigation" type="checkbox" id="fumigation">
+                                    <label class="form-check-label" for="fumigation">Fumigation</label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 ">
+                                <div class=" form-check d-flex align-items-center ">
+                                    <input class="mx-1" formControlName="warehousing" type="checkbox" id="warehousing">
+                                    <label class="form-check-label" for="warehousing">Warehousing/CFS</label>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        
+
+
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="detention">
+                <button class="accordion-button" [class.collapsed]="!isDetentionPanelOpen" type="button"
+                    (click)="toggleButton('detention')" aria-expanded="isDetentionPanelOpen"
+                    aria-controls="panelsdetention">
+                    Detention Details / Free Days
+                </button>
+
+            </h2>
+            <div id="panelsdetention" class="multi-collapse accordion-collapse collapse show"
+                aria-labelledby="detention" data-bs-parent="#accordionPanelsStayOpenExample"
+                [class.show]="isDetentionPanelOpen">
+                <div class="accordion-body mb-5">
+                    <div class="wrap-form-field">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row g-4 align-items-center">
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">Destination Carrier Free Days</label>
+                                        <input formControlName="destinationCarrierFD" class="form-control custom-input"
+                                            type="number"
+                                            [ngClass]="{'is-invalid': submitted && f.destinationCarrierFD.errors}"
+                                            placeholder="Carrier Free Days">
+                                        <div *ngIf="submitted && f.destinationCarrierFD.errors"
+                                            class="invalid-feedback">
+                                            <div *ngIf="f.destinationCarrierFD?.errors?.required">Free Days is required
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">Destination Port Free Days</label>
+                                        <input formControlName="destinationPortFD" class="form-control custom-input"
+                                            type="number"
+                                            [ngClass]="{'is-invalid': submitted && f.destinationPortFD.errors}"
+                                            placeholder=" Port Free Days">
+                                        <div *ngIf="submitted && f.destinationPortFD.errors" class="invalid-feedback">
+                                            <div *ngIf="f.destinationPortFD?.errors?.required">Routing is required</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">Origin Carrier Free Days</label>
+                                        <input formControlName="originCarrierFD" class="form-control custom-input"
+                                            type="number"
+                                            [ngClass]="{'is-invalid': submitted && f.originCarrierFD.errors}"
+                                            placeholder="Carrier Free Days">
+                                        <div *ngIf="submitted && f.originCarrierFD.errors" class="invalid-feedback">
+                                            <div *ngIf="f.originCarrierFD?.errors?.required">Origin Free Days is
+                                                required
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="mb-0 p-0 form-label">Last free date at Carrier</label>
+                                        <mat-form-field appearance="outline" class="custom-date-picker">
+                                            <div class="d-flex align-items-center  w-100">
+                                                <input matInput [matDatepicker]="pickerEta15"
+                                                    formControlName="lastFDDateCarrier" class="h-0" placeholder="Last free date at Carrier" (click)="pickerEta15.open()"/>
+                                                <mat-datepicker-toggle matSuffix
+                                                    [for]="pickerEta15"></mat-datepicker-toggle>
+                                            </div>
+                                            <mat-datepicker #pickerEta15></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="mb-0 p-0 form-label">Last free date at Empty return </label>
+                                        <mat-form-field appearance="outline" class="custom-date-picker">
+                                            <div class="d-flex align-items-center  w-100">
+                                                <input matInput [matDatepicker]="pickerEta18"
+                                                    formControlName="lastFDDateEmptyReturn" class="h-0"
+                                                    placeholder="Last free date at Empty return" (click)="pickerEta18.open()" />
+                                                <mat-datepicker-toggle matSuffix
+                                                    [for]="pickerEta18"></mat-datepicker-toggle>
+                                            </div>
+                                            <mat-datepicker #pickerEta18></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="mb-0 p-0 form-label">Last free date at POCD</label>
+                                        <mat-form-field appearance="outline" class="custom-date-picker">
+                                            <div class="d-flex align-items-center  w-100">
+                                                <input matInput [matDatepicker]="pickerEta19"
+                                                    formControlName="lastFDDatePOCD" class="h-0" placeholder="Last free date at POCD"(click)="pickerEta19.open()" />
+                                                <mat-datepicker-toggle matSuffix
+                                                    [for]="pickerEta19"></mat-datepicker-toggle>
+                                            </div>
+                                            <mat-datepicker #pickerEta19></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="mb-0 p-0 form-label">Last free date at POD</label>
+                                        <mat-form-field appearance="outline" class="custom-date-picker">
+                                            <div class="d-flex align-items-center  w-100">
+                                                <input matInput [matDatepicker]="pickerEta20"
+                                                    formControlName="lastFDDatePOD" class="h-0" placeholder="Last free date at POD" (click)="pickerEta20.open()"/>
+                                                <mat-datepicker-toggle matSuffix
+                                                    [for]="pickerEta20"></mat-datepicker-toggle>
+                                            </div>
+                                            <mat-datepicker #pickerEta20></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="Remarks">
+                <button class="accordion-button" [class.collapsed]="!isRemarksPanelOpen" type="button"
+                    (click)="toggleButton('remarks')" aria-expanded="isRemarksPanelOpen" aria-controls="panelsRemarks">
+                    Remarks
+                </button>
+
+            </h2>
+            <div id="panelsRemarks" class=" multi-collapse accordion-collapse collapse " aria-labelledby="Remarks"
+                data-bs-parent="#accordionPanelsStayOpenExample" [class.show]="isRemarksPanelOpen">
+                <div class="accordion-body">
+                    <div class="wrap-form-field">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row g-4">
+                                    <div class="col-md-12">
+                                        <label class="form-label">Remarks</label>
+
+                                        <textarea class="form-control custom-input" formControlName="remarks"
+                                            [ngClass]="{'is-invalid': submitted && f.remarks.errors}" rows="3" cols="30"
+                                            placeholder="Remarks">
+
+                              </textarea>
+                                        <div *ngIf="submitted && f.remarks.errors" class="invalid-feedback">
+                                            <div *ngIf="f.remarks?.errors?.required">Remarks is
+                                                required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="accordion-item display-none">
+            <h2 class="accordion-header" id="demo1">
+                <button type="button" data-bs-toggle="collapse" data-bs-target="#demo" aria-expanded="false"
+                    aria-controls="demo">
+                </button>
+            </h2>
+            <div id="demo" aria-labelledby="demo1" data-bs-parent="#accordionPanelsStayOpenExample">
+                <div class="accordion-body">
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="wrap-form-field btn-onscreen mb-3 d-flex justify-content-end" *ngIf="!isshowDetails">
+        <div class="ms-2">
+            <button (click)="!Creating ? onSave(false) : ''" *ngIf="this.currentUrl !== 'show'"
+                class="btn btn-outline-primary float-end" type="submit" style="margin-left: 10px">
+                <ng-container>
+                    Save
+                </ng-container>
+            </button>
+            
+            <button (click)="!Creating ? onSave(false) : ''" *ngIf="this.currentUrl === 'clone'"
+                class="btn btn-outline-primary float-end" type="submit">
+                {{ Creating ? 'Cloning..' : 'Clone' }}
+            </button>
+            
+            <button class="btn1 float-end" type="button" style="margin-left: 10px" (click)="onCancel()">
+                {{ "common.cancel" | translate }}
+            </button>
+            
+            <button *ngIf="this.currentUrl !== 'show'" [disabled]="draftPending1()" class="btn btn-outline-primary float-end"
+                (click)="!Creating ? onSave(true) : ''">
+                <ng-container *ngIf="this.currentUrl !== 'clone'">
+                    Save as Draft
+                </ng-container>
+                <ng-container *ngIf="this.currentUrl === 'clone'">
+                    Clone Draft
+                </ng-container>
+            </button>
+
+
+
+        </div>
+    </div>
+</form>
+
+<ng-template #content1 let-c="close" let-d="dismiss">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+            </button>
+        </div>
+        <div class="modal-body mt-4">
+            <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2"> </em> <span
+                class=" text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+        </div>
+        <div class="modal-footer">
+            <div class="text-center">
+                <button type="button" class="btn btn-secondary  btn-sm me-3" (click)="d('Cross click')">No</button>
+                <button type="button" class="btn btn-danger  btn-sm" (click)="c('yes')">Yes</button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+
+<ng-template #Addcommodity let-modal>
+    <form [formGroup]="commodityForm" class="nz-allSelect">
+        <div class=" modal-dialog modal-lg custom-modal">
+            <div class="modal-content wrap-form-field">
+                <div class="modal-header">
+                    <h5 class="modal-title position-relative start-0">{{IsEditCommodity < 0 ? 'Add' : 'Edit' }}
+                            Cargo</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                                (click)="closePopup()"></button>
+                </div>
+                <div class="modal-body ">
+                    <div class="row g-3">
+
+                        <div class="col-md-4 nz-select">
+                            <label class="form-label">Commodity</label>
+                            <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="product_id"
+                                (ngModelChange)="productData()"
+                                [ngClass]="{'is-invalid': submitted1 && f1.product_id.errors}">
+                                <nz-option *ngFor="let product of  sort(productList ,'productName')"
+                                    nzLabel="{{product.productName}}" [nzValue]="product.productId"></nz-option>
+                            </nz-select>
+                            <div *ngIf="submitted1 && f1.product_id.errors" class="invalid-feedback">
+                                <div *ngIf="f1.product_id.errors.required">Commodity is
+                                    required</div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 nz-select">
+                            <label class="form-label">Commodity Type</label>
+                            <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="commodityType"
+                                [ngClass]="{'is-invalid': submitted1 && f1.commodityType.errors}"
+                                (ngModelChange)="changeCommodity()">
+                                <nz-option *ngFor="let enquiryType of  sort(cargoTypeList ,'typeName')"
+                                    [nzLabel]="enquiryType.typeName | uppercase"
+                                    [nzValue]="enquiryType.systemtypeId"></nz-option>
+                            </nz-select>
+
+                            <div *ngIf="submitted1 && f1.commodityType.errors" class="invalid-feedback">
+                                <div *ngIf="f1.commodityType.errors.required">Commodity Type is
+                                    required</div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4">
+                            <label class="form-label">HS Code</label>
+                            <input formControlName="hsCode" type="text" class="form-control custom-input"
+                                [ngClass]="{'is-invalid': submitted1 && f1.hsCode.errors}">
+                            <div *ngIf="submitted1 && f1.hsCode.errors" class="invalid-feedback">
+                                <div *ngIf="f1.hsCode.errors.required">HS Code is required
+                                </div>
+                            </div>
+                        </div>
+
+                        <ng-container *ngIf="refer">
+
+                            <div class="col-md-2 pl-0 pr-0 mr-1 ml-2">
+                                <label class="form-label">Range</label>
+                                <input formControlName="Range" type="number" min="-999" max="9999"
+                                    class="form-control custom-input"
+                                    [ngClass]="{'is-invalid': submitted1 && f1.Range.errors}">
+
+                                <div *ngIf="submitted1 && f1.Range.errors" class="invalid-feedback">
+                                    <div *ngIf="f1.Range.errors.required">Range is
+                                        required</div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 pl-0 pr-0 mr-1">
+                                <label class="form-label">To</label>
+                                <input formControlName="To" type="number" min="-999" max="9999"
+                                    class="form-control custom-input"
+                                    [ngClass]="{'is-invalid': submitted1 && f1.To.errors}">
+
+                                <div *ngIf="submitted1 && f1.To.errors" class="invalid-feedback">
+                                    <div *ngIf="f1.To.errors.required">To is required</div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 pl-0 pr-0 mr-4 nz-select">
+                                <label for="typeTemp" class="form-label">Temperature
+                                </label>
+
+                                <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Type Category"
+                                    formControlName="typeTemp"
+                                    [ngClass]="{'is-invalid': submitted && f.typeTemp.errors}">
+                                    <nz-option *ngFor="let data of categoryData" [nzLabel]="data"
+                                        [nzValue]="data"></nz-option>
+                                </nz-select>
+                                <div *ngIf="submitted1 && f1.typeTemp.errors" class="invalid-feedback">
+                                    <div *ngIf="f1.typeTemp.errors.required">Temperature is required</div>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <ng-container *ngIf="odc">
+                            <div class="col-md-5 w-100">
+                                <div class="row">
+                                    <div class="col-md-2 pl-0 pr-0 mr-1 ml-3">
+                                        <div class="form-field-section">
+                                            <label class="form-label">Length</label>
+                                            <input type="number" min="1" class="form-control custom-input rounded-0"
+                                                formControlName="li" (change)="totalVolume($event,empIndex)"
+                                                placeholder="L"
+                                                [ngClass]="{'is-invalid': submitted1 && f1.li.errors}" />
+                                            <div *ngIf="submitted1 && f1.li.errors" class="invalid-feedback">
+                                                <div *ngIf="f1.li.errors.required">Length is required
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 pl-0 pr-0 mr-1">
+                                        <div class="form-field-section"><label class="form-label">Width<span
+                                                    class="text-danger">*</span></label>
+                                            <input type="number" min="1" class="form-control custom-input rounded-0"
+                                                formControlName="Wi" (change)="totalVolume($event,empIndex)"
+                                                placeholder="W"
+                                                [ngClass]="{'is-invalid': submitted1 && f1.Wi.errors}" />
+                                            <div *ngIf="submitted1 && f1.Wi.errors" class="invalid-feedback">
+                                                <div *ngIf="f1.Wi.errors.required">Width is required
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 pl-0 pr-0 mr-1">
+                                        <div class="form-field-section"><label class="form-label">Height</label>
+                                            <input type="number" min="1" class="form-control custom-input rounded-0"
+                                                formControlName="hi" (change)="totalVolume($event,empIndex)"
+                                                placeholder="W"
+                                                [ngClass]="{'is-invalid': submitted1 && f1.hi.errors}" />
+                                            <div *ngIf="submitted1 && f1.hi.errors" class="invalid-feedback">
+                                                <div *ngIf="f1.hi.errors.required">Heigh is required
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 pl-0 pr-0 mr-1">
+                                        <div class="form-field-section">
+                                            <label class="form-label">Unit</label>
+                                            <nz-select class="nz-form-select nz-select-width"
+                                                style="border-bottom: none !important; width: 100% !important;"
+                                                formControlName="di" (ngModelChange)="totalVolume($event,empIndex)"
+                                                nzShowSearch nzAllowClear
+                                                [ngClass]="{'is-invalid': submitted1 && f1.di.errors}">
+                                                <nz-option *ngFor="let containerType of  lengthData"
+                                                    [nzLabel]="containerType?.uomShort"
+                                                    [nzValue]="containerType?.uomShort"></nz-option>
+                                            </nz-select>
+                                            <div *ngIf="submitted1 && f1.di.errors" class="invalid-feedback">
+                                                <div *ngIf="f1.di.errors.required">Unit is required
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <ng-container *ngIf="openHaz">
+                            <div class="col-md-4">
+                                <label class="form-label">{{ 'stolt.enquiry.new.imcoClass' | translate }}</label>
+                                <!-- <input formControlName="imco_class" type="text" class="form-control custom-input"
+                    [ngClass]="{'is-invalid': submitted1 && f1.imco_class.errors}"> -->
+
+                                <nz-select class="nz-form-select nz-select-width"
+                                    [ngClass]="{'is-invalid': submitted1 && f1.imco_class.errors}"
+                                    style="border-bottom: none !important; width: 100% !important;"
+                                    formControlName="imco_class" nzShowSearch nzAllowClear>
+                                    <nz-option *ngFor="let imco of  imcoList" [nzLabel]="imco?.typeName"
+                                        [nzValue]="imco?.systemtypeId"></nz-option>
+                                </nz-select>
+
+                                <div *ngIf="submitted1 && f1.imco_class.errors" class="invalid-feedback">
+                                    <div *ngIf="f1.imco_class.errors.required">{{ 'stolt.enquiry.new.imcoClass' |
+                                        translate }} is
+                                        required</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">{{ 'stolt.enquiry.new.VesselUNNo' | translate }}</label>
+                                <input formControlName="un_no" type="text" class="form-control custom-input"
+                                    [ngClass]="{'is-invalid': submitted1 && f1.un_no.errors}">
+                                <div *ngIf="submitted1 && f1.un_no.errors" class="invalid-feedback">
+                                    <div *ngIf="f1.un_no.errors.required">{{ 'stolt.enquiry.new.unNo' | translate }} is
+                                        required
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 input-icons">
+                                <label class="form-label">MSDS Document</label>
+
+                                <input type="file" formControlName="msdsDoc" (change)="filechange($event)"
+                                    class="form-control custom-input">
+
+                                <span class="my-1 docTab" *ngIf="activeCommodity?.msdsDoc">{{ activeCommodity?.msdsDoc
+                                    }}
+                                    <em class="bi bi-eye globally-change-icon-color"
+                                        (click)="downloadFile(activeCommodity?.msdsDoc)"></em>
+                                </span>
+
+                                <div *ngIf="submitted1 && f1.msdsDoc.errors" class="invalid-feedback">
+                                    <div *ngIf="f1.msdsDoc.errors.required">MSDS Document is required
+                                    </div>
+                                </div>
+                            </div>
+
+                        </ng-container>
+
+                        <div class="col-md-2">
+                            <label class="form-label">Gross Weight </label>
+                            <input formControlName="grossWeight" type="number" class="form-control custom-input"
+                                [ngClass]="{'is-invalid': submitted2 && f1.packing_group.errors}">
+                            <div *ngIf="submitted2 && f1.grossWeight.errors" class="invalid-feedback">
+                                <div *ngIf="f1.grossWeight.errors.required">Gross Weight is required</div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 nz-select">
+                            <label class="form-label">Unit</label>
+
+                            <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="unit"
+                                [ngClass]="{'is-invalid': submitted1 && f1.unit.errors}">
+                                <nz-option *ngFor="let enquiryType of uomData" [nzLabel]="enquiryType.uomShort  "
+                                    [nzValue]="enquiryType.uomId"></nz-option>
+                            </nz-select>
+
+                            <div *ngIf="submitted1 && f1.unit.errors" class="invalid-feedback">
+                                <div *ngIf="f1.unit.errors.required">Unit is required</div>
+                            </div>
+                        </div>
+                        <!-- <div class="col-md-4 input-icons">
+                <label class="form-label">
+                  MSDS Document<span class="text-danger" *ngIf="openHaz">*</span>
+                </label>
+                
+                <input formControlName="msdsDoc" type="file" (change)="filechange($event)"
+                  class="form-control custom-input">
+                
+                <div *ngIf="submitted1 && f1.msdsDoc.errors" class="invalid-feedback">
+                  <div *ngIf="f1.msdsDoc.errors.required && openHaz">MSDS Document is required</div>
+                </div>
+                
+                <span class="my-1 docTab" *ngIf="activeCommodity?.msdsDoc">
+                  {{activeCommodity?.msdsDoc}}
+                  <em class="bi bi-eye globally-change-icon-color" (click)="downloadFile(activeCommodity?.msdsDoc)"></em>
+                </span>
+              </div> -->
+
+                    </div>
+                </div>
+                <div class="modal-footers mt-4">
+                    <div class="wrap-form-field">
+                        <div class="form-group wrap-form-action d-flex justify-content-center pb-0">
+                            <button (click)="closePopup()" class="btn1 float-end" data-bs-dismiss="modal" type="submit">
+                                {{ 'common.cancel' | translate }}
+                            </button>
+                            <button (click)="addcommodity()" class="btn btn-outline-primary float-end" type="button">
+                                <ng-container *ngIf="IsEditCommodity < 0">
+                                    {{ 'common.save' | translate }}
+                                </ng-container>
+                                <ng-container *ngIf="IsEditCommodity >= 0">
+                                    {{ 'common.update' | translate }}
+                                </ng-container>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #address let-modal>
+    <form [formGroup]="addressForm" class="nz-allSelect">
+      <div class=" modal-dialog modal-lg custom-modal">
+        <div class="modal-content wrap-form-field">
+          <div class="modal-header">
+            <h5 class="modal-title position-relative start-0">Add Address</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+              (click)="closePopup()"></button>
+          </div>
+          <div class="modal-body ">
+            <div class="row g-3 align-items-center">
+  
+              <div class="col-md-4">
+                <label class="form-label">Branch Name
+                  <span class="text-danger" *ngIf="customerStatusTag === 'Resident'">*</span>
+                </label>
+                <input type="text" class="form-control custom-input" formControlName="branch_name"
+                  placeholder="Branch Name"
+                  [ngClass]="{ 'is-invalid': submitted3 && addressForm.get('branch_name').errors }">
+                <div *ngIf="submitted3 && addressForm.get('branch_name').errors" class="invalid-feedback">
+                  <div *ngIf="addressForm.get('branch_name').errors.required">
+                    Name {{ 'common.isRequired' | translate }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Address
+                  <span class="text-danger" *ngIf="customerStatusTag === 'Resident'">*</span>
+                </label>
+                <input type="text" class="form-control custom-input" formControlName="branch_address"
+                  placeholder="Address"
+                  [ngClass]="{ 'is-invalid': submitted3 && addressForm.get('branch_address').errors }">
+                <div *ngIf="submitted3 && addressForm.get('branch_address').errors" class="invalid-feedback">
+                  <div *ngIf="addressForm.get('branch_address').errors.required">
+                    Address {{ 'common.isRequired' | translate }}
+                  </div>
+                  <div *ngIf="addressForm.get('branch_address').hasError('forbiddenChars')">
+                    " and \ are not allowed.
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 nz-select">
+                <label class="form-label">{{ 'stolt.party-master.country' | translate }}
+                  <span class="text-danger" *ngIf="customerStatusTag === 'Resident'">*</span>
+                </label>
+                <nz-select class="form-select" (ngModelChange)="getStateList()" nzShowSearch nzAllowClear
+                  nzPlaceHolder="Country" formControlName="barnch_country"
+                  [ngClass]="{ 'is-invalid': submitted3 && addressForm.get('barnch_country').errors }">
+                  <nz-option *ngFor="let country of countryList" [nzLabel]="country.countryName"
+                    [nzValue]="country.countryId"></nz-option>
+                </nz-select>
+                <div *ngIf="submitted3 && addressForm.get('barnch_country').errors" class="invalid-feedback">
+                  <div *ngIf="addressForm.get('barnch_country').errors.required">
+                    {{ 'stolt.party-master.country' | translate }} {{ 'common.isRequired' |
+                    translate }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 nz-select">
+                <label class="form-label">{{ 'smartagent.smartAgent.AllformAddedit.state' |
+                  translate }}</label>
+                <nz-select class="form-select" (ngModelChange)="getCityList()" nzShowSearch nzAllowClear
+                  nzPlaceHolder="State" formControlName="branch_state"
+                  [ngClass]="{ 'is-invalid': submitted3 && addressForm.get('branch_state').errors }">
+                  <nz-option *ngFor="let state of stateList" [nzLabel]="state.typeDescription"
+                    [nzValue]="state.stateId"></nz-option>
+                </nz-select>
+                <div *ngIf="submitted3 && addressForm.get('branch_state').errors" class="invalid-feedback">
+                  <div *ngIf="addressForm.get('branch_state').errors.required">
+                    {{ 'smartagent.smartAgent.AllformAddedit.state' | translate }} {{ 'common.isRequired' |
+                    translate }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 nz-select">
+                <label class="form-label">{{ 'smartagent.smartAgent.AllformAddedit.city' |
+                  translate }}</label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="City"
+                  [ngClass]="{ 'is-invalid': submitted3 && addressForm.get('branch_city').errors }"
+                  formControlName="branch_city">
+                  <nz-option *ngFor="let city of cityList" [nzLabel]="city.cityName"
+                    [nzValue]="city.cityName"></nz-option>
+                </nz-select>
+                <div *ngIf="submitted3 && addressForm.get('branch_city').errors" class="invalid-feedback">
+                  <div *ngIf="addressForm.get('branch_city').errors.required">
+                    {{ 'smartagent.smartAgent.AllformAddedit.city' | translate }} {{ 'common.isRequired' |
+                    translate }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label for="pinCode" class="form-label">Pincode</label>
+                <input type="number" maxlength="6"
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  class="form-control custom-input" id="pinCode" formControlName="pinCode" placeholder="Pincode"
+                  [ngClass]="{ 'is-invalid': submitted3 && addressForm.get('pinCode').errors }">
+                <div *ngIf="submitted3 && addressForm.get('pinCode').errors" class="invalid-feedback">
+                  <div *ngIf="addressForm.get('pinCode').errors.required">
+                     Pin Code {{ 'common.isRequired' | translate }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label for="placeofSupply" class="form-label">Place of Supply</label>
+                <input type="text" class="form-control custom-input" id="placeofSupply" formControlName="placeofSupply"
+                  placeholder="Place of Supply"
+                  [ngClass]="{ 'is-invalid': submitted3 && addressForm.get('placeofSupply').errors }">
+                <div *ngIf="submitted3 && addressForm.get('placeofSupply').errors" class="invalid-feedback">
+                  <div *ngIf="addressForm.get('placeofSupply').errors.required">
+                    SHIPEASY Party Code {{ 'common.isRequired' | translate }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4" *ngIf="false">
+                <label for="partyCode" class="form-label">SHIPEASY Party Code
+                  <span class="text-danger">*</span>
+                </label>
+                <input type="text" class="form-control custom-input" id="partyCode" formControlName="partyCode"
+                  placeholder="Party Code"
+                  [ngClass]="{ 'is-invalid': submitted3 && addressForm.get('partyCode').errors }">
+                <div *ngIf="submitted3 && addressForm.get('partyCode').errors" class="invalid-feedback">
+                  <div *ngIf="addressForm.get('partyCode').errors.required">
+                    SHIPEASY Party Code {{ 'common.isRequired' | translate }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 nz-select">
+                <label for="bankName" class="form-label">{{ 'stolt.party-master.bankName' |
+                  translate }}</label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Bank Name"
+                  formControlName="bankName">
+                  <nz-option *ngFor="let bank of bankList" [nzLabel]="bank.bankName" [nzValue]="bank.bankId"></nz-option>
+                </nz-select>
+              </div>
+              <div class="col-md-4">
+                <label for="cust_acc_no" class="form-label">{{ 'stolt.party-master.acc_no' |
+                  translate }}</label>
+                <input type="number" class="form-control custom-input" id="cust_acc_no" formControlName="cust_acc_no"
+                  placeholder="ACC Number">
+              </div>
+              <div class="col-md-4">
+                <label for="remarks" class="form-label">{{ 'stolt.party-master.remarks' |
+                  translate }}</label>
+                <input type="text" class="form-control custom-input" id="remarks" formControlName="remarks"
+                  placeholder="Remark">
+              </div>
+              <div class="col-md-4">
+                <label for="tanNo" class="form-label">PAN No.</label>
+                <input type="text" class="form-control custom-input" id="tanNo" formControlName="tanNo"
+                  placeholder="PAN No">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">PIC (Person In Charge)</label>
+                <input type="text" class="form-control custom-input" formControlName="pic" placeholder="PIC">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">PIC Phone No </label>
+                <input type="number" maxlength="10"
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  class="form-control custom-input" formControlName="pic_phone" placeholder="PIC Phone No">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">PIC Email ID</label>
+                <input type="text" class="form-control custom-input" formControlName="pic_email"
+                  placeholder="PIC Email ID"
+                  [ngClass]="{ 'is-invalid': submitted3 && addressForm?.get('pic_email')?.errors }">
+                <div *ngIf="submitted3 && addressForm?.get('pic_email')?.errors" class="invalid-feedback">
+                  <div *ngIf="addressForm?.get('pic_email')?.errors.pattern">
+                    {{'error.err_valid_email' |
+                    translate}}</div>
+                </div>
+              </div>
+              <div class="col-md-4 nz-select">
+                <label class="form-label">Tax Type </label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Tax Type"
+                  formControlName="tax_name"
+                  [ngClass]="{ 'is-invalid': submitted3 && addressForm?.get('tax_name')?.errors }">
+                  <nz-option nzLabel="GST" nzValue="GST"></nz-option>
+                  <nz-option nzLabel="VAT" nzValue="VAT"></nz-option>
+                </nz-select>
+                <div *ngIf="submitted3 && addressForm?.get('tax_name')?.errors" class="invalid-feedback">
+                  <div *ngIf="addressForm?.get('tax_name')?.errors.required">Tax Name {{'common.isRequired'| translate}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Tax No </label>
+                <input type="text" class="form-control custom-input" formControlName="tax_number"
+                  oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^ A-Za-z0-9]/g,'').replace(/ +/g, ' ')"
+                  placeholder="Tax No" [ngClass]="{ 'is-invalid': submitted3 && addressForm?.get('tax_number')?.errors }">
+                <div *ngIf="submitted3 && addressForm?.get('tax_number')?.errors" class="invalid-feedback">
+                  <div *ngIf="addressForm?.get('tax_number')?.errors.required">Tax No {{'common.isRequired'| translate}}
+                  </div>
+                </div>
+              </div>
+              <div
+                class="col-md-4 switch-text-contnet-alignment-for-page-new cost-items-bottom-alignment d-flex align-items-center">
+                <div class="taggle form-check form-switch">
+                  <label class="form-check-label" for="flexSwitchCheckDefault"> {{
+                    'stolt.party-master.BROKERAGE_PAYABLE'|translate }}</label>
+                  <input class="form-check-input mx-1" formControlName="BROKERAGE_PAYABLE" type="checkbox"
+                    id="flexSwitchCheckDefault">
+                </div>
+              </div>
+              <div
+                class="col-md-4 switch-text-contnet-alignment-for-page cost-items-bottom-alignment d-flex align-items-center">
+                <div class="taggle form-check form-switch">
+                  <label class="form-check-label" for="flexSwitchCheckDefault"> {{
+                    'stolt.party-master.Creadit_customer'|translate }}</label>
+                  <input class="form-check-input mx-1" formControlName="creadirCustomer" type="checkbox"
+                    id="flexSwitchCheckDefault">
+                </div>
+              </div>
+              <div
+                class="col-md-4 switch-text-contnet-alignment-for-page cost-items-bottom-alignment d-flex align-items-center">
+                <div class="taggle form-check form-switch">
+                  <label class="form-check-label" for="flexSwitchCheckDefault">Active Flag</label>
+                  <input class="form-check-input mx-1" formControlName="active_flag" type="checkbox"
+                    id="flexSwitchCheckDefault">
+                </div>
+              </div>
+  
+  
+              <div
+                class="col-md-4 switch-text-contnet-alignment-for-page cost-items-bottom-alignment d-flex align-items-center">
+                <div class="taggle form-check form-switch">
+                  <label class="form-check-label" for="flexSwitchCheckDefault"> {{
+                    'stolt.party-master.TDS_GST_APPLICABLE'|translate }}</label>
+                  <input class="form-check-input mx-1" formControlName="TDS_GST_APPLICABLE" type="checkbox"
+                    id="flexSwitchCheckDefault">
+                </div>
+              </div>
+  
+  
+            </div>
+          </div>
+          <div class="modal-footers mt-4">
+            <div class="wrap-form-field">
+              <div class="form-group wrap-form-action d-flex justify-content-center pb-0">
+                <button (click)="closePopup()" class="btn1 float-end" data-bs-dismiss="modal" type="submit">
+                  {{ 'common.cancel' | translate }}
+                </button>
+                <button (click)="saveAddress()" class="btn btn-outline-primary float-end" type="button">
+                  {{ 'common.save' | translate }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </ng-template>

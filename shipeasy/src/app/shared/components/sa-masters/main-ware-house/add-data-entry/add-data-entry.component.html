@@ -1,0 +1,601 @@
+<mat-drawer-container>
+  <mat-drawer #drawer position="end" mode="over" class="drawer" (closed)="onDrawerClose()">
+    <app-add-party [isPopup]="true" (getList)="handleGetList($event)"></app-add-party>
+  </mat-drawer>
+  <mat-drawer-content>
+    <div class="mat-table-with-gheading">
+      <div class="wrapper">
+        <div [ngClass]="warehouseDataEntryId ? 'none' : 'wrap-content'">
+          <div [ngClass]="warehouseDataEntryId ? 'none' : 'container-fluid'">
+            <div class="row">
+              <div class="page-title-box">
+              </div>
+            </div>
+            <div class="row">
+              <!-- FIXED: Prevent form submission on Enter key -->
+              <form [style.paddingBottom.px]="warehouseDataEntryId ? 0 : 80" [formGroup]="dataEntryForm" (keydown.enter)="$event.preventDefault()">
+
+                <!-- First Row: Always Visible Fields -->
+                <div class="row">
+                  <div class="col-md-3">
+                    <label class="form-label">{{ isBondedType() ? 'Space Certificate No.' : 'Job No.' }}</label>
+                    <input type="text" class="form-control custom-input" formControlName="jobNo" readonly
+                      [placeholder]="isBondedType() ? 'Space Certificate No.' : 'Job No.'" />
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="form-label">Type<span class="text-danger">*</span></label>
+                    <div class="form-field-section">
+                      <nz-select class="nz-form-select nz-select-width"
+                        style="border-bottom: none !important; width: 100% !important;" formControlName="type"
+                        nzShowSearch nzAllowClear [ngClass]="{'is-invalid': submitted && f.type.errors?.required}">
+                        <nz-option *ngFor="let status of Type" [nzLabel]="status" [nzValue]="status"></nz-option>
+                      </nz-select>
+                      <div *ngIf="submitted && f.type.errors?.required" class="invalid-feedback">
+                        Field is required
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="mb-0 p-0 form-label">
+                      Job Date <span class="text-danger">*</span>
+                    </label>
+                    <nz-date-picker class="custom-input w-100" nzShowTime nzFormat="dd-MM-yyyy"
+                      formControlName="jobDate"
+                      [nzStatus]="submitted && f.jobDate?.errors ? 'error' : null"></nz-date-picker>
+                    <div *ngIf="submitted && f.jobDate?.errors" class="invalid-feedback d-block">
+                      <div *ngIf="f.jobDate.errors.required">
+                        Job Date is required
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="form-label">Country Of Origin<span class="text-danger">*</span></label>
+                    <div class="form-field-section">
+                      <nz-select class="nz-form-select nz-select-width"
+                        style="border-bottom: none !important; width: 100% !important;" formControlName="originCountry"
+                        nzShowSearch nzAllowClear
+                        [ngClass]="{'is-invalid': submitted && dataEntryForm?.get('originCountry')?.errors}">
+                        <nz-option *ngFor="let country of countryList" [nzLabel]="country?.countryName"
+                          [nzValue]="country?.countryId"></nz-option>
+                      </nz-select>
+                      <div *ngIf="submitted && dataEntryForm?.get('originCountry')?.errors" class="invalid-feedback">
+                        <div *ngIf="dataEntryForm?.get('originCountry')?.errors?.required">Field is required</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Second Row: Mixed Fields -->
+                <div class="row">
+                  <!-- Job Type - Mandatory for Bonded -->
+                  <div class="col-md-3 mt-3" *ngIf="isBondedType()">
+                    <label class="form-label">Job Type<span class="text-danger">*</span></label>
+                    <div class="form-field-section">
+                      <nz-select class="nz-form-select nz-select-width"
+                        style="border-bottom: none !important; width: 100% !important;" formControlName="jobType"
+                        nzShowSearch nzAllowClear [ngClass]="{ 'is-invalid': submitted && f.jobType.errors }">
+                        <nz-option *ngFor="let shipmentTerm of wareHouseDataEntryList" [nzLabel]="shipmentTerm.typeName"
+                          [nzValue]="shipmentTerm.systemtypeId"></nz-option>
+                      </nz-select>
+                      <div *ngIf="submitted && f.jobType.errors?.required" class="invalid-feedback">
+                        Field is required
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- ETA Date - Mandatory for Bonded -->
+                  <div class="col-md-3 mt-3" *ngIf="isBondedType()">
+                    <label class="mb-0 p-0 form-label">ETA Date<span class="text-danger">*</span></label>
+                    <nz-date-picker class="form-select custom-input" nzShowTime nzFormat="dd-MM-yyyy "
+                      formControlName="etaDate" [nzStatus]="submitted && f.etaDate?.errors ? 'error' : null"></nz-date-picker>
+                    <div *ngIf="submitted && f.etaDate?.errors" class="invalid-feedback d-block">
+                      <div *ngIf="f.etaDate.errors?.required">ETA Date is required</div>
+                    </div>
+                  </div>
+
+                  <!-- Importer - Mandatory for Bonded -->
+                  <div class="col-md-3 mt-3" *ngIf="isBondedType()">
+                    <label class="form-label">Importer<span class="text-danger">*</span></label>
+                    <div class="d-flex align-items-center">
+                      <nz-select class="nz-form-select nz-select-width"
+                        style="border-bottom: none !important; width: 100% !important;" formControlName="importerLedger"
+                        nzShowSearch nzAllowClear
+                        [ngClass]="{'is-invalid': submitted && f.importerLedger.errors?.required}">
+                        <nz-option *ngFor="let importer of WareHouseImporterList" [nzLabel]="importer.name"
+                          [nzValue]="importer.partymasterId"></nz-option>
+                      </nz-select>
+                      <em class="bi bi-plus-circle color-pencil-red pl-1" (click)="drawer.toggle()"></em>
+                      <div *ngIf="submitted && f.importerLedger.errors?.required" class="invalid-feedback">
+                        Field is required
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Party Name - Always mandatory -->
+                  <div class="col-md-3 mt-3">
+                    <label class="form-label">Party Name<span class="text-danger">*</span></label>
+                    <div class="d-flex align-items-center">
+                      <nz-select class="nz-form-select nz-select-width"
+                        style="border-bottom: none !important; width: 100% !important;" formControlName="invoiceLedger"
+                        nzShowSearch nzAllowClear
+                        [ngClass]="{'is-invalid': submitted && f.invoiceLedger.errors?.required}">
+                        <nz-option *ngFor="let importer of WareHouseImporterList" [nzLabel]="importer.name"
+                          [nzValue]="importer.partymasterId"></nz-option>
+                      </nz-select>
+                      <em class="bi bi-plus-circle color-pencil-red pl-1" (click)="drawer.toggle()"></em>
+                      <div *ngIf="submitted && f.invoiceLedger.errors?.required" class="invalid-feedback">
+                        Field is required
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- BL No - Mandatory for Bonded -->
+                  <div class="col-md-3 mt-3" *ngIf="isBondedType()">
+                    <label class="form-label">BL No.<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control custom-input" formControlName="blNo"
+                      [ngClass]="{ 'is-invalid': submitted && f.blNo.errors }" placeholder="BL No" />
+                    <div *ngIf="submitted && f.blNo.errors" class="invalid-feedback">
+                      <!-- FIXED: New validation message -->
+                      <div *ngIf="f.blNo.errors.required">BL No is required</div>
+                      <div *ngIf="f.blNo.errors.invoiceBlNoMatch">Invoice No. and BL No. cannot be the same</div>
+                    </div>
+                  </div>
+
+                  <!-- BL Date - Mandatory for Bonded -->
+                  <div class="col-md-3 mt-3" *ngIf="isBondedType()">
+                    <label class="mb-0 p-0 form-label">BL Date <span class="text-danger">*</span></label>
+                    <nz-date-picker class="custom-input w-100" nzShowTime nzFormat="dd-MM-yyyy" formControlName="blDate"
+                      [nzStatus]="submitted && f.blDate?.errors ? 'error' : null"></nz-date-picker>
+                    <div *ngIf="submitted && f.blDate?.errors" class="invalid-feedback d-block">
+                      <div *ngIf="f.blDate.errors?.required">BL Date is required</div>
+                    </div>
+                  </div>
+
+                  <!-- Invoice No - Mandatory for Bonded -->
+                  <div class="col-md-3 mt-3" *ngIf="isBondedType()">
+                    <label class="form-label">Invoice No. <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control custom-input" formControlName="invoiceNo"
+                      [ngClass]="{ 'is-invalid': submitted && f.invoiceNo?.errors }" placeholder="Invoice No" />
+                    <div *ngIf="submitted && f.invoiceNo?.errors" class="invalid-feedback d-block">
+                      <div *ngIf="f.invoiceNo.errors?.required">Invoice No is required</div>
+                      <!-- FIXED: New validation message -->
+                      <div *ngIf="f.invoiceNo.errors?.invoiceBillOfEntryMatch">Invoice No. and Bill of Entry No. cannot be the same</div>
+                    </div>
+                  </div>
+
+                  <!-- Invoice Date - Mandatory for Bonded -->
+                  <div class="col-md-3 mt-3" *ngIf="isBondedType()">
+                    <label class="mb-0 p-0 form-label">Invoice Date<span class="text-danger">*</span></label>
+                    <nz-date-picker class="form-select custom-input" nzShowTime nzFormat="dd-MM-yyyy "
+                      formControlName="invoiceDate" [nzStatus]="submitted && f.invoiceDate?.errors ? 'error' : null"></nz-date-picker>
+                    <div *ngIf="submitted && f.invoiceDate?.errors" class="invalid-feedback d-block">
+                      <div *ngIf="f.invoiceDate.errors?.required">Invoice Date is required</div>
+                    </div>
+                  </div>
+
+                  <!-- Product - Mandatory for Bonded -->
+                  <!-- <div class="col-md-3 mt-3" *ngIf="isBondedType()">
+                    <label class="form-label">Product<span class="text-danger">*</span></label>
+                    <div class="form-field-section">
+                      <nz-select class="nz-form-select nz-select-width"
+                        style="border-bottom: none !important; width: 100% !important;" formControlName="product"
+                        nzShowSearch nzAllowClear (ngModelChange)="productData()"
+                        [ngClass]="{'is-invalid': submitted && f.product.errors?.required}">
+                        <nz-option *ngFor="let product of productList" [nzLabel]="product?.productName"
+                          [nzValue]="product?.productId"></nz-option>
+                      </nz-select>
+                      <div *ngIf="submitted && f.product.errors?.required" class="invalid-feedback">
+                        Field is required
+                      </div>
+                    </div>
+                  </div> -->
+
+                  <!-- Product Description - Mandatory for Bonded -->
+                  <div class="col-md-3 mt-3">
+                    <label class="form-label">Product Description<span class="text-danger">*</span></label>
+                    <textarea class="form-control custom-input" formControlName="productDescription"
+                      [ngClass]="{ 'is-invalid': submitted && f.productDescription.errors }"
+                      placeholder="Product Description" rows="2"></textarea>
+                    <div *ngIf="submitted && f.productDescription.errors" class="invalid-feedback">
+                      <div *ngIf="f.productDescription.errors.required">Product Description is required</div>
+                    </div>
+                  </div>
+
+                  <!-- Location - Mandatory for Bonded -->
+                  <!-- <div class="col-md-3 mt-3" *ngIf="isBondedType()">
+                    <label class="form-label">Location<span class="text-danger">*</span></label>
+                    <div class="form-field-section">
+                      <nz-select class="nz-form-select nz-select-width"
+                        style="border-bottom: none !important; width: 100% !important;" formControlName="location"
+                        nzShowSearch nzAllowClear [ngClass]="{'is-invalid': submitted && f.location.errors?.required}">
+                        <nz-option *ngFor="let location of locationListOriginal" 
+                          [nzLabel]="location?.locationDetails?.locationName"
+                          [nzValue]="location?.locationId"></nz-option>
+                      </nz-select>
+                      <div *ngIf="submitted && f.location.errors?.required" class="invalid-feedback">
+                        Field is required
+                      </div>
+                    </div>
+                  </div> -->
+
+                  <!-- Packages - Mandatory for Bonded -->
+                  <div class="mt-3 col-md-2" >
+                    <label class="form-label">Packages<span class="text-danger">*</span></label>
+                    <input type="number" class="form-control custom-input" formControlName="packagesUnit" min="1" step="1"
+                      [ngClass]="{ 'is-invalid': submitted && f.packagesUnit.errors }" placeholder="Packages" pattern="^\d+(\.\d{1,3})?$"
+                      (input)="onNumberInput($event)" />
+                   <div *ngIf="submitted && f.packagesUnit.errors" class="invalid-feedback">
+                      <div *ngIf="f.packagesUnit.errors?.required">Packages is required</div>
+                    </div>
+                  </div>
+
+                  <!-- Package Unit - Mandatory for Bonded -->
+                  <div class="mt-3 col-md-1">
+                    <label class="form-label">Unit<span class="text-danger">*</span></label>
+                    <div class="form-field-section">
+                      <nz-select class="nz-form-select nz-select-width" 
+                        style="border-bottom: none !important; width: 100% !important;"
+                        formControlName="packageUnit" nzShowSearch nzAllowClear 
+                        [ngClass]="{'is-invalid': submitted && f.packageUnit.errors?.required}">
+                        <nz-option *ngFor="let enquiryType of weighthData" [nzLabel]="enquiryType.uomShort"
+                          [nzValue]="enquiryType.uomId"></nz-option>
+                      </nz-select>
+                      <div *ngIf="submitted && f.packageUnit.errors?.required" class="invalid-feedback">
+                        Field is required
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Gross Qty - Mandatory for Bonded -->
+                  <div class="mt-3 col-md-2" *ngIf="isBondedType()">
+                    <label class="form-label">Gross Qty<span class="text-danger">*</span></label>
+                    <input type="number" class="form-control custom-input" formControlName="grossQtyUnit"
+                      [ngClass]="{ 'is-invalid': submitted && f.grossQtyUnit.errors }" placeholder="Gross Qty/Unit" />
+                    <div *ngIf="submitted && f.grossQtyUnit.errors" class="invalid-feedback">
+                      <div *ngIf="f.grossQtyUnit.errors?.required">Gross Qty/Unit is required</div>
+                    </div>
+                  </div>
+                  
+                  <!-- Qty Unit - Mandatory for Bonded -->
+                  <div class="mt-3 col-md-1" *ngIf="isBondedType()">
+                    <label class="form-label">Unit<span class="text-danger">*</span></label>
+                    <div class="form-field-section">
+                      <nz-select class="nz-form-select nz-select-width" 
+                        style="border-bottom: none !important; width: 100% !important;"
+                        formControlName="QtyUnit" nzShowSearch nzAllowClear
+                        [ngClass]="{'is-invalid': submitted && f.QtyUnit.errors?.required}">
+                        <nz-option *ngFor="let enquiryType of weighthData" [nzLabel]="enquiryType.uomShort"
+                          [nzValue]="enquiryType.uomId"></nz-option>
+                      </nz-select>
+                      <div *ngIf="submitted && f.QtyUnit.errors?.required" class="invalid-feedback">
+                        Field is required
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Custom Duty - Mandatory for Bonded -->
+                  <div class="col-md-3 mt-3" *ngIf="isBondedType()">
+                    <label class="form-label">Custom Duty<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control custom-input" formControlName="customDuty"
+                      [ngClass]="{ 'is-invalid': submitted && f.customDuty.errors }" placeholder="Custom Duty" />
+                    <div *ngIf="submitted && f.customDuty.errors" class="invalid-feedback">
+                      <div *ngIf="f.customDuty.errors?.required">Custom Duty is required</div>
+                    </div>
+                  </div>
+
+                  <!-- HSN Code - OPTIONAL for Bonded -->
+                  <div class="col-md-3 mt-3" *ngIf="isBondedType()">
+                    <label class="form-label">HSN Code</label>
+                    <input type="text" class="form-control custom-input" formControlName="hsnCode"
+                      placeholder="HSN Code" [ngClass]="{ 'is-invalid': f.hsnCode.errors && f.hsnCode.touched }" />
+                    <div *ngIf="f.hsnCode.errors && f.hsnCode.touched" class="invalid-feedback d-block">
+                      <div *ngIf="f.hsnCode.errors?.pattern">HSN Code must be 6-8 digits only</div>
+                    </div>
+                  </div>
+
+                  <!-- CHA Name - Mandatory for Bonded -->
+                  <div class="col-md-3 mt-3">
+                    <label class="form-label">CHA Name<span class="text-danger">*</span></label>
+                    <div class="d-flex align-items-center">
+                      <nz-select class="nz-form-select nz-select-width"
+                        style="border-bottom: none !important; width: 100% !important;" formControlName="chaLedger"
+                        nzShowSearch nzAllowClear [ngClass]="{'is-invalid': submitted && f.chaLedger.errors?.required}">
+                        <nz-option *ngFor="let CHA of WareHouseCHAList" [nzLabel]="CHA.name"
+                          [nzValue]="CHA.partymasterId"></nz-option>
+                      </nz-select>
+                      <em class="bi bi-plus-circle color-pencil-red pl-1" (click)="drawer.toggle()"></em>
+                      <div *ngIf="submitted && f.chaLedger.errors?.required" class="invalid-feedback">
+                        Field is required
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Vessel - OPTIONAL for Bonded -->
+                  <div class="col-md-3 mt-3">
+                    <label class="form-label">Vessel</label>
+                    <div class="d-flex align-items-center">
+                      <nz-select class="nz-form-select nz-select-width"
+                        style="border-bottom: none !important; width: 100% !important;" formControlName="vessel"
+                        nzShowSearch nzAllowClear>
+                        <nz-option *ngFor="let vessel of vesselList" [nzLabel]="vessel?.vesselName"
+                          [nzValue]="vessel.vesselId"></nz-option>
+                      </nz-select>
+                    </div>
+                  </div>
+
+                  <!-- Exporter - OPTIONAL for Bonded -->
+                  <div class="col-md-3 mt-3" *ngIf="isBondedType()">
+                    <label class="form-label">Exporter</label>
+                    <div class="d-flex align-items-center">
+                      <nz-select class="nz-form-select nz-select-width"
+                        style="border-bottom: none !important; width: 100% !important;" formControlName="exporterLedger"
+                        nzShowSearch nzAllowClear>
+                        <nz-option *ngFor="let exporer of WareHouseExporterList" [nzLabel]="exporer.name"
+                          [nzValue]="exporer.partymasterId"></nz-option>
+                      </nz-select>
+                      <em class="bi bi-plus-circle color-pencil-red pl-1" (click)="drawer.toggle()"></em>
+                    </div>
+                  </div>
+
+                  <!-- Space Required - Mandatory for Bonded -->
+                  <div class="col-md-2 mt-3" *ngIf="isBondedType()">
+                    <label class="form-label">Space Required<span class="text-danger">*</span></label>
+                    <input type="number" class="form-control custom-input" formControlName="spaceRequired"
+                      [ngClass]="{ 'is-invalid': submitted && f.spaceRequired.errors }" placeholder="Space Required" />
+                    <div *ngIf="submitted && f.spaceRequired.errors" class="invalid-feedback">
+                      <div *ngIf="f.spaceRequired.errors.required">Space Required is required</div>
+                    </div>
+                  </div>
+
+                  <!-- Space Required Unit - Mandatory for Bonded -->
+                  <div class="col-md-1 mt-3" *ngIf="isBondedType()">
+                    <label class="form-label">Unit <span class="text-danger">*</span></label>
+                    <div class="form-field-section">
+                      <nz-select class="nz-form-select nz-select-width"
+                        style="border-bottom: none !important; width: 100% !important;"
+                        formControlName="spaceRequiredunit" nzShowSearch nzAllowClear
+                        [ngClass]="{'is-invalid': submitted && f.spaceRequiredunit.errors?.required}">
+                        <nz-option *ngFor="let enquiryType of weighthData" [nzLabel]="enquiryType.uomShort"
+                          [nzValue]="enquiryType.uomId"></nz-option>
+                      </nz-select>
+                      <div *ngIf="submitted && f.spaceRequiredunit.errors?.required" class="invalid-feedback">
+                        Field is required
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Exporter Custom Port - Mandatory for Bonded -->
+                  <div class="col-md-3 mt-3" *ngIf="isBondedType()">
+                    <label class="form-label">Exporter Custom Port<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control custom-input" formControlName="exporterCustomPort"
+                      [ngClass]="{ 'is-invalid': submitted && f.exporterCustomPort.errors }"
+                      placeholder="Exporter Custom Port" />
+                    <div *ngIf="submitted && f.exporterCustomPort.errors" class="invalid-feedback">
+                      <div *ngIf="f.exporterCustomPort.errors?.required">Exporter Custom Port is required</div>
+                    </div>
+                  </div>
+
+                  <!-- Container Number - Mandatory for Bonded -->
+                  <!-- <div class="col-md-3 mt-3" *ngIf="isBondedType()">
+                    <label class="form-label">Container Number<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control custom-input" formControlName="ContainerNumber"
+                      [ngClass]="{ 'is-invalid': submitted && f.ContainerNumber.errors }" placeholder="Container Number" />
+                    <div *ngIf="submitted && f.ContainerNumber.errors" class="invalid-feedback">
+                      <div *ngIf="f.ContainerNumber.errors?.required">Container Number is required</div>
+                    </div>
+                  </div> -->
+
+                  <!-- Container Type - Mandatory for Bonded -->
+                  <!-- <div class="col-md-3 mt-3" *ngIf="isBondedType()">
+                    <label class="form-label">Container Type<span class="text-danger">*</span></label>
+                    <div class="form-field-section">
+                      <nz-select class="nz-form-select nz-select-width"
+                        style="border-bottom: none !important; width: 100% !important;" formControlName="ContainerType"
+                        nzShowSearch nzAllowClear [ngClass]="{'is-invalid': submitted && f.ContainerType.errors?.required}">
+                        <nz-option *ngFor="let container of containerlist" [nzLabel]="container.typeName"
+                          [nzValue]="container.systemtypeId"></nz-option>
+                      </nz-select>
+                      <div *ngIf="submitted && f.ContainerType.errors?.required" class="invalid-feedback">
+                        Field is required
+                      </div>
+                    </div>
+                  </div> -->
+
+                  <!-- Validity - Mandatory for Bonded -->
+                  <div class="col-md-3 mt-3" *ngIf="isBondedType()">
+                    <label class="mb-0 p-0 form-label">Validity <span class="text-danger">*</span></label>
+                    <nz-date-picker class="custom-input w-100" nzShowTime nzFormat="dd-MM-yyyy"
+                      formControlName="validity"
+                      [nzStatus]="submitted && f.validity.errors ? 'error' : null"></nz-date-picker>
+                    <div *ngIf="submitted && f.validity.errors" class="invalid-feedback d-block">
+                      <div *ngIf="f.validity.errors.required">Validity Date is required</div>
+                    </div>
+                  </div>
+
+                  <!-- For Non Bonded, show Status and Remarks -->
+                  <div class="col-md-3 mt-3" *ngIf="!isBondedType()">
+                    <label class="form-label">Status</label>
+                    <div class="form-field-section">
+                      <nz-select class="nz-form-select nz-select-width"
+                        style="border-bottom: none !important; width: 100% !important;" formControlName="status"
+                        nzShowSearch nzAllowClear [ngClass]="{'is-invalid': submitted && f.status.errors?.required}">
+                        <nz-option *ngFor="let status of statuses" [nzLabel]="status" [nzValue]="status"></nz-option>
+                      </nz-select>
+                      <div *ngIf="submitted && f.status.errors?.required" class="invalid-feedback">
+                        Field is required
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 mt-3" >
+                    <label class="form-label">Branch<span class="text-danger">*</span></label>
+                    <nz-select class="form-select" nzShowSearch nzAllowClear [ngClass]="{'is-invalid': submitted && f.branch.errors?.required}" formControlName="branch">
+                      <nz-option *ngFor="let data of  branchList"  [nzLabel]="data.branchName"
+                                [nzValue]="data.branchId"></nz-option>
+                    </nz-select>
+                    <div *ngIf="submitted && f.branch.errors" class="invalid-feedback">
+                      <div *ngIf="f.branch.errors?.required">Branch  is required</div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 mt-3" *ngIf="!isBondedType()">
+                    <label class="form-label">Remarks</label>
+                    <textarea class="form-control custom-input" formControlName="remarks"
+                      [ngClass]="{ 'is-invalid': submitted && f.remarks.errors }" placeholder="Remarks" rows="3">
+                </textarea>
+                    <div *ngIf="submitted && f.remarks.errors" class="invalid-feedback">
+                      <div *ngIf="f.remarks.errors.required">Remarks is required</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Bonded-only fields: Bill of Entry, Bond Code, Warehouse -->
+                <div class="row mt-3" *ngIf="isBondedType()">
+                  <div class="col-md-3">
+                    <label class="form-label">Bill of Entry No.<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control custom-input" formControlName="blofEN"
+                      [ngClass]="{ 'is-invalid': submitted && f.blofEN.errors }" placeholder="Bill Of Entry No." />
+                    <div *ngIf="submitted && f.blofEN?.errors" class="invalid-feedback">
+                      <div *ngIf="f.blofEN?.errors.required">Bill of Entry No. is required</div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="mb-0 p-0 form-label">Bill of Entry Date<span class="text-danger">*</span></label>
+                    <nz-date-picker class="custom-input w-100" nzShowTime nzFormat="dd-MM-yyyy"
+                      formControlName="blofEDate"
+                      [nzStatus]="submitted && f.blofEDate?.errors ? 'error' : null"></nz-date-picker>
+                    <div *ngIf="submitted && f.blofEDate?.errors" class="invalid-feedback d-block">
+                      <div *ngIf="f.blofEDate.errors?.required">Bill of Entry Date is required</div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="form-label">Bond Code<span class="text-danger">*</span></label>
+                    <div class="form-field-section">
+                      <nz-select class="nz-form-select nz-select-width"
+                        style="border-bottom: none !important; width: 100% !important;" formControlName="bondCode"
+                        nzShowSearch nzAllowClear [ngClass]="{'is-invalid': submitted && f.bondCode.errors?.required}"
+                        (ngModelChange)="onBondCodeChange($event)">
+                        <nz-option *ngFor="let warehouse of bondCodeList" [nzLabel]="warehouse.bondCode"
+                          [nzValue]="warehouse.bondCode">
+                        </nz-option>
+                      </nz-select>
+                      <div *ngIf="submitted && f.bondCode.errors?.required" class="invalid-feedback">
+                        Field is required
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="form-label">Warehouse Name<span class="text-danger">*</span></label>
+                    <div class="form-field-section">
+                      <nz-select class="nz-form-select nz-select-width"
+                        style="border-bottom: none !important; width: 100% !important;" formControlName="warehouseId"
+                        nzShowSearch nzAllowClear
+                        [ngClass]="{'is-invalid': submitted && f.warehouseId.errors?.required}"  
+                        (ngModelChange)="onWarehouseChange($event)">
+                        <nz-option *ngFor="let warehouse of warehouseList" [nzLabel]="warehouse.wareHouseName"
+                          [nzValue]="warehouse.warehouseId">
+                        </nz-option>
+                      </nz-select>
+                      <div *ngIf="submitted && f.warehouseId.errors?.required" class="invalid-feedback">
+                        Field is required
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Bonded-only: License, Accessible Value, Status, and Remarks -->
+                <div class="row mt-3" *ngIf="isBondedType()">
+                  <div class="col-md-3">
+                    <label class="form-label">License No<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control custom-input" formControlName="licenceNo"
+                      [ngClass]="{ 'is-invalid': submitted && f.licenceNo.errors }"
+                      placeholder="License No" />
+                    <div *ngIf="submitted && f.licenceNo.errors" class="invalid-feedback">
+                      <div *ngIf="f.licenceNo.errors?.required">License No is required</div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-3">
+                    <label class="form-label">Accessible Value<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control custom-input" formControlName="accessibleValue"
+                      [ngClass]="{ 'is-invalid': submitted && f.accessibleValue.errors }"
+                      placeholder="Accessible Value" />
+                    <div *ngIf="submitted && f.accessibleValue.errors" class="invalid-feedback">
+                      <div *ngIf="f.accessibleValue.errors?.required">Accessible Value is required</div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="form-label">Status<span class="text-danger">*</span></label>
+                    <div class="form-field-section">
+                      <nz-select class="nz-form-select nz-select-width"
+                        style="border-bottom: none !important; width: 100% !important;" formControlName="status"
+                        nzShowSearch nzAllowClear [ngClass]="{'is-invalid': submitted && f.status.errors?.required}">
+                        <nz-option *ngFor="let status of statuses" [nzLabel]="status" [nzValue]="status"></nz-option>
+                      </nz-select>
+                      <div *ngIf="submitted && f.status.errors?.required" class="invalid-feedback">
+                        Field is required
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="form-label">Remarks</label>
+                    <textarea class="form-control custom-input" formControlName="remarks"
+                      [ngClass]="{ 'is-invalid': submitted && f.remarks.errors }" placeholder="Remarks" rows="4">
+                    </textarea>
+                    <div *ngIf="submitted && f.remarks.errors" class="invalid-feedback">
+                      <div *ngIf="f.remarks.errors.required">Remarks is required</div>
+                    </div>
+                  </div>
+                </div>
+
+                <br />
+                <div class="form-group wrap-form-action btn-onscreen">
+                  <button class="btn1 btn-lg float-end" type="submit" (click)="onCancel()">
+                    Cancel
+                  </button>
+                  <button (click)="warehouseDataEntryId? openPOPUP(content2) : onSubmit()"
+                    class="btn btn-outline-primary btn-lg float-end" type="submit">
+                    {{ this.warehouseDataEntryId ? 'Update' : 'Save'}}
+                  </button>
+                  <button *ngIf="warehouseDataEntryId && isBondedType()" (click)="printData()"
+                    class="btn btn-outline-primary float-end" type="button">
+                    Print
+                  </button>
+                </div>
+
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>
+
+<ng-template #content2 let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+      </button>
+    </div>
+    <div class="modal-body mt-4">
+      <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2"> </em> <span
+        class=" text-dark fs-6"> {{ "Are You Sure ? You Want To Update." | translate }}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary  btn-sm me-3" (click)="d('Cross click')">No</button>
+        <button type="button" class="btn btn-danger  btn-sm" (click)="c('yes')">Yes</button>
+      </div>
+    </div>
+  </div>
+</ng-template>

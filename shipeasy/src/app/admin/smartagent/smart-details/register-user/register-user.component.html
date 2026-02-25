@@ -1,0 +1,283 @@
+<div class="row">
+    <div class="page-title-box">
+        <ol class="breadcrumb ">
+            <!-- <li class="breadcrumb-item">{{ 'stolt.heading' | translate }}</li> -->
+            <li class="breadcrumb-item active">{{ 'Register' | translate }}</li>
+            <li class="breadcrumb-item active color-red">{{ 'Register Companies' | translate }} {{ 'common.list' |
+                translate }}</li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrap-mat-table-area">
+    <div class="table-header-area">
+        <div>
+            <table-filters [TDP]="[false, false, true, true]" (filterInput)="applyFilter($event)"
+                (onClickExport)="export()">
+            </table-filters>
+        </div>
+        <div class="header-right" *ngIf="false">
+            <a appAccessControl featureCode="['STBT01']" accessType="add" title="Add New Job"
+                class="max-con new-action  btn btn-outline-primary btn-sm rounded-pill" routerLink="add">Add New
+                Job</a>
+        </div>
+    </div>
+
+    <div class="table-card">
+        <div class="table-design example-container mat-elevation-z8">
+            <table mat-table [dataSource]="dataSource" matSort class="" summary="agreement">
+
+                <ng-container matColumnDef="#">
+                    <th scope="col" mat-header-cell *matHeaderCellDef>
+                        # <em class="custom-tooltip" [attr.title]="'Toggle Filters'"
+                            (click)="toggleFilters = !toggleFilters" class="bi bi-search"></em>
+                    </th>
+                    <td mat-cell *matCellDef="let element;let i = index">
+                        {{ element?.id}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="agentName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                        {{ 'smartagent.smartAgent.agentProfileName' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <a class="font-weight" (click)="onOpenEdit(element?.agentId)">{{ element?.agentName }} </a>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="primaryNo.primaryNumber">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                        {{ 'smartagent.smartAgent.phoneNo' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let element"> {{ element?.primaryNo?.primaryNumber }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="primaryMailId">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                        {{ 'smartagent.smartAgent.emailAddress' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let element"> {{ element?.primaryMailId }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="primaryNo.addressInfo.countryName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                        {{ 'smartagent.smartAgent.country' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let element"> {{ element?.addressInfo?.countryName }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="updatedOn">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                        {{ 'Register Date' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let element"> {{ element?.agentStatus == 'Unregistered' ? '': element?.updatedOn | date : 'dd-MM-yyyy' }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="agentStatus">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                        {{ 'Status' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <span class="font-weight status-bar" [ngClass]="element?.agentStatus" >
+                            {{element?.agentStatus | capitalize }}
+                          </span>  
+                    </td>
+                </ng-container>
+
+
+                <ng-container matColumnDef="action">
+                    <th scope="col" id="action" class="charterersPdfHead" mat-header-cell *matHeaderCellDef>
+                        {{ 'Actions' }}
+                    </th>
+                    <td class="borderBottom" mat-cell *matCellDef="let element">
+                        <em class="bi bi-three-dots dots-color-change cursor-pointer wrap-batch1  border px-1 em-icon">
+                            <div class="wrap-open">
+                                <div class="wrap-2">
+                                    <div class="wrap-inside" appAccessControl featureCode="['STCP01']"
+                                        accessType="update" *ngIf="element?.agentStatus == 'registered'">
+                                        <span class="mtop">
+                                            <a (click)="onOpenEdit(element?.agentId)"><em
+                                                    class="bi  color-pencil-red" [class]="element?.agentStatus == 'registered' ?  'bi-pencil':  'bi-pencil'"></em>
+                                                    {{ element?.agentStatus == 'registered' ? 'Edit' : 'Edit'}}  </a>
+                                        </span>
+                                    </div>
+
+                                    <ng-container *ngIf="element?.agentStatus == 'registered'; else registerBlock">
+                                        <div class="wrap-inside" appAccessControl featureCode="['STCP01']" accessType="update">
+                                          <span class="mtop">
+                                            <a (click)="getUser(element,false)">
+                                              <em class="bi color-pencil-red bi-dash-circle"></em>
+                                              Un Register
+                                            </a>
+                                          </span>
+                                        </div>
+                                      </ng-container>
+                                      
+                                      <ng-template #registerBlock>
+                                        <div class="wrap-inside" appAccessControl featureCode="['STCP01']" accessType="update">
+                                          <span class="mtop">
+                                            <a (click)="openDialog(openUser,element)">
+                                              <em class="bi color-pencil-red bi-plus-circle"></em>
+                                              Register
+                                            </a>
+                                          </span>
+                                        </div>
+                                      </ng-template>   
+                                      
+                                      <div class="wrap-inside" appAccessControl featureCode="['STCP01']"
+                                      accessType="update" *ngIf="element?.agentStatus == 'registered'">
+                                      <span class="mtop">
+                                          <a (click)="openDialog(openUser,element,true)"><em
+                                                  class="bi  color-pencil-red" [class]="element?.agentStatus == 'registered' ?  'bi-pencil':  'bi-pencil'"></em>
+                                                  Manage User  </a>
+                                      </span>
+                                  </div>
+                                </div>
+                            </div>
+                        </em>
+                    </td>
+                </ng-container>
+
+                <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index"
+                    [matColumnDef]="headersFilter">
+                    <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+                        <div class="filters-container" [class.animate]="!toggleFilters">
+                            <!-- <em *ngIf="i == 0" class="custom-tooltip" [attr.title]="'Clear Filters'" (click)="clearFilters();toggleFilters = !toggleFilters" class="bi bi-x-circle"></em> -->
+                            <div *ngIf="i > 0 && i < displayedColumns1.length - 1" appearance="outline">
+                                <input type="date" *ngIf="headersFilter == 'createdOn_'+i"
+                                    class="form-control input-txt" placeholder="Press 'Enter' to search"
+                                    [(ngModel)]="filtersModel[i]" (change)="searchColumns()">
+                                <input type="text" *ngIf="headersFilter != 'createdOn_'+i"
+                                    class="form-control input-txt" placeholder="Press 'Enter' to search"
+                                    [(ngModel)]="filtersModel[i]" (keyup.enter)="searchColumns()">
+
+                            </div>
+                            <em *ngIf="i == displayedColumns1.length - 1" class="custom-tooltip"
+                                [attr.title]="'Clear Filters'" (click)="clearFilters();toggleFilters = !toggleFilters"
+                                class="bi bi-x-circle"></em>
+                        </div>
+                    </th>
+                </ng-container>
+
+
+                <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-header-row class="no-default-height" *matHeaderRowDef="displayedColumns1"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+                        <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+                        <span *ngIf="!loaderService?.isLoadingcircle && !dataSource?.data?.length">No data
+                            available</span>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+        <div [ngClass]="{'display-none' : dataSource.filteredData.length < 20}">
+            <mat-paginator [pageSizeOptions]="pagenation" showFirstLastButtons aria-label="Select page">
+            </mat-paginator>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #openUser let-modal>
+    <div class="modal-content nz-allSelect">
+        <div class="modal-header">
+            <h4 class="modal-title d-flex align-items-center">
+                {{regiserData?.manageUser ? 'Manage user':'Create User For Register'}}
+            </h4>
+            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
+        </div>
+
+        <div class="modal-body mt-3">
+            <div class="wrap-form-field">
+                <form [formGroup]="reminderForm" class="row g-3 align-items-center">
+                    <div class="row">
+                        <!-- Role Field -->
+                        <div class="col-md-6" *ngIf="!regiserData?.manageUser">
+                            <label class="form-label">Role<span class="text-danger">*</span></label>
+                            <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="role"
+                                [ngClass]="{'is-invalid': submitted && f.role.errors}">
+                                <nz-option *ngFor="let value of roleList" [nzLabel]="value?.roleName"
+                                    [nzValue]="value?.roleId"></nz-option>
+                            </nz-select>
+                            <div *ngIf="submitted && f.role.errors" class="invalid-feedback">
+                                <div *ngIf="f.role.errors.required">
+                                    {{"Role is required" | translate}}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- User Count Field -->
+                        <div class="col-md-6">
+                            <label class="form-label">User <span class="text-danger">*</span></label>
+                            <div class="d-flex align-items-center border px-2 py-1 bg-white shadow-sm smallSizeFeild">
+                                <button type="button" class="btn btn-sm btn-light border-0 px-1 py-0" (click)="decrease()">
+                                    <i class="bi bi-dash-lg"></i>
+                                </button>
+                                <input 
+                                    type="number" 
+                                    formControlName="userCount" 
+                                    class="form-control border-0 text-center flex-grow-1 mx-1 no-spinner p-0" 
+                                    style="width: 40px; height: 100%;" 
+                                    (input)="onInputChange($event)" 
+                                />
+                                <button type="button" class="btn btn-sm btn-light border-0 px-1 py-0" (click)="increase()">
+                                    <i class="bi bi-plus-lg size12"></i>
+                                </button>
+                            </div>
+                            <div *ngIf="submitted && f.userCount.errors" class="invalid-feedback d-block mt-1">
+                                <div *ngIf="f.userCount.errors.required">User is required</div>
+                                <div *ngIf="f.userCount.errors?.min">User count cannot be zero.</div>
+                            </div>
+                        </div>
+
+                        <!-- BL Format Field -->
+                        <div class="col-md-6">
+                            <label class="form-label">BL Format</label>
+                            <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="blFormat">
+                                <nz-option *ngFor="let format of blFormatList" 
+                                    [nzLabel]="format.label"
+                                    [nzValue]="format.value">
+                                </nz-option>
+                            </nz-select>
+                        </div>
+
+                        <!-- Use Unified Counter Toggle -->
+                        <div class="col-md-6 mt-3">
+                            <label class="form-label d-block">Use Unified Counter</label>
+                            <div class="form-check form-switch">
+                                <input 
+                                    class="form-check-input" 
+                                    type="checkbox" 
+                                    formControlName="useUnifiedCounter"
+                                    id="useUnifiedCounterSwitch"
+                                    [(ngModel)]="useUnifiedCounter"
+                                />
+                                <label class="form-check-label" for="useUnifiedCounterSwitch">
+                                    {{useUnifiedCounter ? 'Enabled' : 'Disabled'}}
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="col-md-12 my-3">
+                            <div class="text-center">
+                                <button type="button" class="btn btn-outline-primary" data-dismiss="modal"
+                                    aria-label="Close" (click)="cancel()">Cancel</button>
+                                <button type="button" class="btn btn-outline-primary" (click)="getUser(regiserData)">
+                                    {{regiserData?.manageUser ? 'Update User':'Create User'}}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-template>

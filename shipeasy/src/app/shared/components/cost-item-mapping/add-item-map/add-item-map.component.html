@@ -1,0 +1,67 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title" *ngIf="!fromParent"> {{ "common.add" | translate }} {{"smartagent.smartAgent.costHead.cost_item_map" | translate}}</h4>
+    <h4 class="modal-title" *ngIf="fromParent"> {{ "common.edit" | translate }} {{"smartagent.smartAgent.costHead.cost_item_map" | translate}}</h4>
+    <button type="button" class="btn-close shadow-none" (click)="onClose()" aria-label="Close">
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="wrap-form-field padding-space  modal-bottom-alignment-for-mobile-view">
+      <form [formGroup]="addCostItemMapping" (ngSubmit)="saveCostHead()" class="row g-3 mt-3">
+
+        <div class="col-md-4">
+          <label class="form-label">{{ "smartagent.smartAgent.costHead.costItemNAme" | translate}}</label><span class="text-danger">*</span>
+          <select (change)="setCostItem($event)" class="form-select custom-input" formControlName="CostItemName"
+            [ngClass]="{ 'is-invalid': submitted && f.CostItemName.errors }">
+            <option *ngFor="let costhead of costheadList" [value]="costhead?._source?.costitemId">
+              {{costhead?._source.costitemName}}</option>
+          </select>
+          <div *ngIf="submitted && f.CostItemName.errors" class="invalid-feedback">
+            <div *ngIf="f.CostItemName.errors.required">{{ 'smartagent.smartAgent.costHead.cost_item_map_required'
+              |
+              translate }}</div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">{{ 'smartagent.smartAgent.costHead.mapping_name' | translate
+            }}</label><span class="text-danger">*</span>
+          <input formControlName="costitemMapping" type="text" class="form-control custom-input" placeholder=""
+            [ngClass]="{ 'is-invalid': submitted && f.costitemMapping.errors }">
+          <div *ngIf="submitted && f.costitemMapping.errors" class="invalid-feedback">
+            <div *ngIf="f.costitemMapping.errors.required">{{ 'smartagent.smartAgent.costHead.mapping_name' | translate
+              }}
+              {{'common.required'|translate}}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">{{ 'smartagent.smartAgent.costHead.VMSCode' | translate
+            }}</label>
+          <input formControlName="vmscode" type="text" class="form-control custom-input" placeholder="">
+        </div>
+
+        <div class="col-md-6">
+          <div class="taggle form-check form-switch">
+            <label class="form-check-label" for="flexSwitchCheckDefault"> {{ 'smartagent.smartAgent.department.status' |
+              translate }}</label>
+            <input class="form-check-input" formControlName="Status" type="checkbox" id="flexSwitchCheckDefault">
+          </div>
+        </div>
+        <div class="form-group wrap-form-action mt-4">
+          <button class="btn1 btn-lg float-end" (click)="onClose()">
+            {{ "common.cancel" | translate }}
+          </button>
+          <button class="btn btn-outline-primary btn-lg float-end">
+            <ng-container *ngIf="!fromParent">
+              {{ "common.save" | translate }}
+            </ng-container>
+            <ng-container *ngIf="fromParent">
+              {{ "common.update" | translate }}
+            </ng-container>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

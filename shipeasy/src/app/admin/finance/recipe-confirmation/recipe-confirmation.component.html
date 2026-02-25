@@ -1,0 +1,162 @@
+<ng-container *ngIf="currentUrl === 'receiptconfirmation'">
+  <div class="wrap-table-area">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2">
+          <div class="mt-2">
+            <span>
+              <h5>{{ fromSize }}-{{ count }} of {{ toalLength }}</h5>
+            </span>
+          </div>
+          <div class="mt-2">
+            <span class="prv" [class.disable-arrow-sign]="fromSize === 1" (click)="prev()"><em
+                class="typcn typcn-chevron-left"></em></span>
+            <span class="prv" [class.disable-arrow-sign]="count === toalLength" (click)="next()"><em
+                class="typcn typcn-chevron-right"></em></span>
+          </div>
+          <div class="mt-2"><select class="form-select form-select-sm" (change)="filter($event)">
+              <option value="20">20</option>
+              <option value="50">50</option>
+            </select></div>
+        </div>
+      </div>
+      <div class="col-md-12 mt-3">
+        <div class="table-responsive without-space">
+          <table aria-describedby="mytable" class="gfg">
+            <thead>
+              <tr class="field-name" *ngIf="false">
+                <th scope="col">
+                  {{ "smartagent.job.list.reciept.invoiceNo" | translate }}
+                 
+                </th>
+                <th scope="col">
+                  {{ "smartagent.job.list.reciept.paymentNo" | translate }}
+                </th>
+                <th scope="col">
+                  {{ "smartagent.job.list.reciept.paymentDate" | translate }}
+                </th>
+                <th scope="col">
+                  {{ "smartagent.job.list.reciept.payedAmount" | translate }}
+                </th>
+                <th scope="col">
+                  {{ "smartagent.job.list..description" | translate }}
+                </th>
+                <th scope="col">{{ "common.status" | translate }}</th>
+                <th scope="col"></th>
+              </tr>
+              <tr>
+                <th scope="col">{{ "smartagent.job.list.reciept.receipt_no" | translate }}</th>
+                <th scope="col"> {{ "smartagent.job.list.reciept.receipt_date" | translate }}</th>
+                <th scope="col"> {{ "smartagent.job.list.reciept.job_no" | translate }}</th>
+                <th scope="col"> {{ "smartagent.job.list.reciept.partyname" | translate }}</th>
+                <th scope="col"> {{ "smartagent.job.list.reciept.department" | translate }}</th>
+                <th scope="col"> {{ "smartagent.job.list.reciept.details" | translate }}</th>
+                <th scope="col"> {{ "smartagent.job.list.reciept.ref_no" | translate }}</th>
+                <th scope="col"> {{ "smartagent.job.list.reciept.currency" | translate }}</th>
+                <th scope="col"> {{ "smartagent.job.list.reciept.amount" | translate }}</th>
+                <th scope="col"> {{ "smartagent.job.list.reciept.amountInr" | translate }}</th>
+                <th scope="col">{{ "common.status" | translate }}</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-template
+                ngFor
+                let-container
+                [ngForOf]="paymentData"
+                *ngIf="false"
+              >
+                <tr>
+                  <td>{{ container.Invoice_No }}</td>
+                  <td>{{ container.Payment_No }}</td>
+                  <td>{{ container.Payment_Date }}</td>
+                  <td>{{ container.Payed_Amount }}</td>
+                  <td>{{ container.Description }}</td>
+                  <td>{{ container.status }}</td>
+
+                  <td class="action-field">
+                    <span
+                      nz-tooltip
+                      nzTooltipTitle="{{ 'common.edit' | translate }}"
+                      class="mtop mt-1"
+                      ><a><em class="bi bi-pencil color-pencil-red"></em></a>
+                    </span>
+                    <span
+                      nz-tooltip
+                      nzTooltipTitle="{{ 'common.delete' | translate }}"
+                      class="mtop mt-1"
+                      ><a><em class="typcn typcn-trash"></em></a>
+                    </span>
+                  </td>
+                </tr>
+              </ng-template>
+
+              <ng-template ngFor let-container [ngForOf]="paymentData">
+                <tr>
+                  <td>{{ container?._source?.paymentNo }}</td>
+                  <td>{{ container?._source?.paymentDate }}</td>
+                  <td>{{ container?._source?.jobNumber }}</td>
+                  <td>{{ container?._source?.paymentFromName }}</td>
+                  <td>{{ container?._source?.department }}</td>
+                  <td>{{ container?._source?.remarks }}</td>
+                  <td>{{ container?._source?.remittingRefNo }}</td>
+                  <td>{{ container?._source?.currency }}</td>
+                  <td>{{ container?._source?.paymentAmount }}</td>
+                  <td>{{ container?._source?.amtInr }}</td>
+                  <td>{{ container?._source?.status }}</td>
+                  <td class="action-field">
+                    <span
+                      nz-tooltip
+                      nzTooltipTitle="{{ 'common.edit' | translate }}"
+                      class="mtop mt-1"
+                      ><a (click)="editReceipt(container?._source)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                    </span>
+                  
+                    <span (click)="deleteReceipt(container?._source?.paymentId, confirmdelete)"
+                      nz-tooltip
+                      nzTooltipTitle="{{ 'common.delete' | translate }}"
+                      class="mtop mt-1"
+                      ><a><em class="typcn typcn-trash"></em></a>
+                    </span>
+                    <span class="mtop mt-1" style="cursor: pointer; color: blue;"  (click)="onOpenNew(container?._source)">Confirm</span>
+                  </td>
+                </tr>
+              
+              </ng-template>
+            </tbody>
+           
+          </table>
+        </div>
+        <div class="no-data-availble" *ngIf="paymentData?.length === 0">
+          {{ "common.no_data" | translate }}
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<ng-container *ngIf="currentUrl === 'confirm'">
+  <app-receipt-confirm [allInvoicesData]="paymentData" [jobDetails]="jobDetails"></app-receipt-confirm>
+</ng-container>
+
+<ng-template #confirmdelete let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body mt-4">
+      <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2">
+      </em>
+      <span class="text-dark fs-6">{{"error.msg_delete" | translate}}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+          {{"common.no"| translate}}
+        </button>
+        <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+          {{"common.yes"| translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>

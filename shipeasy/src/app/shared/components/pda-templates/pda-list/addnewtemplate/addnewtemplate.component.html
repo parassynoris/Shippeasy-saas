@@ -1,0 +1,160 @@
+<div class="table-with-gheading">
+
+<div class=" wrap-form-field">
+
+  <div class="row">
+    <div class="col-md-12">
+      <form [formGroup]="addNewTemplate" class="row g-3 mt-3">
+        <div class="col-md-3">
+          <label class="form-label">{{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.template_name' | translate }}<span class="text-danger">*</span></label>
+          <input type="text" class="form-control custom-input" placeholder="Template Name" value="{{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.template_name_value' | translate }}"
+          formControlName="template_name" [ngClass]="{'is-invalid': submitted && f.template_name.errors}">
+          <div *ngIf="submitted && f.template_name.errors" class="invalid-feedback">
+            <div *ngIf="f.template_name.errors.required"> {{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.template_name_required' | translate }}</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">{{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.process_type' | translate }} <span class="text-danger">*</span></label>
+          <select class="form-select custom-input" aria-label="Process Type"
+          formControlName="process_type" [ngClass]="{'is-invalid': submitted && f.process_type.errors}">
+            <option selected>Import</option>
+          </select> 
+          <div *ngIf="submitted && f.process_type.errors" class="invalid-feedback">
+            <div *ngIf="f.process_type.errors.required"> {{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.process_type_required' | translate }}</div>
+          </div> 
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">{{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.template_type' | translate }}<span class="text-danger">*</span> </label>
+          <select class="form-select custom-input" aria-label="Template Type"
+          formControlName="Template_type" [ngClass]="{'is-invalid': submitted && f.Template_type.errors}">
+            <option selected>Global</option>
+          </select>
+          <div *ngIf="submitted && f.Template_type.errors" class="invalid-feedback">
+            <div *ngIf="f.Template_type.errors.required"> {{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.template_type_required' | translate }}</div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-12">
+      <div class="table-responsive">
+        <table aria-describedby="mytable" class="gfg">
+          <thead>
+            <tr class="field-name">
+              <th  scope="col"  class="width20">{{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.template_name' | translate }} <em class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+              <th  scope="col" class="width20">{{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.template_type' | translate }}</th>
+              <th  scope="col"  class="width10">{{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.cost_head' | translate }}</th>
+              <th  scope="col"  class="width10">{{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.unit' | translate }}</th>
+              <th  scope="col" class="width10">{{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.qty' | translate }}</th>
+              <th  scope="col" class="width30">{{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.description' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let newtemp of newpdatemplateDatas">
+              <td>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                  <label class="form-check-label" for="flexCheckDefault">
+                    {{newtemp. name}}
+                  </label>
+                </div>
+              </td>
+              <td>{{newtemp.type}}</td>
+              <td>{{newtemp.cost_head}}</td>
+              <td>{{newtemp.unit}}</td>
+              <td>{{newtemp.qty}}</td>
+              <td>{{newtemp.description}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="form-group wrap-form-action float-end">
+
+
+        <button class="btn1 btn-lg " (click)="onClose($event)" type="submit">
+          {{ 'common.cancel' | translate }}
+        </button>
+        <button class="btn btn-outline-primary btn-lg m-2" (click)="onSave()" type="submit">
+          {{ 'common.save' | translate }}
+        </button>
+
+
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap-another-form">
+    <div class="row">
+      <div class="col-md-12 mb-2">
+        <h5 class="modal-title" id="templateModalLabel"><strong>{{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.add_new' | translate }}</strong></h5>
+      </div>
+      <br>
+      <div class="col-md-12">
+        <form [formGroup]="addNewTemplate" class="row g-3">
+          <div class="col-md-3">
+            <label class="form-label">{{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.activity_type' | translate }}<span class="text-danger">*</span></label>
+            <select class="form-select custom-input" aria-label="Activity Type"
+            formControlName="activity_type" [ngClass]="{'is-invalid': submitted && f.activity_type.errors}">
+              <option selected>Mumbai</option>
+            </select>
+            <div *ngIf="submitted && f.activity_type.errors" class="invalid-feedback">
+              <div *ngIf="f.activity_type.errors.required"> {{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.activity_type_required' | translate }}</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">{{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.activity_name' | translate }}<span class="text-danger">*</span></label>
+            <input type="text" class="form-control custom-input" placeholder="Activity Name" value="{{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.activity_name_value' | translate }}"
+            formControlName="activity_name" [ngClass]="{'is-invalid': submitted && f.activity_name.errors}">
+            <div *ngIf="submitted && f.activity_name.errors" class="invalid-feedback">
+              <div *ngIf="f.activity_name.errors.required"> {{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.activity_name_required' | translate }}</div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <label class="form-label">{{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.cost_head' | translate }}</label>
+            <select class="form-select custom-input" aria-label="Cost Head">
+              <option selected>{{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.cost_head_option' | translate }}</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label class="form-label">{{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.cost' | translate }}</label>
+            <input type="text" class="form-control custom-input" placeholder="Cost" value="{{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.cost_value' | translate }}">
+          </div>
+          <div class="col-md-2">
+            <label class="form-label">{{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.price' | translate }}</label>
+            <input type="text" class="form-control custom-input" placeholder="Price" value="{{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.cost_value' | translate }}">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">{{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.unit' | translate }}</label>
+            <select class="form-select custom-input" aria-label="Unit">
+              <option selected>{{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.unit_option' | translate }}</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">{{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.quantity' | translate }}</label>
+            <input type="text" class="form-control custom-input" placeholder="Quantity" value="{{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.quantity_value' | translate }}">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">{{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.descriptions' | translate }}</label>
+            <input type="text" class="form-control custom-input" placeholder="Quantity" value="{{ 'stolt.masters.pda_template.pda_template_list.add_new_pda_template.descriptions_value' | translate }}">
+          </div>
+          <div class="col-md-12">
+            <div class="form-group wrap-form-action float-end">
+
+
+              <button class="btn1 btn-lg " (click)="onClose($event)" type="submit">
+                {{ 'common.cancel' | translate }}
+              </button>
+              <button class="btn btn-outline-primary btn-lg m-2" (click)="onSaves()" type="submit">
+                {{ 'common.save' | translate }}
+              </button>
+
+
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

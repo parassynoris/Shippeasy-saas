@@ -1,0 +1,196 @@
+<nav class="navbar navbar-expand-lg fixed-top navbar-light">
+    <div class="wrap-bar">
+        <div class="wrap-left">
+          <a class="navbar-brand" href="#">
+            <img src="assets/img/logos.png" alt="logo" class="d-inline-block align-text-top">
+          </a>
+          <button class="navbar-toggler menu-btn" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+        <div class="wrap-right">
+          <div class="right-menu">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item search-section">
+                <div class="input-group custom-input">
+                  <input type="text" class="form-control" placeholder="Search"
+                    aria-label="Search">
+                  <span class="input-group-text"><em class="bi bi-search"></em></span>
+                </div>
+              </li>
+              <li class="nav-item">
+                <em class="bi bi-border-all"></em>
+              </li>
+              <li class="nav-item position-relative note-icon">
+                <div class="dropdown">
+                  <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink1" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <em class="bi bi-bell"></em>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+                      3
+                    </span></a>
+                  <div class="dropdown-menu dropdown-menu-right dropdown-arrow dropdown-menu-lg border-0">
+    
+                    <div class="dropdown-item noti-title">
+                      <h5>Tittle (3)</h5>
+                    </div>
+    
+                    <a *ngFor="let noti of notification" routerLink="javascript:void(0);" class="dropdown-item notify-item">
+                      <p class="notify-details"><strong>{{noti.title}}</strong><small class="text-muted">{{noti.des}}</small></p>
+                    </a>
+                    <a routerLink="javascript:void(0);" class="dropdown-item notify-item border-top">Btn      </a>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item">
+                <div class="dropdown">
+                  <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <img src="assets/img/avatar-1.avif" alt="user" class="avtar-img">
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" routerLink="#">menu1</a></li>
+                    <li><a class="dropdown-item" routerLink="#">menu2</a></li>
+                    <li><a class="dropdown-item" routerLink="#">menu3</a></li>
+                    <li><a class="dropdown-item" routerLink="#">menu4</a></li>
+                  </ul>
+                </div>
+              </li>
+    
+            </ul>
+          </div>
+        </div>
+      </div>    
+</nav> 
+ 
+<div class="container">
+    <div class="row mt-5 pt-4">
+        <div class=" col-sm-4 card-head pb-2 ">
+            <div class="col card rounded"> 
+               <div class="card-img-top bg-light">
+                   <div class="px-5">
+                      <p class="d-flex justify-content-center mt-4 pt-5 dd"><span class="image  p-4 position-absolute top-0 mt-5"><em class="bi bi-laptop h2"></em></span></p>
+                  </div>
+                </div>
+                <div class="card-block  pt-5 px-6 pb-5">
+                    <h4 class="card-title text-center pt-4">Charter Party Writing</h4>
+                    <p class="card-text text-center">Enabling better decision and transparency.<br>through efficient networks <br>across the maritime ecosystem</p>
+                    <div class="text-center pt-2 "> 
+                        <button class="btn btn-outline-primary btn-sm  rounded-pill px-4" type="submit">
+                       Select <em class="bi bi-chevron-right ml-2"></em>
+                     </button>
+                   </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4 card-head pb-2">
+            <div class="col card rounded ">
+               <div class="card-img-top bg-light">
+                   <div class="px-5">
+                      <p class="d-flex justify-content-center mt-4 pt-5"><span class="image p-4 d-inline position-absolute  top-0 mt-5"><em class="bi bi-laptop h2"></em></span></p>
+                  </div>
+                </div>
+                <div class="card-block pt-5 px-6 pb-5">
+                    <h4 class="card-title text-center letter-spacing-3 pt-4">SHIPEASY</h4>
+                    <p class="card-text text-center ">Enabling better decision and transparency.<br>through efficient networks <br>across the maritime ecosystem</p>
+                     <div class="text-center pt-2 "> 
+                         <button (click)="onRoute()" class="btn btn-outline-primary btn-sm rounded-pill px-4" type="submit">
+                        Select <em class="bi bi-chevron-right ml-2"></em>
+                      </button>
+                    </div>
+                </div>               
+            </div>
+        </div>
+        <div class="col-sm-4 card-head pb-2">
+            <div class="col card rounded ">
+               <div class="card-img-top bg-light">
+                   <div class="px-5">
+                      <p class="d-flex justify-content-center mt-4 pt-5"><span class="image  p-4  position-absolute top-0 mt-5"><em class="bi bi-laptop h2"></em></span></p>
+                  </div>
+                </div>
+                <div class="card-block pt-5 px-6 pb-5">
+                    <h4 class="card-title text-center pt-4">Disbursement Accounting</h4>
+                    <p class="card-text text-center">Enabling better decision and transparency.<br>through efficient networks <br>across the maritime ecosystem</p>
+                    <div class="text-center pt-2 "> 
+                        <button class="btn btn-outline-primary btn-sm  rounded-pill px-4" type="submit">
+                       Select <em class="bi bi-chevron-right ml-2"></em>
+                     </button>
+                   </div>
+                </div>
+            </div>
+        </div>       
+    </div>
+    <div class="row mt-4">
+        <div class=" col-sm-4 card-head pb-2 ">
+            <div class="col card rounded"> 
+               <div class="card-img-top bg-light">
+                   <div class="px-5">
+                      <p class="d-flex justify-content-center mt-4 pt-5 dd"><span class="image  p-4 position-absolute top-0 mt-5"><em class="bi bi-laptop h2"></em></span></p>
+                  </div>
+                </div>
+                <div class="card-block  pt-5 px-6 pb-3">
+                    <h4 class="card-title text-center pt-4">Laytime Calculator</h4>
+                    <p class="card-text text-center">Enabling better decision and transparency.<br>through efficient networks <br>across the maritime ecosystem</p>
+                    <div class="text-center pt-2 "> 
+                        <button class="btn btn-outline-primary btn-sm  rounded-pill px-4" type="submit">
+                       Select <em class="bi bi-chevron-right ml-2"></em>
+                     </button>
+                   </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4 card-head pb-2">
+            <div class="col card rounded ">
+               <div class="card-img-top bg-light">
+                   <div class="px-5">
+                      <p class="d-flex justify-content-center mt-4 pt-5"><span class="image p-4 d-inline position-absolute  top-0 mt-5"><em class="bi bi-laptop h2"></em></span></p>
+                  </div>
+                </div>
+                <div class="card-block pt-5 px-6 pb-2">
+                    <h4 class="card-title text-center letter-spacing-3 pt-4">Marine Directory</h4>
+                    <p class="card-text text-center mb-4">Enabling better decision and transparency.<br>through efficient networks <br>across the maritime ecosystem</p>
+                    
+                    <div class="text-center pt-2 marine-btn"> 
+                         <button (click)="onRoute()" class="btn btn-outline-primary btn-sm rounded-pill px-4" type="submit">
+                        Select <em class="bi bi-chevron-right ml-2"></em>
+                      </button>
+                    </div>
+                </div> 
+                <div class="card-img bg-light">
+                    <div class="pt-4 pb-3">
+                       <p class=" d-flex justify-content-center text-primary h6">Coming Soon</p>
+                   </div>
+                 </div>              
+            </div>
+        </div>
+        <div class="col-sm-4 card-head pb-2">
+            <div class="col card rounded card-clr">
+               <div class="card-img-top bg-light">
+                   <div class="px-5">
+                      <p class="d-flex justify-content-center mt-4 pt-5"><span class="image  p-4  position-absolute top-0 mt-5"><em class="bi bi-laptop h2"></em></span></p>
+                  </div>
+                </div>
+                <div class="card-block pt-5 px-6 pb-5 card-clr">
+                    <h4 class="card-title text-center pt-4">Cash Management</h4>
+                    <div class="d-flex justify-content-center">
+                      <div class="round-cash">
+                        <p class="d-flex justify-content-center "><span class="image images  p-3 mt-3 mr-2"><em class="bi bi-lock h4"></em></span></p>
+                      </div>
+                      <div class="pt-3">
+                         <h5 class="unlock text-primary">Unlock Application</h5> 
+                        <p class="card-text text-center">Lorem ipsum dolor sit amet consectetur<br> adipisicing elit Recusandae aspernatur</p>
+                      </div>
+                    </div>
+                    <div class="text-center pt-4"> 
+                        <button class="btn btn-outline-primary btn-sm  rounded-pill px-4" type="submit">
+                       Select <em class="bi bi-chevron-right ml-2"></em>
+                     </button>
+                   </div>
+                </div>
+            </div>
+        </div>       
+    </div>
+</div>
+

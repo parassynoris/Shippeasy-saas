@@ -1,0 +1,368 @@
+
+@import'../../../../assets/styles/mixins/global.scss';
+.btn-style button{
+  padding: 4px 12px;
+  border-radius: 50px;
+}
+.input-txt {
+  font-size: 12px;
+  color: var(--theme-black-300);
+  border: 1px solid #d1d1d1;
+  font-weight: 400;
+}
+.divider {
+  border-left: 3px solid grey;
+  height: 30px;
+  opacity: .2;
+}
+
+  @media only screen and (max-width: 760px),
+    (min-device-width: 768px) and (max-device-width: 1024px) {
+    td:nth-of-type(1):before {
+      content: "SHIPEASY Ref. No.";
+    }
+    td:nth-of-type(2):before {
+      content: "Quote No.";
+    }
+    td:nth-of-type(3):before {
+      content: "Tank Type";
+    }
+    td:nth-of-type(4):before {
+      content: "Location";
+    }
+    td:nth-of-type(5):before {
+      content: "Shipper";
+    }
+    td:nth-of-type(6):before {
+      content: "Consignee";
+    }
+    td:nth-of-type(7):before {
+      content: "Product";
+    }
+    td:nth-of-type(8):before {
+      content: "Move On";
+    }
+    td:nth-of-type(9):before {
+      content: "Move Type";
+    }
+    td:nth-of-type(10):before {
+      content: "Shipment Type";
+    }
+    td:nth-of-type(11):before {
+      content: "Notify Party";
+    }
+    td:nth-of-type(12):before {
+      content: "Invoice Party";
+    }
+    td:nth-of-type(13):before {
+      content: "Shipping Line";
+    }
+    td:nth-of-type(14):before {
+      content: "Status";
+    }
+    td:nth-of-type(15):before {
+      content: "Action";
+    }
+  }
+  .tableFixHead td:nth-child(2),
+.tableFixHead th:nth-child(2) {
+  position: sticky;
+  left: 106px;
+  z-index: 1;
+  background-color: white;
+}
+.tableFixHead td:nth-child(3),
+.tableFixHead th:nth-child(3){
+  position: sticky;
+  left: 230px;
+  z-index: 1 !important;
+  background-color: white;
+}
+
+.menuright {
+  position: fixed;
+  right: 0;
+  top: 40%;
+  width: 10px;
+  margin: -2.5em 0 0 0;
+  z-index: 5;
+  background: var(--theme-white-background-color);
+  color: var(--link-text-color);
+  font-weight: bold;
+  text-align: left;
+  padding: 10px 30px 10px 0px;
+  box-shadow: var(--theme-shadow);
+  border-radius: 10px 0 0px 10px;
+  li {
+    width: 30px;
+    border-bottom: 1px solid var(--theme-border-color-light);
+    list-style: none;
+    padding: 0px 0 0px 3px;
+    &:last-child {
+      border-bottom: 0;
+    }
+    i,em{
+      font-size: 12px;
+    }
+  }
+}
+
+.tableFixHead td:nth-child(2),
+.tableFixHead th:nth-child(2) {
+  position: sticky;
+  left: 100px;
+  z-index: 3;
+  background-color: white;
+}
+
+.tableFixHead td:nth-child(3),
+.tableFixHead th:nth-child(3) {
+  position: sticky;
+  left: 239px;
+  z-index: 3 !important;
+  background-color: white;
+}
+.btn-outline-primary{
+  padding: 7px 9px 4px 9px;
+}
+.accordion-body {
+padding: 10px 0 !important;
+}
+.table-design { 
+  max-height: calc(100vh - 300px);
+}
+
+.ant-select{
+width: 100%;
+}
+.font-size{
+    font-size: 15px !important;
+    font-weight: 500 !important;
+}
+.btn-outline-primary{
+    padding: 3px 7px !important;
+}
+
+.form-check-input:checked {
+    border-color: var(--link-text-color);
+}
+.table-responsive {
+    margin-top: 20px;
+    max-height: 320px;
+
+    table {
+        border-spacing: 0 0px;
+
+        td {
+            border: 0;
+            border-bottom: 1px solid #e3e3e3;
+
+            &:first-child,
+            &:last-child {
+                border-radius: 0;
+            }
+        }
+    }
+}
+::ng-deep {
+    .wrap-modal-autosearch {
+        nz-select {
+
+            input,
+            select {
+                padding: 0 0px !important;
+                border: 1px solid rgb(207 202 202) !important;
+            }
+        }
+
+        .nz-form-select.wrap-inline-select nz-select-top-control {
+            height: 32px !important;
+        }
+    }
+
+    .cdk-overlay-container,
+    .cdk-overlay-pane {
+        z-index: 2000 !important;
+    }
+}
+
+.nz-select-width {
+    width: 100%;
+}
+
+// mat-sidebar
+.modal.right .modal-dialog {
+  position: fixed;
+  margin: auto;
+  width: 1097px;
+  height: 100%;
+  right: 0px;
+  -webkit-transform: translate3d(0%, 0, 0);
+  -ms-transform: translate3d(0%, 0, 0);
+  -o-transform: translate3d(0%, 0, 0);
+  transform: translate3d(0%, 0, 0);
+}
+.modal.right .modal-content {
+  height: 100%;
+  overflow-y: auto;
+}
+.modal.right .modal-body {
+  padding: 15px 15px 80px;
+}
+/*Right*/
+.modal.right.fade .modal-dialog {
+  right: 0px;
+  -webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
+  -moz-transition: opacity 0.3s linear, right 0.3s ease-out;
+  -o-transition: opacity 0.3s linear, right 0.3s ease-out;
+  transition: opacity 0.3s linear, right 0.3s ease-out;
+}
+.modal.right.fade.in .modal-dialog {
+  right: 0;
+}
+/* ----- MODAL STYLE ----- */
+.modal-content {
+  border-radius: 0;
+  border: none;
+}
+.modal-header {
+  display: flex;
+  justify-content: unset;
+}
+
+.modal {
+  -bs-modal-width: unset;
+}
+/* ----- v CAN BE DELETED v ----- */
+body {
+  background-color: #78909c;
+}
+.demo {
+  padding-top: 60px;
+  padding-bottom: 110px;
+}
+.btn-demo {
+  margin: 15px;
+  padding: 10px 15px;
+  border-radius: 0;
+  font-size: 16px;
+  background-color: #ffffff;
+}
+.btn-demo:focus {
+  outline: 0;
+}
+.demo-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 15px;
+  background-color: #212121;
+  text-align: center;
+}
+.demo-footer > a {
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 16px;
+  color: var(--theme-white-text-color);
+}
+.font{
+  font-size: medium;
+}
+.new-action{
+background: #e9e6e6;
+border-radius: 2px;
+padding: 6px;
+margin-top: 17px;
+.wrap-text, .wrap-btn{
+  width: 49%;
+  display: inline-block;
+  vertical-align: middle;
+}
+.wrap-btn{
+   text-align: right;
+}
+}
+.form-control.calender {
+  width: 75%;
+}
+.form-label {
+  margin-bottom: 0rem;
+}
+.btncal {
+  background-color: transparent;
+  border-right: 0;
+  border-left: 0;
+  border-top: 0;
+  border-bottom: 1px solid var(--theme-border-bottom-color);
+}
+.btncal i {
+  color: var(--link-text-color);
+  font-size: 12px;
+}
+
+.btn {
+  border-radius: 50px;
+  padding: 5px 30px;
+}
+
+.wrap-add-btn{
+padding: 6px 0 10px 0;
+text-align: right;
+color: var(--theme-red-color);
+}
+::ng-deep {
+  .cdk-overlay-container,
+  .cdk-overlay-pane {
+    z-index: 2000 !important;
+  }
+}
+.font2{
+  font-weight: 600 !important;
+  margin: 10px;
+}
+
+.upload-btn-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+.btns {
+  border: 2px dashed #c2bcbc;
+  color: var(--theme-gray-800); 
+  background-color: var(--theme-light-bg);
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.upload-btn-wrapper input[type=file] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+.new-action{
+  background: unset;
+}
+input[type="checkbox"] {
+  width: 10px; /* Increased size for better visibility */
+  height: 10px; /* Increased size for better visibility */
+  margin-right: 2px; /* Space between checkbox and label */
+  margin-bottom: 4px;
+  accent-color: #007BFF; /* Color for the checkbox when checked */
+  vertical-align: middle; /* Align checkbox vertically with text */
+}
+
+label.form-label {
+  margin-bottom: 0; /* Ensures label is inline with checkbox */
+  line-height: 1.5; /* Adjust line height for better vertical alignment */
+  display: inline-flex; /* Make label behave like a flex container */
+  align-items: center; /* Center items in the label */
+}
+
+

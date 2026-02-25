@@ -1,0 +1,424 @@
+<div class="table-with-gheading">
+  <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+    <div class="row">
+      <div class="col-md-12 mb-5">
+        <form [formGroup]="addProduct" class="row g-3 mt-3">
+          <div class="col-md-4" *ngIf="false">
+            <label class="form-label">{{
+              "stolt.masters.product.addproduct.stolt_product_id" | translate
+              }}
+              <span class="text-danger">*</span></label>
+            <input type="text" class="form-control custom-input" value="{{
+                'stolt.masters.product.addproduct.stolt_product_id_value'
+                  | translate
+              }}" formControlName="Stolt_Product_id" [ngClass]="{
+                'is-invalid': submitted && f.Stolt_Product_id.errors
+              }" />
+            <div *ngIf="submitted && f.Stolt_Product_id.errors" class="invalid-feedback">
+              <div *ngIf="f.Stolt_Product_id.errors.required">
+                {{
+                "stolt.masters.product.addproduct.stolt_product_id" | translate
+                }} {{"common.isRequired" | translate}}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">{{ "stolt.masters.product.addproduct.product_name" | translate
+              }}<span class="text-danger">*</span>
+            </label>
+            <input type="text" class="form-control custom-input" value="{{
+                'stolt.masters.product.addproduct.product_name_value'
+                  | translate
+              }}" formControlName="productName" [ngClass]="{ 'is-invalid': submitted && f.productName.errors }" placeholder="Product Name" />
+            <div *ngIf="submitted && f.productName.errors" class="invalid-feedback">
+              <div *ngIf="f.productName.errors.required">
+                {{ "stolt.masters.product.addproduct.product_name" | translate
+                }} {{"common.isRequired" | translate}}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">{{ "stolt.masters.product.addproduct.product_type" | translate
+              }}</label>
+            <div class="col d-flex">
+              <div>
+              <div class="form-check form-check-inline d-flex">
+                <input class=" margin" type="radio" name="productType" id="inlineRadio1" value="HAZ"
+                  formControlName="productType" (change)="onProductTypeChange($event.target.value)"  />
+                <label class="form-check-label" for="inlineRadio1">HAZ</label>
+              </div>
+              </div>
+              <div class="form-check form-check-inline d-flex" >
+                <input class=" margin" type="radio" name="productType" id="inlineRadio2" value="GENERAL"
+                  formControlName="productType" (change)="onProductTypeChange($event.target.value)" />
+                <label class="form-check-label" for="inlineRadio2">GENERAL</label>
+              </div>
+              <div class="form-check form-check-inline d-flex">
+                <input class=" margin" type="radio" name="productType" id="inlineRadio3" value="REFER"
+                  formControlName="productType" (change)="onProductTypeChange($event.target.value)" />
+                <label class="form-check-label" for="inlineRadio3">REFER</label>
+              </div>
+              <div *ngIf="submitted && !f.productType.value" class="invalid-feedback">
+                <div *ngIf="!f.productType.value">
+                  {{ "stolt.masters.product.addproduct.product_type" | translate
+                  }} {{"common.isRequired" | translate}}
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="col-md-4">
+            <label class="form-label">{{ "stolt.party-master.customerName" | translate
+              }}<span class="text-danger">*</span>
+            </label>
+
+
+            <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Customer Name"formControlName="customerName"
+              [ngClass]="{ 'is-invalid': submitted && f.customerName.errors }">
+              <nz-option *ngFor="let customer of partyMasterNameList" [nzLabel]="customer?.name"
+                [nzValue]="customer?.partymasterId"></nz-option>
+            </nz-select>
+            <div *ngIf="submitted && f.customerName.errors" class="invalid-feedback">
+              <div *ngIf="f.customerName.errors.required">
+                {{ "stolt.party-master.customerName" | translate
+                }} {{"common.isRequired" | translate}}
+              </div>
+            </div>
+          </div> -->
+          <div class="col-md-4" *ngIf="false">
+            <label class="form-label">Proper Shipping Name</label>
+            <input type="text" class="form-control custom-input" value="" formControlName="shippingName"
+              [ngClass]="{ 'is-invalid': submitted && f.shippingName.errors }" placeholder=" Shipping Name"/>
+            <div *ngIf="submitted && f.shippingName.errors" class="invalid-feedback">
+              <div *ngIf="f.shippingName.errors.required">
+                {{ "stolt.party-master.shippingName" | translate
+                }} {{"common.isRequired" | translate}}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">{{ "stolt.masters.product.addproduct.hs_code" | translate
+              }}</label>
+            <input type="text" class="form-control custom-input" value="{{
+                'stolt.masters.product.addproduct.hs_code_value' | translate
+              }}" formControlName="hsCode" [ngClass]="{
+                'is-invalid': submitted && f.hsCode.errors
+              }" placeholder="HS Code"/>
+            <div *ngIf="submitted && f.hsCode.errors" class="invalid-feedback">
+              <div *ngIf="f.hsCode.errors.required">{{ "stolt.masters.product.addproduct.hs_code" | translate
+                }} {{"common.isRequired" | translate}}</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">{{ "stolt.masters.product.addproduct.imco_class" | translate
+              }}</label>
+            <!-- <input type="text" class="form-control custom-input" value=""
+              [ngClass]="{ 'is-invalid': submitted && f.imcoClass.errors }" formControlName="imcoClass" placeholder="IMCO Class" /> -->
+
+              <nz-select class="form-select"   [ngClass]="{'is-invalid': submitted && f.imcoClass.errors}" 
+              formControlName="imcoClass"  nzShowSearch nzAllowClear>
+              <nz-option *ngFor="let imco of  imcoList"
+                [nzLabel]="imco?.typeName"
+                [nzValue]="imco?.systemtypeId"></nz-option>
+            </nz-select>
+
+            <div *ngIf="submitted && !f.imcoClass.value" class="invalid-feedback">
+              <div *ngIf="!f.imcoClass.value">
+                {{
+                "stolt.masters.product.addproduct.imco_class" 
+                | translate
+                }} {{"common.isRequired" | translate}}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">{{ "stolt.masters.product.addproduct.un_number" | translate }}
+              </label>
+            <input type="text" class="form-control custom-input" value="" formControlName="unNumber"
+              [ngClass]="{ 'is-invalid': submitted && f.unNumber.errors }" placeholder="UN Number" />
+            <div *ngIf="submitted && !f.unNumber.value" class="invalid-feedback">
+              <div *ngIf="!f.unNumber.value">
+                {{
+                "stolt.masters.product.addproduct.un_number"
+                | translate
+                }} {{"common.isRequired" | translate}}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">{{ "stolt.enquiry.new.imdgPage" | translate
+              }}</label>
+            <input type="text" class="form-control custom-input" value="" formControlName="imdgPage" placeholder="IMDG Page" />
+
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">UNDG Number type</label>
+            <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="UNDG Number type"formControlName="UNDGType"
+              [ngClass]="{ 'is-invalid': submitted && f.UNDGType.errors }">
+              <nz-option nzLabel="UN" nzValue="UN"></nz-option>
+              <nz-option nzLabel="NA" nzValue="NA"></nz-option>
+            </nz-select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">{{
+              "stolt.masters.product.addproduct.haz_subclass" | translate
+              }}
+            </label>
+            <input type="text" class="form-control custom-input" value="" formControlName="hazSubclass"
+              [ngClass]="{ 'is-invalid': submitted && f.hazSubclass.errors }" placeholder="Sub HAZ Class"/>
+            <div *ngIf="submitted && !f.hazSubclass.value" class="invalid-feedback">
+              <div *ngIf="!f.hazSubclass.value">
+                {{
+                "stolt.masters.product.addproduct.haz_subclass"
+                | translate
+                }} {{"common.isRequired" | translate}}
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-4">
+            <label class="form-label">{{
+              "stolt.masters.product.addproduct.density_specific_gravity"
+              | translate
+              }}</label>
+            <input type="text" class="form-control custom-input" value="{{
+                'stolt.masters.product.addproduct.un_number_value' | translate
+              }}" formControlName="densityGravity" [ngClass]="{
+                'is-invalid': submitted && f.densityGravity.errors
+              }" placeholder="Density/ Specific Gravity" />
+            <div *ngIf="submitted && f.densityGravity.errors" class="invalid-feedback">
+              <div *ngIf="f.densityGravity.errors.required">
+                {{
+                "stolt.masters.product.addproduct.density_specific_gravity"
+                | translate
+                }} {{"common.isRequired" | translate}}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">{{ "stolt.masters.product.addproduct.flash_point" | translate
+              }}</label>
+            <input type="text" class="form-control custom-input" value="" formControlName="flashPoint" [ngClass]="{
+              'is-invalid': submitted && f.flashPoint.errors }" placeholder="Flash Point" />
+            <div *ngIf="submitted && f.flashPoint.errors" class="invalid-feedback">
+              <div *ngIf="f.flashPoint.errors.required">
+                {{
+                "stolt.masters.product.addproduct.flash_point"
+                | translate
+                }} {{"common.isRequired" | translate}}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">{{ "stolt.masters.product.addproduct.psn" | translate
+              }}</label>
+            <input type="text" class="form-control custom-input" value="{{
+                'stolt.masters.product.addproduct.psn_value' | translate
+              }}" formControlName="psn" [ngClass]="{
+                'is-invalid': submitted && f.psn.errors
+              }" placeholder="PSN"/>
+            <div *ngIf="submitted && f.psn.errors" class="invalid-feedback">
+              <div *ngIf="f.psn.errors.required">{{ "stolt.masters.product.addproduct.psn" | translate
+                }} {{"common.isRequired" | translate}}</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">{{ "stolt.masters.product.addproduct.technical_name" | translate
+              }}</label>
+            <input type="text" class="form-control custom-input" value="{{
+                'stolt.masters.product.addproduct.technical_name_value'
+                  | translate
+              }}" formControlName="technicalName" placeholder="Technical Name" />
+
+          </div>
+          <div class="col-md-4">
+            <label *ngIf="isExport" class="form-label">{{ "stolt.masters.product.addproduct.packing_group" | translate
+              }} </label>
+            <label *ngIf="!isExport" class="form-label">Packing Group </label>
+            <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Packing Group" formControlName="packingGroup"
+              [ngClass]="{'is-invalid': submitted && f.packingGroup.errors}">
+              <nz-option *ngFor="let data of productList" [nzLabel]="data?.typeName"
+                [nzValue]="data?.systemtypeId"></nz-option>
+            </nz-select>
+
+            <div *ngIf="submitted && f.packingGroup.errors" class="invalid-feedback">
+              <div *ngIf="f.packingGroup.errors.required">
+                {{ "stolt.masters.product.addproduct.packing_group" | translate
+                }} {{"common.isRequired" | translate}}
+              </div>
+            </div>
+
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">{{ "stolt.enquiry.new.subRisk" | translate
+              }}</label>
+            <input type="text" class="form-control custom-input" value="" formControlName="subRisk" placeholder="Sub Risk" />
+
+          </div>
+          <div class="col-md-4 taggle form-check form-switch margib">
+            <label class="form-check-label">Marine Pollution
+            </label>
+            <input class="mx-2" formControlName="marinePollution" type="checkbox">
+          </div>  
+          <div class="col-md-4">
+            <label class="form-label">Reportable Quantity</label>
+            <input type="text" class="form-control custom-input"  formControlName="reportableQuantity" placeholder="Reportable Quantity" />
+
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">{{ "stolt.masters.product.addproduct.ems_no" | translate
+              }}</label>
+            <input type="text" class="form-control custom-input" value="{{
+                'stolt.masters.product.addproduct.ems_no_value' | translate
+              }}" formControlName="emsNo" placeholder="EMS No" />
+
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">{{ "stolt.masters.product.addproduct.ems_code" | translate
+              }}</label>
+            <input type="text" class="form-control custom-input" formControlName="emsCode" placeholder="EMS Code" />
+
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Flashpoint Celsius</label>
+            <input type="text" class="form-control custom-input" formControlName="flashpointCelsius" placeholder="Flashpoint Celsius"/>
+
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Flashpoint Fahrenheit</label>
+            <input type="text" class="form-control custom-input" formControlName="flashpointFahrenheit" placeholder="Flashpoint Fahrenheit"/>
+
+          </div>
+          <div class="col-md-4 taggle form-check form-switch margib">
+            <label class="form-check-label">Toxic-Inhalation Hazard
+            </label>
+            <input class="mx-2" formControlName="toxinHazard" type="checkbox">
+          </div> 
+
+          <div class="col-md-4">
+            <label class="form-label">Hazard Zone</label>
+            <input type="text" value="ZONE B" class="form-control custom-input" formControlName="hazardZone" placeholder="Hazard Zone"/>
+
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">{{ "stolt.masters.product.addproduct.mfagNo" | translate
+              }}</label>
+            <input type="text" class="form-control custom-input" formControlName="mfagNo" placeholder="MFAG Number" />
+
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">IMO No</label>
+            <input type="text" class="form-control custom-input" value=""
+              [ngClass]="{ 'is-invalid': submitted && f.imoNo.errors }" formControlName="imoNo" placeholder="IMO No" />
+            <div *ngIf="submitted && !f.imoNo.value" class="invalid-feedback">
+              <div *ngIf="!f.imoNo.value">
+                imo No {{"common.isRequired" | translate}}
+              </div>
+            </div>
+          </div>
+          
+          <!-- <div class="col-md-4">
+            <label class="form-label">{{ "stolt.masters.ContainerMaster.TankType" | translate
+              }}<span class="text-danger">*</span></label>
+            <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Tank Type"formControlName="tankType" [ngClass]="{
+                'is-invalid': submitted && f.tankType.errors
+              }">
+              <nz-option *ngFor="let tank of tankTypeList" [nzLabel]="tank.typeName"
+                [nzValue]="tank.typeName"></nz-option>
+            </nz-select>
+            <div *ngIf="submitted && f.tankType.errors" class="invalid-feedback">
+              <div *ngIf="f.tankType.errors.required">{{ "stolt.masters.ContainerMaster.TankType" | translate
+                }} {{"common.isRequired" | translate}}</div>
+            </div>
+          </div> -->
+          <div class="col-md-4">
+            <label class="form-label">{{ "stolt.masters.product.addproduct.msds_upload" | translate
+              }}</label>
+           <input type="file" class="form-control custom-input mb-2" (change)="uploadDoc($event)" multiple
+              [disabled]="this.isType === 'show'" />
+
+            <span class="my-1" *ngFor="let doc of documentPayload">
+              <span class="docTab" *ngIf="doc?.docname"><span>{{doc?.docname}}</span><a (click)="deleteFile(doc)"><em
+                    class="bi bi-x-lg ml-4"></em></a></span>
+            </span>
+
+          </div>
+          <div class="col-md-2 taggle form-check form-switch p-4">
+            <label class="form-check-label">{{
+              "stolt.masters.product.addproduct.approval_status" | translate
+              }}
+            </label>
+            <input class="form-check-input mx-2" formControlName="isApproved" type="checkbox"
+              id="flexSwitchCheckDefault">
+          </div>
+
+
+
+
+
+          <div class="col-md-4" *ngIf="false">
+            <label class="form-label">{{
+              "stolt.masters.product.addproduct.msds_validity_date"
+              | translate
+              }}</label>
+            <input type="date" class="form-control custom-input" value="{{
+                'stolt.masters.product.addproduct.msds_validity_value'
+                  | translate
+              }}" formControlName="msdsValidityDate" [ngClass]="{
+                'is-invalid': submitted && f.msdsValidityDate.errors
+              }" />
+            <div *ngIf="submitted && f.msdsValidityDate.errors" class="invalid-feedback">
+              <div *ngIf="f.msdsValidityDate.errors.required">
+                {{
+                "stolt.masters.product.addproduct.msds_validity_date"
+                | translate
+                }} {{"common.isRequired" | translate}}
+              </div>
+            </div>
+          </div>
+
+
+
+
+      <div class="col-md-4" *ngIf="false">
+            <label class="form-label">{{
+              "stolt.masters.product.addproduct.mapping_with_customer_master"
+              | translate
+              }} </label>
+
+            <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder=""formControlName="mappingCustomerMaster"
+              [ngClass]="{'is-invalid': submitted && f.mappingCustomerMaster.errors}">
+              <nz-option *ngFor="let data of partyMasterNameList" [nzLabel]="data.saleName"
+                [nzValue]="data.partymasterId"></nz-option>
+            </nz-select>
+            <div *ngIf="submitted && f.mappingCustomerMaster.errors" class="invalid-feedback">
+              <div *ngIf="f.mappingCustomerMaster.errors.required">
+                {{
+                "stolt.masters.product.addproduct.mapping_with_customer_master"
+                | translate
+                }} {{"common.isRequired" | translate}}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group wrap-form-action btn-onscreen">
+            <button class="btn1 float-end" (click)="onClose($event)" type="submit">
+              {{ "common.cancel" | translate }}
+            </button>
+            <button *ngIf="isEditMode && isType !== 'show'" (click)="productMasters()" class="btn btn-outline-primary float-end"
+              type="submit">
+              Update
+            </button>
+            
+            <button *ngIf="!isEditMode && isType !== 'show'" (click)="productMasters()" class="btn btn-outline-primary float-end"
+              type="submit">
+              {{ "common.save" | translate }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,297 @@
+<div class="table-with-gheading">
+  <div class="wrap-table-area">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="float-clear-mobile-view d-flex flex-column flex-sm-row gap-3 float-start search-section">
+          <div class="input-group custom-input">
+            <input type="text" class="form-control" placeholder="Search" aria-label="Search" />
+          </div>
+        </div>
+        <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2">
+          <div class="mt-2">
+            <span>
+              <h5>{{ fromSize }}-{{ count }} of {{ toalLength }}</h5>
+            </span>
+          </div>
+          <div class="mt-2">
+            <span class="prv" [class.disable-arrow-sign]="fromSize === 1" (click)="prev()"><em
+                class="typcn typcn-chevron-left"></em></span>
+            <span class="prv" [class.disable-arrow-sign]="count === toalLength" (click)="next()"><em
+                class="typcn typcn-chevron-right"></em></span>
+          </div>
+          <div class="mt-2">
+            <select class="form-select form-select-sm" (change)="filter($event)">
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+          <div class="mt-2">
+            <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="openPDF()">{{
+              'common.print' | translate }} {{
+                'common.list' | translate }}</a>
+          </div>
+          <div class="mt-2">
+            <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="exportAsExcelFile()">{{
+              'common.exportToExcel' | translate }}</a>
+          </div>
+          <div class="mt-2">
+            <a class="new-action" (click)="open(AddClause)">{{"common.add" | translate}} {{
+              "stolt.masters.TRAMP_CATAGORY_MASTER.TRAMP_CATAGORY_MASTER"
+              | translate
+              }}</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="table-responsive" id="htmlData">
+          <table aria-describedby="mytable" class="gfg">
+            <thead>
+              <tr class="field-name">
+                <th scope="col" class="text-center">Action
+                </th>
+                <th scope="col">
+                  {{
+                  "stolt.masters.TRAMP_CATAGORY_MASTER.CATAGORY_NAME"
+                  | translate
+                  }}
+                   <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                </th>
+                <th scope="col">
+                  {{
+                  "stolt.masters.TRAMP_CATAGORY_MASTER.LAST_UPDATE"
+                  | translate
+                  }}
+                   <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                </th>
+                <th scope="col">
+                  {{
+                  "stolt.masters.TRAMP_CATAGORY_MASTER.LAST_UPDATE_USER_ID"
+                  | translate
+                  }}
+                   <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                </th>
+                <th scope="col">
+                  {{
+                  "stolt.masters.TRAMP_CATAGORY_MASTER.SERVICE_ID" | translate
+                  }}
+                   <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                </th>
+                <th scope="col">
+                  {{
+                  "stolt.masters.TRAMP_CATAGORY_MASTER.CREATED_BY" | translate
+                  }}
+                   <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                </th>
+                <th scope="col">
+                  {{
+                  "stolt.masters.TRAMP_CATAGORY_MASTER.CREATED_DATE"
+                  | translate
+                  }}
+                   <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                </th>
+                <th scope="col">
+                  {{
+                  "stolt.masters.TRAMP_CATAGORY_MASTER.SEQ_NO" | translate
+                  }}
+                   <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                </th>
+                <th scope="col">
+                  {{
+                  "stolt.masters.TRAMP_CATAGORY_MASTER.QUOTE_ONLY_FLAG"
+                  | translate
+                  }}
+                   <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                </th>
+                <th scope="col">
+                  {{
+                  "stolt.masters.TRAMP_CATAGORY_MASTER.IS_PRINCIPAL_PLD"
+                  | translate
+                  }}
+                   <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                </th>
+                <th scope="col"></th>
+              </tr>
+              <tr>
+                <th scope="col"><input type="text" class="form-control" id="" ></th>
+                <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="name" (change)="searchDataChange()" (keydown.enter)="search()"/></th>
+                <th scope="col"><input type="date" class="form-control" id="" [(ngModel)]="last_update" (change)="searchDataChange()" (keydown.enter)="search()"/></th>
+                <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="last_update_user" (change)="searchDataChange()" (keydown.enter)="search()"/></th>
+                <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="service_id" (change)="searchDataChange()" (keydown.enter)="search()"/></th>
+                <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="Created_by" (change)="searchDataChange()" (keydown.enter)="search()"/></th>
+                <th scope="col"><input type="date" class="form-control" id="" [(ngModel)]="created_date" (change)="searchDataChange()" (keydown.enter)="search()"/></th>
+                <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="seq_no" (change)="searchDataChange()" (keydown.enter)="search()" /></th>
+                <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="only_flag" (change)="searchDataChange()" (keydown.enter)="search()"/></th>
+                <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="principle_pld" (change)="searchDataChange()" (keydown.enter)="search()"/></th>
+                <th scope="col"  class="wrap-table-btn">
+                  <button type="button" class="bi bi-search btn btn-outline-primary btn-sm rounded-pill" (click)="search()">
+                   
+                  </button>
+                  <a routerLink="#" class="bi bi-arrow-clockwise btn btn-outline-primary btn-sm rounded-pill" (click)="clear()">
+                   </a>
+                </th>
+              </tr>
+            </thead>
+            <tbody *ngIf="categoryData">
+              <tr *ngFor="let category of categoryData; let i = index">
+                <td class="action-field">
+                  <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop"><a
+                      (click)="open(AddClause, category)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                  </span>
+                  <span nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}"><a
+                    (click)="open(AddClause,category,'show')"><em
+                        class="bi bi-eye globally-change-icon-color"></em></a></span>
+                 
+                  <span class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"  (change)="changeStatus(category)" [checked]="category?._source?.status" />
+                    <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                  </span>
+                </td>
+                <td class="">{{ category._source.typeName }}</td>
+                <td class="">{{ category._source.updatedDate | date:"dd-MM-YYYY,hh:mm"}}</td>
+                <td class="">{{ category._source.updatedBy }}</td>
+                <td class="">{{ category._source.serviceId }}</td>
+                <td class="">{{ category._source.createdBy }}</td>
+                <td class="">{{ category._source.createdDate | date:"dd-MM-YYYY,hh:mm"}}</td>
+                <td class="">{{ category._source.seqNo }}</td>
+                <td class="">{{ category._source.QuoteOnlyFlag }}</td>
+                <td class="">{{ category._source.isPrincipalPLD }}</td>
+
+                
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="no-data-availble" *ngIf="categoryData.length === 0" >
+          {{'common.no_data' | translate}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #AddClause let-modal>
+  <div class="modal-content">
+    <div class="modal-headers mt-2">
+      <h4 class="modal-title">
+        <ng-container *ngIf="!this.categoryIdToUpdate; else template1">
+          {{ 'common.add' | translate }} {{
+          "stolt.masters.TRAMP_CATAGORY_MASTER.TRAMP_CATAGORY_MASTER"
+          | translate
+          }}
+        </ng-container>
+        <ng-template #template1>
+          {{ 'common.edit' | translate }} {{
+          "stolt.masters.TRAMP_CATAGORY_MASTER.TRAMP_CATAGORY_MASTER"
+          | translate
+          }}
+        </ng-template>
+      </h4>
+      <button type="button" class="btn-close shadow-none float-end" (click)="onSave()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <div class="wrap-form-field padding-space">
+        <form class="row g-3" [formGroup]="addCategoryForm">
+         <div class="col-md-4">
+            <label class="form-label">{{
+              "stolt.masters.TRAMP_CATAGORY_MASTER.CATAGORY_NAME" | translate
+              }}<span class="text-danger">*</span></label>
+            <input type="text" class="form-control custom-input" id=" " formControlName="categoryName" placeholder=""
+              value="" [ngClass]="{ 'is-invalid': submitted && f.categoryName.errors }" />
+            <div *ngIf="submitted && f.categoryName.errors" class="invalid-feedback">
+              <div *ngIf="f.categoryName.errors.required">
+                {{
+                "stolt.masters.TRAMP_CATAGORY_MASTER.CategoryMasterValidation.CATAGORY_NAMEValidation" | translate
+                }}
+              </div>
+            </div>
+          </div>
+           <div class="col-md-4">
+            <label class="form-label">{{
+              "stolt.masters.TRAMP_CATAGORY_MASTER.SERVICE_ID" | translate
+              }}<span class="text-danger">*</span></label>
+            <input type="text" class="form-control custom-input" id=" " formControlName="serviceId" placeholder=""
+              value="" [ngClass]="{ 'is-invalid': submitted && f.serviceId.errors }" />
+            <div *ngIf="submitted && f.serviceId.errors" class="invalid-feedback">
+              <div *ngIf="f.serviceId.errors.required">
+                {{
+                "stolt.masters.TRAMP_CATAGORY_MASTER.CategoryMasterValidation.SERVICE_IDValidation" | translate
+                }}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">{{
+              "stolt.masters.TRAMP_CATAGORY_MASTER.SEQ_NO" | translate
+              }}<span class="text-danger">*</span></label>
+            <input type="text" class="form-control custom-input" id=" " formControlName="seqNo" placeholder="" value=""
+              [ngClass]="{ 'is-invalid': submitted && f.seqNo.errors }" />
+            <div *ngIf="submitted && f.seqNo.errors" class="invalid-feedback">
+              <div *ngIf="f.seqNo.errors.required">
+                {{
+                "stolt.masters.TRAMP_CATAGORY_MASTER.CategoryMasterValidation.SEQ_NOValidation" | translate
+                }}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">{{
+              "stolt.masters.TRAMP_CATAGORY_MASTER.QUOTE_ONLY_FLAG" | translate
+              }}</label>
+            <input type="text" class="form-control custom-input" id=" " formControlName="QuoteOnlyFlag" placeholder=""
+              value="" />
+          </div>
+          <div class="col-md-4 d-flex">
+            <label class="form-label">{{
+              "stolt.masters.TRAMP_CATAGORY_MASTER.IS_PRINCIPAL_PLD" | translate
+              }}</label>
+            <input type="checkbox" id=" " formControlName="isPrincipalPLD" placeholder="" value="" />
+          </div>
+          <div class="col-md-4 mobile-view-input-alignment">
+            <div class="taggle form-check form-switch">
+              <label class="form-check-label" for="flexSwitchCheckDefault">{{ "stolt.masters.uom.status" | translate }}</label>
+              <input class="form-check-input" formControlName="status" type="checkbox" id="flexSwitchCheckDefault">
+            </div> 
+          </div>
+          <div class="form-group wrap-form-action mt-4">
+            <button class="btn1 btn-lg float-end" (click)="onSave()" type="submit">
+              {{ "common.cancel" | translate }}
+            </button>
+            <button (click)="categoryMasters()"
+              class="btn btn-outline-primary btn-lg float-end" *ngIf="show !== 'show'" type="submit">
+              <ng-container *ngIf="!this.categoryIdToUpdate; else templateA">
+                {{ 'common.save' | translate }}
+              </ng-container>
+              <ng-template #templateA>
+                {{ 'common.update' | translate }}
+              </ng-template>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #deletecategory let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body mt-4">
+      <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2">
+      </em>
+      <span class="text-dark fs-6">{{"error.msg_delete" | translate}}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+          {{"common.no" | translate}}
+        </button>
+        <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+          {{"common.yes" | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>

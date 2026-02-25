@@ -1,0 +1,120 @@
+@import "../../../../assets/styles/mixins/global.scss";
+
+.wrap-area {
+  .wrap-header {
+    p {
+      font-size: 16px;
+    }
+  }
+
+  .wrap-setting-body {
+    background-color: white;
+    padding: 30px 20px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 4px 0px #0000000F;
+
+    overflow: overlay;
+    max-height: 64vh;
+
+    .borderBottom {
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .wrap-heading {
+      border-top: 1px solid #e0e0e0;
+      position: relative;
+      padding: 10px 0px 40px 0px;
+
+      .label-text {
+        position: absolute;
+        text-transform: uppercase;
+        background-color: white;
+        top: -11px;
+        padding-right: 13px;
+        left: 0px;
+        font-weight: 600;
+      }
+
+      &:last-child {
+        padding-bottom: 0px;
+      }
+    }
+  }
+
+  .desc {
+    font-weight: 600;
+  }
+
+  .wrap-footer {
+    a {
+      text-decoration: none;
+    }
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 30% 70%;
+  gap: 20px;
+  padding-right: 24px;
+}
+
+.custom-checkbox{
+  color: var(--change-theme);
+}
+
+
+.accordion-bottom-alignment {
+  .mat-expansion-panel {
+    margin: 0 0 16px 0 !important;
+  }
+}
+
+.mat-button-toggle-group {
+  width: 100% !important;
+}
+
+.tabs {
+  max-height: 600px;
+  overflow: auto;
+  font-size: small;
+
+}
+
+.directMails {
+  width: 95% !important;
+}
+
+.tabs button {
+  padding: 10px 20px;
+  margin: 1px;
+  // border: none;
+  border-color: white;
+  cursor: pointer;
+  background-color: #f5f5f5;
+  text-align: left;
+}
+
+.tabs button.active {
+  background-color: var(--primary-button-background-color) !important;
+  color: white;
+}
+
+.option-opacity {
+  opacity: .5;
+}
+
+.mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+  line-height: 40px;
+}
+
+.content-container {
+  .title {
+    font-size: 14px;
+    font-weight: 600;
+  }
+}
+
+.form-control {
+  padding: 0px 0px 0px 7px !important;
+}

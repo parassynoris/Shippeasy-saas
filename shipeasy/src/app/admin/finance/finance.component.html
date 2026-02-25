@@ -1,0 +1,126 @@
+<div class="mat-table-with-gheading">
+  <div class="wrapper">
+    <div class="container-fluid">
+      <div class="wrap-content">
+        <div class="row">
+          <div class="col-sm-12 bottom-alignment-view mb-5">
+            <div class="page-title-box pt-1">
+              <div class="btn-group  ">
+                <ol class="breadcrumb hide-phone p-0 m-0">
+                  <li class="breadcrumb-item" *ngIf="!isSmartAgentUser"> {{ 'stolt.heading' | translate }}</li>
+                  <li class="breadcrumb-item" *ngIf="isSmartAgentUser"> {{ "smartagent.heading" | translate }}</li>
+                  <li class="breadcrumb-item active">{{'stolt.finance.heading' | translate}}</li>
+                  <li class="breadcrumb-item active color-red">{{holdControlKey(holdControl)}}</li>
+                </ol>
+              </div>
+            </div>
+            <div class="tab-design-change">
+              <div class="wrap-bar">
+
+                <div class="custome-tab">
+                  <ul class="nav nav-tabs nav-rght" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation" *ngFor="let tab of tabs">
+                      <button class="nav-link" [class.active]="holdControl === tab.key" id="{{tab.id}}"
+                        data-bs-toggle="tab" data-bs-target="#{{tab.control}}" type="button" role="tab"
+                        aria-controls="{{tab.control}}" aria-selected="true" (click)="onTab(tab)">{{tab.name}}</button>
+                    </li>
+
+                    <!-- needed for Future development  -->
+                    <!-- <li class="nav-item" *ngFor="let menus of financeTabs" (click)="onTab(menus?._source)">
+                    <a class="nav-link" [class.active]="highlight === menus?._source?.menuUrl" *ngIf="menus?._source?.subMenus?.length === 0">{{menus?._source?.menuName}}</a>
+                    </li> -->
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="tab-content" id="myTabContent">
+              <div appAccessControl featureCode="['STFI01']" accessType="add" *ngIf="holdControl === 'invoice'"
+                [class.active]="holdControl === 'invoice'" class="tab-pane fade show" id="invoice" role="tabpanel"
+                aria-labelledby="invoice-tab">
+                <app-invoice [isFinanceInvoice]="true" [isparent]="'finance'"></app-invoice>
+              </div>
+
+              <div *ngIf="holdControl === 'purchase'" [class.active]="holdControl === 'purchase'"
+                class="tab-pane fade show" id="reciept" role="tabpanel" aria-labelledby="purchase-tab">
+                <app-receipt-payment></app-receipt-payment>
+              </div>
+
+              <div *ngIf="holdControl === 'sale'" [class.active]="holdControl === 'sale'" class="tab-pane fade show"
+                id="reciept" role="tabpanel" aria-labelledby="sale-tab">
+                <app-receipt-payment></app-receipt-payment>
+              </div>
+
+
+              <div *ngIf="holdControl === 'payment out'" [class.active]="holdControl === 'payment out'"
+                class="tab-pane fade show" id="payment out" role="tabpanel" aria-labelledby="payment out-tab">
+                <app-payment-in-out></app-payment-in-out>
+              </div>
+
+              <div *ngIf="holdControl === 'payment in'" [class.active]="holdControl === 'payment in'"
+                class="tab-pane fade show" id="payment in" role="tabpanel" aria-labelledby="payment in-tab">
+                <app-payment-in-out></app-payment-in-out>
+              </div>
+
+
+              <div *ngIf="holdControl === 'reciept'" [class.active]="holdControl === 'reciept'"
+                class="tab-pane fade show" id="reciept" role="tabpanel" aria-labelledby="reciept-tab">
+                <app-payment></app-payment>
+              </div>
+
+
+              <div *ngIf="holdControl === 'reciept-posting'" [class.active]="holdControl === 'reciept-posting'"
+                class="tab-pane fade show" id="reciept-posting" role="tabpanel" aria-labelledby="reciept-posting-tab">
+                <app-payment></app-payment>
+              </div>
+
+
+              <div *ngIf="holdControl === 'credit-debit'" [class.active]="holdControl === 'credit-debit'"
+                class="tab-pane fade show" id="credit-debit" role="tabpanel" aria-labelledby="credit-debit-tab">
+                <!-- <app-credit></app-credit> -->
+                <app-credit-debit-note></app-credit-debit-note>
+              </div>
+
+              <div *ngIf="holdControl === 'debit'" [class.active]="holdControl === 'debit'" class="tab-pane fade show"
+                id="debit" role="tabpanel" aria-labelledby="debit-tab">
+                <app-debit></app-debit>
+              </div>
+              <div *ngIf="holdControl === 'pl'" [class.active]="holdControl === 'pl'" class="tab-pane fade show" id="pl"
+                role="tabpanel" aria-labelledby="pl-tab">
+                <app-pnl-finance [isTypePage]="'finance'"></app-pnl-finance>
+              </div>
+              <div *ngIf="holdControl === 'bills'" [class.active]="holdControl === 'bills'" class="tab-pane fade show"
+                id="bills" role="tabpanel" aria-labelledby="bills-tab">
+                <app-vendor-bill [isparent]="'finance'"></app-vendor-bill>
+              </div>
+              <div *ngIf="holdControl === 'bill-posting'" [class.active]="holdControl === 'bill-posting'"
+                class="tab-pane fade show " id="bill-posting" role="tabpanel" aria-labelledby="bill-posting-tab">
+                <app-vendor-bill [isparent]="'finance'"></app-vendor-bill>
+              </div>
+
+              <div *ngIf="holdControl === 'tds'" [class.active]="holdControl === 'tds'" class="tab-pane fade show"
+                id="tds" role="tabpanel" aria-labelledby="tds-tab">
+                <app-tds></app-tds>
+              </div>
+
+              <div *ngIf="holdControl === 'bankStatement'" [class.active]="holdControl === 'bankStatement'"
+                class="tab-pane fade show" id="bankStatement" role="tabpanel" aria-labelledby="bankStatement-tab">
+                <app-bold-report-list [financeModule]="true"></app-bold-report-list>
+              </div>
+              <div *ngIf="holdControl === 'gstReport'" [class.active]="holdControl === 'gstReport'"
+                class="tab-pane fade show" id="gstReport" role="tabpanel" aria-labelledby="gstReport-tab">
+                <app-bold-report-list [financeModule]="true"></app-bold-report-list>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- <ul class="menuright">
+          <li><a ><em class="mdi mdi-folder-upload "></em></a></li>
+          <li><a (click)="calculator()"><em class="mdi mdi-calculator"></em></a></li>
+          <li><a ><em class="mdi mdi-comment-text "></em></a></li>
+          </ul> -->
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,1305 @@
+<div class="table-with-gheading">
+  <div class="wrapper">
+    <div class="container-fluid">
+      <div class="wrap-content">
+        <div class="row">
+          <div class="col-sm-12 ">
+            <div class="page-title-box">
+              <div class="btn-group mt-2">
+                <ol class="breadcrumb hide-phone p-0 m-0">
+                  <!-- <li class="breadcrumb-item">{{ 'stolt.heading' | translate }}</li> -->
+                  <li class="breadcrumb-item active">{{ 'stolt.enquiry.heading' | translate }}</li>
+                  <li class="breadcrumb-item active">Quotation</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+          <ng-container>
+            <div class="col-md-12 modal-grid new-white-box-design">
+              <div class="d-grid-4" *ngIf="!loader">
+                <div>
+                  <div class="new-title">
+                    <p>BASIC DETAILS</p>
+                  </div>
+                  <div class="d-grid-2 type" *ngIf="enquiryDetails?.basicDetails?.enquiryTypeName">
+                    <span class="header">Trade Type :</span>
+                    <span class="font">{{enquiryDetails?.basicDetails?.enquiryTypeName ||'-'}}
+                    </span>
+                  </div>
+                  <div class="d-grid-2"  *ngIf="isImport ?  enquiryDetails?.agentadviceNo : enquiryDetails?.enquiryNo ">
+                    <span class="header">Inquiry No. :</span>
+                    <span class="font font-clr">{{isImport ?  enquiryDetails?.agentadviceNo : enquiryDetails?.enquiryNo 
+                      || '-'}}
+                    </span>
+                  </div>
+                  <div class="d-grid-2" *ngIf="isImport && enquiryDetails?.basicDetails?.billingPartyName">
+                    <span class="header">Customer/Billing Party :</span>
+                    <span class="font">{{enquiryDetails?.basicDetails?.billingPartyName ||
+                      '-'}} </span>
+                  </div>
+
+                  <div class="d-grid-2" *ngIf="isImport && enquiryDetails?.basicDetails?.billingPartyAddress">
+                  <span class="header">Customer Address :</span>
+                  <span class="font">{{enquiryDetails?.basicDetails?.billingPartyAddress ||
+                    '-'}} </span>
+                </div>
+
+                  <div class="d-grid-2" *ngIf="isImport && enquiryDetails?.basicDetails?.billingBranch">
+                    <span class="header">Billing Branch :</span>
+                    <span class="font">{{enquiryDetails?.basicDetails?.billingBranch || '-'}}
+                    </span>
+                  </div>
+
+
+                  <div class="d-grid-2" *ngIf="enquiryDetails?.basicDetails?.ShipmentTypeName">
+                    <span class="header">Freight Type :</span>
+                    <span class="font">{{enquiryDetails?.basicDetails?.ShipmentTypeName ||'-'}}
+                    </span>
+                  </div>
+                  <div class="d-grid-2" *ngIf="enquiryDetails?.basicDetails?.loadType">
+                    <span class="header">Load Type :</span>
+                    <span class="font">{{enquiryDetails?.basicDetails?.loadType ||'-'}}
+                    </span>
+                  </div>
+                  <div class="d-grid-2" *ngIf="enquiryDetails?.basicDetails?.shipperName">
+                    <span class="header">Shipper :</span>
+                    <span class="font">{{enquiryDetails?.basicDetails?.shipperName || '-'}}
+                    </span>
+                  </div>
+                  <div class="d-grid-2" *ngIf="isImport && enquiryDetails?.basicDetails?.shipperAddress">
+                  <span class="header">Shipper Address :</span>
+                  <span class="font">{{enquiryDetails?.basicDetails?.shipperAddress ||
+                    '-'}} </span>
+                </div>
+                  <div class="d-grid-2" *ngIf="enquiryDetails?.basicDetails?.bookingPartyName || enquiryDetails?.basicDetails?.forwarderName">
+                    <span class="header">Billing Branch:</span>
+                    <span class="font">
+                      {{(enquiryDetails?.basicDetails?.bookingPartyName || enquiryDetails?.basicDetails?.forwarderName) ? (enquiryDetails?.basicDetails?.billingBranch || '-') : '-'}}
+                    </span>
+                  </div>
+                  <div class="d-grid-2" *ngIf="(isExport || isTransport) && enquiryDetails?.basicDetails?.invoicingPartyName">
+                    <span class="header">Invoice Party :</span>
+                    <span class="font">{{enquiryDetails?.basicDetails?.invoicingPartyName
+                      ||'-'}}
+                    </span>
+                  </div>
+                  <div class="d-grid-2" *ngIf="enquiryDetails?.basicDetails?.consigneeName">
+                    <span class="header">Consignee :</span>
+                    <span class="font">{{enquiryDetails?.basicDetails?.consigneeName ||'-'}}
+                    </span>
+                  </div>
+                  <div class="d-grid-2" *ngIf="isImport && enquiryDetails?.basicDetails?.consigneeAddress">
+                    <span class="header">Consignee Address :</span>
+                    <span class="font">{{enquiryDetails?.basicDetails?.consigneeAddress ||'-'}} </span>
+                  </div>
+                  <div class="d-grid-2" *ngIf="isImport && enquiryDetails?.basicDetails?.incoTermName">
+                    <span class="header">INCO Term :</span>
+                    <span class="font">{{enquiryDetails?.basicDetails?.incoTermName ||'-'}} </span>
+                  </div>
+                  <div class="d-grid-2" *ngIf="isImport && enquiryDetails?.createdBy">
+                    <span class="header">Created By :</span>
+                    <span class="font">{{enquiryDetails?.createdBy ||'-'}} </span>
+                  </div>
+                  <div class="d-grid-2" *ngIf="isImport && enquiryDetails?.createdOn">
+                    <span class="header">Created At :</span>
+                    <span class="font">{{enquiryDetails?.createdOn | date : 'dd-MM-yyyy HH:mm:ss'}} </span>
+                  </div>
+                  <div class="d-grid-2" *ngIf="isImport && enquiryDetails?.basicDetails?.salePerson ">
+                    <span class="header">Sales Person :</span>
+                    <span class="font">{{enquiryDetails?.basicDetails?.salePerson ||'-'}} </span>
+                  </div>
+                  <div class="d-grid-2" *ngIf="isImport && enquiryDetails?.basicDetails?.quotationRef">
+                    <span class="header">Quotation Ref :</span>
+                    <span class="font">{{enquiryDetails?.basicDetails?.quotationRef ||'-'}} </span>
+                  </div>
+                  
+                   <div class="d-grid-2" *ngIf="enquiryDetails?.basicDetails?.forwarderName">
+                    <span class="header">Forwarder :</span>
+                    <span class="font">{{enquiryDetails?.basicDetails?.forwarderName ||'-'}}
+                    </span>
+                  </div>
+                  <div class="d-grid-2" *ngIf="(isExport || isTransport) && enquiryDetails?.basicDetails?.salesPersonId">
+                    <span class="header">Sales Person :</span>
+                    <span class="font">{{enquiryDetails?.basicDetails?.salesPersonId || '-'}}
+                    </span>
+                  </div>
+                  <div class="d-grid-2" *ngIf="isImport && enquiryDetails?.basicDetails?.userBranchName">
+                    <span class="header">Booked By Branch :</span>
+                    <span class="font">{{enquiryDetails?.basicDetails?.userBranchName || '-'}}
+                    </span>
+                  </div>
+                  <!-- <div class="d-grid-2" *ngIf="(isExport || isTransport)">
+                    <span class="header">Operational Coordinator :</span>
+                    <span class="text">{{enquiryDetails?.basicDetails?.opsCoordinatorId ||
+                      '-'}}
+                    </span>
+                  </div> -->
+                  <div class="d-grid-2" *ngIf="(isExport || isTransport) && enquiryDetails?.createdBy">
+                    <span class="header">Created by :</span>
+                    <span class="font">{{enquiryDetails?.createdBy}} </span>
+                  </div>
+                  <div class="d-grid-2" *ngIf="(isExport || isTransport) && enquiryDetails?.createdOn">
+                    <span class="header">Created at :</span>
+                    <span class="font">{{enquiryDetails?.createdOn | date : 'dd-MM-yyyy' ||
+                      '-'}}
+                    </span>
+                  </div>
+                </div>
+                <div *ngIf="isImport">
+                  <div class="new-title">
+                    <p>BOOKING DETAILS</p>
+                  </div>
+                  
+                  
+                  <div class="d-grid-2" *ngIf="enquiryDetails?.bookingNumber">
+                    <span class="header">Booking No :</span>
+                    <span class="text">{{enquiryDetails?.bookingNumber || '-'}} </span>
+                  </div>
+
+                  <div class="d-grid-2" *ngIf="enquiryDetails?.bookingDate">
+                    <span class="header">Booking Date :</span>
+                    <span class="text">{{enquiryDetails?.bookingDate | date :
+                      'dd-MM-yyyy' || '-'}} </span>
+                  </div>
+                  <div class="d-grid-2" *ngIf="enquiryDetails?.bookingValidityDate">
+                    <span class="header">Booking Validity Date :</span>
+                    <span class="text">{{enquiryDetails?.bookingValidityDate | date :
+                      'dd-MM-yyyy' || '-'}} </span>
+                  </div>
+                  
+                  <div class="d-grid-2" *ngIf="enquiryDetails?.shippingTermName">
+                    <span class="header">Shipping Term :</span>
+                    <span class="text">{{enquiryDetails?.shippingTermName || '-'}} </span>
+                  </div>
+                  <!-- <div class="new-title">
+                    <p>Custom Clearance</p>
+                  </div> -->
+                    
+                    <!-- <div class="d-grid-2">
+                      <span class="header">Custom Clearance Destination :</span>
+                      <span class="text">{{enquiryDetails?.customDetails?.clearanceDestination ? 'Yes' : 'No'}} </span>
+                    </div> -->
+  
+                    <!-- <div class="d-grid-2" *ngIf="enquiryDetails?.customDetails?.customDestinationLocationName ">
+                      <span class="header text-wrap">Destination Custom Clearance :</span>
+                      <span class="text">{{enquiryDetails?.customDetails?.customDestinationLocationName || '-'}} </span>
+                    </div>
+                    <div class="d-grid-2">
+                      <span class="header">Value Added Services :</span>
+                      <span class="text">
+                        <span *ngIf="enquiryDetails?.insurance?.cargo">Cargo Insurance ,</span>
+                        <span *ngIf="enquiryDetails?.insurance?.emptyContainer">Empty Container Insurance ,</span>
+                        <span *ngIf="enquiryDetails?.insurance?.fumigation">Fumigation ,</span>
+                        <span *ngIf="enquiryDetails?.insurance?.palletization">Palletization ,</span>
+                        <span *ngIf="enquiryDetails?.insurance?.warehousing">Warehousing </span>
+                      </span>
+                    </div> -->
+               
+
+                  <!-- <div class="d-grid-2" *ngFor="let cargo of enquiryDetails?.cargoDetail;let i=index">
+                    <span class="header">Commodity {{i+1}} :</span>
+                    <span class="text">{{cargo?.commodityTypeName | uppercase}} | {{cargo?.productName}} |
+                      {{cargo?.hsCode}}
+                      <span *ngIf="cargo?.commodityTypeName == 'haz'">| {{cargo?.imcoClass}} </span>
+                      <span *ngIf="cargo?.commodityTypeName == 'haz'">| {{cargo?.unNo}} </span> </span>
+                  </div> -->
+
+                  <!-- <div class="d-grid-2">
+                    <span class="header">Commodity Description :</span>
+                    <span class="text">{{enquiryDetails?.productDetails?.commodityDescription
+                      }} </span>
+                  </div>
+
+                  <div class="d-grid-2">
+                    <span class="header">Container :</span>
+                    <span class="text"><span *ngFor="let cargo of enquiryDetails?.containersDetails;let i=index">
+                        <span>{{cargo?.containerType}}<i class="bi bi-x"></i>{{cargo?.noOfContainer}}
+                        </span><br>
+                      </span> </span>
+                  </div>
+                  <div class="d-grid-2">
+                    <span class="header">Total Gross Weight :</span>
+                    <span class="text">
+                      <span>{{totalGrossWeight(enquiryDetails?.containersDetails)}} </span>
+                      <span >{{enquiryDetails?.containersDetails[0]?.unitName || 'KG'
+                        |uppercase}}</span><br>
+                    </span>
+                  </div> -->
+
+                  <div *ngIf="isImport" class="mt-3">
+                    <div class="new-title">
+                      <p *ngIf="enquiryDetails?.detentionDetails?.destinationCarrierFD || enquiryDetails?.detentionDetails?.destinationPortFD || enquiryDetails?.detentionDetails?.originCarrierFD || enquiryDetails?.detentionDetails?.lastFDDateCarrier || enquiryDetails?.detentionDetails?.lastFDDateEmptyReturn || enquiryDetails?.detentionDetails?.lastFDDatePOD || enquiryDetails?.detentionDetails?.lastFDDatePOCD">DETENTION DETAILS</p>
+                    </div>
+  
+                    <div class="d-grid-2" *ngIf="enquiryDetails?.detentionDetails?.destinationCarrierFD">
+                      <span class="header">Destination Carrier Free Days :</span>
+                      <span class="text">{{enquiryDetails?.detentionDetails?.destinationCarrierFD || '-'}}
+                      </span>
+                    </div>
+                    <div class="d-grid-2" *ngIf="enquiryDetails?.detentionDetails?.destinationPortFD">
+                      <span class="header">Destination Port Free Days :</span>
+                      <span class="text">{{enquiryDetails?.detentionDetails?.destinationPortFD  || '-'}}
+                      </span>
+                    </div>
+  
+                    <div class="d-grid-2" *ngIf="enquiryDetails?.detentionDetails?.originCarrierFD">
+                      <span class="header">Origin Carrier Free Days:</span>
+                      <span class="text">{{enquiryDetails?.detentionDetails?.originCarrierFD|| '-'}}
+                      </span>
+                    </div>
+  
+                    <div class="d-grid-2" *ngIf="enquiryDetails?.detentionDetails?.lastFDDateCarrier">
+                      <span class="header">Last free date at Carrier:</span>
+                      <span class="text">{{enquiryDetails?.detentionDetails?.lastFDDateCarrier | date : 'dd-MM-yyyy' || '-'}}
+                      </span>
+                    </div>
+  
+                    <div class="d-grid-2" *ngIf="enquiryDetails?.detentionDetails?.lastFDDateEmptyReturn">
+                      <span class="header">Last free date at Empty return :</span>
+                      <span class="text">{{enquiryDetails?.detentionDetails?.lastFDDateEmptyReturn | date : 'dd-MM-yyyy' || '-'}}
+                      </span>
+                    </div>
+  
+                    <div class="d-grid-2" *ngIf="enquiryDetails?.detentionDetails?.lastFDDatePOCD">
+                      <span class="header">Last free date at POCD :</span>
+                      <span class="text">{{enquiryDetails?.detentionDetails?.lastFDDatePOCD | date : 'dd-MM-yyyy' || '-'}}
+                      </span>
+                    </div>
+  
+                    <div class="d-grid-2" *ngIf="enquiryDetails?.detentionDetails?.lastFDDatePOD">
+                      <span class="header">Last free date at POD :</span>
+                      <span class="text">{{enquiryDetails?.detentionDetails?.lastFDDatePOD | date : 'dd-MM-yyyy' || '-'}}
+                      </span>
+                    </div>
+                    
+  
+                  </div>
+
+                </div>
+                <div *ngIf="isImport">
+                  <div class="new-title">
+                    <p>COMMODITY DETAILS</p>
+                  </div>
+                  <ng-container *ngFor="let cargo of enquiryDetails?.cargoDetail;let i=index">
+                    <div class="">
+                      <div class="">
+                        <span class="header" >{{i+1}}.Name: </span>
+                        <span class="text">{{cargo?.productName}}</span>
+                      </div>
+                      <div class="type">
+                        <span class="header">CommodityDetails :</span>
+                        <span class="text">{{enquiryDetails?.productDetails?.commodityDescription}} </span>
+                      </div>                    
+                      <div class="type">
+                        <span class="header">Type :</span>
+                        <span class="text">{{cargo?.commodityTypeName | uppercase}} </span>,
+                        <span class="header">HS Code :</span>
+                        <span class="text" *ngIf="cargo?.hsCode">{{cargo?.hsCode}} </span>
+                      </div>
+                      <div class="type">
+                        <span class="header">Weight :</span>
+                        <span class="text">{{cargo?.grossWeight || 0}} {{cargo?.unitName || 'KG' | uppercase}} </span>
+                      </div>
+                      <div class="type" *ngIf="cargo?.commodityTypeName == 'Refer'">
+                        <span class="header" >Temperature :</span>
+                        <span class="text" >({{cargo?.Range}} To {{cargo?.To}} ) {{cargo?.typeTemp}}</span>
+                      </div>
+                      <div class="type" *ngIf="cargo?.commodityTypeName == 'ODC'">
+                        <span class="header" >Dimension :</span>
+                        <span class="text" >({{cargo?.Wi}} * {{cargo?.li}}  * {{cargo?.hi}})  {{cargo?.di}}</span>
+                      </div>
+                      <div class="type" *ngIf="cargo?.commodityTypeName == 'HAZ'">
+                        <span class="header" >UN No :</span>
+                        <span class="text">{{cargo?.unNo}} </span>
+                      </div>
+                      <div class="type" *ngIf="cargo?.imcoClass">
+                        <span class="header" >IMCO Class :</span>
+                        <span class="text">{{cargo?.imcoClass}} </span>
+                      </div>
+                      <div>
+                      </div>
+                    </div>
+                    <!-- <div class=""> -->
+                      <!-- <span class="header">Commodity Weight <span
+                          *ngIf="enquiryDetails?.cargoDetail?.length != 1">{{i+1}}</span> :</span>
+                      <span class="text">{{cargo?.grossWeight || 0}} {{cargo?.unitName || 'KG' | uppercase}}</span> -->
+                    <!-- </div> -->
+                  </ng-container>
+                  <!-- <div class="d-grid-2" *ngFor="let cargo of enquiryDetails?.cargoDetail;let i=index">
+                    <span class="header">Commodity {{i+1}} :</span>
+                    <span class="text">{{cargo?.commodityTypeName | uppercase}} | {{cargo?.productName}} |
+                      {{cargo?.hsCode}}
+                      <span *ngIf="cargo?.commodityTypeName == 'haz'">| {{cargo?.imcoClass}} </span>
+                      <span *ngIf="cargo?.commodityTypeName == 'haz'">| {{cargo?.unNo}} </span> </span>
+                  </div> -->
+
+                  <!-- <div class="d-grid-2">
+                    <span class="header">Commodity Description :</span>
+                    <span class="text">{{enquiryDetails?.productDetails?.commodityDescription
+                      }} </span>
+                  </div>
+
+                  <div class="d-grid-2">
+                    <span class="header">Container :</span>
+                    <span class="text"><span *ngFor="let cargo of enquiryDetails?.containersDetails;let i=index">
+                        <span>{{cargo?.containerType}}<i class="bi bi-x"></i>{{cargo?.noOfContainer}}
+                        </span><br>
+                      </span> </span>
+                  </div>
+                  <div class="d-grid-2">
+                    <span class="header">Total Gross Weight :</span>
+                    <span class="text">
+                      <span>{{totalGrossWeight(enquiryDetails?.containersDetails)}} </span>
+                      <span >{{enquiryDetails?.containersDetails[0]?.unitName || 'KG'
+                        |uppercase}}</span><br>
+                    </span>
+                  </div> -->
+
+                  <div *ngIf="isImport" class="mt-3">
+                    <div class="new-title">
+                      <p>INVOICE DETAILS</p>
+                    </div>
+                    <div *ngFor="let invoice of enquiryDetails?.invoicesDetails; let i = index" class="mt-2">
+                      <div class="d-grid-2" *ngIf="invoice?.invoiceNo">
+                        <span class="header"><span class="fw-bold">{{i + 1}}.</span>Invoice No.:</span> 
+                        <span class="text">{{invoice?.invoiceNo || '-'}}</span>
+                      </div>
+                      <div class="d-grid-2" *ngIf="invoice?.invoiceDate">
+                        <span class="header ml-2"> Invoice Date:</span>
+                        <span class="text">{{invoice?.invoiceDate | date : 'dd-MM-yyyy' || '-'}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+
+                </div>
+                <div>
+                  <div class="new-title">
+                    <p>ROUTE DETAILS</p>
+                  </div>
+
+                  <div class="d-grid-3" *ngIf="(isExport || isTransport ||isImport)">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th scope="col" class="white-space">Location</th>
+                          <th scope="col" class="white-space">Transit</th> 
+                          <th scope="col" class="white-space" >{{ enquiryDetails?.basicDetails?.ShipmentTypeName === 'Air' ? 'Airline' : isTransport ? 'Transporter ': 'Carrier'}}</th>
+                          <th scope="col" class="white-space">ETA</th>
+                          <th scope="col" class="white-space">ETD</th>
+                        </tr>
+                      </thead>
+                      <tbody class="tab-reactive">
+                        <span class="border-left">
+                        </span>
+                        <span class="location-icon"><i class="bi bi-geo-alt-fill"></i></span>
+
+                        <tr *ngFor=" let cargo of originRouteList;let i=index">
+                          <td class="whiteSpace">{{cargo?.locationName || cargo?.addressId}}</td>
+                          <td class="white-space">{{cargo?.transit || 'Land'}}</td>
+                          <td class="white-space" *ngIf="!isTransport">{{cargo?.carrierName}}</td>
+                          <td class="white-space" *ngIf="isTransport && cargo?.transpoterType !== 'self'"><span *ngFor="let data of cargo?.carrierList">{{data?.name}}, </span></td>
+                          <td class="white-space" *ngIf="isTransport && cargo?.transpoterType === 'self'">Self</td>
+
+                          <td class="white-space">  {{cargo?.eta | date : 'dd-MM-yyyy HH:mm:ss'}}</td>
+                          <td class="white-space">{{cargo?.etd | date : 'dd-MM-YYYY HH:mm:ss'}}</td>
+                        </tr>
+                        <ng-container *ngIf="shipment === 'ocean' || shipment === 'air'">
+                          <tr>
+                            <td class="white-space">{{enquiryDetails?.routeDetails?.loadPortName}}</td>
+                            <td class="white-space">{{enquiryDetails?.basicDetails?.ShipmentTypeName ||'-'}}</td>
+                            <td class="white-space" *ngIf="isExport">{{enquiryDetails?.routeDetails?.shippingLineName}}</td>
+                            <td class="white-space" *ngIf="isImport">{{enquiryDetails?.routeDetails?.shippinglineName}}</td>
+                            <td class="white-space">
+                              {{enquiryDetails?.transportDetails?.origin[enquiryDetails?.transportDetails?.origin?.length
+                              -1]?.eta | date : 'dd-MM-YYYY HH:mm:ss'}}</td> 
+                              <!-- <td class="white-space">{{enquiryDetails?.routeDetails?.eta | date : 'dd-MM-YYYY HH:mm:ss'}}</td> -->
+                            <td class="white-space">{{enquiryDetails?.routeDetails?.etd | date : 'dd-MM-YYYY HH:mm:ss'}}</td>
+                           
+                          </tr>
+                          <tr *ngIf="destinationRouteList?.length == 0">
+                            <td class="white-space">{{enquiryDetails?.routeDetails?.destPortName}}</td>
+                            <td class="white-space"></td>
+                            <td class="white-space"></td>
+                            <td class="white-space">
+                              {{enquiryDetails?.routeDetails?.eta | date : 'dd-MM-YYYY HH:mm:ss'}}</td>
+                            <td class="white-space"></td>
+
+                          </tr>
+                          <tr *ngFor=" let cargo of destinationRouteList;let i=index;">
+                            <td class="whiteSpace">{{cargo?.locationName || cargo?.addressId}}</td>
+                            <td class="white-space">{{cargo?.transit}}</td>
+                            <td class="white-space" *ngIf="!isTransport">{{cargo?.carrierName}}</td>
+                          <td class="white-space" *ngIf="isTransport"><span *ngFor="let data of cargo?.carrierList">{{data?.name}}, </span></td>
+                          <td class="white-space"> {{ i === 0
+                            ? (enquiryDetails?.routeDetails?.eta | date: 'dd-MM-yyyy HH:mm:ss')
+                            : (cargo?.eta | date: 'dd-MM-yyyy HH:mm:ss')
+                            }}</td>
+
+                          <td class="white-space">{{cargo?.etd | date : 'dd-MM-YYYY HH:mm:ss'}}</td>
+                            
+                          </tr>
+                        </ng-container>
+
+                        <span class="location-icon1"><i class="bi bi-geo-alt-fill"></i></span>
+
+                      </tbody>
+                    </table> 
+                  </div>
+                  
+                  <div class="d-grid-2" *ngIf="!isTransport">
+                    <span class="header">{{ activeFrightAir ? 'Airline' : 'Carrier' }} :</span>
+                    <span class="text" *ngIf="isExport">{{enquiryDetails?.routeDetails?.shippingLineName}}</span>
+                    <span class="text" *ngIf="isImport">{{enquiryDetails?.routeDetails?.shippinglineName}}</span>
+                 </div>
+                
+                  <div class="d-grid-2 1" *ngIf="isTransport">
+                    <span class="header">Transporter</span>
+                    <div class="white-space" *ngFor=" let cargo of originRouteList"><span *ngFor="let data of cargo?.carrierList">{{data?.name}}, </span> </div>
+                  </div>
+
+                  <div class="d-grid-2" *ngIf="enquiryDetails?.routeDetails?.flightNo">
+                    <span class="header">Flight No. :</span>
+                    <span class="text">{{enquiryDetails?.routeDetails?.flightNo || '-'}}
+                    </span>
+                  </div>
+
+                  <div class="d-grid-2" *ngIf="isTransport">
+                    <span class="header">Origin Address:</span>
+                    <span class="text">{{enquiryDetails?.transportDetails?.origin[0]?.addressId}} , {{enquiryDetails?.transportDetails?.origin[0]?.address}} </span>
+                  </div>
+                  <div class="d-grid-2" *ngIf="isTransport">
+                    <span class="header">Destination Address:</span>
+                    <span class="text">{{enquiryDetails?.transportDetails?.origin[1]?.addressId}} , {{enquiryDetails?.transportDetails?.origin[1]?.address}}</span>
+                  </div>
+             
+
+                  <div class="d-grid-2" *ngIf="isImport && enquiryDetails?.routeDetails?.loadPlaceName">
+                    <span class="header">Origin :</span>
+                    <span class="text">{{enquiryDetails?.routeDetails?.loadPlaceName || '-'}} </span>
+                  </div>
+                  <div class="d-grid-2" *ngIf="isImport && enquiryDetails?.routeDetails?.loadPortName">
+                    <span class="header">{{activeFrightAir? 'Airport':'Port'}} of Loading :</span>
+                    <span class="text">{{enquiryDetails?.routeDetails?.loadPortName}} </span>
+                  </div>
+                  <div class="d-grid-2" *ngIf="isImport && enquiryDetails?.routeDetails?.loadPortETD">
+                    <span class="header">ETD :</span>
+                    <span class="text">{{enquiryDetails?.routeDetails?.loadPortETD | date :
+                      'dd-MM-yyyy' || '-'}} </span>
+                  </div>
+                  <div class="d-grid-2" *ngIf="isImport && enquiryDetails?.routeDetails?.vesselName">
+                    <span class="header">Vessel :</span>
+                    <span class="text">{{enquiryDetails?.routeDetails?.vesselName || '-'}} </span>
+                  </div>
+                  <div class="d-grid-2" *ngIf="isImport && enquiryDetails?.routeDetails?.voyageNumber">
+                    <span class="header">Voyage :</span>
+                    <span class="text"> {{enquiryDetails?.routeDetails?.voyageNumber || '-'}} </span>
+                  </div>
+                  <div class="d-grid-2" *ngIf="isImport && enquiryDetails?.routeDetails?.destPortName">
+                    <span class="header">{{activeFrightAir? 'Airport':'Port'}} of Discharge :</span>
+                    <span class="text">{{enquiryDetails?.routeDetails?.destPortName}} </span>
+                  </div>
+                  <div class="d-grid-2" *ngIf="isImport && enquiryDetails?.routeDetails?.locationName">
+                    <span class="header">Destination :</span>
+                    <span class="text">{{enquiryDetails?.routeDetails?.locationName || '-'}} </span>
+                  </div>
+                  <div class="d-grid-2" *ngIf="isImport && enquiryDetails?.routeDetails?.destPortETA">
+                    <span class="header">ETA :</span>
+                    <span class="text">{{enquiryDetails?.routeDetails?.destPortETA | date :
+                      'dd-MM-yyyy' || '-'}} </span>
+                  </div>
+
+                  <!-- <div class="d-grid-2" *ngIf="!isImport && enquiryDetails?.routeDetails?.shippingLineName">
+                    <span class="header ">312{{isTransport ? 'Transporter ': 'Carrier'}} :</span>
+                    <span class="text">{{enquiryDetails?.routeDetails?.shippingLineName ||'-'}}
+                    </span>
+                  </div> -->
+                  <div class="d-grid-2" *ngIf="isImport && enquiryDetails?.backupShippingLineName">
+                    <span class="header">Backup {{isTransport ? 'Transporter ': 'Carrier'}} :</span>
+                    <span class="text">{{enquiryDetails?.backupShippingLineName ||'-'}} </span>
+                  </div>
+                  <div class="d-grid-2" *ngIf="enquiryDetails?.basicDetails?.incoTermName">
+                    <span class="header">INCO Terms :</span>
+                    <span class="text">{{enquiryDetails?.basicDetails?.incoTermName ||'-'}}
+                    </span>
+                  </div>
+                  <div class="d-grid-2" *ngIf="enquiryDetails?.remarks">
+                    <span class="header">Remarks :</span>
+                    <span class="text">{{enquiryDetails?.remarks || '-'}}
+                    </span>
+                  </div>
+                  <div class="d-grid-2" *ngIf="enquiryDetails?.backupShippingLineName && !isImport" >
+                    <span class="header">Backup {{activeFrightAir ? 'Airline' : isTransport ? 'Transporter ': 'Carrier'}} :</span>
+                    <span class="text">{{enquiryDetails?.backupShippingLineName ||'-'}}
+                    </span>
+                  </div>
+                </div>
+                <div *ngIf="(isExport || isTransport)" class="left">
+                  <div class="new-title">
+                    <p>CARGO DETAILS</p>
+                  </div>
+                  <div class="d-grid-2" *ngIf="enquiryDetails?.routeDetails?.freightTermsName">
+                    <span class="header">Freight Terms :</span>
+                    <span class="right">{{enquiryDetails?.routeDetails?.freightTermsName ||'-'}}
+                    </span>
+                  </div>
+                  <div class="d-grid-2" *ngIf="enquiryDetails?.basicDetails?.shippingTermName">
+                    <span class="header">Shipping Term :</span>
+                    <span class="righ">{{enquiryDetails?.basicDetails?.shippingTermName ||'-'}}
+                    </span>
+                  </div>
+                  <div class="d-grid-2">
+                    <span class="header">Cargo Ready Date:</span>
+                    <span class="righ">{{enquiryDetails?.productDetails?.cargoReadyDate | date
+                      :
+                      'dd-MM-yyyy' || '-'}} </span>
+                  </div>
+
+                  <div class="d-grid-2" *ngIf="enquiryDetails?.productDetails?.targetDeliveryDate">
+                    <span class="header">Delivery Date :</span>
+                    <span class="righ">{{enquiryDetails?.productDetails?.targetDeliveryDate |
+                      date :
+                      'dd-MM-yyyy' || '-'}} </span>
+                  </div>
+
+                  <div class="d-grid-2" *ngIf="enquiryDetails?.productDetails?.biddingDueDate && isTransport">
+                    <span class="header">Bidding Due Date :</span>
+                    <span class="righ">{{enquiryDetails?.productDetails?.biddingDueDate |
+                      date :
+                      'dd-MM-yyyy' || '-'}} </span>
+                  </div>
+
+                  <ng-container *ngFor="let cargo of enquiryDetails?.cargoDetail;let i=index">
+                    <div class="">
+                      <div class="">
+                        <span class="header" >{{i+1}}.Name: </span>
+                        <span class="text">{{cargo?.productName}}</span>
+                      </div>                    
+                      <div class="type">
+                        <span class="header">Type :</span>
+                        <span class="text">{{cargo?.commodityTypeName | uppercase}} </span>,
+                        <span class="header">HS Code :</span>
+                        <span class="text" *ngIf="cargo?.hsCode">{{cargo?.hsCode}} </span>
+                      </div>
+                      <div class="type">
+                        <span class="header">Weight :</span>
+                        <span class="text">{{cargo?.grossWeight || 0}} {{cargo?.unitName || 'KG' | uppercase}} </span>
+                      </div>
+                      <div class="type" *ngIf="cargo?.commodityTypeName == 'Refer'">
+                        <span class="header" >Temperature :</span>
+                        <span class="text" >({{cargo?.Range}} To {{cargo?.To}} ) {{cargo?.typeTemp}}</span>
+                      </div>
+                      <div class="type" *ngIf="cargo?.commodityTypeName == 'ODC'">
+                        <span class="header" >Dimension :</span>
+                        <span class="text" >({{cargo?.Wi}} * {{cargo?.li}}  * {{cargo?.hi}})  {{cargo?.di}}</span>
+                      </div>
+                      <div class="type" *ngIf="cargo?.commodityTypeName == 'HAZ'">
+                        <span class="header" >UN No :</span>
+                        <span class="text">{{cargo?.unNo}} </span>
+                      </div>
+                      <div class="type" *ngIf="cargo?.imcoClass">
+                        <span class="header" >IMCO Class :</span>
+                        <span class="text">{{cargo?.imcoClass}} </span>
+                      </div>
+                      <div>
+                      </div>
+                    </div>
+                    <!-- <div class=""> -->
+                      <!-- <span class="header">Commodity Weight <span
+                          *ngIf="enquiryDetails?.cargoDetail?.length != 1">{{i+1}}</span> :</span>
+                      <span class="text">{{cargo?.grossWeight || 0}} {{cargo?.unitName || 'KG' | uppercase}}</span> -->
+                    <!-- </div> -->
+                  </ng-container>
+
+
+
+                  <!-- <div class="d-grid-2">
+                                        <span class="header">Recieved at :</span>
+                                        <span class="text">{{enquiryDetails?.basicDetails?.enquiryDate}} </span>
+                                    </div> -->
+                </div>
+
+                <!-- 
+                <div *ngIf="isImport">
+                  <div class="new-title">
+                    <p>LOAD DETAILS</p>
+                  </div>
+
+                  <div class="d-grid-2" *ngIf="enquiryDetails?.containerNo">
+                    <span class="header">Container No :</span>
+                    <span class="text">{{enquiryDetails?.containerNo || '-'}}
+                    </span>
+                  </div>
+                  <div class="d-grid-2">
+                    <span class="header">Container Type :</span>
+                    <span class="text">{{enquiryDetails?.containersDetails?.[0]?.containerType || '-'}}
+                    </span>
+                  </div>
+
+                  <div class="d-grid-2">
+                    <span class="header">No. of Container:</span>
+                    <span class="text">{{enquiryDetails?.containersDetails?.[0]?.noOfContainer|| '-'}}
+                    </span>
+                  </div>
+
+                  <div class="d-grid-2">
+                    <span class="header">Gross Weight:</span>
+                    <span class="text">{{enquiryDetails?.containersDetails?.[0]?.grossWeight || '-'}}  {{enquiryDetails?.containersDetails?.[0]?.unitName|| '-'}}
+                    </span>
+                  </div>
+
+                  
+                
+                <div *ngIf="isImport">
+                  <div class="new-title">
+                    <p>CREATION DETAILS</p>
+                  </div>
+
+                  <div class="d-grid-2">
+                    <span class="header">Created by :</span>
+                    <span class="text">{{enquiryDetails?.createdBy || '-'}}
+                    </span>
+                  </div>
+                  <div class="d-grid-2">
+                    <span class="header">Created at :</span>
+                    <span class="text">{{enquiryDetails?.createdOn | date : 'dd-MM-yyyy' || '-'}}
+                    </span>
+                  </div>
+
+                  <div class="d-grid-2">
+                    <span class="header"> Sales Person :</span>
+                    <span class="text">{{enquiryDetails?.basicDetails?.salePerson || '-'}}
+                    </span>
+                  </div>
+
+                  <div class="d-grid-2">
+                    <span class="header">Remarks :</span>
+                    <span class="text">{{enquiryDetails?.remarks || '-'}}
+                    </span>
+                  </div>
+
+                  <div class="d-grid-2">
+                    <span class="header">Inquiry No. :</span>
+                    <span class="text">{{enquiryDetails?.agentadviceNo || '-'}}
+                    </span>
+                  </div>
+
+                </div> -->
+
+
+                <div>
+                  <div class="new-title">
+                    <p>{{showContainer ? 'LOAD DETAILS' : 'Loose Cargo Details'}}</p>
+                  </div>
+                  <ng-container *ngIf="showContainer">
+                    <div class="d-grid-2">
+                      <span class="header">{{ typeOfWay }} :</span>
+                      <span class="top">
+                        <span *ngFor="let cargo of enquiryDetails?.containersDetails; let i = index">
+                          <span *ngIf="cargo?.containerType">
+                            {{ cargo?.containerType }} <i class="bi bi-x"></i> {{ cargo?.noOfContainer }}
+                          </span>
+                          <!-- <span *ngIf="cargo?.truckType">
+                            {{ cargo?.truckType }} <i class="bi bi-x"></i> {{ cargo?.noOfContainer }}
+                          </span> -->
+                          <br />
+                        </span>
+                      </span>
+                    </div>
+                    <div class="d-grid-2">
+                      <span class="header">Total Gross Weight:</span>
+                      <span class="top">
+                        <span>{{totalGrossWeight(enquiryDetails?.containersDetails)}} </span>
+                        <span >{{enquiryDetails?.containersDetails[0]?.unitName || 'KG'
+                          |uppercase}}</span><br>
+                      </span>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="showPallet">
+                    <div class="d-grid-3">
+                      <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th scope="col" class="white-space">Lot</th>
+                            <th scope="col" class="white-space">Package Type</th>
+                            <th scope="col" class="white-space">Quantity</th>
+                            <th scope="col" class="white-space">Size (l x b x h) </th>
+                            <th scope="col" class="white-space">Volume</th>
+                            <th scope="col" class="white-space">Weight</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor=" let cargo of enquiryDetails?.looseCargoDetails?.cargos; let i=index">
+                            <td class="white-space">{{i+1}}</td>
+                            <td class="white-space">{{cargo?.pkgname}}</td>
+                            <td class="white-space">{{cargo?.units}}</td>
+                            <td class="white-space">   ({{cargo?.lengthp}} x {{cargo?.Weightp}} x {{cargo?.heightselected}}){{cargo?.selectedh}}  </td>
+
+                            <td class="white-space">
+                              {{cargo?.volumeselect  | number:'1.2-2'}} CBM
+                            </td>
+                            <td class="white-space">
+                              {{cargo?.Weightselected}}{{cargo?.selectedw}}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
+                  </ng-container>
+
+                  <div class="d-grid-2" *ngIf="enquiryDetails?.customDetails?.customOrigin">
+                    <span class="header">Origin Custom Clearance :</span>
+                    <span class="top">
+                      <span>{{enquiryDetails?.customDetails?.customOriginLocationName}}</span>
+                    </span>
+                  </div>
+
+                  <div class="d-grid-2" *ngIf="enquiryDetails?.customDetails?.customDestination">
+                    <span class="header">Destination Custom Clearance :</span>
+                    <span class="top">
+                      <span>{{enquiryDetails?.customDetails?.customDestinationLocationName}}</span>
+                    </span>
+                  </div>
+
+
+                  <div class="d-grid-2" *ngIf="!isTransport">
+                    <span class="header" *ngIf="enquiryDetails?.insurance?.cargo || enquiryDetails?.insurance?.emptyContainer || enquiryDetails?.insurance?.warehousing">Value Added Services :</span>
+                    <span class="top">
+                      <span *ngIf="enquiryDetails?.insurance?.cargo">Cargo Insurance ,</span>
+                      <span *ngIf="enquiryDetails?.insurance?.emptyContainer">Empty Container Insurance ,</span>
+                      <span *ngIf="enquiryDetails?.insurance?.cargo">Fumigation ,</span>
+                      <span *ngIf="enquiryDetails?.insurance?.cargo">Palletization ,</span>
+                      <span *ngIf="enquiryDetails?.insurance?.warehousing">Warehousing </span>
+                    </span>
+                  </div>
+
+
+
+                </div>
+              </div>
+              <ngx-skeleton-loader count="{{totalCount}}" appearance="line" *ngIf="loader"></ngx-skeleton-loader>
+            </div>
+
+            <div class="col-md-12 mt-2 tab-design-change mb-5">
+              <div class="wrap-bar row">
+                <div class="custome-tab col-md-6">
+                  <ul class="nav nav-tabs shadow-none" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation" *ngFor="let tab of tabs">
+                      <button class="nav-link" [class.active]="holdControl === tab.key" id="{{ tab.id }}"
+                        data-bs-toggle="tab" data-bs-target="#{{ tab.control }}" type="button" role="tab"
+                        aria-controls="{{ tab.control }}" aria-selected="true" (click)="onTab(tab)">
+                        {{ tab.name }}
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-md-6">
+                  <div *ngIf="enquiryDetails?.enquiryStatusCustomer==='Rejected'">
+                    <span class="set-font"> Customer Reason for Rejection : {{enquiryDetails?.reason}}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-content" id="myTabContent">
+                <div *ngIf="holdControl === 'quote'" [class.active]="holdControl === 'quote'"
+                  class="disabledNoOfCasesDiv tab-pane fade show" id="quote" role="tabpanel"
+                  aria-labelledby="quote-tab">
+
+                  <div class="col-md-12 p-0">
+                    <div class="col-md-12 p-0">
+                      <div class=" d-flex flex-column flex-sm-row gap-3">
+                        <div class="col-md-12 p-0">
+                          <div class="wrap-form-field  wrap-pagination  d-flex justify-content-end alignment" *ngIf="isQuoteAcceptedOrRejected()">
+                            <div *ngIf="!isTransport" class="my-2" appAccessControl featureCode="['STQ01']" accessType="add" >
+                              <button  class="max-con new-action btn btn-outline-primary btn-sm rounded-pill"
+                                [disabled]="(isExport || isTransport) && (enquiryDetails?.enquiryStatus == 'Inquiry Submitted') || (!(isExport || isTransport) && enquiryDetails?.agentAdviseStatus == 'Inquiry Submitted')"
+                                *ngIf="(isExport || isTransport) ? enquiryDetails?.enquiryStatus == 'Inquiry Created' || enquiryDetails?.enquiryStatus == 'Inquiry Submitted' : enquiryDetails?.agentAdviseStatus == 'Inquiry Created' || enquiryDetails?.agentAdviseStatus == 'Inquiry Submitted'"
+                                (click)="openQuote()">Create Quotation</button>
+                            </div>   
+                            <div *ngIf="isTransport" class="my-2" appAccessControl featureCode="['STQ01']" accessType="add" nz-tooltip  nzTooltipTitle="{{ (hideCreateQuote && enquiryDetails.transportDetails?.origin[0]?.transpoterType !== 'self') ? 'You should accept bidding Price' :'' }}">
+                              <button   class="max-con new-action btn btn-outline-primary btn-sm rounded-pill"
+                                [disabled]="enquiryDetails?.enquiryStatus == 'Inquiry Submitted' || (hideCreateQuote && enquiryDetails.transportDetails?.origin[0]?.transpoterType !== 'self')"
+                                *ngIf="(isTransport) ? enquiryDetails?.enquiryStatus == 'Inquiry Created' || enquiryDetails?.enquiryStatus == 'Inquiry Submitted' : enquiryDetails?.agentAdviseStatus == 'Inquiry Created' || enquiryDetails?.agentAdviseStatus == 'Inquiry Submitted'"
+                                (click)="openQuote()">Create Quotation</button>
+                            </div>                          
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="table-charge mt-2 mb-5" *ngIf="!loader">
+                      <table class="custom-row" aria-describedby="mytable" class="gfg">
+                        <thead>
+                          <tr class="field-name1">
+                            <th scope="col" class="">#</th>
+                            <th scope="col" class="">Quote</th>
+                            <!-- <th scope="col" class="">Unit Freight Buy</th> -->
+                            <!-- <th scope="col" class="">Unit Freight Sell</th> -->
+                            <th scope="col" class="">Total Buy ({{currentUser?.currency?.currencyCode}})</th>
+                            <th scope="col" class="">Total Sell ({{currentUser?.currency?.currencyCode}})</th>
+                            <th scope="col" class="">Total Margin ({{currentUser?.currency?.currencyCode}})</th>
+                            <th scope="col" class="">{{ enquiryDetails?.basicDetails?.ShipmentTypeName === 'Air' ? 'Airline' : isTransport ? 'Transporter ': 'Carrier'}}</th>
+                            <th scope="col" class="">ETA</th>
+                            <th scope="col" class="">ETD</th>
+
+                            <!-- <th scope="col" class="">Total Freight Margin</th> -->
+
+                            <!-- <th scope="col" class="">RA</th> -->
+                            <th scope="col" class="">Valid Till Date</th>
+                            <th scope="col" class="">Remarks</th>
+                            <!-- <th scope="col" class="">Amended From</th>  -->
+                            <th scope="col" class="">Status</th>
+                            <th scope="col" class="">Actions</th>
+                          </tr>
+
+                        </thead>
+                        <tbody>
+                          <tr class="collapse-ui" *ngFor="let row of quotationList; let i=index">
+                            <td>
+                              <div class="d-flex align-items-center">
+                                &nbsp;&nbsp;
+                                <div class="form-check  checkbox" *ngIf="row?.quoteStatus == 'Quotation Created' ">
+                                  <input class="checkbox mt-2" [(ngModel)]="row.isSelected" type="checkbox">
+                                </div>
+                              </div>
+                            </td>
+                            <td>{{row.quotationNo}} </td>
+                            <!-- <td> </td> -->
+                            <!-- <td> </td> -->
+                            <td class="red text-end">{{row.totalBuy | number : '1.2-2' |
+                              customCurrency:row?.currencyShortName}} </td>
+                            <td class="green text-end">{{row.totalSell | number : '1.2-2'|
+                              customCurrency:row?.currencyShortName}} </td>
+                            <td class="text-end"
+                              [ngClass]="{ 'positive': (row.totalSell - row.totalBuy) >= 0, 'negative': (row.totalSell - row.totalBuy) < 0 }">
+                              {{row.totalSell - row.totalBuy | number : '1.2-2' |
+                              customCurrency:row?.currencyShortName}} </td>
+                            <td>{{row.carrierName}} </td>
+                            <td>{{row.eta | date : 'dd-MM-yyyy HH:mm:ss'}} </td>
+                            <td>{{row.etd | date : 'dd-MM-yyyy HH:mm:ss'}} </td>
+                            <!-- <td> </td> -->
+                            <!-- <td> </td> -->
+                            <td class="text-end">{{row.validTo| date : 'dd-MM-yyyy'}} </td>
+                            <td>
+                              <span *ngIf="!row?.isRequotation">
+                                {{ row.remarks}}
+                              </span>
+                              <span class="cursor-pointer">
+                                <a *ngIf="row?.isRequotation" class="bi bi-eye globally-change-icon-color mr-1"
+                                  (click)="remarksView(Views)">View</a>
+                              </span>
+                            </td>
+                            <!-- <td> </td>  -->
+                            <td [class]="row.quoteStatus == 'Quotation Expired' ? 'color--secondary' : ''">
+                              {{row.quoteStatus}} </td>
+                            <td>
+                              <em
+                                class="bi bi-three-dots dots-color-change cursor-pointer wrap-batch1  border px-1 em-icon">
+                                <div class="wrap-open">
+                                  <div class="wrap-2">
+                                    <div class="wrap-inside"
+                                      *ngIf="row?.quoteStatus =='Requotation Requested' || row?.quoteStatus == 'Quotation Created' || row?.quoteStatus == 'Draft'"
+                                      appAccessControl featureCode="['STQ01']" accessType="update">
+                                      <span class="mtop">
+                                        <a (click)="editQuote(row,'editquote')"><em
+                                            class="bi bi-pencil color-pencil-red"></em>
+                                          Edit</a>
+                                      </span>
+                                    </div>
+                                    <div class="wrap-inside" appAccessControl featureCode="['STQ01']" accessType="view">
+                                      <span class="mtop">
+                                        <a (click)="editQuote(row,'viewquote')"><em
+                                            class="bi bi-eye globally-change-icon-color"></em>
+                                          View</a>
+                                      </span>
+                                    </div>
+                                    <div class="wrap-inside" appAccessControl featureCode="['STQ01']" accessType="view"
+                                      *ngIf="row?.quoteStatus == 'Quotation Created' || row?.quoteStatus == 'Draft'">
+                                      <span class="mtop">
+                                        <a (click)="deleteQuote(row )"><em
+                                            class="bi bi-trash globally-change-icon-color"></em>
+                                          Delete</a>
+                                      </span>
+                                    </div>
+                                    <div class="wrap-inside" appAccessControl featureCode="['STQ01']" accessType="update"
+                                      [class.disabled]="enquiryDetails?.enquiryStatus == 'Inquiry Submitted'"
+                                      *ngIf="(enquiryDetails?.enquiryStatus == 'Inquiry Created' || enquiryDetails?.enquiryStatus == 'Inquiry Submitted') && !(checkForJob())  && !isImport">
+                                      <span class="mtop">
+                                        <a (click)="editQuote(row, 'clonequote')">
+                                          <em class="bi bi-bookmarks"></em>
+                                          Clone Quotation
+                                        </a>
+                                      </span>
+                                    </div>
+                                    <!-- *ngIf="row?.quoteStatus == 'Quotation Created'" -->
+                                    <div class="wrap-inside" appAccessControl featureCode="['STQ01']"
+                                      accessType="update"
+                                      *ngIf="row?.quoteStatus == 'Quotation Created' || row?.quoteStatus == 'Quotation Submitted' || row?.quoteStatus == 'Requotation Submitted'">
+                                      <span class="mtop">
+                                        <a (click)="sendQuotation(sendQuote,row)"><em class="bi bi-envelope-fill"></em>
+                                          Send Quotation to Email</a>
+                                      </span>
+                                    </div>
+
+
+                                    <div class="wrap-inside" appAccessControl featureCode="['STQ01']"
+                                      accessType="update"
+                                      *ngIf="row?.quoteStatus == 'Quotation Created' || row?.quoteStatus == 'Quotation Submitted'|| row?.quoteStatus == 'Requotation Submitted'">
+                                      <span (click)="createBatch(row)" class="mtop"> <a><em
+                                            class="bi bi-check-circle"></em>
+                                          Quotation Accept & Complete Booking</a> </span>
+                                    </div>
+                                    <div class="wrap-inside" appAccessControl featureCode="['STQ01']"
+                                      accessType="update"
+                                      *ngIf="(isExport || isTransport) && (row?.quoteStatus =='Requotation Created' || row?.quoteStatus =='Requotation Submitted') ">
+                                      <span (click)="createBatch(row)" class="mtop"> <a><em
+                                            class="bi bi-check-circle"></em>
+                                          Requotation Accept & Complete Booking</a> </span>
+                                    </div>
+                                    <div class="wrap-inside" appAccessControl featureCode="['STQ01']"
+                                      accessType="update"
+                                      *ngIf="(isExport || isTransport) && (row?.quoteStatus =='Requotation Created' || row?.quoteStatus =='Requotation Submitted') ">
+                                      <span (click)="rejectQuote(row)" class="mtop"> <a><em class="bi bi-x-circle"></em>
+                                          Requotation Reject</a> </span>
+                                    </div>
+
+                                    <div class="wrap-inside" appAccessControl featureCode="['STQ01']"
+                                      accessType="update"
+                                      *ngIf="row?.quoteStatus == 'Quotation Created' || row?.quoteStatus == 'Quotation Submitted'|| row?.quoteStatus == 'Requotation Submitted'">
+                                      <span (click)="rejectQuote(row)" class="mtop"> <a><em class="bi bi-x-circle"></em>
+                                          Quotation Reject</a> </span>
+                                    </div>
+
+                                    <div class="wrap-inside" appAccessControl featureCode="['STBT01']" accessType="add"
+                                      *ngIf="row?.quoteStatus == 'Quotation Accepted' || row?.quoteStatus == 'Requotation Accepted'">
+                                      <span (click)="createBatch(row)" class="mtop"> <a><em class="bi bi-plus"></em>
+                                          Create Job</a> </span>
+                                    </div>
+
+                                    <!-- <div class="wrap-inside" >
+                                                                            <span (click)="deleteQuote(row)" class="mtop"> <a><em
+                                                                                        class="bi bi-trash color-pencil-red"></em>
+                                                                                    Delete</a> </span>
+                                                                        </div> -->
+
+                                  </div>
+                                </div>
+                              </em>
+                              
+                              <mat-menu #menu="matMenu" class="wrap-open">
+                                <!-- Edit Quote -->
+                                <ng-container *ngIf="row?.quoteStatus == 'Requotation Requested' || row?.quoteStatus == 'Quotation Created' || row?.quoteStatus == 'Draft'">
+                                  <button mat-menu-item class="wrap-inside" appAccessControl featureCode="['STQ01']" accessType="update" (click)="editQuote(row,'editquote')" style="border-top: 1px solid #bcd7ee !important;">
+                                    <em class="bi bi-pencil color-pencil-red"></em> Edit
+                                  </button>
+                                </ng-container>
+                              
+                                <!-- View Quote -->
+                                <button mat-menu-item class="wrap-inside" appAccessControl featureCode="['STQ01']" accessType="view" (click)="editQuote(row,'viewquote')">
+                                  <em class="bi bi-eye globally-change-icon-color"></em> View
+                                </button>
+                              
+                                <!-- Delete Quote -->
+                                <ng-container *ngIf="row?.quoteStatus == 'Quotation Created' || row?.quoteStatus == 'Draft'">
+                                  <button mat-menu-item class="wrap-inside" appAccessControl featureCode="['STQ01']" accessType="view" (click)="deleteQuote(row)">
+                                    <em class="bi bi-trash globally-change-icon-color"></em> Delete
+                                  </button>
+                                </ng-container>
+                              
+                                <!-- Clone Quotation -->
+                                <ng-container *ngIf="enquiryDetails?.enquiryStatus == 'Inquiry Created' || enquiryDetails?.enquiryStatus == 'Inquiry Submitted'">
+                                  <button mat-menu-item class="wrap-inside" appAccessControl featureCode="['STQ01']" accessType="update" [class.disabled]="enquiryDetails?.enquiryStatus == 'Inquiry Submitted'" (click)="editQuote(row,'clonequote')">
+                                    <em class="bi bi-bookmarks"></em> Clone Quotation
+                                  </button>
+                                </ng-container>
+                              
+                                <!-- Send Quotation to Email -->
+                                <ng-container *ngIf="row?.quoteStatus == 'Quotation Created' || row?.quoteStatus == 'Quotation Submitted'">
+                                  <button mat-menu-item class="wrap-inside" appAccessControl featureCode="['STQ01']" accessType="update" (click)="sendQuotation(sendQuote,row)">
+                                    <em class="bi bi-envelope-fill"></em> Send Quotation to Email
+                                  </button>
+                                </ng-container>
+                              
+                                <!-- Quotation Accept & Complete Booking -->
+                                <ng-container *ngIf="row?.quoteStatus == 'Quotation Created' || row?.quoteStatus == 'Quotation Submitted'">
+                                  <button mat-menu-item class="wrap-inside" appAccessControl featureCode="['STQ01']" accessType="update" (click)="createBatch(row)">
+                                    <em class="bi bi-check-circle"></em> Quotation Accept & Complete Booking
+                                  </button>
+                                </ng-container>
+                              
+                                <!-- Requotation Accept & Complete Booking -->
+                                <ng-container *ngIf="(isExport|| isTransport) && (row?.quoteStatus == 'Requotation Created' || row?.quoteStatus == 'Requotation Submitted')">
+                                  <button mat-menu-item class="wrap-inside" appAccessControl featureCode="['STQ01']" accessType="update" (click)="createBatch(row)">
+                                    <em class="bi bi-check-circle"></em> Requotation Accept & Complete Booking
+                                  </button>
+                                </ng-container>
+                              
+                                <!-- Requotation Reject -->
+                                <ng-container *ngIf="(isExport||isTransport) && (row?.quoteStatus == 'Requotation Created' || row?.quoteStatus == 'Requotation Submitted')">
+                                  <button mat-menu-item class="wrap-inside" appAccessControl featureCode="['STQ01']" accessType="update" (click)="rejectQuote(row)">
+                                    <em class="bi bi-x-circle"></em> Requotation Reject
+                                  </button>
+                                </ng-container>
+                              
+                                <!-- Quotation Reject -->
+                                <ng-container *ngIf="row?.quoteStatus == 'Quotation Created' || row?.quoteStatus == 'Quotation Submitted'">
+                                  <button mat-menu-item class="wrap-inside" appAccessControl featureCode="['STQ01']" accessType="update" (click)="rejectQuote(row)">
+                                    <em class="bi bi-x-circle"></em> Quotation Reject
+                                  </button>
+                                </ng-container>
+                              
+                                <!-- Create Job -->
+                                <ng-container *ngIf="row?.quoteStatus == 'Quotation Accepted' || row?.quoteStatus == 'Requotation Accepted'">
+                                  <button mat-menu-item class="wrap-inside" appAccessControl featureCode="['STBT01']" accessType="add" (click)="createBatch(row)">
+                                    <em class="bi bi-plus"></em> Create Job
+                                  </button>
+                                </ng-container>
+                              </mat-menu>
+                              
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <div class="no-data-availble" *ngIf="quotationList.length === 0">
+                        {{'common.no_data' | translate}}
+                      </div>
+                    </div>
+                    <ngx-skeleton-loader count="{{totalCount}}" appearance="line" *ngIf="loader"></ngx-skeleton-loader>
+
+                  </div>
+
+                </div>
+                <div *ngIf="holdControl === 'documents'" [class.active]="holdControl === 'documents'"
+                  class="disabledNoOfCasesDiv tab-pane fade show" id="documents" role="tabpanel"
+                  aria-labelledby="documents-tab">
+
+                  <div class="col-md-12 mt-3">
+                    <div class="table-charge ">
+                      <table class="custom-row" aria-describedby="mytable" class="gfg">
+                        <thead>
+                          <tr class="field-name">
+                            <th scope="col" class="text-center">#</th>
+                            <th scope="col">Document Type</th>
+                            <th scope="col">Document Name</th>
+
+                            <th scope="col" class="text-center">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr class="collapse-ui" *ngFor="let row of documentList; let i=index">
+                            <td class="text-center">{{i+1}}</td>
+                            <td>{{row?.documentType}}</td>
+                            <td>{{row?.msdsDoc }}</td>
+                            <td class="action-field text-center">
+
+                              <span class="mtop" (click)="viewDoc(row?.msdsDoc )">
+                                <a><em class="bi bi-eye globally-change-icon-color"></em></a>
+                              </span>
+
+                              <span class="mtop" (click)="downloadDoc(row?.msdsDoc )">
+                                <a><em class="bi bi-download"></em></a>
+                              </span>
+
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <div class="no-data-availble" *ngIf="documentList.length === 0">
+                        {{'common.no_data' | translate}}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="holdControl === 'bidding'" [class.active]="holdControl === 'bidding'"
+                  class="disabledNoOfCasesDiv tab-pane fade show" id="bidding" role="tabpanel"
+                  aria-labelledby="bidding-tab"> 
+                  <div class="col-md-12 mt-3 mb-5">
+                    <app-bidding></app-bidding> 
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="wrap-form-field btn-onscreen mb-3">
+              <a class="btn btn-outline-primary float-end" (click)="back()"><span style="font-weight: bold;">Back</span></a>
+              <!-- <button class="btn btn-outline-secondary float-end mx-2" 
+                            *ngIf="(isExport || isTransport) ? (enquiryDetails?.enquiryStatus == 'Inquiry Created' || enquiryDetails?.enquiryStatus =='Inquiry Received' || enquiryDetails?.enquiryStatus =='Inquiry Submitted')  : (enquiryDetails?.agentAdviseStatus == 'Inquiry Created' || enquiryDetails?.enquiryStatus =='Inquiry Received')"
+                             [disabled]="quotationList?.length == 0 || ((isExport || isTransport) ? enquiryDetails?.enquiryStatus =='Inquiry Submitted'  :  enquiryDetails?.enquiryStatus =='Inquiry Submitted')" 
+                            (click)="enquiryUpdate(false) "  >
+                                 Send to Customer
+                            </button>  -->
+
+              <button class="btn btn-outline-secondary float-end mx-2" *ngIf="isQuoteAccepted() && (isExport || isTransport || isImport)"
+                (click)="updateQuotation()" >
+                <span style="font-weight: bold;">
+                  Send to Customer
+                </span>
+                
+              </button>
+
+              <!-- <button (click)="enquiryUpdate(true)" [disabled]="quotationList?.length == 0"  class="btn btn-outline-secondary float-end mx-2"  *ngIf="(isExport || isTransport) && enquiryDetails?.enquiryStatus =='Requotation Requested'">
+                               Resend to Customer
+                            </button> -->
+
+              <!-- <button *ngIf="checkForJob() && (isExport || isTransport)" (click)="sendForJobCreate()"
+                class="btn btn-outline-secondary float-end mx-2">
+                Create Job
+              </button> -->
+
+            </div>
+
+          </ng-container>
+
+
+
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #content1 let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+      </button>
+    </div>
+    <div class="modal-body mt-4 d-flex align-items-center">
+      <em class="bi bi-question-circle text-danger fs-2 text-center float-start me-2"> </em> <span
+        class=" text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary  btn-sm me-3" (click)="d('Cross click')">No</button>
+        <button type="button" class="btn btn-danger  btn-sm" (click)="c('yes')">Yes</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #sendQuote let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span>Send Quotation</span>
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+      </button>
+    </div>
+    <div class="modal-body ">
+      <form [formGroup]="emailForm">
+        <div class="row  mb-3">
+          <div class="col-md-8">
+            <label class="form-label">Send to Mail</label>
+            <div class="d-flex">
+              <input id="email" formControlName="email" name="email" class="form-control custom-input" type="email">
+              <button type="submit" class="btn btn-outline-primary" aria-label="Close"
+                (click)="submitForm()">Send</button>
+            </div>
+            <div *ngIf="emailForm.controls.email.touched && emailForm.controls.email.invalid" class="text-danger">
+              <div *ngIf="emailForm.controls.email.errors.required">Email is required</div>
+              <div *ngIf="emailForm.controls.email.errors.email">Invalid email format</div>
+            </div>
+          </div>
+
+
+        </div>
+      </form>
+      <div style="border: 1px solid #e0e0e0;">
+        <iframe id="pdfViewer" width="100%" height="500px"></iframe>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #shipper let-c="close" let-d="dismiss">
+  <div class="modal-content p-0">
+    <div class="modal-header">
+      <span>Shipper Details</span>
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+      </button>
+    </div>
+    <div class="modal-body mt-4 modal-grid">
+      <div class="d-grid">
+        <div class="d-grid-2">
+          <span class="header">Shipper :</span>
+          <span class="text"> {{shipperList?.name}} </span>
+        </div>
+        <div class="d-grid-2">
+          <span class="header">Address :</span>
+          <span class="text"> {{shipperList?.addressInfo?.address}} </span>
+        </div>
+        <div class="d-grid-2">
+          <span class="header">City :</span>
+          <span class="text"> {{shipperList?.addressInfo?.cityName}} </span>
+        </div>
+        <div class="d-grid-2">
+          <span class="header">State :</span>
+          <span class="text"> {{shipperList?.addressInfo?.stateName}} </span>
+        </div>
+        <div class="d-grid-2">
+          <span class="header">Country :</span>
+          <span class="text"> {{shipperList?.addressInfo?.countryName}} </span>
+        </div>
+
+        <div class="d-grid-2">
+          <span class="header">Mail ID :</span>
+          <span class="text"> {{shipperList?.primaryMailId}} </span>
+        </div>
+        <!-- <div class="d-grid-2"> 
+            <span class="header">Contact No. :</span>
+            <span class="text"> +{{shipperList?.primaryNo.primaryCountryCode}} {{shipperList?.primaryNo.primaryNo}}</span>
+          </div> -->
+        <div class="d-grid-2">
+          <span class="header">PAN No. :</span>
+          <span class="text"> {{shipperList?.panNo}} </span>
+        </div>
+      </div>
+      <div class="branch-card" *ngFor="let branch of shipperList.branch">
+        <div class="d-grid">
+          <div class="d-grid-2">
+            <span class="header">Branch :</span>
+            <span class="text"> {{branch?.branch_name}} </span>
+          </div>
+          <div class="d-grid-2">
+            <span class="header">Address :</span>
+            <span class="text"> {{branch?.branch_address}} </span>
+          </div>
+          <div class="d-grid-2">
+            <span class="header">City :</span>
+            <span class="text"> {{branch?.branch_city}} </span>
+          </div>
+          <div class="d-grid-2">
+            <span class="header">State :</span>
+            <span class="text"> {{branch?.branch_stateName}} </span>
+          </div>
+          <div class="d-grid-2">
+            <span class="header">PIC :</span>
+            <span class="text"> {{branch?.pic}} </span>
+          </div>
+          <div class="d-grid-2">
+            <span class="header">PIC No. :</span>
+            <span class="text"> {{branch?.pic_phone}} </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #Views let-c="close" let-d="dismiss">
+  <div class="mt-3 d-flex justify-content-between">
+    <h6 class="comment">Customer Comment</h6>
+    <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+  </div>
+  <div class="custom-modal wrap-form-field">
+    <div class="modal-body">
+      <div *ngFor="let row of quotationList">
+        <p *ngIf="row?.isRequotation" class="remarks">
+          {{ row?.remarks}}
+        </p>
+      </div>
+    </div>
+
+  </div>
+</ng-template>

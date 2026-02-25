@@ -1,0 +1,434 @@
+
+<!-- Work is under progress -->
+
+
+<div class="mat-table-with-gheading">
+  <div class="wrapper">
+    <div class="container-fluid">
+      <div class="wrap-content">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="wrap-sticky">
+              <div class="page-title-box mt-2">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item active">
+                    Edit {{ isExport ? "Export" : "Import" }} Job
+                  </li>
+                  <li
+                    *ngIf="holdControl === 'details'"
+                    class="breadcrumb-item active color-red"
+                  >
+                    Details
+                  </li>
+                  <li
+                    *ngIf="holdControl !== 'details' && holdControl !== 'bl'"
+                    class="breadcrumb-item active color-red"
+                  >
+                    {{ holdControl }}
+                  </li>
+                  <li
+                    *ngIf="holdControl === 'bl'"
+                    class="breadcrumb-item active color-red"
+                  >
+                    Bill Of Lading
+                  </li>
+                </ol>
+              </div>
+
+              <div class="tab-design-change">
+                <div class="wrap-bar">
+                  <div class="custome-tab">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                      <li
+                        class="nav-item"
+                        role="presentation"
+                        *ngFor="let tab of tabs"
+                      >
+                        <button
+                          class="nav-link"
+                          [class.active]="holdControl === tab.key"
+                          id="{{ tab.id }}"
+                          data-bs-toggle="tab"
+                          data-bs-target="#{{ tab.control }}"
+                          type="button"
+                          role="tab"
+                          aria-controls="{{ tab.control }}"
+                          aria-selected="true"
+                          (click)="onTab(tab)"
+                        >
+                          <ng-container *ngIf="this.isExport">
+                            {{ tab.name }}
+                          </ng-container>
+                          <ng-container *ngIf="!this.isExport">
+                            {{
+                              tab.name === "SOB" ? "Discharge Date" : tab.name
+                            }}
+                          </ng-container>
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-content" id="myTabContent">
+              <div
+                *ngIf="holdControl === 'details'"
+                [class.active]="holdControl === 'details'"
+                class="tab-pane fade show"
+                id="details"
+                role="tabpanel"
+                aria-labelledby="details-tab"
+              >
+                <div
+                  class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view"
+                >
+                  <div class="row mb-5">
+                    <div class="col-md-12">
+                      <ng-container>
+                        <ng-container
+                          *ngFor="let data of consolidationbooking?.batchwiseGrouping;let i=index"
+                        >
+                          <div class="modal-grid new-white-box-design">
+                            <div class="row">
+                              
+                              <div class="col-md-6">
+                                <div class="new-title">
+                                  <!-- <p>{{ data?.batchNo }}</p> -->
+                                  <a class="font-weight"
+                                  (click)="navigateToNewTab1(data)">{{ data?.batchNo }} </a>&nbsp;<i
+                                   class="bi bi-box-arrow-up-right" (click)="navigateToNewTab1(data)"></i>
+                                </div>
+
+                              
+                                <div class="d-grid-2">
+                                  <span class="header">Port of Loading :</span>
+                                  <span class="text"
+                                    >{{
+                                      data?.loadPortName ||
+                                        "-"
+                                    }}
+                                  </span>
+                                </div>
+
+                                <div class="d-grid-2">
+                                  <span class="header"
+                                    >Port of Discharge :</span
+                                  >
+                                  <span class="text"
+                                    >{{
+                                      data?.destPortName || "-"
+                                    }}
+                                  </span>
+                                </div>
+                              </div>
+                              <div class="col-md-6 text-end positionRlt" *ngIf="i ==0 && false">
+                                <button class="btn btn-outline-primary edit-btn" (click)="navToEdit()">Edit</button>
+                                </div>
+                              <!-- <div
+                                *ngIf="
+                                  data?.enquiryDetails?.basicDetails
+                                    ?.ShipmentTypeName === 'Air' ||
+                                  data?.enquiryDetails?.basicDetails
+                                    ?.ShipmentTypeName === 'Ocean LCL'
+                                "
+                              >
+                                <div *ngIf="isExport">
+                                  <div class="new-title">
+                                    <p>Loose Cargo Details</p>
+                                  </div>
+                                  <div class="d-grid-3">
+                                    <table class="table">
+                                      <thead>
+                                        <tr>
+                                          <th scope="col">Package Type</th>
+                                          <th scope="col">Pallets Type</th>
+                                          <th scope="col">Volume</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr
+                                          *ngFor="
+                                            let cargo of data?.enquiryDetails
+                                              ?.looseCargoDetails?.cargos
+                                          "
+                                        >
+                                          <td>{{ cargo?.pkgname }}</td>
+                                          <td>{{ cargo?.Pallettype }}</td>
+                                          <td>
+                                            <span
+                                              *ngIf="
+                                                cargo?.pkgname ===
+                                                'Boxes/Crates'
+                                              "
+                                              >{{ cargo?.volumeb }}</span
+                                            >
+                                            <span
+                                              *ngIf="
+                                                cargo?.pkgname !=
+                                                  'Boxes/Crates' &&
+                                                cargo?.Pallettype ===
+                                                  'Pallets (non specified size)'
+                                              "
+                                              >{{ cargo?.volumep }}</span
+                                            >
+                                            <span
+                                              *ngIf="
+                                                cargo?.pkgname !=
+                                                  'Boxes/Crates' &&
+                                                cargo?.Pallettype !=
+                                                  'Pallets (non specified size)'
+                                              "
+                                              >{{ cargo?.volumeselect }}</span
+                                            >
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                              </div> -->
+                            </div>
+
+                            <div class="table-responsive table-design"> 
+                              <div class="wrap-table-area  wrap-table-design wrap-form-field costtable " id="htmlData">
+                              <table aria-describedby="mytable" class="gfg" id="tablerecords">
+                                <thead>
+                                  <tr class="field-name">
+                                    <th scope="col">#  </th>
+                                    <th scope="col"> Package Type</th>
+                                    <th scope="col">Qty</th>
+                                    <th scope="col"   data-order="desc"
+                                                  data-name="name"> Package Size(lxbxh) <em class="typcn typcn-arrow-unsorted arrow-iconss typcn typcn-arrow-unsorted arrow-icons-sort"></em></th>
+                         
+                                    <!-- for future use -->
+                                    <!-- <th scope="col"  (click)="sort('primaryNo.primaryNo')">{{ 'smartagent.smartAgent.phoneNo' | translate }}   <em class="typcn typcn-arrow-unsorted arrow-iconss typcn typcn-arrow-unsorted arrow-icons-sort"></em></th> -->
+                                    <th scope="col"  data-order="desc"
+                                                  data-name="primaryMailId">Package Weight  <em class="typcn typcn-arrow-unsorted arrow-iconss typcn typcn-arrow-unsorted arrow-icons-sort"></em></th>
+                                 
+                                    <th scope="col"  data-order="desc"
+                                                  data-name="panNo">Package Volume <em class="typcn typcn-arrow-unsorted arrow-iconss typcn typcn-arrow-unsorted arrow-icons-sort"></em></th>
+                                  
+                                    <!-- <th scope="col">Weight <em   class="typcn typcn-arrow-unsorted arrow-iconss typcn typcn-arrow-unsorted arrow-icons-sort"></em></th> -->
+                                    <th scope="col"> Bin</th>
+                                    <th scope="col"> Container</th>
+                                    <!-- <th class="text-center">Action</th> -->
+                                  </tr>
+                                 
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let batch of data?.items; let i=index">
+                                    <td class="text-center">{{i+1}}</td>
+                                    <td class="uppercase">{{batch?.packageType}}</td>
+                                    <td class="uppercase">{{batch?.quantity}}</td>
+                                    <td class="uppercase">{{batch?.height}} x {{batch?.length}} x {{batch?.width}} {{batch?.unit}}</td>
+                                    <td class="uppercase">{{batch?.weight}} KG</td>
+                                   
+                                    <td class="uppercase">{{batch?.volume}} CBM</td>
+                                   
+                                    <td class="uppercase">{{batch?.binSelection}}</td>
+                                    <td class="wrap1">{{batch?.assignContainer?.containerNo}}</td>
+                                    <!-- <td  class="text-center">
+                                        <div *ngIf="batch?.assignContainer?.containerNo">
+                                            <button class="btn btn-outline-primary" (click)="onUnassigned(batch,i)">
+                                                <em class="bi bi-dash-circle"></em> UnAssign Container
+                                            </button>
+                                        </div></td> -->
+                                
+                                   
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                            </div>
+
+                          </div>
+                        </ng-container>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                *ngIf="holdControl === 'Container'"
+                [class.active]="holdControl === 'Container'"
+                class="tab-pane fade show"
+                id="Container"
+                role="tabpanel"
+                aria-labelledby="Container-tab"
+              >
+                <app-tanks [isConsolidate]="true"></app-tanks>
+              </div>
+              <div
+                *ngIf="holdControl === 'route'"
+                [class.active]="holdControl === 'route'"
+                class="tab-pane fade show"
+                id="route"
+                role="tabpanel"
+                aria-labelledby="route-tab"
+              >
+                <app-route (getBatchById)="getBatchById()" [isConsolidate]="true" [consolidationbooking]="consolidationbooking"></app-route>
+              </div>
+
+              <div
+                *ngIf="holdControl === 'destination' && isExport"
+                [class.active]="holdControl === 'destination'"
+                class="tab-pane fade show"
+                id="destination"
+                role="tabpanel"
+                aria-labelledby="destination-tab"
+              >
+                <app-destination [isConsolidate]="true" [consolidationbooking]="consolidationbooking"></app-destination>
+              </div>
+
+              <div
+                *ngIf="holdControl === 'charges'"
+                [class.active]="holdControl === 'charges'"
+                class="tab-pane fade show"
+                id="charges"
+                role="tabpanel"
+                aria-labelledby="charges-tab"
+              >
+                <app-charges
+                  [isAddNewSection]="true"
+                  [OATab]="false"
+                ></app-charges>
+              </div>
+              <div
+                *ngIf="holdControl === 'bl'"
+                [class.active]="holdControl === 'bl'"
+                class="tab-pane fade show"
+                id="bl"
+                role="tabpanel"
+                aria-labelledby="bl-tab"
+              >
+                <app-consolidate-bl [isExportImport]="isExportImport"></app-consolidate-bl>
+              </div>
+
+              <div
+                *ngIf="holdControl === 'principle-bill'"
+                [class.active]="holdControl === 'principle-bill'"
+                class="tab-pane fade show"
+                id="principle-bill"
+                role="tabpanel"
+                aria-labelledby="principle-bill-tab"
+              >
+                <app-principle-bill
+                  [isFinanceInvoice]="false"
+                  [isparent]="'batch'"
+                ></app-principle-bill>
+              </div>
+              <div
+                *ngIf="holdControl === 'invoice'"
+                [class.active]="holdControl === 'invoice'"
+                class="tab-pane fade show"
+                id="invoice"
+                role="tabpanel"
+                aria-labelledby="invoice-tab"
+              >
+                <app-invoices
+                  [isFinanceInvoice]="false"
+                  [isparent]="'batch'"
+                ></app-invoices>
+              </div>
+              <div
+                *ngIf="holdControl === 'email'"
+                [class.active]="holdControl === 'email'"
+                class="tab-pane fade show"
+                id="email"
+                role="tabpanel"
+                aria-labelledby="email-tab"
+              >
+                <app-email-tab></app-email-tab>
+              </div>
+              <div
+                *ngIf="holdControl === 'document'"
+                [class.active]="holdControl === 'document'"
+                class="tab-pane fade show"
+                id="document"
+                role="tabpanel"
+                aria-labelledby="document-tab"
+              >
+                <app-document [batch]="true"></app-document>
+              </div>
+              <div
+                *ngIf="holdControl === 'batch-close'"
+                [class.active]="holdControl === 'batch-close'"
+                class="tab-pane fade show"
+                id="batch-close"
+                role="tabpanel"
+                aria-labelledby="batch-close-tab"
+              >
+                <app-batch-close [isTypePage]="'batch'"></app-batch-close>
+              </div>
+              <div
+                *ngIf="holdControl === 'Remarks'"
+                [class.active]="holdControl === 'Remarks'"
+                class="tab-pane fade show"
+                id="Remarks"
+                role="tabpanel"
+                aria-labelledby="Remarks-tab"
+              >
+                <app-discussion [EnquiryId]="EnquiryId"></app-discussion>
+              </div>
+              <div
+                *ngIf="holdControl === 'check-list'"
+                [class.active]="holdControl === 'check-list'"
+                class="tab-pane fade show"
+                id="check-list"
+                role="tabpanel"
+                aria-labelledby="check-list-tab"
+              >
+                <app-check-list></app-check-list>
+              </div>
+              <div
+                *ngIf="holdControl === 'shipping-instruction' && isExport"
+                [class.active]="holdControl === 'shipping-instruction'"
+                class="tab-pane fade show"
+                id="check-list"
+                role="tabpanel"
+                aria-labelledby="shipping-instruction"
+              >
+                <app-si
+                  (getBatchById)="getBatchById()"
+                  [batchDetail]="batchDetail"
+                ></app-si>
+              </div>
+              <div
+                *ngIf="holdControl === 'shipped-onboard'"
+                [class.active]="holdControl === 'shipped-onboard'"
+                class="tab-pane fade show"
+                id="check-list"
+                role="tabpanel"
+                aria-labelledby="shipped-onboard"
+              >
+                <app-shipped-onboard></app-shipped-onboard>
+              </div>
+              <div
+                *ngIf="holdControl === 'ops-additional'"
+                [class.active]="holdControl === 'ops-additional'"
+                class="tab-pane fade show"
+                id="check-list"
+                role="tabpanel"
+                aria-labelledby="ops-additional"
+              >
+                <app-charges [OATab]="true"></app-charges>
+              </div>
+              <div
+                *ngIf="holdControl === 'custom'"
+                [class.active]="holdControl === 'custom'"
+                class="tab-pane fade show"
+                id="check-list"
+                role="tabpanel"
+                aria-labelledby="custom"
+              >
+                <app-customs [isConsolidate]="true" [consolidationbooking]="consolidationbooking"></app-customs>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

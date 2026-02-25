@@ -1,0 +1,279 @@
+<div class="gate-out-data-container">
+  <div [formGroup]="gateInForm">
+
+    <div class="row mt-3">
+     <div class="col-md-3" *ngIf="isEditMode || isclone">
+  <label class="form-label">
+    Gate Pass Number <span class="text-danger">*</span>
+  </label>
+  <input
+    type="text"
+    class="form-control"
+    formControlName="gatePassNumber"
+    placeholder="Auto Generated"
+    [readonly]="true"
+    [ngClass]="{ 'is-invalid': isFieldInvalid('gatePassNumber') }"
+  />
+  <div *ngIf="isFieldInvalid('gatePassNumber')" class="invalid-feedback">
+    Gate Pass Number is required
+  </div>
+</div>
+
+
+      <div class="col-md-3">
+        <label class="form-label">Importer <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="importer" placeholder="Importer"
+          [ngClass]="{ 'is-invalid': isFieldInvalid('importer') }" />
+        <div *ngIf="isFieldInvalid('importer')" class="invalid-feedback">
+          Importer is required
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Warehouse Number <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="warehouseNumber" placeholder="Warehouse Number"
+          [ngClass]="{ 'is-invalid': isFieldInvalid('warehouseNumber') }" />
+        <div *ngIf="isFieldInvalid('warehouseNumber')" class="invalid-feedback">
+          Warehouse Number is required
+        </div>
+      </div>
+       <div class="col-md-3">
+        <label class="form-label">Vessel</label>
+        <input type="text" class="form-control" formControlName="vessel" />
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-md-3">
+        <label class="form-label">Product Description <span class="text-danger">*</span></label>
+        <textarea class="form-control" formControlName="productDescription" rows="2"
+          [ngClass]="{ 'is-invalid': isFieldInvalid('productDescription') }"
+          placeholder="Product Description"></textarea>
+        <div *ngIf="isFieldInvalid('productDescription')" class="invalid-feedback">
+          Product Description is required
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">CHA Name <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="chaName"
+          [ngClass]="{ 'is-invalid': isFieldInvalid('chaName') }" />
+        <div *ngIf="isFieldInvalid('chaName')" class="invalid-feedback">
+          CHA Name is required
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">WH B/E Number <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="whBeNumber"
+          [ngClass]="{ 'is-invalid': isFieldInvalid('whBeNumber') }" />
+        <div *ngIf="isFieldInvalid('whBeNumber')" class="invalid-feedback">
+          WH B/E Number is required
+        </div>
+      </div>
+
+       <div class="col-md-3">
+        <label class="form-label">Vehicle No <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="truckNumber" (input)="toUppercase('truckNumber')"
+          [ngClass]="{ 'is-invalid': isFieldInvalid('truckNumber') }" placeholder="Vehicle No" />
+        <div *ngIf="isFieldInvalid('truckNumber')" class="invalid-feedback">
+          Vehicle No is required
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-3 d-flex align-items-center">
+      <div class="col-md-3">
+        <label class="form-label">Transporter <span class="text-danger">*</span></label>
+        <div class="form-field-section">
+          <nz-select class="nz-form-select nz-select-width" style="border-bottom: none !important; width: 100% !important;"
+            formControlName="transporter" nzShowSearch nzAllowClear
+            [ngClass]="{'is-invalid': submitted && f.transporter.errors?.required}">
+            <nz-option *ngFor="let port of TransporterList" [nzLabel]="port?.name"
+              [nzValue]="port?.partymasterId"></nz-option>
+          </nz-select>
+          <div *ngIf="submitted && f.transporter.errors?.required" class="invalid-feedback">
+            Transporter is required
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-3">
+        <label class="form-label">L.R. Number</label>
+        <input type="text" class="form-control" formControlName="lrNumber" placeholder="L.R. Number" />
+      </div>
+      
+      <div class="col-md-3">
+        <label class="form-label">Container Number <span class="text-danger">*</span></label>
+        <nz-select class="nz-form-select nz-select-width" style="width: 100% !important;"
+          (ngModelChange)="onContainerChange($event)" formControlName="containerNumber" nzShowSearch nzAllowClear
+          [ngClass]="{'is-invalid': isFieldInvalid('containerNumber')}">
+          <nz-option *ngFor="let container of containerList" [nzLabel]="container.containerNo"
+            [nzValue]="container.containerNo">
+          </nz-option>
+        </nz-select>
+        <div *ngIf="isFieldInvalid('containerNumber')" class="invalid-feedback">
+          Container Number is required
+        </div>
+      </div>
+      
+      <div class="col-md-1 d-flex align-items-center mt-4">
+        <input type="checkbox" class="form-check-input" formControlName="isContainerChange" id="containerChangeCheckbox" />
+        <label class="form-check-label ms-1" for="containerChangeCheckbox">Change Container</label>
+      </div>
+
+      <div class="col-md-2" *ngIf="gateInForm.get('isContainerChange')?.value">
+        <label class="form-label">Topple Container No. <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="toppleContainerNo" placeholder="Topple Container No."
+          [ngClass]="{ 'is-invalid': gateInForm.get('isContainerChange')?.value && isFieldInvalid('toppleContainerNo') }" />
+        <div *ngIf="gateInForm.get('isContainerChange')?.value && isFieldInvalid('toppleContainerNo')" class="invalid-feedback">
+          Topple Container No. is required when container change is selected
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-md-2 pr-1">
+        <label class="form-label">Packages <span class="text-danger">*</span></label>
+        <input type="text" class="form-control custom-input" formControlName="packages"
+          [ngClass]="{ 'is-invalid': isFieldInvalid('packages') }" placeholder="Packages" />
+        <div *ngIf="isFieldInvalid('packages')" class="invalid-feedback">
+          Packages is required
+        </div>
+      </div>
+
+      <div class="col-md-1 pl-0">
+        <label class="form-label">Unit <span class="text-danger">*</span></label>
+        <div class="form-field-section">
+          <nz-select class="nz-form-select nz-select-width"
+            style="border-bottom: none !important; width: 100% !important;" formControlName="unit" nzShowSearch
+            nzAllowClear [ngClass]="{ 'is-invalid': isFieldInvalid('unit') }">
+            <nz-option *ngFor="let enquiryType of weighthData" [nzLabel]="enquiryType.uomShort"
+              [nzValue]="enquiryType.uomId"></nz-option>
+          </nz-select>
+          <div *ngIf="isFieldInvalid('unit')" class="invalid-feedback">
+            Unit is required
+          </div>
+        </div>
+      </div>
+       <div class="col-md-3">
+              <label class="form-label">Container Weight</label>
+              <input type="number" class="form-control custom-input" formControlName="containerWeight"
+                  [ngClass]="{ 'is-invalid': submitted && f.containerWeight.errors }" placeholder="Container Weight" />
+          </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Entry Date & Time <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="entryDateTime"
+          [ngClass]="{ 'is-invalid': isFieldInvalid('entryDateTime') }" />
+        <div *ngIf="isFieldInvalid('entryDateTime')" class="invalid-feedback">
+          Entry Date & Time is required
+        </div>
+      </div>
+
+      <div class="col-md-1 d-flex align-items-center mt-4">
+        <input type="checkbox" class="form-check-input" formControlName="isOpenContainer" id="cisOpenContainerCheckbox" />
+        <label class="form-check-label ms-1" for="isOpenContainerCheckbox">Open Container</label>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Remarks </label>
+        <input type="text" class="form-control" formControlName="remarks" placeholder="Enter Remarks"
+          [ngClass]="{ 'is-invalid': isFieldInvalid('remarks') }" />
+        <div *ngIf="isFieldInvalid('remarks')" class="invalid-feedback">
+          Remarks is required
+        </div>
+      </div>
+    </div>
+
+    <!-- CFS/Port Weighment Details with CFS Name added -->
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <h5 class="section-subheader">CFS/Port Weighment Details</h5>
+      </div>
+    </div>
+
+    <div class="row mt-3" formGroupName="cfsPortWeighment">
+      <div class="col-md-3">
+        <label class="form-label">CFS Name <span class="text-danger">*</span></label>
+        <input 
+          type="text" 
+          class="form-control" 
+          formControlName="cfsName" 
+          placeholder="CFS Name"
+          [class.is-invalid]="isNestedFieldInvalid('cfsPortWeighment', 'cfsName')" />
+        <div *ngIf="isNestedFieldInvalid('cfsPortWeighment', 'cfsName')" class="invalid-feedback">
+          CFS Name is required
+        </div>
+      </div>
+    
+      <div class="col-md-3">
+        <label class="form-label">CFS Gate Pass No <span class="text-danger">*</span></label>
+        <input 
+          type="text" 
+          class="form-control" 
+          formControlName="cfsSlipNo" 
+          placeholder="CFS Gate Pass No"
+          [class.is-invalid]="isNestedFieldInvalid('cfsPortWeighment', 'cfsSlipNo')" />
+        <div *ngIf="isNestedFieldInvalid('cfsPortWeighment', 'cfsSlipNo')" class="invalid-feedback">
+          CFS Gate Pass No is required
+        </div>
+      </div>
+    
+      <div class="col-md-2">
+        <label class="form-label">CFS Gross Weight <span class="text-danger">*</span></label>
+        <input 
+          type="number" 
+          class="form-control" 
+          formControlName="cfsGross" 
+          placeholder="CFS Gross"
+          min="0"
+          step="0.01"
+          [class.is-invalid]="isNestedFieldInvalid('cfsPortWeighment', 'cfsGross')" />
+        <div *ngIf="isNestedFieldInvalid('cfsPortWeighment', 'cfsGross')" class="invalid-feedback">
+          CFS Gross Weight is required
+        </div>
+      </div>
+    
+      <div class="col-md-2">
+        <label class="form-label">CFS Tare Weight <span class="text-danger">*</span></label>
+        <input 
+          type="number" 
+          class="form-control" 
+          formControlName="cfsTare" 
+          placeholder="CFS Tare"
+          min="0"
+          step="0.01"
+          [class.is-invalid]="isNestedFieldInvalid('cfsPortWeighment', 'cfsTare')" />
+        <div *ngIf="isNestedFieldInvalid('cfsPortWeighment', 'cfsTare')" class="invalid-feedback">
+          CFS Tare Weight is required
+        </div>
+      </div>
+    
+      <div class="col-md-2">
+        <label class="form-label">CFS Net Weight <span class="text-danger">*</span></label>
+        <input 
+          type="number" 
+          class="form-control bg-light" 
+          formControlName="cfsNet" 
+          placeholder="CFS Net"
+          readonly
+          style="background-color: #f8f9fa !important; cursor: not-allowed;" />
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="btn-onscreen wrap-form-action mb-3">
+      <button type="button" class="btn1 float-end" (click)="onSubmit()">
+        {{ (isEditMode && !isclone) ? 'Update' : 'Save' }}
+      </button>
+      <button type="button" class="btn btn-outline-primary float-end" (click)="printData()" *ngIf="isEditMode && !isclone">
+         Print
+      </button>
+      <button type="button" class="btn btn-outline-primary float-end" (click)="goBack()">
+        Cancel
+      </button>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,565 @@
+@import '../../../../assets/styles/mixins/global.scss';
+// for future use for date picker
+// small{
+//     font-size: 12px;
+//     color: #868789;
+// }
+//  .heading{
+//     font-size: 12px;
+// } 
+// a {
+//     color: #3b579d!important;
+//     :hover{
+//         text-decoration: underline !important;
+//     }
+// }
+// p{
+//     color: #525252;
+// }
+// .badge{
+//     @include new-heading-12;
+//     padding: 5px;  
+// }
+.boldheading {
+  font-weight: bolder;
+}
+
+.namebold1 {
+  font-weight: bold;
+  color: var(--change-theme);
+}
+
+.namebold {
+  font-weight: bold;
+}
+
+// .description{
+//     color: #000000 !important;
+// }
+.btn-link1 {
+  color: #2d2da2;
+  font-weight: bold;
+}
+
+.checkboxname {
+  font-weight: bold;
+}
+
+.form-check {
+  display: block;
+
+
+}
+
+.form-check-label {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.form-check-input {
+  margin-top: 5px;
+}
+
+.fontweight {
+  font-weight: 700;
+}
+// for future use for date picker
+// ::ng-deep .from-to-date-alignment {
+//     display: flex;
+//     align-items: baseline;
+//     justify-content: space-between;
+//     padding: 0 1147px 0 0;
+
+//     span {
+//       color: var(--theme-modal-text-color);
+//       opacity: .5;
+//       display: block;
+//     }
+
+//     span {
+
+//       font-weight: 400;
+//       padding-right: 38px;
+
+//     }
+//   }
+
+//   ::ng-deep .datePosition mat-date-range-input {
+//     color: var(--toogle-text-color);
+//   }
+
+//   ::ng-deep  .datePosition {
+//     position: absolute;
+//     top: -27px;
+//     right: -349px;
+//     // border-bottom: 1px solid lightgray !important;
+//   }
+//   ::ng-deep .mat-datepicker-toggle {
+//     display: flex !important;
+//     align-items: center !important;
+//     justify-content: flex-end !important;
+//   }
+
+//   ::ng-deep .mat-icon-button {
+//     width: 40px !important;
+//     color: var(--toogle-text-color);
+//   }
+
+//   ::ng-deep .mat-date-range-input {
+//     top: 28px !important;
+//     position: relative !important;
+//   }
+
+//   ::ng-deep .mat-date-range-input-start-wrapper {
+//     width: 72px !important;
+//   }
+
+
+
+//   ::ng-deep .notification-contnet-alignment {
+//     display: flex;
+//     align-items: center;
+//     justify-content: space-between;
+//   }
+
+//   ::ng-deep .notification-contnet-alignment label {
+//     font-size: 14px !important;
+//   }
+
+//   ::ng-deep .notification-border-style {
+//     border: 1px solid var(--form-input-border-color);
+
+
+//     // active border class //
+
+//     &.notification-border-active {
+//       border: 1px solid #025CAC;
+//     }
+
+//     // active border class //
+//   }
+//   ::ng-deep .d-flexs{
+//     display: flex;
+//     justify-content: space-between;
+//     align-items: baseline;
+//   }
+//   ::ng-deep .notifications{
+//     overflow-x: auto;
+//     height: 100vh;
+//   }
+
+//   .mat-calendar-body-cell-container{
+//     background: #025CAC !important;
+//   }
+
+
+
+
+
+
+li {
+  list-style: none;
+}
+
+.my-fav-all-contnet-alignment {
+  background-color: var(--card-backgrond-color);
+  border-radius: 24px;
+  // height: 100vh;
+}
+
+
+.title-text {
+  span {
+    display: block;
+    color: var(--link-text-color);
+    font-size: 20px;
+    padding-top: 20px;
+  }
+}
+
+.my-notification {
+  padding: 26px;
+}
+
+.notification-m {
+  margin-right: 28px;
+}
+
+.my-fav-all-contnet-alignments {
+  background-color: var(--card-backgrond-color);
+  border-radius: 10px;
+}
+
+.d-flex {
+  display: flex;
+
+}
+
+.between-space {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  margin-top: 12px;
+}
+
+::ng-deep mat-form-field .mat-form-field-infix {
+  display: flex !important;
+  width: unset !important;
+}
+
+
+mat-icon {
+  position: relative;
+  color: var(--headingColor);
+}
+
+.time {
+  margin-right: -20px;
+}
+
+
+
+mat-card {
+  margin-bottom: 5px;
+}
+
+.bg {
+  background-color: var(--theme-light-gray-background);
+}
+
+.icon {
+  color: var(--theme-500-black-color);
+}
+
+.image {
+  position: relative;
+  height: 20px;
+  width: 20px;
+  padding-left: 5px;
+}
+
+#img {
+  fill: var(--headingColor);
+
+}
+
+::ng-deep .mat-datepicker-toggle {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+}
+
+
+.date-and-text-alignment {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--theme-modal-text-color);
+
+
+
+  p {
+    font-size: 16px;
+    line-height: 26px;
+    color: var(--theme-modal-text-color);
+    color: var(--toogle-text-color);
+  }
+
+  .mat-form-field {
+    width: 300px !important;
+  }
+
+}
+
+.from-to-date-alignment {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 0 0 0 0;
+
+  span {
+    color: var(--theme-modal-text-color);
+    opacity: .5;
+    display: block;
+  }
+
+  span {
+
+    font-weight: 400;
+    padding-right: 38px;
+
+  }
+}
+
+.datePosition mat-date-range-input {
+  color: var(--toogle-text-color);
+}
+
+.datePosition {
+  position: absolute;
+  top: -27px;
+  right: -349px;
+}
+
+::ng-deep .mat-icon-button {
+  width: 40px !important;
+  color: var(--toogle-text-color);
+}
+
+::ng-deep .mat-date-range-input {
+  top: 28px !important;
+  position: relative !important;
+}
+
+::ng-deep .mat-date-range-input-start-wrapper {
+  width: 72px !important;
+}
+
+.datePosition {
+  position: absolute;
+  top: -27px;
+  right: -349px;
+}
+
+.notification-contnet-alignment {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.notification-contnet-alignment label {
+  font-size: 14px !important;
+}
+
+.notification-border-style {
+  border: 1px solid var(--form-input-border-color);
+
+
+
+
+  &.notification-border-active {
+    border: 1px solid #025CAC;
+  }
+
+
+}
+
+.d-flexs {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.notifications {
+  overflow-x: auto;
+  height: 100vh;
+}
+.stick{
+    position: fixed;
+    bottom: 42px;
+    width: 96.3%;
+}
+.align{
+  display: flex;
+  justify-content: space-between;
+}
+
+.popupheight{
+  margin-top: 10px;
+  // height: 70vh;
+  overflow-y: auto;
+}
+.mrgn{
+  margin-left: -15px;
+}
+.box{
+  padding: 12px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 6px;
+  width: 98% !important;
+  margin-left: 9px;
+}
+
+.red-text-color {
+  color: var(--change-theme) !important;
+}
+
+.blur-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 99999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .spinner {
+      width: 20px;
+      height: 20px;
+      animation: spinner-o824ag 1s infinite linear;
+   }
+   
+   .spinner div {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: var(--theme-red-color);
+      border-radius: 50%;
+      animation: spinner-vse6n7 1.25s infinite ease;
+   }
+   
+   .spinner div:nth-child(1) {
+      --rotation: 90;
+   }
+   
+   .spinner div:nth-child(2) {
+      --rotation: 180;
+   }
+   
+   .spinner div:nth-child(3) {
+      --rotation: 270;
+   }
+   
+   .spinner div:nth-child(4) {
+      --rotation: 360;
+   }
+   
+   @keyframes spinner-vse6n7 {
+      0%, 100% {
+         transform: rotate(calc(var(--rotation) * 1deg)) translateY(0);
+      }
+   
+      50% {
+         transform: rotate(calc(var(--rotation) * 1deg)) translateY(300%);
+      }
+   }
+   
+   @keyframes spinner-o824ag {
+      to {
+         transform: rotate(360deg);
+      }
+   }
+}
+.overflow-y-scroll {
+  overflow-y: auto;
+  max-height: 500px; 
+}
+.selected {
+  background-color:#cfcfcf; 
+  color: black;
+}
+.mt-5 {
+  margin-top: 0.5rem !important;
+  margin-bottom: -1.5rem !important
+}
+.uploadDoc {
+  width: 60px;
+  height: 70px;
+  border: 1px solid black;
+  padding: 10px;
+  margin: 10px;
+  font-size: 12px;
+  line-height: 16px;
+  color: #2F2C2C;
+  font-weight: 500 !important;
+  margin: 0 0 6px 0 !important;
+}
+.upload-box {
+  display: -ms-inline-grid;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  width: max-content;
+  height: 150px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: relative;
+  font-size: 11px;
+    line-height: 14px;
+    color: #3B3939;
+    margin: 15px;
+}
+.upload-icon {
+  flex: 0 0 40px;
+  margin-right: 10px;
+  display: flex;
+}
+.upload-icon img {
+  width: 100%;
+}
+.upload-details {
+  flex-grow: 1;
+}
+.upload-details .file-name {
+  font-weight: bold;
+  color: #333;
+  margin-left: 5px;
+  font-size: 12px;
+  line-height: 16px;
+  color: #2F2C2C;
+  font-weight: 500 !important;
+}
+.upload-details .file-size {
+  font-size: 12px;
+  color: #999;
+}
+.upload-actions {
+  display: flex;
+  align-items: center;
+  margin: 30px;
+}
+.upload-actions button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  margin-left: 5px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: relative;
+  background-color: #b4b2b2;
+}
+.upload-actions button img {
+  width: 24px;
+}
+.corner-ribbon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-top: 20px solid transparent;
+  border-right: 20px solid #f44336;
+}
+::ng-deep.card1 {
+  --bs-card-spacer-y: 1rem;
+  --bs-card-spacer-x: 1rem;
+  --bs-card-title-spacer-y: 0.5rem;
+  --bs-card-title-color: ;
+  --bs-card-subtitle-color: ;
+  --bs-card-border-width: var(--bs-border-width);
+  --bs-card-border-color: var(--bs-border-color-translucent);
+  --bs-card-cap-padding-x: 1rem;
+  --bs-card-cap-bg: rgba(var(--bs-body-color-rgb), 0.03);
+  --bs-card-cap-color: ;
+  --bs-card-height: ;
+  --bs-card-color: ;
+  --bs-card-bg: var(--bs-body-bg);
+  --bs-card-img-overlay-padding: 1rem;
+  --bs-card-group-margin: 0.75rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: var(--bs-card-height);
+  color: var(--bs-body-color);
+  word-wrap: break-word;
+  background-color: var(--bs-card-bg);
+  background-clip: border-box;
+  border: var(--bs-card-border-width) solid var(--bs-card-border-color);
+  border-radius: var(--bs-card-border-radius);
+}

@@ -1,0 +1,531 @@
+<div class="wrap-form-field table-with-gheading">
+    <form [formGroup]="editinvoiceForm" class="mb-5">
+        <div class="row align-items-center">
+            <div class="col-md-12">
+                <div class="row g-4 align-items-center">
+                    <div class="col-md-3" *ngIf="!this.isAddMode">
+                        <label class="form-label">{{'stolt.finance.new_invoice.invoice_no' | translate}}</label>
+                        <input disabled formControlName="invoice_no" class="form-control custom-input" type="text" placeholder="Invoice No">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">{{'stolt.finance.new_invoice.invoice_type' | translate}} <span
+                                class="text-danger">*</span></label>
+                        <nz-select  class="form-select" nzShowSearch
+                        nzAllowClear formControlName="invoice_type" (change)="invoiceType()"
+                        [ngClass]="{'is-invalid': submitted && f.invoice_type.errors}">
+                        <nz-option *ngFor="let data of  sort(invoiceTypeList ,'name')"
+                            [nzLabel]="data.name" [nzValue]="data.value"></nz-option>
+                    </nz-select>
+
+                        <div *ngIf="submitted && f.invoice_type.errors" class="invalid-feedback">
+                            <div *ngIf="f.invoice_type.errors.required">
+                                {{'stolt.finance.new_invoice.invoicetype_required' |
+                                translate}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label"> {{'stolt.finance.new_invoice.bill_to' | translate}} <span
+                                class="text-danger">*</span></label>
+                        <nz-select  style="width: 95%;" class="form-select" nzShowSearch
+                            nzAllowClear formControlName="bill_to" (ngModelChange)="setVendor1()"
+                            [ngClass]="{'is-invalid': submitted && f.bill_to.errors}">
+                            <nz-option *ngFor="let data of  sort(partyMasterList ,'name')"
+                                [nzLabel]="data.name" [nzValue]="data.tax_number"></nz-option>
+                        </nz-select>
+                        <button #insideVendor class="findButton" (click)="showTem = !showTem">...</button>
+                        <div #insideVendor1>
+                            <div class=" select-table" *ngIf="showTem">
+                                <div class="text-end">
+                                    <button type="button" class="btn-close shadow-none p-2" aria-label="Close"
+                                        (click)="showTem = false"></button>
+                                </div>
+                                <div class="mb-2">
+                                    <input type="text" class="form-control custom-input" [(ngModel)]="searchText"
+                                        [ngModelOptions]="{standalone: true}" placeholder="Search here..">
+                                </div>
+                                <div class="overLay">
+                                    <table aria-describedby="mytable" class="gfg">
+                                        <thead>
+                                            <tr class="field-name">
+                                                <th scope="col">Name</th>
+                                                <th scope="col">Branch Name</th>
+                                                <th scope="col">Address</th>
+                                                <th scope="col">TAX No</th>
+                                                <th scope="col">City</th>
+                                                <th scope="col">Pincode</th>
+                                                <th scope="col">Place of Supply</th>
+                                                <th scope="col">Is SEZ</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of partyMasterList | searchfilter : searchText"
+                                                (click)="setVendor(item?.tax_number);showTem = !showTem">
+                                                <td>{{item.name}}</td>
+                                                <td>{{item.branch_name}}</td>
+                                                <td>{{item?.branch_address}}</td>
+                                                <td>{{item.tax_number}}</td>
+                                                <td>{{item.branch_city}}</td>
+                                                <td>{{item.pinCode}}</td>
+                                                <td>{{item.placeofSupply}}</td>
+                                                <td>{{item.isSez === 'true' ? 'Y' : 'N'}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="no-data-availble" *ngIf="partyMasterList?.length === 0">
+                                    {{'common.no_data' | translate}}
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="submitted && f.bill_to.errors" class="invalid-feedback">
+                            <div *ngIf="f.bill_to.errors.required"> Bill To is required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">BL <span class="text-danger">*</span></label>
+
+                        <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="bl"
+                            [ngClass]="{'is-invalid': submitted && f.bl.errors}" [(ngModel)]="blModel"
+                            (ngModelChange)="getContainer();setShipper()" >
+                            <nz-option *ngFor="let data of blData" [nzLabel]="data. blNumber"
+                                [nzValue]="data.blId"></nz-option>
+                        </nz-select>
+                        <div *ngIf="submitted && f.bl.errors" class="invalid-feedback">
+                            <div *ngIf="f.bl.errors.required"> BL is required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">{{ 'stolt.enquiry.new.shipper' | translate }} </label>
+                        <nz-select nzDisabled="true" class="form-select" nzShowSearch nzAllowClear
+                            formControlName="shipper" [ngClass]="{'is-invalid': submitted && f.shipper.errors}">
+                            <nz-option *ngFor="let shipper of  sort(shipperList ,'name')"
+                                [nzLabel]="shipper?.name"
+                                [nzValue]="shipper?.partymasterId"></nz-option>
+                            <nz-option *ngIf="showDefault" nzLabel="SHIPEASY" nzValue="SHIPEASY"></nz-option>
+                        </nz-select>
+                        <div *ngIf="submitted && f.shipper.errors" class="invalid-feedback">
+                            <div *ngIf="f.shipper.errors.required">{{ 'stolt.enquiry.new.shipper' | translate }} is
+                                required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3" *ngIf="false">
+                        <label class="form-label"> Detention From Date <span class="text-danger">*</span></label>
+                        <nz-date-picker class="form-select custom-input" nzShowTime nzFormat="dd-MM-yyyy "
+                            formControlName="detentionFrom" (nzOnOpenChange)="countDays()"
+                            [ngClass]="{'is-invalid': submitted && f.detentionFrom.errors}"></nz-date-picker>
+                        <div *ngIf="submitted && f.detentionFrom.errors" class="invalid-feedback">
+                            <div *ngIf="f.detentionFrom.errors.required">
+                                Date is required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3" *ngIf="false">
+                        <label class="form-label"> Detention To Date <span class="text-danger">*</span></label>
+                        <nz-date-picker class="form-select custom-input" nzShowTime nzFormat="dd-MM-yyyy "
+                            formControlName="detentionTo" (nzOnOpenChange)="countDays()"
+                            [ngClass]="{'is-invalid': submitted && f.detentionTo.errors}"></nz-date-picker>
+                        <div *ngIf="submitted && f.detentionTo.errors" class="invalid-feedback">
+                            <div *ngIf="f.detentionTo.errors.required">
+                                Date is required
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 d-flex align-items-center">
+                        <div class=" form-check form-switch">
+                            <input class="form-check-input" formControlName="credit_debit" type="checkbox" role="switch"
+                                id="flexSwitchCheckChecked" />
+                            <label class="form-check-label" for="flexSwitchCheckChecked">Credit Customer</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label"> {{'stolt.finance.new_invoice.bill_from' | translate}} <span
+                                class="text-danger">*</span></label>
+                        <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="bill_from"
+                            (ngModelChange)="setGST($event)"
+                            [ngClass]="{'is-invalid': submitted && f.bill_from.errors}">
+                            <nz-option *ngFor="let data of partyMasterFrom" nzLabel="{{data?.partyShortcode}}{{data?.partyShortcode ? '-': ''}}{{data.name}}"
+                                [nzValue]="data.partymasterId"></nz-option>
+                        </nz-select>
+
+                        <div *ngIf="submitted && f.bill_from.errors" class="invalid-feedback">
+                            <div *ngIf="f.bill_from.errors.required"> Bill From is required
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-3">
+                        <label class="mb-0 p-0 form-label">{{ 'stolt.finance.new_invoice.invoice_date' | translate }}<span
+                            class="text-danger">*</span></label>
+                        <mat-form-field appearance="outline" class="custom-date-picker">
+                           <div class="d-flex align-items-center  w-100">
+                            <input matInput [matDatepicker]="pickerEta2" formControlName="invoice_date" class="h-0"[min]="todayDate" />
+                          <mat-datepicker-toggle matSuffix [for]="pickerEta2"></mat-datepicker-toggle>
+                           </div>
+                            <mat-datepicker #pickerEta2></mat-datepicker>
+                          </mat-form-field>
+                          <mat-error>
+                            <div class="set-error-msg" *ngIf="submitted && f?.invoice_date?.errors?.required">
+                              {{'stolt.finance.new_invoice.invoice_date' | translate}} is required</div>
+                        </mat-error>
+                    </div>
+
+
+                    <div class="col-md-3" *ngIf="false">
+                        <label class="form-label">Detention Days</label>
+                        <input (keyup)="calculate()" type="number" formControlName="detentionDays"
+                            class="form-control custom-input" placeholder="" value="">
+                    </div>
+
+                    <div class="col-md-3" *ngIf="false">
+                        <label class="form-label">Detention Rate</label>
+                        <input (keyup)="calculate()" type="number" formControlName="detentionRate"
+                            class="form-control custom-input" placeholder="" value="">
+                    </div>
+                    <div class="col-md-3" *ngIf="false">
+                        <label class="form-label">No Of Containers</label>
+                        <input (keyup)="calculate()" type="number" formControlName="noContainer"
+                            class="form-control custom-input" placeholder="" value="">
+                    </div>
+
+
+
+                    <div class="col-md-3">
+                        <label class="form-label"> {{'stolt.finance.new_invoice.payments_terms' | translate}}</label>
+                        <input type="number" formControlName="payment_terms" class="form-control custom-input"
+                            [ngClass]="{'is-invalid': submitted && f.payment_terms.errors}"
+                            (keyup)="paymentValue($event)">
+
+                        <div *ngIf="submitted && f.payment_terms.errors" class="invalid-feedback">
+                            <div *ngIf="f.payment_terms.errors.required"> Payment terms is required</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="mb-0 p-0 form-label">Due Date<span
+                          class="text-danger">*</span></label>
+                        <mat-form-field appearance="outline" class="custom-date-picker">
+                           <div class="d-flex align-items-center  w-100">
+                            <input matInput [matDatepicker]="pickerEta3" formControlName="billdue_date" class="h-0" [min]="todayDate"/>
+                          <mat-datepicker-toggle matSuffix [for]="pickerEta3"></mat-datepicker-toggle>
+                           </div>
+                            <mat-datepicker #pickerEta3></mat-datepicker>
+                          </mat-form-field>
+                          <mat-error>
+                            <div  class="set-error-msg" *ngIf="submitted && f?.billdue_date?.errors?.required">Due Date is required</div>
+                        </mat-error>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Invoice Amount <span class="text-danger">*</span></label>
+                        <input type="number" formControlName="invoice_amount" class="form-control custom-input"
+                            placeholder="" value="" [ngClass]="{'is-invalid': submitted && f.invoice_amount.errors}">
+                        <div *ngIf="submitted && f.invoice_amount.errors" class="invalid-feedback">
+                            <div *ngIf="f.invoice_amount.errors.required">Amount is required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label"> Remarks <span class="text-danger">*</span></label>
+                        <input formControlName="remark" class="form-control custom-input" type="text" 
+                        [ngClass]="{'is-invalid': submitted && f.remark.errors}">
+                        <div *ngIf="submitted && f.remark.errors" class="invalid-feedback">
+                            <div *ngIf="f.remark.errors.required">Remark is required
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-onscreen my-3">
+            <div class="form-group wrap-form-action">
+                <button (click)="onCloseInvoice($event)" class="btn btn-outline-secondary  float-end" type="submit">
+                    Exit
+                </button>
+                <ng-container *ngIf="!viewEdit">
+                    <button *ngIf="invoiceIdToUpdate?.invoiceStatus !== 'Completed'" (click)="onSave($event,'Pending')"
+                        class="btn btn-outline-primary  float-end">
+                        Proforma Invoice
+                    </button>
+                    <button [disabled]="isAddMode || irisResponse?.irn" (click)="onSave($event,'Completed')"
+                        class="btn btn-outline-primary btn-lg float-end">
+                       Final Invoice
+                    </button>
+                </ng-container>
+                <button *ngIf="invoiceIdToUpdate?.invoiceStatus === 'Completed'" class="btn btn-outline-primary  float-end" (click)="digitalSign()" >
+                    Digital Signature
+                    </button>
+                <button class="btn btn-outline-primary btn-lg float-end" (click)="printData()">
+                    {{ "common.print" | translate }}
+                </button>
+            </div>
+        </div>
+    </form>
+    <div class="veselother my-3 ">
+        <h2>IRN Details </h2>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <p><span class="data-header">IRN<span class="invoice-data">:</span>{{irisResponse?.irn}}</span><span
+              class="invoice-data text-secondary"></span>
+          </p>
+        </div>
+      </div>
+
+      <div class="wrap-table-area my-5" >
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-design">
+                    <table aria-describedby="mytable" class="gfg">
+                        <thead>
+                            <tr class="field-name">
+                                <th scope="col">
+                                    {{ "stolt.finance.addnew_invoice.charge_name" | translate }}
+                                </th>
+                                <th scope="col">{{ "stolt.finance.addnew_invoice.HSN/SAC_Code" | translate }}</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">{{ "stolt.finance.addnew_invoice.currency" | translate }}</th>
+                                <!-- <th scope="col" class="text-end">{{ "stolt.finance.addnew_invoice.rate" | translate }}</th> -->
+                                <th scope="col" class="text-end">{{ "stolt.finance.addnew_invoice.amount" | translate }}</th>
+                                <th scope="col">{{ "stolt.finance.addnew_invoice.ex_rate" | translate }}</th>
+                                <th scope="col" class="text-end">{{ "stolt.finance.addnew_invoice.tax_amount_inr" | translate }}</th>
+                                <th scope="col">GST Type</th>
+                                <th scope="col">{{ "stolt.finance.addnew_invoice.tax" | translate }}</th>
+                                <th scope="col" class="text-end">{{ "stolt.finance.addnew_invoice.igst" | translate }}</th>
+                                <th scope="col" class="text-end">{{ "stolt.finance.addnew_invoice.cgst" | translate }}</th>
+                                <th scope="col" class="text-end">{{ "stolt.finance.addnew_invoice.sgst" | translate }}</th>
+                                <th scope="col" class="text-end">Total Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let invoice of costItemList">
+                                <td>{{ invoice?.costitemName }}</td>
+                                <td>{{ invoice?.hsnCode }}</td>
+                                <td>{{ addChargesForm?.controls?.charges?.length || 0}}</td>
+                                <td>{{defaultCurrency}}</td>
+                                <!-- <td class="text-end">{{ totalContainerAmount }}</td> -->
+                                <td class="text-end">{{ totalContainerAmount }}</td>
+                                <td>{{ exchangeRate }}</td>
+                                <td class="text-end">{{ totalContainerAmount * exchangeRate | number : '1.2-2'}}</td>
+                                <td>{{ gstType | uppercase}}</td>
+                                <td>{{ invoice?.taxRate }}</td>
+                                <td class="text-end">{{ gstType === 'igst' ? igst( invoice?.taxRate) : 0 }}</td>
+                                <td class="text-end">{{ gstType === 'igst' ? 0 : sgst( invoice?.taxRate) }}</td>
+                                <td class="text-end">{{ gstType === 'igst' ? 0 : sgst( invoice?.taxRate) }}</td>
+                                <td class="text-end">{{ totalAmt(invoice?.taxRate) }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="no-data-availble" *ngIf="costItemList?.length === 0">
+                    {{ "common.no_data" | translate }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wrap-table-area my-5">
+        <div class="row">
+            <div class="col-md-12">
+
+            </div>
+            <div class="col-md-12">
+                <div class="table-design">
+                    <div class=" costtable">
+                        <form [formGroup]="addChargesForm">
+                            <table aria-describedby="mytable" class="gfg">
+                                <thead>
+                                    <tr class="field-name">
+                                        <th scope="col">Container Number </th>
+                                        <th scope="col">Container Type </th>
+                                        <th scope="col">From Date </th>
+                                        <th scope="col">To Date</th>
+                                        <th scope="col">Free Days</th>
+                                        <th scope="col">Detention Days</th>
+                                        <th scope="col" class="text-end">Tank Detention Per Day</th>
+                                        <th scope="col" class="text-end"> Total <span *ngIf="isCurency">(USD)</span></th>
+                                        <th scope="col" class="text-end"> Total (INR)</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody *ngIf="addChargesForm?.controls?.charges?.length !== 0">
+                                    <ng-container formArrayName="charges">
+                                        <tr *ngFor="let chargesForm of addChargesForm.controls.charges.controls; let i = index"
+                                            [formGroupName]="i">
+
+                                            <td><input disabled type="text" class="form-control custom-input"
+                                                    formControlName="containerNo"> </td>
+                                            <td><input disabled type="text" class="form-control custom-input"
+                                                    formControlName="containerType"> </td>
+                                            <td>
+                                                <nz-date-picker class="form-control custom-input" nzShowTime
+                                                    nzFormat="dd-MM-yyyy " formControlName="fromDate"
+                                                    (nzOnOpenChange)="changeDate(i)"></nz-date-picker>
+                                            </td>
+                                            <td>
+                                                <nz-date-picker class="form-control custom-input" nzShowTime
+                                                    nzFormat="dd-MM-yyyy " formControlName="toDate"
+                                                    (nzOnOpenChange)="changeDate(i)"></nz-date-picker>
+                                            </td>
+                                            <td><input type="text" class="form-control custom-input"
+                                                    formControlName="freeDays" (keyup)="changeDate(i)"> </td>
+                                            <td><input type="text" class="form-control custom-input"
+                                                    formControlName="detentionDays" (keyup)="detentionPerDay(i)"> </td>
+                                            <td><input type="text" class="form-control custom-input text-end"
+                                                    formControlName="detentionPerDays" (keyup)="detentionPerDay(i)">
+                                            </td>
+                                            <td><input type="text" class="form-control custom-input text-end"
+                                                    formControlName="totalAmount"> </td>
+                                            <td><input type="text" class="form-control custom-input text-end"
+                                                        formControlName="totalAmountInr"> </td>
+                                        </tr>
+                                        <tr class="">
+                                            <td class="border-0 font-weight-bold text-end" colspan="7">{{
+                                                'smartagent.job.list.vendorbill.totalPayment' |
+                                                translate
+                                                }}</td>
+                                            <td class="text-end"><span>{{totalContainerAmount | number : '1.2-2'}}</span> </td>
+                                            <td class="text-end"><span>{{totalContainerAmount * exchangeRate  | number : '1.2-2'}}</span> </td>
+                                        </tr>
+                                    </ng-container>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="no-data-availble" *ngIf="addChargesForm?.controls?.charges?.length === 0">
+                {{'common.no_data' | translate}}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<ng-template #Deletetable let-c="close" let-d="dismiss">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+        </div>
+        <div class="modal-body mt-4">
+            <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2">
+            </em>
+            <span class="text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+        </div>
+        <div class="modal-footer">
+            <div class="text-center">
+                <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+                    {{ "common.no" | translate }}
+                </button>
+                <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+                    {{ "common.yes" | translate }}
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #check let-c="close" let-d="dismiss">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+            </button>
+        </div>
+        <div class="modal-body mt-4">
+            <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2"> </em> <span
+                class=" text-dark fs-6"> {{ "error.you_sure" | translate }}</span>
+        </div>
+        <div class="modal-footer">
+            <div class="text-center">
+                <button type="button" class="btn btn-secondary  btn-sm me-3"
+                    (click)="c('no')">{{'common.no'|translate}}</button>
+                <button type="button" class="btn btn-danger  btn-sm"
+                    (click)="c('yes')">{{'common.yes'|translate}}</button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<div class="display-print">
+    <div class="row" id="InvoiceRecords">
+        <div class="col-md-12">
+            <div><b>Invoice No :</b> {{editinvoiceForm?.controls?.invoice_no?.value}}</div>
+            <div><b>Invoice Type :</b> {{editinvoiceForm?.controls?.invoice_type?.value}}</div>
+            <div><b>Bill to party :</b> {{editinvoiceForm?.controls?.bill_to?.value}}</div>
+            <div><b>Invoice Date :</b> {{editinvoiceForm?.controls?.invoice_date?.value}}</div>
+            <div><b>Invoice Amount :</b> {{editinvoiceForm?.controls?.invoice_amount?.value}}</div>
+        </div>
+        <div class="col-md-12">
+            <div class="table-design">
+                <div class=" costtable">
+                    <form [formGroup]="addChargesForm">
+                        <table aria-describedby="mytable" class="gfg">
+                            <thead>
+                                <tr class="field-name">
+                                    <th scope="col">Container Number </th>
+                                    <th scope="col">Container Type </th>
+                                    <th scope="col">From Date </th>
+                                    <th scope="col">To Date</th>
+                                    <th scope="col">Free Days</th>
+                                    <th scope="col">Detention Days</th>
+                                    <th scope="col">Tank Detention Per Day</th>
+                                    <th scope="col"> Total</th>
+                                    <th scope="col"> Total (INR)</th>
+                                </tr>
+                            </thead>
+
+                            <tbody *ngIf="addChargesForm?.controls?.charges?.length !== 0">
+                                <ng-container formArrayName="charges">
+                                    <tr *ngFor="let chargesForm of addChargesForm.controls.charges.controls; let i = index"
+                                        [formGroupName]="i">
+
+                                        <td><input disabled type="text" class="form-control custom-input"
+                                                formControlName="containerNo"> </td>
+                                        <td><input disabled type="text" class="form-control custom-input"
+                                                formControlName="containerType"> </td>
+                                        <td>
+                                            <nz-date-picker class="form-control custom-input" nzShowTime
+                                                nzFormat="dd-MM-yyyy" formControlName="fromDate"
+                                                (nzOnOpenChange)="changeDate(i)"></nz-date-picker>
+                                        </td>
+                                        <td>
+                                            <nz-date-picker class="form-control custom-input" nzShowTime
+                                                nzFormat="dd-MM-yyyy " formControlName="toDate"
+                                                (nzOnOpenChange)="changeDate(i)"></nz-date-picker>
+                                        </td>
+                                        <td><input type="text" class="form-control custom-input"
+                                                formControlName="freeDays" (keyup)="changeDate(i)"> </td>
+                                        <td><input type="number" min="0" class="form-control custom-input"
+                                                formControlName="detentionDays" (keyup)="detentionPerDay(i)"> </td>
+                                        <td><input type="text" class="form-control custom-input"
+                                                formControlName="detentionPerDays" (keyup)="detentionPerDay(i)"> </td>
+                                        <td><input type="text" class="form-control custom-input"
+                                                formControlName="totalAmount"> </td>
+                                        <td><input type="text" class="form-control custom-input"
+                                                    formControlName="totalAmountInr"> </td>
+                                    </tr>
+                                    <tr class="">
+                                        <td class="border-0 font-weight-bold text-end" colspan="7">{{
+                                            'smartagent.job.list.vendorbill.totalPayment' |
+                                            translate
+                                            }}</td>
+                                        <td class=""><span>{{totalContainerAmount}}</span> </td>
+                                    </tr>
+                                </ng-container>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="no-data-availble" *ngIf="addChargesForm?.controls?.charges?.length === 0">
+            {{'common.no_data' | translate}}
+        </div>
+    </div>
+</div>

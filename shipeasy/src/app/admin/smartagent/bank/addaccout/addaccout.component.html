@@ -1,0 +1,596 @@
+<div class="table-with-gheading pb-5">
+  <div class="row">
+    <div class="col-md-12">
+      <div
+        class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view"
+      >
+        <div class="row">
+          <div class="col float-start">
+            <h1 *ngIf="isAddMode === 'add'">
+              {{ "smartagent.smartAgent.bank.addNewAccount" | translate }}
+            </h1>
+            <h1 *ngIf="isAddMode === 'edit'">
+              {{ "smartagent.smartAgent.bank.editNewAccount" | translate }}
+            </h1>
+          </div>
+          <div class="col">
+            <a class="new-action float-end" (click)="backbtn()">Back</a>
+          </div>
+        </div>
+
+        <form [formGroup]="addAccountForm" class="row g-3 mt-3">
+          <div class="col-md-4">
+            <label for="country" class="form-label"
+              >{{ "smartagent.smartAgent.AllformAddedit.country" | translate
+              }}<span class="text-danger">*</span></label
+            >
+            <select
+              id="Country"
+              class="form-select custom-input"
+              formControlName="country"
+              (change)="getStateList()"
+              [ngClass]="{ 'is-invalid': submitted && f.country.errors }"
+            >
+              <option
+                *ngFor="let country of countryList"
+                [value]="country?._source?.countryISOCode"
+              >
+                {{ country?._source?.countryName }}
+              </option>
+            </select>
+            <div *ngIf="submitted && f.country.errors" class="invalid-feedback">
+              <div *ngIf="f.country.errors.required">
+                {{
+                  "smartagent.smartAgent.AllformAddedit.countryisrequired"
+                    | translate
+                }}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="localCurrency" class="form-label">{{
+              "smartagent.smartAgent.AllformAddedit.currency" | translate
+            }}</label
+            ><span class="text-danger">*</span>
+            <select
+              id="currency"
+              class="form-select custom-input"
+              formControlName="currency"
+              [ngClass]="{ 'is-invalid': submitted && f.currency.errors }"
+            >
+              <option
+                *ngFor="let currency of currencyList"
+                [value]="currency?._source?.currencyShortName"
+              >
+                {{ currency?._source?.currencyShortName }}
+              </option>
+            </select>
+            <div
+              *ngIf="submitted && f.currency.errors"
+              class="invalid-feedback"
+            >
+              <div *ngIf="f.currency.errors.required">
+                {{
+                  "smartagent.smartAgent.AllformAddedit.currencyisrequired"
+                    | translate
+                }}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="bankname" class="form-label"
+              >{{ "smartagent.smartAgent.bank.bankName" | translate
+              }}<span class="text-danger">*</span></label
+            >
+           
+            <select
+              id="bankName"
+              class="form-select custom-input"
+              formControlName="bankNameId"
+              [ngClass]="{ 'is-invalid': submitted && f.bankNameId.errors }"
+            >
+              <option
+                *ngFor="let bank of bankList"
+                [value]="bank?._source?.bankId"
+              >
+                {{ bank?._source?.bankName }}
+              </option>
+            </select>
+            <div
+              *ngIf="submitted && f.bankNameId.errors"
+              class="invalid-feedback"
+            >
+              <div *ngIf="f.bankNameId.errors.required">
+                {{
+                  "smartagent.job.list.reciept.banknameisrequired" | translate
+                }}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="account" class="form-label"
+              >{{ "smartagent.smartAgent.bank.accountNo" | translate
+              }}<span class="text-danger">*</span></label
+            >
+            <input
+              class="form-control custom-input"
+              placeholder=""
+              formControlName="accountNo"
+              maxlength="20" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+              [ngClass]="{ 'is-invalid': submitted && f.accountNo.errors }"
+              value=""
+            />
+            <div
+              *ngIf="submitted && f.accountNo.errors"
+              class="invalid-feedback"
+            >
+              <div *ngIf="f.accountNo.errors.required">
+                {{
+                  "smartagent.job.list.reciept.accountnoisrequired" | translate
+                }}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="beneficiary" class="form-label"
+              >{{
+                "smartagent.smartAgent.AllformAddedit.beneficiaryName"
+                  | translate
+              }}<span class="text-danger">*</span></label
+            >
+            <input
+              type="text"
+              class="form-control custom-input"
+              placeholder=""
+              formControlName="beneficiary"
+              value=""
+              oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^ A-Za-z]/g,'').replace(/ +/g, ' ')"
+              [ngClass]="{ 'is-invalid': submitted && f.beneficiary.errors }"
+            />
+            <div
+              *ngIf="submitted && f.beneficiary.errors"
+              class="invalid-feedback"
+            >
+              <div *ngIf="f.beneficiary.errors.required">
+                {{
+                  "smartagent.smartAgent.AllformAddedit.beneficiarynameisrequired"
+                    | translate
+                }}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label for="branch" class="form-label"
+              >{{ "smartagent.smartAgent.AllformAddedit.branch" | translate
+              }}<span class="text-danger">*</span></label
+            >
+           
+            <select
+              id="bankName"
+              class="form-select custom-input"
+              formControlName="branch"
+              [ngClass]="{ 'is-invalid': submitted && f.branch.errors }"
+            >
+              <option
+                *ngFor="let branch of branchList"
+                [value]="branch?._source?.branchId"
+              >
+                {{ branch?._source?.branchName }}
+              </option>
+            </select>
+            <div *ngIf="submitted && f.branch.errors" class="invalid-feedback">
+              <div *ngIf="f.branch.errors.required">
+                {{
+                  "smartagent.smartAgent.AllformAddedit.branchisrequired"
+                    | translate
+                }}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="address" class="form-label"
+              >{{ "smartagent.smartAgent.AllformAddedit.address" | translate
+              }}</label
+            >
+            <input
+              type="text"
+              class="form-control custom-input"
+              placeholder=""
+              formControlName="address"
+              value="Chicago"
+              [ngClass]="{ 'is-invalid': submitted && f.address.errors }"
+            />
+            <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
+              <div *ngIf="f.address.errors.required">
+                {{
+                  "smartagent.smartAgent.AllformAddedit.addressisrequired"
+                    | translate
+                }}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="State" class="form-label"
+              >{{ "smartagent.smartAgent.AllformAddedit.state" | translate
+              }}</label
+            >
+            <select
+              id="State"
+              class="form-select custom-input"
+              formControlName="state"
+              (change)="getCityList()"
+              [ngClass]="{ 'is-invalid': submitted && f.state.errors }"
+            >
+              <option
+                *ngFor="let state of stateList"
+                [value]="state?._source?.stateId"
+              >
+                {{ state?._source?.typeDescription }}
+              </option>
+            </select>
+            <div *ngIf="submitted && f.state.errors" class="invalid-feedback">
+              <div *ngIf="f.state.errors.required">
+                {{
+                  "smartagent.smartAgent.AllformAddedit.stateisrequired"
+                    | translate
+                }}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="City" class="form-label"
+              >{{ "smartagent.smartAgent.AllformAddedit.city" | translate
+              }}</label
+            >
+            <select
+              id="City"
+              class="form-select custom-input"
+              formControlName="city"
+              [ngClass]="{ 'is-invalid': submitted && f.city.errors }"
+            >
+              <option
+                *ngFor="let city of cityList"
+                [value]="city?._source?.cityId"
+              >
+                {{ city?._source?.cityName }}
+              </option>
+            </select>
+            <div *ngIf="submitted && f.city.errors" class="invalid-feedback">
+              <div *ngIf="f.city.errors.required">
+                {{
+                  "smartagent.smartAgent.AllformAddedit.cityisrequired"
+                    | translate
+                }}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="SWIFCode" class="form-label"
+              >{{ "smartagent.smartAgent.bank.SWIFTCode" | translate
+              }}</label
+            >
+            <input
+              type="text"
+              class="form-control custom-input"
+              placeholder=""
+              formControlName="swiftCode"
+              value=""
+              oninput="this.value= this.value.replace(/[^0-9a-z]/gi, '')"
+              [ngClass]="{ 'is-invalid': submitted && f.swiftCode.errors }"
+            />
+            <div
+              *ngIf="submitted && f.swiftCode.errors"
+              class="invalid-feedback"
+            >
+              <div *ngIf="f.swiftCode.errors.required">
+                {{
+                  "smartagent.smartAgent.bank.swiftcodeisrequired" | translate
+                }}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="routingno" class="form-label"
+              >{{ "smartagent.smartAgent.AllformAddedit.routingNo" | translate
+              }}</label
+            >
+            <input
+              class="form-control custom-input"
+              placeholder=""
+              value="12178"
+              formControlName="routingNo"
+              maxlength="25" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              oninput="this.value= this.value.replace(/[^0-9a-z]/gi, '')"
+              [ngClass]="{ 'is-invalid': submitted && f.routingNo.errors }"
+            />
+            <div
+              *ngIf="submitted && f.routingNo.errors"
+              class="invalid-feedback"
+            >
+              <div *ngIf="f.routingNo.errors.required">
+                {{
+                  "smartagent.smartAgent.AllformAddedit.routingNoisrequired"
+                    | translate
+                }}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="IBANno" class="form-label"
+              >{{ "smartagent.smartAgent.AllformAddedit.IBANNo" | translate
+              }}</label
+            >
+            <input
+              class="form-control custom-input"
+              placeholder=""
+              formControlName="ibanNo"
+              value="12178"
+              maxlength="25" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              oninput="this.value= this.value.replace(/[^0-9a-z]/gi, '')"
+              [ngClass]="{ 'is-invalid': submitted && f.ibanNo.errors }"
+            />
+            <div *ngIf="submitted && f.ibanNo.errors" class="invalid-feedback">
+              <div *ngIf="f.ibanNo.errors.required">
+                {{
+                  "smartagent.smartAgent.AllformAddedit.ibanNoisrequired"
+                    | translate
+                }}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <h6>
+              {{
+                "smartagent.smartAgent.bank.1stCorrespondentDetails" | translate
+              }}
+            </h6>
+          </div>
+
+          <div class="col-md-4">
+            <label for="bankname" class="form-label">{{
+              "smartagent.smartAgent.bank.bankName" | translate
+            }}</label>
+            <select
+              id="bankName"
+              class="form-select custom-input"
+              formControlName="firstCorrespondentBankName"
+            >
+              <option
+                *ngFor="let bank of bankList"
+                [value]="bank?._source?.bankName"
+              >
+                {{ bank?._source?.bankName }}
+              </option>
+            </select>
+          </div>
+
+          <div class="col-md-4">
+            <label for="SWIFCode" class="form-label">{{
+              "smartagent.smartAgent.bank.SWIFTCode" | translate
+            }}</label>
+            <input
+              type="text"
+              class="form-control custom-input"
+              formControlName="firstCorrespondentSwiftCode"
+              oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^ A-Za-z0-9]/g,'').replace(/ +/g, ' ')"
+              placeholder=""
+              value=""
+            />
+          </div>
+          <div class="col-md-4">
+            <label for="routingno" class="form-label">{{
+              "smartagent.smartAgent.AllformAddedit.ABARoutingNo" | translate
+            }}</label>
+            <input
+              maxlength="25" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              oninput="this.value= this.value.replace(/[^0-9a-z]/gi, '')"
+              class="form-control custom-input"
+              formControlName="firstCorrespondentRoutingNo"
+              placeholder=""
+              value="12145"
+            />
+          </div>
+
+          <div class="col-md-12">
+            <h6>
+              {{
+                "smartagent.smartAgent.bank.2ndCorrespondentDetails" | translate
+              }}
+            </h6>
+          </div>
+
+          <div class="col-md-4">
+            <label for="bankname" class="form-label">{{
+              "smartagent.smartAgent.bank.bankName" | translate
+            }}</label>
+            <select
+              id="bankName"
+              class="form-select custom-input"
+              formControlName="secondCorrespondentBankName"
+            >
+              <option
+                *ngFor="let bank of bankList"
+                [value]="bank?._source?.bankName"
+              >
+                {{ bank?._source?.bankName }}
+              </option>
+            </select>
+          </div>
+
+          <div class="col-md-4">
+            <label for="SWIFCode" class="form-label">{{
+              "smartagent.smartAgent.bank.SWIFTCode" | translate
+            }}</label>
+            <input
+              type="text"
+              class="form-control custom-input"
+              formControlName="secondCorrespondentSwiftCode"
+              oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^ A-Za-z0-9]/g,'').replace(/ +/g, ' ')"
+              placeholder=""
+              value=""
+            />
+          </div>
+
+          <div class="col-md-4">
+            <label for="routingno" class="form-label">{{
+              "smartagent.smartAgent.AllformAddedit.ABARoutingNo" | translate
+            }}</label>
+            <input
+              maxlength="25" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              oninput="this.value= this.value.replace(/[^0-9a-z]/gi, '')"
+              class="form-control custom-input"
+              formControlName="secondCorrespondentRoutingNo"
+              placeholder=""
+              value=""
+            />
+          </div>
+
+          <div class="col-md-4">
+            <label for="localCurrency" class="form-label">{{
+              "smartagent.smartAgent.AllformAddedit.localCurrency" | translate
+            }}</label
+            ><span class="text-danger">*</span>
+            <select
+              id="currency"
+              class="form-select custom-input"
+              formControlName="localCurrency"
+              [ngClass]="{ 'is-invalid': submitted && f.currency.errors }"
+            >
+              <option
+                *ngFor="let currency of currencyList"
+                [value]="currency?._source?.currencyShortName"
+              >
+                {{ currency?._source?.currencyShortName }}
+              </option>
+            </select>
+            <div
+              *ngIf="submitted && f.localCurrency.errors"
+              class="invalid-feedback"
+            >
+              <div *ngIf="f.localCurrency.errors.required">
+                {{
+                  "smartagent.smartAgent.AllformAddedit.localCurrency"
+                    | translate
+                }}
+                is required
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="remark" class="form-label">{{
+              "smartagent.smartAgent.AllformAddedit.remark" | translate
+            }}</label>
+            <input
+              type="text"
+              class="form-control custom-input"
+              formControlName="remark"
+              placeholder=""
+              value="12145"
+            />
+          </div>
+
+          <div class="col-md-4">
+            <label for="status" class="form-label">{{
+              "common.status" | translate
+            }}</label>
+            <label class="switch" style="margin-left: 20px">
+              <input type="checkbox" checked />
+              <span class="slider round"></span>
+            </label>
+          </div>
+          <div class="col-md-12 mt-3">
+            <h6>
+              {{
+                "smartagent.smartAgent.AllformAddedit.uploadDocument"
+                  | translate
+              }}
+            </h6>
+            <div class="row justify-content-start">
+              <div class="col-3">
+                <label for="custom-file-upload" class="filupp">
+                  <span class="filupp-file-name js-value">Browse Files</span>
+                  <input
+                    type="file"
+                    name="attachment-file"
+                    value=""
+                    id="custom-file-upload"
+                    multiple
+                    [ngClass]="{
+                      'is-invalid': fileTypeNotMatched
+                    }"
+                    (change)="OnfileChange($event)"
+                  />
+                  <div *ngIf="fileTypeNotMatched">
+                    {{
+                      "smartagent.portenquiry.document.fileTypeNotMatched"
+                        | translate
+                    }}
+                  </div>
+                </label>
+                
+              </div>
+              <div class="col-3" *ngFor="let doc of document">
+                <button type="button" class="btn btn-light">
+                  {{doc.documentName}}
+                 <em class="mdi mdi-close" (click)="removefile(doc)"></em>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group wrap-form-action">
+            <button
+              class="btn1 btn-lg float-end"
+              type="submit"
+              style="margin-left: 20px"
+              (click)="backbtn()"
+            >
+              {{ "common.cancel" | translate }}
+            </button>
+            <button
+              (click)="onSave()"
+              *ngIf="isAddMode !== 'edit'"
+              class="btn btn-outline-primary btn-lg float-end"
+              type="submit"
+            >
+              {{ "common.save" | translate }}
+            </button>
+            <button
+              (click)="onSave()"
+              class="btn btn-outline-primary btn-lg float-end"
+              type="submit"
+              *ngIf="isAddMode === 'edit'"
+            >
+              {{ "common.update" | translate }}
+            </button>
+          </div>
+        </form>
+        <p class="mt-3">
+          {{ "smartagent.smartAgent.bank.note" | translate }}
+        </p>
+      </div>
+    </div>
+  </div>
+  <!-- <ul class="menuright">
+    <li>
+      <a href=""><em class="mdi mdi-folder-upload"></em></a>
+    </li>
+    <li>
+      <a href=""><em class="bi bi-pencil color-pencil-red"></em></a>
+    </li>
+    <li>
+      <a href=""><em class="mdi mdi-comment-text"></em></a>
+    </li>
+  </ul> -->
+</div>

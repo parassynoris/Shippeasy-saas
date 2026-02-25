@@ -1,0 +1,221 @@
+
+  <div class="table-with-gheading mb-4">
+    <div class="wrap-table-area">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2">
+            <div class="mt-2">
+              <span>
+                <a routerLink=""><em class="ti-export" style="margin-right: 15px"></em></a>
+                <a routerLink=""><em class="ti-printer"></em></a>
+              </span>
+            </div>
+            <div class="mt-2">
+              <span>
+                <h5>{{ fromSize }}-{{ count }} of {{ toalLength }}</h5>
+              </span>
+            </div>
+            <div class="mt-2">
+              <span class="prv" [class.disable-arrow-sign]="fromSize === 1" (click)="prev()"><em
+                  class="typcn typcn-chevron-left"></em></span>
+              <span class="prv" [class.disable-arrow-sign]="count === toalLength" (click)="next()"><em
+                  class="typcn typcn-chevron-right"></em></span>
+            </div>
+            <div class="mt-2">
+              <select class="form-select form-select-sm" (change)="filter($event)">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+              </select>
+            </div>
+
+            <div class="mt-2">
+              <a class="new-action" (click)="toggleShow(templateA)">{{
+                "smartagent.smartAgent.portService.addNewService" | translate
+                }}</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="table-responsive">
+            <table aria-describedby="mytable" class="gfg">
+              <thead>
+                <tr class="field-name">
+                  <th scope="col">
+                    {{ "smartagent.smartAgent.portService.branch" | translate
+                    }} <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col">
+                    {{ "smartagent.smartAgent.portService.country" | translate
+                    }} <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col">
+                    {{ "smartagent.smartAgent.portService.port" | translate
+                    }} <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col">
+                    {{
+                    "smartagent.smartAgent.portService.services" | translate
+                    }}
+                     <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col">
+                    {{ "smartagent.smartAgent.portService.cargoType" | translate
+                    }} <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col"></th>
+                </tr>
+                <tr>
+                  <th scope="col"><input type="text" class="form-control" id=""></th>
+                  <th scope="col"><input type="text" class="form-control" id=""></th>
+                  <th scope="col"><input type="text" class="form-control" id=""></th>
+                  <th scope="col"><input type="text" class="form-control" id=""></th>
+                  <th scope="col"><input type="text" class="form-control" id=""></th>
+                  <th scope="col" class="wrap-table-btn">
+                    <button type="button" class="btn btn-outline-primary" (click)="search()">
+                      {{ "common.search_btn" | translate }}
+                    </button>
+                    <a (click)="clear()" class="clearbtn">{{
+                      "common.clear" | translate
+                      }}</a>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let port of portData">
+                  <td class="uppercase">{{ port.branch }}</td>
+                  <td>{{ port.country }}</td>
+                  <td>{{ port.port }}</td>
+                  <td>
+                    <a class="new-action" routerLink="#" (click)="open(service)">
+                      {{ port.service }}</a>
+                  </td>
+                  <td>{{ port.cargotype }}</td>
+
+                  <td class="action-field">
+                    <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop"><a routerLink=""><em
+                          class="bi bi-pencil color-pencil-red"></em></a>
+                    </span>
+                    <span nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}" class="mtop"><a
+                        routerLink=""><em class="typcn typcn-trash"></em></a>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="no-data-availble" *ngIf="portData.length === 0">
+            {{ "common.no_data" | translate }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<ng-template #templateA let-modal>
+  <div>
+    <div class=" p-4">
+      <h5 style="font-size: medium">
+        {{ "smartagent.smartAgent.portService.addNewService" | translate }}
+      </h5>
+      <div class="col-md-12">
+        <div class="wrap-form-field padding-pace">
+          <form [formGroup]="AddNewService" class="row g-3 mt-3">
+            <div class="col-md-4">
+              <label for="State" class="form-label">{{ "smartagent.smartAgent.portService.country" | translate
+                }}<span class="text-danger">*</span></label>
+              <select class="form-select custom-input" formControlName="Country"
+                [ngClass]="{ 'is-invalid': submitted && f.Country.errors }" (change)="onSelect()">
+                <option *ngFor="let country of countryList" [value]="country?._source?.countryISOCode">
+                  {{ country?._source?.countryName }}
+                </option>
+              </select>
+              <div *ngIf="submitted && f.Country.errors" class="invalid-feedback">
+                <div *ngIf="f.Country.errors.required">
+                  {{
+                  "smartagent.smartAgent.portService.countryisrequired"
+                  | translate
+                  }}
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label for="State" class="form-label">{{ "smartagent.smartAgent.portService.port" | translate
+                }}<span class="text-danger">*</span></label>
+              <select class="form-select custom-input" formControlName="Port"
+                [ngClass]="{ 'is-invalid': submitted && f.Port.errors }">
+                <option *ngFor="let port of portList" [value]="port?._source?.portName">
+                  {{ port?._source?.portName }}
+                </option>
+              </select>
+              <div *ngIf="submitted && f.Port.errors" class="invalid-feedback">
+                <div *ngIf="f.Port.errors.required">
+                  {{
+                  "smartagent.smartAgent.portService.portisrequired"
+                  | translate
+                  }}
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label for="port" class="form-label">{{
+                "smartagent.smartAgent.portService.services" | translate
+                }}<span class="text-danger">*</span></label>
+              <div class="input-group">
+                <input type="text" aria-label="Search" class="form-control custom-input" formControlName="Services"
+                  [ngClass]="{
+                        'is-invalid': submitted && f.Services.errors
+                      }" />
+                <span class="input-group-text"><em class="bi bi-search"></em></span>
+                <div *ngIf="submitted && f.Services.errors" class="invalid-feedback">
+                  <div *ngIf="f.Services.errors.required">
+                    {{
+                    "smartagent.smartAgent.portService.servicesisrequired"
+                    | translate
+                    }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label for="Pincode" class="form-label">{{
+                "smartagent.smartAgent.portService.cargoType" | translate
+                }}
+                <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <input type="text" aria-label="Search" value="" class="form-control custom-input"
+                  formControlName="CargoType" [ngClass]="{
+                        'is-invalid': submitted && f.CargoType.errors
+                      }" />
+                <span class="input-group-text"><em class="bi bi-search"></em></span>
+                <div *ngIf="submitted && f.CargoType.errors" class="invalid-feedback">
+                  <div *ngIf="f.CargoType.errors.required">
+                    {{
+                    "smartagent.smartAgent.portService.cargoTypeisrequired"
+                    | translate
+                    }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group wrap-form-action">
+              <button class="btn1 btn-lg float-end" type="submit" style="margin-left: 20px"
+                (click)="cancel()">
+                {{ "common.cancel" | translate }}
+              </button>
+              <button class="btn btn-outline-primary btn-lg float-end" type="submit" (click)="onSave()">
+                {{ "common.save" | translate }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+
+<ng-template #service let-modal>
+  <app-selectservice></app-selectservice>
+</ng-template>

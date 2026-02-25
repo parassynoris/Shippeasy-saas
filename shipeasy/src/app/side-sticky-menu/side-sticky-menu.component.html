@@ -1,0 +1,26 @@
+<div class="sideBarContainer">
+    <!-- <div class="iconContainer firstChild" matTooltip="DMS" [matTooltipPosition]="'left'" *ngIf="!isagentlogin || this.isAgent == false || userDetails?.UserType !== 'agent' "> -->
+    <!-- <div class="iconContainer firstChild" accessControl   matTooltip="DMS" [matTooltipPosition]="'left'">
+      <img class="matIcons svgicons" src="../../../assets/images/pda-dms.svg" alt="" />
+    </div>
+    <div class="iconContainer" matTooltip="Chat" [matTooltipPosition]="'left'">
+      <span class="counter"></span>
+      <img  class="matIcons svgicons" src="../../../assets/images/pda-chat.svg" alt="" />
+    </div>
+    <div class="iconContainer" matTooltip="Milestone" [matTooltipPosition]="'left'">
+      <img class="matIcons svgicons" src="../../../assets/images/pda-milestone.svg" alt="" />
+    </div> -->
+   
+    <div class="iconContainer" featureCode="['STSD01']" appAccessControl accessType="add" matTooltip="Load Calculator" [matTooltipPosition]="'left'" (click)="loadCalcNavigate()" >
+      <img class="matIcons svgicons" src="../../assets/img/calculator-svgrepo-com.svg" alt=""/>
+    </div>
+  
+    <div appAccessControl featureCode="['STSD01']" appAccessControl accessType="add"
+     class="iconContainer" matTooltip="Smart Documents" [matTooltipPosition]="'left'" (click)="documentNavigate()">
+      <img *ngIf="isSmartDocumentsRoute" class="matIcons svgicons" src="../../assets/img/document-1-svgrepo-com-copy.svg"
+        alt="" />
+        <img *ngIf="!isSmartDocumentsRoute" class="matIcons svgicons" src="../../assets/img/document-1-svgrepo-com.svg"
+        alt="" />
+    </div>
+  </div>
+  

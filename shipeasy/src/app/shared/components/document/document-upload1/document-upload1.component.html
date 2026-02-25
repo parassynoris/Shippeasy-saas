@@ -1,0 +1,56 @@
+<div class="modal-content ids-card">
+  <div class="modal-header justify-content-between">
+
+    <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="oncancel()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <div class="container">
+      <div class="row my-2">
+        <div class="col">
+          <form [formGroup]="documentForm">
+            <div class="col-md-12 nz-select input-field wrap-top-filter input-icon dropdown-icon" [class.float-ui1]="
+                documentForm.controls.type.value !== '' &&
+                documentForm.controls.type.value !== null
+              ">
+              <label for="Country" class="form-label">Select Document Type<span class="text-danger">*</span></label>
+              <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="type" id="docu">
+
+                <nz-option *ngFor="let data of documentTypeList" [nzValue]="data?.nzValue" [nzLabel]="data?.nzLabel" ></nz-option> 
+
+              </nz-select>
+ 
+            </div>
+          </form>
+        </div>
+      </div>
+      <input class="file-input" type="file" #fileInput (change)="setFileName($event)" style="display: none" />
+      <button class="card-upload card-upload-content-alignment py-lg-5 px-lg-3" (click)="openFile()" *ngIf="!filename">
+        <div class="text-center text-center-box d-flex flex-column align-items-center" *ngIf="!filename">
+          <button class="color--secondary center-alignment-choose-file">Choose file</button>
+          <p class="center-alignment-text">or Drag & Drop it into this field</p>
+        </div>
+      </button>
+      <div class="ids-border-card bg--bgprimary" *ngIf="filename">
+        <div class="text-center">
+          <div class="form-check-radio form-check-radio-label-space-remove">
+            <input checked type="radio" id="radio" />
+            <label for="radio">&nbsp;</label>
+          </div>
+          <h6 class="heading--h6">Document Name</h6>
+          <p>{{ filename.name }}</p>
+          <button class="color--secondary" (click)="openFile()">
+            Reupload
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer justify-content-between">
+    <button class="btn1" data-bs-dismiss="modal" (click)="oncancel()">
+      Cancel
+    </button>
+    <button type="button" (click)="uploadDoc()" class="btn btn-outline-primary" data-bs-dismiss="modal" [disabled]="!documentForm.valid">
+      Upload
+    </button>
+  </div>
+</div>

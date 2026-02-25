@@ -1,0 +1,49 @@
+<div class="mat-table-with-gheading">
+  <div class="wrapper">
+    <div class="container-fluid">
+      <div class="wrap-content">
+      <div class="row mt-3">
+        <div class="tab-design-change">
+          <div class="wrap-bar ">
+
+            <div class="">
+              <div class="wrap-right custome-tab">
+                <ul class="nav nav-tabs" id="myTab" role="masterTabs">
+                  <li class="nav-item"   *ngFor="let tab of masterTabs">
+                    <button class="nav-link" [class.active]="holdControl === tab.key" id="{{ tab.id }}"
+                      data-bs-toggle="tab" data-bs-target="#{{ tab.control }}" type="button" role="tab"
+                      aria-controls="{{ tab.control }}" aria-selected="true" (click)="onTab(tab)" >
+                      {{ tab.name }}
+                    </button>
+                  </li> 
+                </ul>
+              </div>
+            </div>
+
+          </div>
+          <div class="tab-content" id="myTabContent">
+            <div *ngIf="holdControl === 'list'" [class.active]="holdControl === 'list'"
+              class="disabledNoOfCasesDiv tab-pane fade show" id="details" role="tabpanel"
+              aria-labelledby="details-tab"> 
+               <app-register-user></app-register-user> 
+            </div> 
+            <div *ngIf="holdControl == 'request'" [class.active]="holdControl == 'request'" class="tab-pane fade show"
+            id="branch" role="tabpanel" aria-labelledby="branch-tab"> 
+            <app-request-list></app-request-list> 
+         </div>
+            <div *ngIf="holdControl === 'ticketlist'" [class.active]="holdControl === 'ticketlist'"
+              class="tab-pane fade show" id="ticketadmin-tab" role="tabpanel"
+              aria-labelledby="ticketadmin-tab"> 
+              <app-ticketadmin></app-ticketadmin>
+            </div> 
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+      
+    </div>
+  </div>
+</div>

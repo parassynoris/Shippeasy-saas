@@ -1,0 +1,393 @@
+<!-- <div class="table-with-gheading">
+  <div class="wrap-table-area">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="float-clear-mobile-view d-flex flex-column flex-sm-row gap-3 float-start search-section">
+          <div class="input-group custom-input">
+            <input type="text" class="form-control" placeholder="Search" aria-label="Search" />
+          </div>
+        </div>
+        <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2">
+          <div class="mt-2">
+            <span>
+              <h5>{{ fromSize }}-{{ count }} of {{ toalLength }}</h5>
+            </span>
+          </div>
+          <div class="mt-2">
+            <span class="prv" [class.disable-arrow-sign]="fromSize === 1" (click)="prev()"><i class="fas fa-arrow-left"></i>
+            </span>
+            <span class="prv" [class.disable-arrow-sign]="count === toalLength" (click)="next()"><i class="fas fa-arrow-right"></i>
+            </span>
+          </div>
+          <div class="mt-2">
+            <select class="form-select form-select-sm" (change)="filter($event)">
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+          <div class="mt-2">
+            <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="openPDF()">{{
+              'common.print' | translate }} {{
+                'common.list' | translate }}</a>
+          </div>
+          <div class="mt-2">
+            <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="exportAsExcelFile()">{{
+              'common.exportToExcel' | translate }}</a>
+          </div>
+          <div class="mt-2">
+            <a class="new-action btn btn-outline-primary btn-sm rounded-pill" appAccessControl featureCode="['STM016']" accessType="add"
+            (click)="open(AddClause)">{{'common.add'| translate}} {{ "stolt.masters.uom.uom" |
+              translate
+              }}</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="table-responsive" id="htmlData">
+          <table aria-describedby="mytable" class="gfg">
+            <thead>
+              <tr class="field-name">
+                <th scope="col"class="text-center">
+                  Action </th>
+                <th scope="col"  data-order="desc" data-name="uomName">
+                  {{ "stolt.masters.uom.uom_name" | translate
+                  }} <em  (click)="sortList(uomData,'uomName')" class="fas typcn typcn-arrow-unsorted arrow-icons"></em>
+                </th>
+                <th scope="col"  data-order="desc" data-name="uomShort">
+                  {{ "stolt.masters.uom.uom_short" | translate
+                  }} <em  (click)="sortList(uomData,'uomShort')" class="fas typcn typcn-arrow-unsorted arrow-icons"></em>
+                </th>
+                <th scope="col"  data-order="desc" data-name="uomCategory">
+                  {{ "stolt.masters.uom.uomcategory" | translate
+                  }} <em  (click)="sortList(uomData,'uomCategory')" class="fas typcn typcn-arrow-unsorted arrow-icons"></em>
+                </th>
+                <th scope="col"></th>
+              </tr>
+              <tr>
+                <th scope="col">
+                </th>
+                <th scope="col">
+                  <input type="text" class="form-control" id="" [(ngModel)]="uomName" (keydown.enter)="search()" />
+                </th>
+                <th scope="col">
+                  <input type="text" class="form-control" id="" [(ngModel)]="uomShort" (keydown.enter)="search()" />
+                </th>
+                <th scope="col">
+                  <input type="text" class="form-control" id="" [(ngModel)]="uomCategory" (keydown.enter)="search()" />
+                </th>
+                <th scope="col" class="wrap-table-btn">
+                  <button type="button" class="bi bi-search btn btn-outline-primary btn-sm rounded-pill"
+                    (click)="search()">
+                  </button>
+                  <a routerLink="#" class="bi bi-arrow-clockwise btn btn-outline-primary btn-sm rounded-pill"
+                    (click)="clear()">
+                  </a>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let uom of uomData; let i = index">
+                <td class="action-field">
+                  <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop">
+                    <a routerLink="#" appAccessControl featureCode="['STM016']" accessType="update"
+                      (click)="open(AddClause, uom)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                  </span>
+                  <span nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}">
+                    <a appAccessControl featureCode="['STM016']" accessType="view"
+                    (click)="open(AddClause, uom,'show')"><em
+                        class="bi bi-eye globally-change-icon-color"></em></a></span>
+                 
+                  <span class="form-check form-switch">
+                    <input appAccessControl featureCode="['STM016']" accessType="update"
+                     class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                      (change)="changeStatus(uom,i)" [checked]="uom.status" />
+                    <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                  </span>
+                </td>
+                <td class="uppercase">{{ uom?.uomName }}</td>
+                <td>{{ uom?.uomShort }}</td>
+                <td class="uppercase">{{ uom?.uomCategory }}</td>
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="no-data-availble" *ngIf="uomData.length === 0">
+          {{'common.no_data' | translate}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<ng-template #AddClause let-modal>
+  <div class="modal-content">
+    <div class="modal-headers mt-2">
+      <h4 class="modal-title" *ngIf="!this.UomIdToUpdate">{{'common.add'| translate}} {{ "stolt.masters.uom.uom" |
+        translate
+        }}</h4>
+      <h4 class="modal-title" *ngIf="this.UomIdToUpdate">{{'common.edit'| translate}} {{ "stolt.masters.uom.uom" |
+        translate
+        }}</h4>
+      <button type="button" class="btn-close shadow-none float-end" (click)="onSave()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+        <form class="row g-3" [formGroup]="uomForm">
+          <div class="col-md-4 mobile-view-input-alignment">
+            <label class="form-label"> {{ "stolt.masters.uom.uom_name" | translate
+              }}</label><span class="text-danger">*</span>
+            <input type="text" class="form-control custom-input" value="" formControlName="uomName"
+              [ngClass]="{ 'is-invalid': submitted && f.uomName.errors }" placeholder="UOM Name"appCapitalizeFirst/>
+            <div *ngIf="submitted && f.uomName.errors" class="invalid-feedback">
+              <div *ngIf="f.uomName.errors.required"> {{ "stolt.masters.uom.uom_name" | translate
+                }} {{"common.isRequired" | translate}}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mobile-view-input-alignment">
+            <label class="form-label">{{ "stolt.masters.uom.uom_short" | translate
+              }}</label><span class="text-danger">*</span>
+            <input type="text" class="form-control custom-input" value="" formControlName="uomShort"
+              [ngClass]="{ 'is-invalid': submitted && f.uomShort.errors }" placeholder="UOM Short" appCapitalizeFirst />
+            <div *ngIf="submitted && f.uomShort.errors" class="invalid-feedback">
+              <div *ngIf="f.uomShort.errors.required">
+                {{ "stolt.masters.uom.uom_short" | translate
+                }} {{"common.isRequired" | translate}}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 mobile-view-input-alignment">
+            <label class="form-label"> {{ "stolt.masters.uom.uomcategory" | translate
+              }}</label><span class="text-danger">*</span>
+            <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="UOM Category" formControlName="uomCategory"
+              [ngClass]="{ 'is-invalid': submitted && f.uomCategory.errors }">
+              <nz-option *ngFor="let category of uomcategoryList" [nzLabel]="category?.typeName" [nzValue]="category?.typeName">
+                </nz-option>
+            </nz-select>
+            <div *ngIf="submitted && f.uomCategory.errors" class="invalid-feedback">
+              <div *ngIf="f.uomCategory.errors.required">
+                {{ "stolt.masters.uom.uomcategory" | translate
+                }} {{"common.isRequired" | translate}}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 mobile-view-input-alignment">
+            <label class="form-label"> {{ "stolt.masters.uom.measurementCode" | translate
+              }}</label>
+            <input type="text" class="form-control custom-input" value="" formControlName="uomCode"
+              [ngClass]="{ 'is-invalid': submitted && f.uomCode.errors }" placeholder="Code" />
+            <div *ngIf="submitted && f.uomCode.errors" class="invalid-feedback">
+              <div *ngIf="f.uomCode.errors.required"> {{ "stolt.masters.uom.measurementCode" | translate
+                }} {{"common.isRequired" | translate}}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 mobile-view-input-alignment">
+            <label class="form-label"> {{ "stolt.masters.uom.measurement" | translate
+              }}</label>
+            <input type="text" class="form-control custom-input" value="" formControlName="measurement"
+              [ngClass]="{ 'is-invalid': submitted && f.measurement.errors }" placeholder="Measurement" />
+            <div *ngIf="submitted && f.measurement.errors" class="invalid-feedback">
+              <div *ngIf="f.measurement.errors.required"> {{ "stolt.masters.uom.measurement" | translate
+                }} {{"common.isRequired" | translate}}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 mobile-view-input-alignment">
+            <label class="form-label"> {{ "stolt.masters.uom.remark" | translate
+              }}</label>
+            <input type="text" class="form-control custom-input" value="" formControlName="remark" placeholder="Remark" />
+
+          </div>
+          
+          <div class="col-md-4 mobile-view-input-alignment">
+            <div class="taggle form-check form-switch">
+              <label class="form-check-label" for="flexSwitchCheckDefault"> {{ "stolt.masters.uom.status" | translate }}</label>
+              <input class="form-check-input" formControlName="status" type="checkbox" id="flexSwitchCheckDefault">
+            </div>
+          </div>
+
+          <div class="form-group wrap-form-action mt-4" *ngIf="this.show !== 'show'">
+            <button class="btn1 btn-lg float-end" (click)="onSave()" type="submit">
+              {{ "common.cancel" | translate }}
+            </button>
+            <button *ngIf="!this.UomIdToUpdate" (click)="uomMasters()" class="btn btn-outline-primary btn-lg float-end"
+              type="submit">
+              {{'common.save' | translate}}
+            </button>
+            <button *ngIf="this.UomIdToUpdate" (click)="uomMasters()" class="btn btn-outline-primary btn-lg float-end"
+              type="submit">
+              {{ "common.update" | translate }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #deleteuom let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body mt-4">
+      <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2">
+      </em>
+      <span class="text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+          No
+        </button>
+        <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+          Yes
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<div class="table-header-area">
+  <div class="mat-table-with-gheading">
+    <div class="wrapper">
+      <div class="container-fluid">
+        <div class=" pt-2">
+          <div class="wrap-mat-table-area">
+            <div class="table-header-area pt-2">
+              <div>
+                <table-filters [TDP]="[false, false, true, true]" (filterInput)="applyFilter($event)"
+                  (onClickExport)="exportAsExcelFile()">
+                </table-filters>
+              </div>
+              <div class="header-right">
+                <div class="mt-2">
+                  <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="openPDF()">{{
+                    'common.print' | translate }} {{
+                      'common.list' | translate }}</a>
+                </div>
+                <div class="mt-2">
+                <a class="new-action btn btn-outline-primary btn-sm rounded-pill" appAccessControl
+                  featureCode="['STM016']" accessType="add" (click)="open(AddClause)">{{'common.add'| translate}} {{
+                  "stolt.masters.uom.uom" |
+                  translate
+                  }}</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="table-card">
+            <div class="table-design example-container mat-elevation-z8">
+              <table mat-table [dataSource]="dataSource" matSort class="full-width-table" summary="agreement">
+                <ng-container matColumnDef="#">
+                  <th scope="col" mat-header-cell *matHeaderCellDef style="width: 3%;">
+                    # <em class="custom-tooltip" [attr.title]="'Toggle Filters'"
+                      (click)="toggleFilters = !toggleFilters" class="bi bi-search"></em>
+                  </th>
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    {{ element?.id}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                  <th scope="col" id="action" class="charterersPdfHead" mat-header-cell
+                        *matHeaderCellDef style="width: 8%;">
+                      {{ 'Actions' }}
+                  </th>
+                  <td class="borderBottom" mat-cell *matCellDef="let element; let i = index">
+                          <div class="d-flex"  style="align-items: center;">
+                            <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mx-1">
+                              <a routerLink="#" appAccessControl featureCode="['STM016']" accessType="update"
+                                (click)="open(AddClause, element)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                            </span>
+                            <span nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}" class="mx-1">
+                              <a appAccessControl featureCode="['STM016']" accessType="view"
+                              (click)="open(AddClause, element,'show')"><em
+                                  class="bi bi-eye globally-change-icon-color"></em></a></span>
+                           
+                            <span class="form-check form-switch mx1 mb-0 mt-1">
+                              <input appAccessControl featureCode="['STM016']" accessType="update"
+                               class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                                (change)="changeStatus(element,i)" [checked]="element.status" />
+                              <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                            </span>
+                          </div>
+                      </td>
+                  
+              </ng-container>
+              
+                <ng-container matColumnDef="uomName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    UOM Name 
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.uomName }}
+                  </td>
+                </ng-container>
+                 <ng-container matColumnDef="uomShort">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    UOM Short 
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.uomShort}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="uomCategory">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    UOM Category
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.uomCategory}}
+                  </td>
+                </ng-container>  
+
+                <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index"
+                                        [matColumnDef]="headersFilter">
+                                        <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+                                            <div class="filters-container" [class.animate]="!toggleFilters">
+                                                <em *ngIf="i > 0 && i < displayedColumns1.length - 3" class="custom-tooltip"
+                                                [attr.title]="'Clear Filters'"
+                                                (click)="clearFilters();toggleFilters = !toggleFilters"
+                                                class="bi bi-x-circle"></em>
+                                                <div *ngIf="i > 1 && i < displayedColumns1.length - 0"
+                                                    appearance="outline">
+                                                    <input class="form-control input-txt"
+                                                        placeholder="Press 'Enter' to search"
+                                                        [(ngModel)]="filtersModel[i]" (keyup.enter)="searchColumns()">
+                                                </div>
+                                               
+                                            </div>
+                                        </th>
+                                    </ng-container>
+
+                <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumns">
+                </tr>
+                <tr mat-header-row class="no-default-height" *matHeaderRowDef="displayedColumns1"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns">
+                </tr>
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+                    <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+                    <span *ngIf="!loaderService?.isLoadingcircle && !dataSource?.data?.length">No data available</span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            <div [ngClass]="{'display-none' : toalLength < 10}">
+              <mat-paginator [length]="toalLength" [pageSize]="pageSize" [pageIndex]="pageNumber-1"
+                (page)="onPageChange($event)"  [pageSizeOptions]="_gc.PAGINATOR_OPTIONS" showFirstLastButtons></mat-paginator>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

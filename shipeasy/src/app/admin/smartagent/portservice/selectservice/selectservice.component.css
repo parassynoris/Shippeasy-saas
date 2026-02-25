@@ -1,0 +1,25 @@
+.modal-header {
+
+    border-bottom: 0;
+    padding-bottom: 0;
+}
+.modal-title
+{color:#007BFF; }
+.btn-close{
+
+   color:#007BFF; 
+}
+.modal-content {
+   padding:10px 20px;
+   border: 0;
+}
+.modal-body {
+   padding-top: 0px;
+   padding-bottom: 70px;
+}
+.wrap-form-action .btn {
+   font-size: 12px;
+   padding: 4px 15px;
+   border-radius: 50px;
+   margin-right: 4px;
+}

@@ -1,0 +1,2172 @@
+<div class="container-fluid">
+    <div [ngClass]="isPopup ? '': 'wrap-content'">
+        <div class="row">
+            <div class="page-title-box">
+                <ol class="breadcrumb ">
+                    <li class="breadcrumb-item">SHIPEASY
+                    </li>
+                    <li class="breadcrumb-item active color-red">{{ this.id ? (this.smartAgentDetail?.name ?? '') : 'Add
+                        New' }}</li>
+                </ol>
+            </div>
+        </div>
+
+
+
+        <div class="nz-allSelect" [ngClass]="isPopup ? '' : 'modal-content'">
+            <div class="modal-header" *ngIf="!commonfunction?.getUserType()">
+            </div>
+            <div [ngClass]="isPopup ? '' : 'modal-body'">
+                <!-- <div class="float-right text-end mt-2 mb-2">
+                <button *ngIf="!allPanelsOpen" (click)="toggleAllPanels(true)"class="btn btn-outline-primary px-0" type="button">Expand All</button>
+            <button *ngIf="allPanelsOpen" (click)="toggleAllPanels(false)" class="btn btn-outline-primary px-0" type="button">Collapse All</button>
+            </div> -->
+                <mat-tab-group mat-stretch-tabs [(selectedIndex)]="selectedIndex"
+                    (selectedTabChange)="onTabChange($event)">
+                    <mat-tab label="Overview">
+                        <div class="row mx-0 overflow-hidden">
+                            <div class="" [ngClass]="id && !isPopup ? 'col-md-6' : 'col-md-12'">
+                                <div class="shadow">
+                                    <form [formGroup]="Overview">
+                                        <div class="wrap-form-field m-4">
+                                            <div class="row g-3 align-items-center">
+                                                <div class="col-md-4">
+                                                    <label for="name" class="form-label">Company Name<span
+                                                            class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control custom-input" id="name "
+                                                        [readonly]="commonfunction?.getUserType()"
+                                                        formControlName="name" placeholder="Name" appCapitalizeFirst
+                                                        [ngClass]="{ 'is-invalid': submitted && f.name?.errors }">
+                                                    <div *ngIf="submitted && f.name?.errors" class="invalid-feedback">
+                                                        <div *ngIf="f.name?.errors?.required">{{
+                                                            'stolt.party-master.Name' |
+                                                            translate }} {{'common.isRequired'| translate}}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label for="principle" class="form-label">Party Shortcode</label>
+                                                    <input type="text" class="form-control custom-input"
+                                                        id="partyShortcode" formControlName="partyShortcode"
+                                                        placeholder="party Shortcode"
+                                                        [ngClass]="{ 'is-invalid': submitted && f?.partyShortcode?.errors }">
+
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label for="companyCin" class="form-label">Company CIN</label>
+                                                    <input type="text" class="form-control custom-input"
+                                                        id="companyCin " formControlName="companyCin" placeholder=""
+                                                        [ngClass]="{ 'is-invalid': submitted && f.companyCin?.errors }">
+                                                    <div *ngIf="submitted && f.companyCin?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="f.companyCin?.errors?.required">{{
+                                                            'stolt.party-master.refund_ac_code' |
+                                                            translate }} {{'common.isRequired'| translate}}</div>
+                                                    </div>
+                                                </div>
+                                                <div *ngIf="false" class="col-md-4">
+                                                    <label for="shortname" class="form-label">{{
+                                                        'stolt.party-master.sortName' |
+                                                        translate }}</label>
+                                                    <input type="text" class="form-control custom-input" id="shortname "
+                                                        formControlName="shortname" placeholder=""
+                                                        oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^ A-Za-z]/g,'').replace(/ +/g, ' ')"
+                                                        [ngClass]="{ 'is-invalid': submitted && f.shortname?.errors }">
+                                                    <div *ngIf="submitted && f.shortname?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="f.shortname?.errors?.required">{{
+                                                            'stolt.party-master.sortName' |
+                                                            translate }} {{'common.isRequired'| translate}}</div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4 nz-select" *ngIf="false">
+                                                    <label for="Country" class="form-label">{{
+                                                        'stolt.party-master.country' |
+                                                        translate }}<span class="text-danger">*</span></label>
+
+
+                                                    <nz-select nzAutocomplete="off" class="form-select" nzShowSearch
+                                                        nzAllowClear nzPlaceHolder="Country" formControlName="country"
+                                                        [ngClass]="{'is-invalid': submitted && f.country?.errors}"
+                                                        (ngModelChange)="getStateList()">
+                                                        <nz-option *ngFor="let country of countryList"
+                                                            [nzLabel]="country?.countryName"
+                                                            [nzValue]="country?.countryId"></nz-option>
+                                                    </nz-select>
+
+                                                    <div *ngIf="submitted && f.country?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="f.country?.errors?.required">{{
+                                                            'smartagent.smartAgent.AllformAddedit.countryisrequired' |
+                                                            translate }}</div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4 nz-select" *ngIf="false">
+                                                    <label for="State" class="form-label">{{
+                                                        'smartagent.smartAgent.AllformAddedit.state' | translate
+                                                        }}</label>
+
+                                                    <div class="d-flex align-items-center">
+                                                        <nz-select nzAutocomplete="off" class="form-select" nzShowSearch
+                                                            nzAllowClear nzPlaceHolder="State" formControlName="state"
+                                                            [ngClass]="{'is-invalid': submitted && f.state?.errors}"
+                                                            (ngModelChange)="getCityList()">
+                                                            <nz-option *ngFor="let state of stateList"
+                                                                [nzLabel]="state?.typeDescription"
+                                                                [nzValue]="state?.stateId"></nz-option>
+                                                        </nz-select>
+                                                        <div *ngIf="submitted && f.state?.errors"
+                                                            class="invalid-feedback">
+                                                            <div *ngIf="f.state?.errors?.required">{{
+                                                                'smartagent.smartAgent.AllformAddedit.stateisrequired' |
+                                                                translate
+                                                                }}</div>
+                                                        </div>
+                                                        <em _ngcontent-xxs-c770=""
+                                                            *ngIf="Overview?.get('country').value"
+                                                            (click)="openStateMaster(AddState)"
+                                                            class="bi bi-plus-circle color-pencil-red pl-1"></em>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 nz-select" *ngIf="false">
+                                                    <label for="City" class="form-label">{{
+                                                        'smartagent.smartAgent.AllformAddedit.city' | translate
+                                                        }}</label>
+
+                                                    <div class="d-flex align-items-center">
+                                                        <nz-select nzAutocomplete="off" class="form-select" nzShowSearch
+                                                            nzAllowClear nzPlaceHolder="City" formControlName="city"
+                                                            [ngClass]="{'is-invalid': submitted && f.city?.errors}">
+                                                            <nz-option *ngFor="let city of cityList"
+                                                                [nzLabel]="city?.cityName"
+                                                                [nzValue]="city?.cityId"></nz-option>
+                                                        </nz-select>
+                                                        <div *ngIf="submitted && f.city?.errors"
+                                                            class="invalid-feedback">
+                                                            <div *ngIf="f.city?.errors?.required">{{
+                                                                'smartagent.smartAgent.AllformAddedit.cityisrequired' |
+                                                                translate
+                                                                }}</div>
+                                                        </div>
+                                                        <em _ngcontent-xxs-c770="" (click)="openCityMaster(AddCity)"
+                                                            *ngIf="Overview?.get('state').value"
+                                                            class="bi bi-plus-circle color-pencil-red pl-1"></em>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4  d-flex align-items-center">
+                                                    <div class="form-check   d-flex align-items-center p-0 mt-4">
+                                                        <input class="" formControlName="parentCompany"
+                                                            (change)="onCheckboxChange($event.target.checked, 'parentCompany')"
+                                                            type="checkbox" [disabled]="isGroupCompaniesChecked">
+                                                        <label class="form-check-label mx-1"
+                                                            for="flexSwitchCheckDefault">Is parent
+                                                            Companies</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4" *ngIf="false">
+                                                    <label for="panNo" class="form-label">{{ 'stolt.party-master.pan_no'
+                                                        |
+                                                        translate }}<span class="text-danger">*</span>
+                                                    </label>
+                                                    <input type="text" class="form-control custom-input" id="panNo "
+                                                        oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^ A-Za-z0-9]/g,'').replace(/ +/g, ' ')"
+                                                        formControlName="panNo" placeholder="Pan No"
+                                                        [ngClass]="{ 'is-invalid': submitted && f.panNo?.errors }">
+                                                    <div *ngIf="submitted && f.panNo?.errors" class="invalid-feedback">
+                                                        <div *ngIf="f.panNo?.errors?.required">{{
+                                                            'stolt.party-master.pan_no' |
+                                                            translate }} {{'common.isRequired'| translate}}</div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4" *ngIf="false">
+                                                    <label for="address" class="form-label">{{
+                                                        'stolt.party-master.address' |
+                                                        translate }}</label>
+                                                    <textarea type="text" class="form-control custom-input"
+                                                        id="address " formControlName="address" placeholder="Address"
+                                                        [ngClass]="{ 'is-invalid': submitted && f.address?.errors }"></textarea>
+                                                    <div *ngIf="submitted && f.address?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="f.address?.errors?.required">{{
+                                                            'stolt.party-master.address' |
+                                                            translate }} {{'common.isRequired'| translate}}</div>
+                                                        <div *ngIf="Overview.get('address').hasError('forbiddenChars')">
+                                                            " and \ are not allowed.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4" *ngIf="false">
+                                                    <label for="Pincode" class="form-label">{{
+                                                        'stolt.party-master.pincode' |
+                                                        translate
+                                                        }}</label>
+                                                    <input type="number" maxlength="6"
+                                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                        class="form-control custom-input" formControlName="pinCode"
+                                                        id="Pincode " placeholder="Pin Code" value=""
+                                                        [ngClass]="{ 'is-invalid': submitted && f.pinCode?.errors }">
+                                                    <div *ngIf="submitted && f.pinCode?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="f.pinCode?.errors?.required">{{
+                                                            'stolt.party-master.pincode' |
+                                                            translate }} {{'common.isRequired'| translate}}</div>
+                                                        <div
+                                                            *ngIf="f.pinCode?.errors?.pattern && !f.pinCode?.errors?.required">
+                                                            The value must be exactly 6 digits.</div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4 nz-select">
+                                                    <label for="partyCurrency" class="form-label">Currency</label><span
+                                                        class="text-danger">*</span>
+                                                    <nz-select nzAutocomplete="off" class="form-select" nzShowSearch
+                                                        nzAllowClear nzPlaceHolder="Currency"
+                                                        formControlName="partyCurrency"
+                                                        [ngClass]="{'is-invalid': submitted && f.partyCurrency?.errors}">
+                                                        <nz-option *ngFor="let currency of currencyList"
+                                                            [nzLabel]="currency?.currencyShortName"
+                                                            [nzValue]="currency?.currencyId"></nz-option>
+                                                    </nz-select>
+                                                    <div *ngIf="submitted && f.partyCurrency?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="f.partyCurrency?.errors?.required">Currency
+                                                            {{'common.isRequired'| translate}}</div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div *ngIf="false" class="col-md-4">
+                                                    <label for="url" class="form-label">{{ 'stolt.party-master.website'
+                                                        |
+                                                        translate }}</label>
+                                                    <input type="text" class="form-control custom-input" id="url "
+                                                        formControlName="website" placeholder="Website"
+                                                        [ngClass]="{ 'is-invalid': submitted && f.website?.errors }">
+                                                    <div *ngIf="submitted && f.website?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="f.website?.errors?.required">{{
+                                                            'stolt.party-master.website' |
+                                                            translate }} {{'common.isRequired'| translate}} </div>
+                                                        <div *ngIf="f.website?.errors?.pattern"> {{"error.err_pattern" |
+                                                            translate}}</div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="col-md-4">
+                                                    <label for="email" class="form-label">{{ 'stolt.party-master.email'
+                                                        | translate }} (<span class="text-email">Use semi-colon to seperate multiple email</span>)</label>
+                                                    <input type="text" class="form-control custom-input" id="email"
+                                                        [readonly]="commonfunction?.getUserType()"
+                                                        formControlName="primaryEmailId"
+                                                        placeholder="Email (comma-separated)"
+                                                        [ngClass]="{ 'is-invalid': submitted && f.primaryEmailId?.errors }">
+
+                                                    <div *ngIf="submitted && f.primaryEmailId?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="f.primaryEmailId?.errors?.required">
+                                                            {{ 'stolt.party-master.email' | translate }} {{
+                                                            'common.isRequired' | translate }}
+                                                        </div>
+                                                        <div *ngIf="f.primaryEmailId?.errors?.pattern">
+                                                            {{ 'error.err_valid_email' | translate }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div *ngIf="false" class="col-md-4">
+                                                    <label for="Faxno" class="form-label">{{
+                                                        'stolt.party-master.faxNo' |
+                                                        translate }}</label>
+                                                    <div class="input-group mb-3">
+                                                        <div class="col border-end">
+                                                            <select class="form-select custom-input"
+                                                                formControlName="faxCountryCode">
+                                                                <option *ngFor="let callingCode of callingCodeList"
+                                                                    [value]="callingCode?.callingCode">
+                                                                    {{callingCode?.callingCode}}</option>
+
+                                                            </select>
+                                                        </div>
+                                                        <div class="col border-start">
+                                                            <input type="number" class="form-control custom-input"
+                                                                maxlength="10"
+                                                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                                formControlName="faxAreaCode" value=""
+                                                                placeholder="Fax Area Code">
+                                                        </div>
+                                                        <div class="col border-start">
+                                                            <input type="number" class="form-control custom-input"
+                                                                maxlength="10"
+                                                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                                formControlName="faxNo" value="" placeholder="Fax No">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+
+                                                <div class="col-md-4 selectClass">
+                                                    <label for="customerType" class="form-label">Party Type<span
+                                                            class="text-danger">*</span></label>
+
+                                                    <ng-multiselect-dropdown [settings]="settings"
+                                                        [data]="CustomerTypeList"
+                                                        [ngClass]="{ 'is-invalid': submitted && listOfTagOptions.length === 0 }"
+                                                        [ngModelOptions]="{standalone: true}"
+                                                        [(ngModel)]="listOfTagOptions">
+                                                    </ng-multiselect-dropdown>
+                                                    <div *ngIf="submitted" class="invalid-feedback">
+                                                        <div *ngIf="listOfTagOptions.length === 0">Party Type
+                                                            {{'common.isRequired'| translate}}</div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4 nz-select">
+                                                    <label for="Country" class="form-label">Import/Export<span
+                                                            class="text-danger">*</span></label>
+                                                    <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                        nzPlaceHolder="Import/Export" formControlName="ImportExport"
+                                                        [ngClass]="{'is-invalid': submitted && f?.ImportExport?.errors}">
+                                                        <nz-option nzLabel="Import" nzValue="import"></nz-option>
+                                                        <nz-option nzLabel="Export" nzValue="Export"></nz-option>
+                                                        <nz-option nzLabel="Both" nzValue="Both"></nz-option>
+                                                    </nz-select>
+
+                                                    <div *ngIf="submitted && f?.ImportExport?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="f?.ImportExport?.errors?.required">This field is
+                                                            required</div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4" *ngIf="false">
+                                                    <label for="principle" class="form-label">Principle</label>
+                                                    <input type="text" class="form-control custom-input" id="principle "
+                                                        formControlName="principle" placeholder="Principle"
+                                                        [ngClass]="{ 'is-invalid': submitted && f?.principle?.errors }">
+
+                                                </div>
+
+
+
+
+                                                <div *ngIf="false" class="col-md-4">
+                                                    <label for="exportTeun" class="form-label">{{
+                                                        'stolt.party-master.export_teun' |
+                                                        translate }}</label>
+                                                    <input type="text" class="form-control custom-input"
+                                                        id="exportTeun " formControlName="exportTeun" placeholder=""
+                                                        oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^ A-Za-z]/g,'').replace(/ +/g, ' ')"
+                                                        [ngClass]="{ 'is-invalid': submitted && f.exportTeun?.errors }">
+
+                                                </div>
+                                                <div *ngIf="false" class="col-md-4">
+                                                    <label for="annualTernover" class="form-label">{{
+                                                        'stolt.party-master.ANNUAL_TURNOVER' |
+                                                        translate }}</label>
+                                                    <input type="number" class="form-control custom-input"
+                                                        id="annualTernover " formControlName="annualTernover"
+                                                        placeholder=""
+                                                        [ngClass]="{ 'is-invalid': submitted && f.annualTernover?.errors }">
+                                                    <div *ngIf="submitted && f.annualTernover?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="f.annualTernover?.errors?.required">{{
+                                                            'stolt.party-master.ANNUAL_TURNOVER' |
+                                                            translate }} {{'common.isRequired'| translate}}</div>
+                                                    </div>
+                                                </div>
+                                                <div *ngIf="false" class="col-md-4">
+                                                    <label for="importTeun" class="form-label">{{
+                                                        'stolt.party-master.import_teun' |
+                                                        translate }}</label>
+                                                    <input type="text" class="form-control custom-input" id="consignee "
+                                                        formControlName="importTeun" placeholder=""
+                                                        oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^ A-Za-z]/g,'').replace(/ +/g, ' ')"
+                                                        [ngClass]="{ 'is-invalid': submitted && f.importTeun?.errors }">
+                                                    <div *ngIf="submitted && f.importTeun?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="f.importTeun?.errors?.required">{{
+                                                            'stolt.party-master.import_teun' |
+                                                            translate }} {{'common.isRequired'| translate}}</div>
+                                                    </div>
+                                                </div>
+
+                                                <div *ngIf="false" class="col-md-4">
+                                                    <label for="accountCode" class="form-label">{{
+                                                        'stolt.party-master.ACCOUNT_CODE' |
+                                                        translate }}</label>
+                                                    <input type="number" class="form-control custom-input"
+                                                        id="accountCode " formControlName="accountCode" placeholder=""
+                                                        [ngClass]="{ 'is-invalid': submitted && f.accountCode?.errors }">
+                                                    <div *ngIf="submitted && f.accountCode?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="f.accountCode?.errors?.required">{{
+                                                            'stolt.party-master.ACCOUNT_CODE' |
+                                                            translate }} {{'common.isRequired'| translate}}</div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div *ngIf="false" class="col-md-4">
+                                                    <label for="GROUP_COMPANIES_NAME" class="form-label">{{
+                                                        'stolt.party-master.GROUP_COMPANIES_NAME' | translate }}
+                                                    </label>
+
+                                                    <input type="text" class="form-control custom-input"
+                                                        id="GROUP_COMPANIES_NAME "
+                                                        formControlName="GROUP_COMPANIES_NAME" placeholder=""
+                                                        [ngClass]="{ 'is-invalid': submitted && f.GROUP_COMPANIES_NAME?.errors }">
+                                                    <div *ngIf="submitted && f.GROUP_COMPANIES_NAME?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="f.GROUP_COMPANIES_NAME?.errors?.required">{{
+                                                            'stolt.party-master.GROUP_COMPANIES_NAME' | translate
+                                                            }}</div>
+                                                    </div>
+                                                </div>
+
+                                                <div *ngIf="false" class="col-md-4">
+                                                    <label for="refundAC_Code" class="form-label">{{
+                                                        'stolt.party-master.refund_ac_code' |
+                                                        translate }}</label>
+                                                    <input type="text" class="form-control custom-input"
+                                                        id="refundAC_Code " formControlName="refundAC_Code"
+                                                        placeholder=""
+                                                        [ngClass]="{ 'is-invalid': submitted && f.refundAC_Code?.errors }">
+                                                    <div *ngIf="submitted && f.refundAC_Code?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="f.refundAC_Code?.errors?.required">{{
+                                                            'stolt.party-master.refund_ac_code' |
+                                                            translate }} {{'common.isRequired'| translate}}</div>
+                                                    </div>
+                                                </div>
+                                                <div *ngIf="false" class="col-md-4">
+                                                    <label for="BROKERAGE_AC_CODE" class="form-label">{{
+                                                        'stolt.party-master.BROKERAGE_AC_CODE' |
+                                                        translate }}</label>
+                                                    <input type="text" class="form-control custom-input"
+                                                        id="BROKERAGE_AC_CODE " formControlName="BROKERAGE_AC_CODE"
+                                                        placeholder=""
+                                                        [ngClass]="{ 'is-invalid': submitted && f.BROKERAGE_AC_CODE?.errors }">
+                                                    <div *ngIf="submitted && f.BROKERAGE_AC_CODE?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="f.BROKERAGE_AC_CODE?.errors?.required">{{
+                                                            'stolt.party-master.BROKERAGE_AC_CODE' |
+                                                            translate }} {{'common.isRequired'| translate}}</div>
+                                                    </div>
+                                                </div>
+
+
+
+
+                                                <div class="col-md-4  d-flex align-items-center  ">
+                                                    <div class="form-check d-flex align-items-center p-0 mt-4  ">
+                                                        <input class="" formControlName="chequeAcceptance"
+                                                            type="checkbox">
+                                                        <label class="form-check-label mx-1">Cheque Acceptance
+                                                            Status</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4  d-flex align-items-center ">
+                                                    <div class="form-check d-flex align-items-center p-0 mt-4">
+                                                        <input class="" formControlName="isSez" type="checkbox">
+                                                        <label class="form-check-label mx-1">SEZ</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4  d-flex align-items-center">
+                                                    <div class="form-check d-flex align-items-center p-0 mt-4">
+                                                        <input class="" formControlName="isRegister" type="checkbox">
+                                                        <label class="form-check-label mx-1">Is Register Company</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4  d-flex align-items-center"
+                                                    [ngClass]="{'disaplay-non': hideCreateUSer}">
+                                                    <div class="form-check d-flex align-items-center p-0 mt-4">
+                                                        <input class="" formControlName="isUser" type="checkbox">
+                                                        <label class="form-check-label mx-1 ">Create User</label>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="col-md-4 taggle form-check form-switch mt-5">
+
+                                                    <input class="form-check-input  "
+                                                        (change)="onCheckboxChange($event.target.checked, 'groupCompany');toggleValidation()"
+                                                        type="checkbox" id="flexSwitchCheckDefault"
+                                                        formControlName="groupCompany">
+                                                    <label class="form-check-label">Group Companies
+                                                    </label>
+                                                </div>
+
+                                                <div class="col-md-4 nz-select" *ngIf="Overview.value?.groupCompany">
+                                                    <label class="form-label">Customer</label><span
+                                                        class="text-danger">*</span>
+                                                    <nz-select nzAutocomplete="off" class="form-select" nzShowSearch
+                                                        nzAllowClear formControlName="customerList"
+                                                        [ngClass]="{'is-invalid': submitted && f.customerList?.errors}">
+                                                        <nz-option *ngFor="let customer of partyMasterLength"
+                                                            nzLabel="{{customer?.partyShortcode}}{{customer?.partyShortcode ? '-': ''}}{{customer.name}}"
+                                                            [nzValue]="customer?.partymasterId"></nz-option>
+                                                    </nz-select>
+                                                    <div *ngIf="submitted && f.customerList?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="f.customerList?.errors?.required">Customer
+                                                            {{'common.isRequired'| translate}}</div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4 taggle form-check form-switch  mt-5 ">
+
+                                                    <input class="form-check-input  " type="checkbox"
+                                                        id="flexSwitchCheckDefault" formControlName="isSupplier">
+                                                    <label class="form-check-label">Billing Party
+                                                    </label>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="col-md-6 sidetable" *ngIf="this.id">
+                                <div class="container shadow">
+                                    <div class="tabs-container">
+                                        <div class="tab" *ngFor="let tab of tabs" [class.active]="tab?.active"
+                                            (click)="searchTerm='';selectTab(tab)">
+                                            <span>{{ tab.name }}</span>
+                                            <p>{{ getCount(tab) }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="search-container">
+                                        <input type="text" placeholder="Search..." [(ngModel)]="searchTerm"
+                                            (keyup)="getfilterrecord()" />
+                                    </div>
+                                    <div class="table-card">
+                                        <div class="table-design TBL-DESIGN example-container mat-elevation-z8">
+                                            <table mat-table [dataSource]="dataSource" class="full-width-table"
+                                                summary="agreement">
+
+                                                <!-- Job No / Enquiry No Column -->
+                                                <ng-container matColumnDef="JobNo">
+                                                    <th *matHeaderCellDef mat-header-cell> Job No </th>
+                                                    <td *matCellDef="let userdata">{{ userdata?.batchNo }}</td>
+                                                </ng-container>
+                                                <ng-container matColumnDef="InquiryNo">
+                                                    <th *matHeaderCellDef mat-header-cell> Inquiry No </th>
+                                                    <td *matCellDef="let userdata">{{ userdata?.enquiryNo }}</td>
+                                                </ng-container>
+                                                <!-- Consignee Column -->
+                                                <ng-container matColumnDef="Consignee">
+                                                    <th *matHeaderCellDef mat-header-cell> Consignee </th>
+                                                    <td *matCellDef="let userdata">{{
+                                                        userdata?.basicDetails?.consigneeName ??
+                                                        userdata?.enquiryDetails?.basicDetails?.consigneeName }}</td>
+                                                </ng-container>
+
+                                                <!-- POL Column -->
+                                                <ng-container matColumnDef="POL">
+                                                    <th *matHeaderCellDef mat-header-cell> POL </th>
+                                                    <td *matCellDef="let userdata">{{
+                                                        userdata?.routeDetails?.loadPortName ??
+                                                        userdata?.enquiryDetails?.routeDetails?.loadPortName }}</td>
+                                                </ng-container>
+
+                                                <!-- POD Column -->
+                                                <ng-container matColumnDef="POD">
+                                                    <th *matHeaderCellDef mat-header-cell> POD </th>
+                                                    <td *matCellDef="let userdata">{{
+                                                        userdata?.routeDetails?.destPortName ??
+                                                        userdata?.enquiryDetails?.routeDetails?.destPortName }}</td>
+                                                </ng-container>
+
+                                                <!-- LoadType Column -->
+                                                <ng-container matColumnDef="LoadType">
+                                                    <th *matHeaderCellDef mat-header-cell> Load Type </th>
+                                                    <td *matCellDef="let userdata">{{ userdata?.basicDetails?.loadType
+                                                        ?? userdata?.enquiryDetails?.basicDetails?.loadType }}</td>
+                                                </ng-container>
+
+                                                <!-- Status Column -->
+                                                <ng-container matColumnDef="Status">
+                                                    <th *matHeaderCellDef mat-header-cell> Status </th>
+                                                    <td *matCellDef="let userdata">{{ userdata?.statusOfBatch ??
+                                                        userdata?.enquiryStatus }}</td>
+                                                </ng-container>
+
+                                                <!-- Updated On Column -->
+                                                <ng-container matColumnDef="UpdatedOn">
+                                                    <th *matHeaderCellDef mat-header-cell> Updated On </th>
+                                                    <td *matCellDef="let userdata">{{ userdata?.updatedOn | date }}</td>
+                                                </ng-container>
+
+                                                <!-- Updated By Column -->
+                                                <ng-container matColumnDef="UpdatedBy">
+                                                    <th *matHeaderCellDef mat-header-cell> Updated By </th>
+                                                    <td *matCellDef="let userdata">{{ userdata?.updatedBy }}</td>
+                                                </ng-container>
+
+                                                <tr mat-header-row *matHeaderRowDef="tableColumns"></tr>
+                                                <tr mat-row *matRowDef="let row; columns: tableColumns"></tr>
+                                                <tr class="mat-row" *matNoDataRow>
+                                                    <td class="mat-cell" [attr.colspan]="tableColumns.length"
+                                                        class="text-center">
+                                                        <span
+                                                            *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+                                                        <span
+                                                            *ngIf="!loaderService?.isLoadingcircle && !dataSource?.data?.length">No
+                                                            data available</span>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <!-- Paginator -->
+                                        </div>
+                                        <div [ngClass]="{'display-none' : dataSource?.filteredData?.length < 5}"
+                                            class="text-nowrap">
+                                            <mat-paginator [pageSizeOptions]="pagenation" showFirstLastButtons
+                                                aria-label="Select page">
+                                            </mat-paginator>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <div class="col-md-12">
+
+                                <div class="wrap-form-field  shadows">
+                                    <div class="py-3 d-flex justify-content-between  align-items-baseline">
+                                        <h6 class="mb-0">Notes</h6>
+                                        <button class="btn btn-outline-primary float-end" [disabled]="isType"
+                                            (click)="openNotes(notesOverview)">
+                                            Add Notes
+                                        </button>
+                                    </div>
+                                    <div class="table-card mt-4" *ngIf=this.Overview?.value?.notes?.length>
+                                        <div class="table-design example-container mat-elevation-z8">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Note</th>
+                                                        <th>Note Date</th>
+                                                        <th>Note By</th>
+                                                        <th>Delete</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="tab-reactive">
+                                                    <tr *ngFor="let note of this.Overview?.value?.notes;let i =index">
+                                                        <td>{{note?.notes}}</td>
+                                                        <td>{{note?.noteDate|date}}</td>
+                                                        <td>{{note?.createdBy}}</td>
+                                                        <td> <a class="mx-1" (click)="onDelete(i)"><i
+                                                                    class="bi bi-trash color-pencil-red"></i></a></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="row g-3 align-items-center" *ngIf="!isType">
+
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </mat-tab>
+
+                    <mat-tab label="Address" [disabled]="!id" (click)="getBankList()">
+                        <form [formGroup]="AddressBranch">
+                            <div class="wrap-form-field m-4">
+                                <div>
+                                    <div class="wrap-add-btn wrap-size">
+                                        <a class="btn btn-outline-primary" (click)="addNewBranch()">
+                                            Add Address
+                                        </a>
+                                        <a class="px-2" title="Click to Clone primary information"
+                                            (click)="copyMessage()">
+                                            <em class="bi bi-info-circle text-secondary"></em>
+                                        </a>
+                                    </div>
+                                    <ng-container formArrayName="branch">
+                                        <ng-container *ngFor="let branchForm of branch.controls; let i = index">
+                                            <div class="row g-3 align-items-center mb-3" [formGroup]="branchForm">
+                                                <div class="new-action">
+                                                    <a class="wrap-text">Address {{ i + 1 }}</a>
+                                                    <a *ngIf="i > 0" class="wrap-btn" (click)="deleteBranch(i)">
+                                                        <i class="bi bi-trash color-pencil-red"></i>
+                                                    </a>
+                                                </div>
+
+
+                                                <div class="col-md-4">
+                                                    <label class="form-label">Branch Name
+                                                        <span class="text-danger">*</span>
+                                                    </label>
+                                                    <input type="text" class="form-control custom-input"
+                                                        formControlName="branch_name" placeholder="Branch Name"
+                                                        appCapitalizeFirst
+                                                        [ngClass]="{ 'is-invalid': submitted && branchForm.get('branch_name').errors }">
+                                                    <div *ngIf="submitted && branchForm.get('branch_name').errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="branchForm.get('branch_name').errors.required">
+                                                            Name {{ 'common.isRequired' | translate }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-2 chk  d-flex align-items-center">
+                                                    <input type="radio" value="Resident"
+                                                        (ngModelChange)="customerStatus(i)"
+                                                        formControlName="customerStatus" />
+                                                    <label class="form-label mx-1">Resident</label>
+                                                </div>
+                                                <div class="col-md-2 chk  d-flex align-items-center">
+                                                    <input type="radio" value="Non Resident"
+                                                        (ngModelChange)="customerStatus(i)"
+                                                        formControlName="customerStatus"
+                                                        class="d-flex align-items-center" />
+                                                    <label class="form-label mx-1">Non Resident</label>
+                                                </div>
+
+
+                                                <div class="col-md-4 nz-select"
+                                                    *ngIf="branchForm?.get('customerStatus')?.value == 'Resident'">
+                                                    <label class="form-label">Tax Name <span
+                                                            class="text-danger">*</span></label>
+                                                    <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                        (ngModelChange)="setValidationForTAX(i)"
+                                                        nzPlaceHolder="Tax Name" formControlName="tax_name"
+                                                        [ngClass]="{ 'is-invalid': submitted && branchForm.get('tax_name').errors }">
+                                                        <nz-option nzLabel="GST" nzValue="GST"></nz-option>
+                                                        <nz-option nzLabel="VAT" nzValue="VAT"></nz-option>
+                                                    </nz-select>
+                                                    <div *ngIf="submitted && branchForm?.get('tax_name')?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="branchForm?.get('tax_name')?.errors?.required">Tax
+                                                            Name {{'common.isRequired'| translate}}</div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4"
+                                                    *ngIf="branchForm?.get('tax_name')?.value == 'GST' && branchForm?.get('customerStatus')?.value == 'Resident'">
+                                                    <label class="form-label">GST No. <span
+                                                            class="text-danger">*</span></label>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control custom-input"
+                                                            formControlName="tax_number"
+                                                            [ngClass]="{ 'is-invalid': submitted && branchForm.get('tax_number').errors }"
+                                                            oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^ A-Za-z0-9]/g,'').replace(/ +/g, ' ')"
+                                                            placeholder="GST No." (keyup)="checkGst($event,i)">
+                                                        <span class="input-group-text py-0">
+                                                            <i class="bi bi-check-circle-fill"
+                                                                [ngClass]="branchForm?.get('taxActive')?.value ? 'Active': 'Inactive'"></i>
+                                                        </span>
+                                                    </div>
+                                                    <div *ngIf="submitted && branchForm?.get('tax_number')?.errors"
+                                                        class="invalid-feedback" style="display: block;">
+                                                        <div *ngIf="branchForm?.get('tax_number')?.errors?.required">Tax
+                                                            No {{'common.isRequired' | translate}}</div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <label class="form-label">Address
+                                                        <span class="text-danger">*</span>
+                                                    </label>
+
+                                                    <textarea id="branch_address" name="branch_address" rows="3"
+                                                        cols="50" formControlName="branch_address" class="form-control"
+                                                        placeholder="Address"
+                                                        [ngClass]="{ 'is-invalid': submitted && branchForm.get('branch_address').errors }"></textarea>
+
+
+                                                    <div *ngIf="submitted && branchForm.get('branch_address').errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="branchForm.get('branch_address').errors.required">
+                                                            Address {{ 'common.isRequired' | translate }}
+                                                        </div>
+                                                        <div
+                                                            *ngIf="branchForm.get('branch_address').hasError('forbiddenChars')">
+                                                            " and \ are not allowed.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 nz-select">
+                                                    <label class="form-label">{{ 'stolt.party-master.country' |
+                                                        translate }}
+                                                        <span class="text-danger"
+                                                            *ngIf="branchForm?.get('customerStatus')?.value == 'Resident'">*</span>
+                                                    </label>
+                                                    <nz-select class="form-select"
+                                                        (ngModelChange)="getStateListBranch(i)" nzShowSearch
+                                                        nzAllowClear nzPlaceHolder="Country"
+                                                        formControlName="barnch_country"
+                                                        [ngClass]="{ 'is-invalid': submitted && branchForm.get('barnch_country').errors }">
+                                                        <nz-option *ngFor="let country of countryList"
+                                                            [nzLabel]="country.countryName"
+                                                            [nzValue]="country.countryId"></nz-option>
+                                                    </nz-select>
+                                                    <div *ngIf="submitted && branchForm.get('barnch_country').errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="branchForm.get('barnch_country').errors.required">
+                                                            {{ 'stolt.party-master.country' | translate }} {{
+                                                            'common.isRequired' |
+                                                            translate }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 nz-select"
+                                                    *ngIf="branchForm?.get('customerStatus')?.value == 'Resident'">
+                                                    <label class="form-label">{{
+                                                        'smartagent.smartAgent.AllformAddedit.state' |
+                                                        translate }}</label>
+                                                    <input type="text" class="form-control custom-input"
+                                                        formControlName="branch_state" placeholder="State"
+                                                        [ngClass]="{ 'is-invalid': submitted && branchForm.get('branch_state').errors }">
+                                                    <!-- <nz-select class="form-select" (ngModelChange)="getCityBranchList(i)"
+                                                        nzShowSearch nzAllowClear nzPlaceHolder="State" formControlName="branch_state" [ngClass]="{ 'is-invalid': submitted && branchForm.get('branch_state').errors }">
+                                                        <nz-option *ngFor="let state of stateListBranch" [nzLabel]="state.typeDescription"
+                                                            [nzValue]="state.stateId"></nz-option>
+                                                    </nz-select> -->
+                                                    <div *ngIf="submitted && branchForm.get('branch_state').errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="branchForm.get('branch_state').errors.required">
+                                                            State {{ 'common.isRequired' |
+                                                            translate }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 nz-select"
+                                                    *ngIf="branchForm?.get('customerStatus')?.value == 'Resident'">
+                                                    <label class="form-label">{{
+                                                        'smartagent.smartAgent.AllformAddedit.city' |
+                                                        translate }}</label>
+                                                    <input type="text" class="form-control custom-input"
+                                                        formControlName="branch_city" placeholder="City"
+                                                        [ngClass]="{ 'is-invalid': submitted && branchForm.get('branch_city').errors }">
+                                                    <!-- <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="City"
+                                                        formControlName="branch_city" [ngClass]="{ 'is-invalid': submitted && branchForm.get('branch_city').errors }">
+                                                        <nz-option *ngFor="let city of cityListBranch" [nzLabel]="city.cityName"
+                                                            [nzValue]="city.cityName"></nz-option>
+                                                    </nz-select> -->
+                                                    <div *ngIf="submitted && branchForm.get('branch_city').errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="branchForm.get('branch_city').errors.required">
+                                                            City {{ 'common.isRequired' |
+                                                            translate }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4"
+                                                    *ngIf="branchForm?.get('customerStatus')?.value == 'Resident'">
+                                                    <label for="pinCode" class="form-label">Pincode </label>
+                                                    <input type="number" maxlength="6"
+                                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                        class="form-control custom-input" id="pinCode"
+                                                        formControlName="pinCode" placeholder="Pincode"
+                                                        [ngClass]="{ 'is-invalid': submitted && branchForm.get('pinCode').errors }">
+                                                    <div *ngIf="submitted && branchForm.get('pinCode').errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="branchForm.get('pinCode').errors.required">
+                                                            Code {{ 'common.isRequired' | translate }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4"
+                                                    *ngIf="branchForm?.get('customerStatus')?.value == 'Resident'">
+                                                    <label for="placeofSupply" class="form-label">Place of
+                                                        Supply <span class="text-danger">*</span></label>
+                                                    <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                        nzPlaceHolder="Place of Supply" formControlName="placeofSupply"
+                                                        [ngClass]="{ 'is-invalid': submitted && branchForm.get('placeofSupply').errors }">
+                                                        <nz-option *ngFor="let state of supplystateList"
+                                                            [nzLabel]="state.typeDescription"
+                                                            [nzValue]="state.stateId"></nz-option>
+                                                    </nz-select>
+
+                                                    <div *ngIf="submitted && branchForm.get('placeofSupply').errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="branchForm.get('placeofSupply').errors.required">
+                                                            Place of Supply {{ 'common.isRequired' | translate }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 nz-select">
+                                                    <label for="bankName" class="form-label">{{
+                                                        'stolt.party-master.bankName' |
+                                                        translate }}</label>
+                                                    <div class="d-flex align-items-center">
+                                                        <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                            nzPlaceHolder="Bank Name" formControlName="bankName"
+                                                            (ngModelChange)="getBranchBank(i)">
+                                                            <nz-option *ngFor="let bank of bankList"
+                                                                [nzLabel]="bank.bankName"
+                                                                [nzValue]="bank.bankId"></nz-option>
+                                                        </nz-select>
+                                                        <em class="bi bi-plus-circle color-pencil-red pl-1"
+                                                            (click)="openBanks(addBank)"></em>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label for="cust_acc_no" class="form-label">{{
+                                                        'stolt.party-master.acc_no' |
+                                                        translate }}</label>
+                                                    <input type="number" class="form-control custom-input"
+                                                        id="cust_acc_no" formControlName="cust_acc_no"
+                                                        placeholder="ACC Number" (wheel)="$event.preventDefault()">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label for="remarks" class="form-label">{{
+                                                        'stolt.party-master.remarks' |
+                                                        translate }}</label>
+                                                    <input type="text" class="form-control custom-input" id="remarks"
+                                                        formControlName="remarks" placeholder="Remark">
+                                                </div>
+                                                <div class="col-md-4"
+                                                    *ngIf="branchForm?.get('tax_name')?.value == 'GST'">
+                                                    <label for="tanNo" class="form-label">PAN No</label>
+                                                    <input type="text" class="form-control custom-input" id="tanNo"
+                                                        formControlName="tanNo" placeholder="PAN No"
+                                                        [ngClass]="{ 'is-invalid': submitted && branchForm.get('tanNo').errors }">
+
+                                                    <div *ngIf="submitted && branchForm?.get('tanNo')?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="branchForm?.get('tanNo')?.errors?.required">
+                                                            PAN No. is required</div>
+                                                        <div *ngIf="branchForm?.get('tanNo')?.errors?.pattern">
+                                                            Invalid Pattern.</div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="form-label">PIC (Person In Charge)</label>
+                                                    <input type="text" class="form-control custom-input"
+                                                        formControlName="pic" placeholder="PIC">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="form-label">PIC Phone No </label>
+                                                    <input type="number" maxlength="10"
+                                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                        class="form-control custom-input" formControlName="pic_phone" (wheel)="$event.preventDefault()"
+                                                        placeholder="PIC Phone No">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="form-label">PIC Email ID</label>
+                                                    <input type="text" class="form-control custom-input"
+                                                        formControlName="pic_email" placeholder="PIC Email ID"
+                                                        [ngClass]="{ 'is-invalid': submitted && branchForm?.get('pic_email')?.errors }">
+                                                    <div *ngIf="submitted && branchForm?.get('pic_email')?.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="branchForm?.get('pic_email')?.errors?.pattern">
+                                                            {{'error.err_valid_email' |
+                                                            translate}}</div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- 
+                                                <div
+                                                    class="col-md-4 switch-text-contnet-alignment-for-page-new cost-items-bottom-alignment d-flex align-items-center">
+                                                    <div class="taggle form-check form-switch mt-5">
+                                                       
+                                                        <input class="form-check-input "
+                                                            formControlName="BROKERAGE_PAYABLE" type="checkbox"
+                                                            id="flexSwitchCheckDefault">
+                                                            <label class="form-check-label" for="flexSwitchCheckDefault"> {{
+                                                                'stolt.party-master.BROKERAGE_PAYABLE'|translate }}</label>
+                                                    </div>
+                                                </div> -->
+                                                <!-- <div
+                                                    class="col-md-4 switch-text-contnet-alignment-for-page cost-items-bottom-alignment d-flex align-items-center">
+                                                    <div class="taggle form-check form-switch mt-5">
+                                                       
+                                                        <input class="form-check-input  "
+                                                            formControlName="creadirCustomer" type="checkbox"
+                                                            id="flexSwitchCheckDefault">
+                                                            <label class="form-check-label" for="flexSwitchCheckDefault"> {{
+                                                                'stolt.party-master.Creadit_customer'|translate }}</label>
+                                                    </div>
+                                                </div> -->
+                                                <div
+                                                    class="col-md-4 switch-text-contnet-alignment-for-page cost-items-bottom-alignment d-flex align-items-center">
+                                                    <div class="taggle form-check form-switch mt-5">
+
+                                                        <input class="form-check-input  " formControlName="active_flag"
+                                                            type="checkbox" id="flexSwitchCheckDefault">
+                                                        <label class="form-check-label"
+                                                            for="flexSwitchCheckDefault">Active Flag</label>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="col-md-4 switch-text-contnet-alignment-for-page cost-items-bottom-alignment d-flex align-items-center">
+                                                    <div class="taggle form-check form-switch mt-5">
+
+                                                        <input class="form-check-input  " formControlName="kyc_flag"
+                                                            type="checkbox" id="flexSwitchCheckDefault">
+                                                        <label class="form-check-label" for="flexSwitchCheckDefault">KYC
+                                                            Flag</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4" *ngIf="branchForm.value.kyc_flag">
+                                                    <input type="file" class="form-control custom-input"
+                                                        [ngClass]="{'hidetext': documents.length !== 0}"
+                                                        (change)="onSelectedDocument($event,i)" placeholder="">
+                                                    <div class="col-2 mt-1"
+                                                        *ngFor="let document of branchForm.value.documents">
+                                                        <button type="button" class="btn btn-light">{{ document.name }}
+                                                            <em class="mdi mdi-close"
+                                                                (click)="deleteDoc(document,i )"></em></button>
+                                                    </div>
+                                                </div>
+                                                <!-- <div
+                                                    class="col-md-4 switch-text-contnet-alignment-for-page cost-items-bottom-alignment d-flex align-items-center">
+                                                    <div class="taggle form-check form-switch mt-5">
+                                                       
+                                                        <input class="form-check-input mx-1"
+                                                            formControlName="TDS_GST_APPLICABLE" type="checkbox"
+                                                            id="flexSwitchCheckDefault">
+                                                            <label class="form-check-label" for="flexSwitchCheckDefault"> {{
+                                                                'stolt.party-master.TDS_GST_APPLICABLE'|translate }}</label>
+                                                    </div>
+                                                </div> -->
+
+
+                                            </div>
+                                        </ng-container>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </form>
+                    </mat-tab>
+
+                    <mat-tab [disabled]="!id" label="Contacts">
+                        <form [formGroup]="AddressCustomer">
+                            <div class="wrap-form-field m-4">
+                                <div class="">
+                                    <div class="wrap-add-btn wrap-size">
+                                        <a class="btn btn-outline-primary" (click)="addNewCustomer()">
+                                            Add Contact
+                                        </a>
+                                        <a class="px-2" title="Click to Clone primary information"
+                                            (click)="copyMessage()">
+                                            <em class="bi bi-info-circle text-secondary"></em>
+                                        </a>
+                                    </div>
+                                    <div class="table-card mt-4">
+                                        <div class="table-design example-container mat-elevation-z8">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>SR NO</th>
+                                                        <th>Contact Name</th>
+                                                        <th>Address</th>
+                                                        <th>Phone Number</th>
+                                                        <th>Email</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody formArrayName="customer">
+                                                    <tr *ngFor="let customerForm of customer.controls; let i = index"
+                                                        [formGroup]="customerForm">
+                                                        <td class="w-set">{{ i + 1 }}</td>
+                                                        <td>
+                                                            <input type="text" class="form-control"
+                                                                formControlName="customerName"
+                                                                placeholder="Contact Name" appCapitalizeFirst
+                                                                [ngClass]="{ 'is-invalid': submitted && customerForm?.get('customerName')?.errors }">
+                                                            <div *ngIf="submitted && customerForm?.get('customerName')?.errors"
+                                                                class="invalid-feedback">
+                                                                <div
+                                                                    *ngIf="customerForm?.get('customerName')?.errors?.required">
+                                                                    Contact Name {{ 'common.isRequired' | translate }}
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <textarea type="text" class="form-control" rows="3"
+                                                                cols="50" formControlName="address"
+                                                                placeholder="Address"
+                                                                [ngClass]="{ 'is-invalid': submitted && customerForm?.get('address')?.errors }"></textarea>
+                                                            <div *ngIf="submitted && customerForm?.get('address')?.errors"
+                                                                class="invalid-feedback">
+                                                                <div
+                                                                    *ngIf="customerForm?.get('address')?.errors?.required">
+                                                                    Address {{ 'common.isRequired' | translate }}
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" maxlength="10"
+                                                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                                class="form-control" formControlName="phoneNo"
+                                                                placeholder="Phone Number"
+                                                                [ngClass]="{ 'is-invalid': submitted && customerForm?.get('phoneNo')?.errors }" (wheel)="$event.preventDefault()">
+                                                            <div *ngIf="submitted && customerForm?.get('phoneNo')?.errors"
+                                                                class="invalid-feedback">
+                                                                <div
+                                                                    *ngIf="customerForm?.get('phoneNo')?.errors?.required">
+                                                                    Phone Number {{ 'common.isRequired' | translate }}
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" class="form-control"
+                                                                formControlName="email" placeholder="Email"
+                                                                [ngClass]="{ 'is-invalid': submitted && customerForm?.get('email')?.errors }">
+                                                            <div *ngIf="submitted && customerForm?.get('email')?.errors"
+                                                                class="invalid-feedback">
+                                                                <div
+                                                                    *ngIf="customerForm?.get('email')?.errors?.required">
+                                                                    Email {{ 'common.isRequired' | translate }}
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <!-- Only show the delete icon if this is not the first contact -->
+                                                            <a *ngIf="i > 0" class="wrap-btn"
+                                                                (click)="deleteCustomer(i)">
+                                                                <i class="bi bi-trash color-pencil-red"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </form>
+                    </mat-tab>
+
+                    <mat-tab [disabled]="!id" label="KYC & Documents">
+                        <form [formGroup]="KYCAndDocuments">
+                            <div class="wrap-form-field m-4">
+                                <div class="row g-3 align-items-center">
+                                    <br>
+
+                                    <div class="col-md-3">
+                                        <label for="kycPan" class="form-label">COMPANY REGISTRATION NO</label>
+                                        <input type="text" class="form-control custom-input" id="kycPan"
+                                            formControlName="kycPan" placeholder="Company Registration No">
+                                    </div>
+                                    <div class="col-md-3 margin-top">
+                                        <div class="upload-btn-wrapper d-flex ">
+                                            <div *ngIf="!KYCAndDocuments.value.CompanydocumentName" class="btns">
+                                                Click or drag files to upload
+                                                <input class="form-control custom-input" type="file"
+                                                    id="formFileCompany" (change)="onFileSelected($event, 'Company')">
+                                            </div>
+                                            <div *ngIf="KYCAndDocuments.value.CompanydocumentName" class="btns">
+                                                {{KYCAndDocuments.value.CompanydocumentName}}
+                                                <span class="icons-file">
+                                                    <em class="bi bi-eye globally-change-icon-color"
+                                                        (click)="documentPreview('Company')"></em>
+                                                    <em class="bi bi-download" (click)="downloadFile('Company')"></em>
+                                                    <em class="bi bi-trash color-pencil-red"
+                                                        (click)="deleteFile('Company', content1)"></em>
+                                                </span>
+                                            </div>
+                                            <button class="btn btn-outline-primary btn-lg float-end" type="button"
+                                                (click)="uploadDocument('Company')"
+                                                [disabled]="KYCAndDocuments.value.CompanydocumentId || !KYCAndDocuments.value.CompanydocumentName">
+                                                {{ 'smartagent.portenquiry.document.uploadDocument' | translate }}
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label for="kycGst" class="form-label">TAX ID</label>
+                                        <input type="text" class="form-control custom-input" id="kycGst"
+                                            formControlName="kycGst" placeholder="Tax Id">
+                                    </div>
+
+
+
+                                    <div class="col-md-3 margin-top">
+                                        <div class="upload-btn-wrapper d-flex">
+                                            <div *ngIf="!KYCAndDocuments.value.TaxdocumentName" class="btns">
+                                                Click or drag files to upload
+                                                <input class="form-control custom-input" type="file" id="formFileTax"
+                                                    (change)="onFileSelected($event, 'Tax')">
+                                            </div>
+                                            <div *ngIf="KYCAndDocuments.value.TaxdocumentName" class="btns">
+                                                {{KYCAndDocuments.value.TaxdocumentName}}
+                                                <span class="icons-file">
+                                                    <em class="bi bi-eye globally-change-icon-color"
+                                                        (click)="documentPreview('Tax')"></em>
+                                                    <em class="bi bi-download" (click)="downloadFile('Tax')"></em>
+                                                    <em class="bi bi-trash color-pencil-red"
+                                                        (click)="deleteFile('Tax', content1)"></em>
+                                                </span>
+                                            </div>
+                                            <button class="btn btn-outline-primary btn-lg float-end" type="button"
+                                                (click)="uploadDocument('Tax')"
+                                                [disabled]="KYCAndDocuments.value.TaxdocumentId || !KYCAndDocuments.value.TaxdocumentName">
+                                                {{ 'smartagent.portenquiry.document.uploadDocument' | translate }}
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4 d-flex align-items-center">
+                                        <div class="form-check mx-1 d-flex align-items-center p-0">
+                                            <input class="" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                                                formControlName="completeKYC"
+                                                [checked]="KYCAndDocuments.value.completeKYC"
+                                                [disabled]="(!KYCAndDocuments.value.TaxdocumentId || !KYCAndDocuments.value.CompanydocumentId)">
+                                            <label class="form-check-label mx-1" for="flexSwitchCheckChecked"></label>
+                                            <label class="form-check-label mx-1">Complete KYC</label>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </form>
+                    </mat-tab>
+
+                    <mat-tab [disabled]="!id" label="Sales Representative">
+                        <form [formGroup]="salesRepresentativeForm">
+                            <div class="wrap-form-field m-4">
+                                <div class="row g-3 align-items-center">
+
+                                    <div class="col-md-4">
+                                        <label for="saleName" class="form-label"> Name</label>
+                                        <input type="text" class="form-control custom-input" id="saleName"
+                                            formControlName="saleName" placeholder="Name" appCapitalizeFirst
+                                            [ngClass]="{ 'is-invalid': submitted && salesRepresentativeControls.saleName.errors }">
+                                        <div *ngIf="submitted && salesRepresentativeControls.saleName.errors"
+                                            class="invalid-feedback">
+                                            <div *ngIf="salesRepresentativeControls.saleName.errors.required">SALES REP
+                                                Name
+                                                {{'common.isRequired'| translate}}</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label for="saleCode" class="form-label">Code</label>
+                                        <input type="text" class="form-control custom-input" id="saleCode"
+                                            formControlName="saleCode" placeholder="Code">
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label for="saleLocation" class="form-label"> Location</label>
+                                        <input type="text" class="form-control custom-input" id="saleLocation"
+                                            formControlName="saleLocation" placeholder="Location">
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="mb-0 p-0 form-label">Effective From</label>
+                                        <mat-form-field appearance="outline" class="custom-date-picker">
+                                            <div class="d-flex align-items-center  w-100">
+                                                <input matInput [matDatepicker]="pickerEtan" formControlName="saleFrom"
+                                                    class="h-0" placeholder="Effective From" />
+                                                <mat-datepicker-toggle matSuffix
+                                                    [for]="pickerEtan"></mat-datepicker-toggle>
+                                            </div>
+                                            <mat-datepicker #pickerEtan></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label for="salemoblino" class="form-label"> Mobile no</label>
+                                        <input type="tel" maxlength="15" class="form-control custom-input"
+                                            id="salemoblino" formControlName="salemoblino" placeholder=" Mobile No"
+                                            [ngClass]="{ 'is-invalid': submitted && salesRepresentativeControls.salemoblino.errors }">
+                                        <div *ngIf="submitted && salesRepresentativeControls.salemoblino.errors"
+                                            class="invalid-feedback">
+                                            <div *ngIf="salesRepresentativeControls.salemoblino.errors.required">Mobile
+                                                no
+                                                {{'common.isRequired'| translate}}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label for="saleemail" class="form-label">Email
+
+                                        </label>
+                                        <input type="email" class="form-control custom-input" id="saleemail"
+                                            formControlName="saleemail"
+                                            [ngClass]="{ 'is-invalid': submitted && salesRepresentativeControls.saleemail.errors }"
+                                            placeholder="Email">
+                                        <div *ngIf="submitted && salesRepresentativeControls.saleemail.errors"
+                                            class="invalid-feedback">
+                                            <div *ngIf="salesRepresentativeControls.saleemail.errors.required">{{
+                                                'stolt.party-master.email' |
+                                                translate }} {{'common.isRequired'| translate}}</div>
+                                            <div *ngIf="salesRepresentativeControls.saleemail.errors?.pattern">
+                                                {{'error.err_valid_email' |
+                                                translate}}</div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </form>
+                    </mat-tab>
+                    <mat-tab [disabled]="!id" label="Credit Control Details">
+                        <form [formGroup]="creditControlDetailsForm">
+                            <div class="wrap-form-field m-4">
+                                <div class="row g-3 align-items-center">
+
+
+                                    <div class="col-md-4">
+                                        <label class="mb-0 p-0 form-label"> Date From</label>
+                                        <mat-form-field appearance="outline" class="custom-date-picker">
+                                            <div class="d-flex align-items-center  w-100">
+                                                <input matInput [matDatepicker]="pickerEta21"
+                                                    formControlName="lumsumDateFrom" placeholder="Date From" />
+                                                <mat-datepicker-toggle matSuffix
+                                                    [for]="pickerEta21"></mat-datepicker-toggle>
+                                            </div>
+                                            <mat-datepicker #pickerEta21></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="mb-0 p-0 form-label">Date To</label>
+                                        <mat-form-field appearance="outline" class="custom-date-picker">
+                                            <div class="d-flex align-items-center  w-100">
+                                                <input matInput [matDatepicker]="pickerEta22"
+                                                    formControlName="lumsumDateTo" placeholder="Date To" />
+                                                <mat-datepicker-toggle matSuffix
+                                                    [for]="pickerEta22"></mat-datepicker-toggle>
+                                            </div>
+                                            <mat-datepicker #pickerEta22></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="daysinPeriod" class="form-label"> Period(Days) </label>
+                                        <input type="number" class="form-control custom-input" id="daysinPeriod"
+                                            formControlName="daysinPeriod" placeholder="Period"
+                                            [ngClass]="{ 'is-invalid': submitted && creditControlDetailsControls?.daysinPeriod.errors }" (wheel)="$event.preventDefault()">
+                                        <div *ngIf="submitted && creditControlDetailsControls?.daysinPeriod.errors"
+                                            class="invalid-feedback">
+                                            <div *ngIf="creditControlDetailsControls?.daysinPeriod.errors.required">
+                                                Days in Period
+                                                {{'common.isRequired'| translate}}</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label for="amount" class="form-label"> Amount </label>
+                                        <input type="number" class="form-control custom-input" id="amount"
+                                            formControlName="amount" placeholder="Amount"
+                                            [ngClass]="{ 'is-invalid': submitted && creditControlDetailsControls?.amount.errors }" (wheel)="$event.preventDefault()">
+                                        <div *ngIf="submitted && creditControlDetailsControls?.amount.errors"
+                                            class="invalid-feedback">
+                                            <div *ngIf="creditControlDetailsControls?.amount.errors.required">Amount
+                                                {{'common.isRequired'| translate}}</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4 nz-select">
+                                        <label for="currency" class="form-label">Currency</label>
+                                        <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear
+                                            nzPlaceHolder="Currency" formControlName="currency"
+                                            [ngClass]="{'is-invalid': submitted && creditControlDetailsControls?.currency.errors}">
+                                            <nz-option *ngFor="let currency of currencyList"
+                                                [nzLabel]="currency?.currencyShortName"
+                                                [nzValue]="currency?.currencyId"></nz-option>
+                                        </nz-select>
+                                        <div *ngIf="submitted && creditControlDetailsControls?.currency.errors"
+                                            class="invalid-feedback">
+                                            <div *ngIf="creditControlDetailsControls?.currency.errors.required">Currency
+                                                {{'common.isRequired'| translate}}</div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </form>
+                    </mat-tab>
+                    <mat-tab [disabled]="!id" label="Credit Report">
+                        <!-- <form [formGroup]="cibilActionForm"> -->
+
+
+                        <div class="mt-5">
+                            <div class="newtable" *ngIf="financialData?.length">
+                                <table>
+                                    <tr>
+                                        <th>Year</th> <!-- <th>Basic Earning Per Equity Share</th> -->
+                                        <th>RevenueFromSaleOfProducts</th>
+                                        <th>RevenueFromSaleOfServices</th>
+                                        <th>OtherOperatingRevenues</th>
+                                        <th>ExciseDuty</th>
+                                        <th>ServiceTaxCollected</th>
+                                        <th>OtherDutiesTaxesCollected</th>
+                                        <th>RevenueFromOperations</th>
+                                        <th>OtherIncome</th>
+                                        <th>Revenue</th>
+                                        <th>CostOfMaterialsConsumed</th>
+                                        <th>PurchasesOfStockInTrade</th>
+                                        <th>ChangesInInventoriesOfFinishedGoodsWorkInProgressAndStockInTrade</th>
+                                        <th>EmployeeBenefitExpense</th>
+                                        <th>FinanceCosts</th>
+                                        <th>DepreciationDepletionAndAmortisationExpense</th>
+                                        <th>OtherExpenses</th>
+                                        <th>ExceptionalItemsBeforeTax</th>
+                                        <th>ProfitBeforeExtraordinaryItemsAndTax</th>
+                                        <th>ExtraordinaryItemsBeforeTax</th>
+                                        <th>ProfitBeforeTax</th>
+                                        <th>CurrentTax</th>
+                                        <th>DeferredTax</th>
+                                        <th>TaxExpense</th>
+                                        <th>ProfitLossForPeriodFromContinuingOperations</th>
+                                        <th>ProfitLossFromDiscontinuingOperationsBeforeTax</th>
+                                        <th>TaxExpenseOfDiscontinuingOperations</th>
+                                        <th>ProfitLossFromDiscontinuingOperationAfterTax</th>
+                                        <th>ProfitLossForPeriod</th>
+                                        <th>BasicEarningPerEquityShare</th>
+                                        <th>DilutedEarningsPerEquityShare</th>
+                                    </tr>
+                                    <tr *ngFor="let item of financialData">
+                                        <td> {{item?.year}} </td>
+                                        <!-- <td>{{item?.data?.BasicEarningPerEquityShare}}</td> -->
+                                        <td>{{item?.data?.RevenueFromSaleOfProducts}}</td>
+                                        <td>{{item?.data?.RevenueFromSaleOfServices}}</td>
+                                        <td>{{item?.data?.OtherOperatingRevenues}}</td>
+                                        <td>{{item?.data?.ExciseDuty}}</td>
+                                        <td>{{item?.data?.ServiceTaxCollected}}</td>
+                                        <td>{{item?.data?.OtherDutiesTaxesCollected}}</td>
+                                        <td>{{item?.data?.RevenueFromOperations}}</td>
+                                        <td>{{item?.data?.OtherIncome}}</td>
+                                        <td>{{item?.data?.Revenue}}</td>
+                                        <td>{{item?.data?.CostOfMaterialsConsumed}}</td>
+                                        <td>{{item?.data?.PurchasesOfStockInTrade}}</td>
+                                        <td>{{item?.data?.ChangesInInventoriesOfFinishedGoodsWorkInProgressAndStockInTrade}}
+                                        </td>
+                                        <td>{{item?.data?.EmployeeBenefitExpense}}</td>
+                                        <td>{{item?.data?.FinanceCosts}}</td>
+                                        <td>{{item?.data?.DepreciationDepletionAndAmortisationExpense}}</td>
+                                        <td>{{item?.data?.OtherExpenses}}</td>
+                                        <td>{{item?.data?.ExceptionalItemsBeforeTax}}</td>
+                                        <td>{{item?.data?.ProfitBeforeExtraordinaryItemsAndTax}}</td>
+                                        <td>{{item?.data?.ExtraordinaryItemsBeforeTax}}</td>
+                                        <td>{{item?.data?.ProfitBeforeTax}}</td>
+                                        <td>{{item?.data?.CurrentTax}}</td>
+                                        <td>{{item?.data?.DeferredTax}}</td>
+                                        <td>{{item?.data?.TaxExpense}}</td>
+                                        <td>{{item?.data?.ProfitLossForPeriodFromContinuingOperations}}</td>
+                                        <td>{{item?.data?.ProfitLossFromDiscontinuingOperationsBeforeTax}}</td>
+                                        <td>{{item?.data?.TaxExpenseOfDiscontinuingOperations}}</td>
+                                        <td>{{item?.data?.ProfitLossFromDiscontinuingOperationAfterTax}}</td>
+                                        <td>{{item?.data?.ProfitLossForPeriod}}</td>
+                                        <td>{{item?.data?.BasicEarningPerEquityShare}}</td>
+                                        <td>{{item?.data?.DilutedEarningsPerEquityShare}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <!-- Company Basic Details -->
+                            <div class="company-details-container" *ngIf="companyy?.CompanyCin">
+                                <!-- Company Basic Details -->
+                                <div class="company-section">
+                                    <strong>Company CIN:</strong> {{ companyy?.CompanyCin }}<br>
+                                    <strong>Company Name:</strong> {{ companyy?.CompanyName }}<br>
+                                    <strong>Company Date Of Inc:</strong> {{ companyy?.CompanyDateOfInc }}<br>
+                                    <strong>Company Roc City:</strong> {{ companyy?.CompanyRocCity }}<br>
+                                </div>
+
+                                <!-- Company Financial and Legal Information -->
+                                <div class="company-section">
+                                    <strong>Company Reg Number:</strong> {{ companyy?.CompanyRegNumber }}<br>
+                                    <strong>Company Category:</strong> {{ companyy?.CompanyCategory }}<br>
+                                    <strong>Company Sub Category:</strong> {{ companyy?.CompanySubCategory }}<br>
+                                    <strong>Company Class:</strong> {{ companyy?.CompanyClass }}<br>
+                                    <strong>Company Auth Capital:</strong> {{ companyy?.CompanyAuthCapital }}<br>
+                                    <strong>Company Paid Up Capital:</strong> {{ companyy?.CompanyPaidUpCapital }}<br>
+                                </div>
+
+                                <!-- Company Address Information -->
+                                <div class="company-section">
+                                    <strong>Company Full Address:</strong> {{ companyy?.CompanyFullAddress }}<br>
+                                    <strong>Company Reg State:</strong> {{ companyy?.CompanyRegState }}<br>
+                                    <strong>Company Reg City:</strong> {{ companyy?.CompanyRegCity }}<br>
+                                    <strong>Company Reg Pin Code:</strong> {{ companyy?.CompanyRegPinCode }}<br>
+                                    <strong>Company Book Address:</strong> {{ companyy?.CompanyBookAddress }}<br>
+                                </div>
+
+                                <!-- Company Contact and Industry Information -->
+                                <div class="company-section">
+                                    <strong>Company Mca Status:</strong> {{ companyy?.CompanyMcaStatus }}<br>
+                                    <strong>Company Last Bs Date:</strong> {{ companyy?.CompanyLastBsDate }}<br>
+                                    <strong>Company Email:</strong> {{ companyy?.CompanyEmail }}<br>
+                                    <strong>Company Website:</strong> {{ companyy?.CompanyWebSite }}<br>
+                                    <strong>Company Mca Industry:</strong> {{ companyy?.CompanyMcaIndustry }}<br>
+                                    <strong>Company Mca Industry Division:</strong> {{
+                                    companyy?.CompanyMcaIndustryDivision }}<br>
+                                    <strong>Company Mca Industry Group:</strong> {{ companyy?.CompanyMcaIndustryGroup
+                                    }}<br>
+                                </div>
+                            </div>
+
+
+                            <div class="newtable" *ngIf="director?.length">
+                                <table border="1" cellpadding="8" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Director Name</th>
+                                            <th>Director DIN</th>
+                                            <th>Company CIN</th>
+                                            <th>Company Name</th>
+                                            <th>Date of Incorporation</th>
+                                            <th>Company Status</th>
+                                            <th>Industry</th>
+                                            <th>Last Balance Sheet Date</th>
+                                            <th>Paid Up Capital</th>
+                                            <th>Common Director Count</th>
+                                            <th>Director Appointment Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Loop through each director -->
+                                        <ng-container *ngFor="let director of director">
+
+                                            <!-- Check if the director has CompanyOtherCurrentDirectorship data -->
+                                            <ng-container
+                                                *ngIf="director.CompanyOtherCurrentDirectorship && director.CompanyOtherCurrentDirectorship.length > 0; else noCompany">
+
+                                                <!-- Loop through each company for the director -->
+                                                <tr
+                                                    *ngFor="let company of director.CompanyOtherCurrentDirectorship; let i = index">
+                                                    <!-- Only show director name and DIN in the first row for each director -->
+                                                    <td *ngIf="i === 0"
+                                                        [attr.rowspan]="director.CompanyOtherCurrentDirectorship.length">
+                                                        {{ director.DirectorName ? director.DirectorName : '-' }}
+                                                    </td>
+                                                    <td *ngIf="i === 0"
+                                                        [attr.rowspan]="director.CompanyOtherCurrentDirectorship.length">
+                                                        {{ director.DirectorDin ? director.DirectorDin : '-' }}
+                                                    </td>
+
+                                                    <!-- Company details -->
+                                                    <td>{{ company.CompanyCin ? company.CompanyCin : '-' }}</td>
+                                                    <td>{{ company.CompanyName ? company.CompanyName : '-' }}</td>
+                                                    <td>{{ company.CompanyDateOfInc ? company.CompanyDateOfInc : '-' }}
+                                                    </td>
+                                                    <td>{{ company.CompanyMcaStatus ? company.CompanyMcaStatus : '-' }}
+                                                    </td>
+                                                    <td>{{ company.CompanyMcaIndustry ? company.CompanyMcaIndustry : '-'
+                                                        }}</td>
+                                                    <td>{{ company.CompanyLastBsDate ? company.CompanyLastBsDate : '-'
+                                                        }}</td>
+                                                    <td>{{ company.CompanyPaidUpCapital ? company.CompanyPaidUpCapital :
+                                                        '-' }}</td>
+                                                    <td>{{ company.CommonDirectorCount ? company.CommonDirectorCount :
+                                                        '-' }}</td>
+                                                    <td>{{ company.DirectorDateOfAppnt ? company.DirectorDateOfAppnt :
+                                                        '-' }}</td>
+                                                </tr>
+
+                                            </ng-container>
+
+                                            <!-- Template to show when the director has no companies -->
+                                            <ng-template #noCompany>
+                                                <tr>
+                                                    <td>{{ director.DirectorName ? director.DirectorName : '-' }}</td>
+                                                    <td>{{ director.DirectorDin ? director.DirectorDin : '-' }}</td>
+                                                    <td colspan="9">No company data available</td>
+                                                </tr>
+                                            </ng-template>
+
+                                        </ng-container>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+
+                        <div class="newtable" *ngIf="false">
+                            <table border="1" cellpadding="8" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <!-- <th>Director Name</th>
+                <th>Director DIN</th> -->
+                                        <th>Company CIN</th>
+                                        <th>Company Name</th>
+                                        <th>Date of Incorporation</th>
+                                        <th>Company Status</th>
+                                        <th>Address</th>
+                                        <th>ROC Name</th>
+                                        <!-- <th>Paid Up Capital</th>
+                <th>Common Director Count</th>
+                <th>Director Appointment Date</th> -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Loop through each director -->
+                                    <ng-container>
+
+                                        <!-- Check if the director has CompanyOtherCurrentDirectorship data -->
+                                        <ng-container>
+
+                                            <!-- Loop through each company for the director -->
+                                            <tr *ngFor="let company of ulipmcaData">
+                                                <!-- Only show director name and DIN in the first row for each director -->
+                                                <!-- <td *ngIf="i === 0" [attr.rowspan]="director.CompanyOtherCurrentDirectorship.length">
+                            {{ director.DirectorName ? director.DirectorName : '-' }}
+                        </td>
+                        <td *ngIf="i === 0" [attr.rowspan]="director.CompanyOtherCurrentDirectorship.length">
+                            {{ director.DirectorDin ? director.DirectorDin : '-' }}
+                        </td> -->
+
+                                                <!-- Company details -->
+                                                <td>{{ company.CIN ? company.CIN : '-' }}</td>
+                                                <td>{{ company.companyName ? company.companyName : '-' }}</td>
+                                                <td>{{ company.incorporationDate ? company.incorporationDate : '-' }}
+                                                </td>
+                                                <td>{{ company.companyStatus ? company.companyStatus : '-' }}</td>
+                                                <td>{{ company.addressType ? company.addressType : '-' }}</td>
+                                                <td>{{ company.ROCName ? company.ROCName : '-' }}</td>
+                                                <!-- <td>{{ company.CompanyPaidUpCapital ? company.CompanyPaidUpCapital : '-' }}</td>
+                        <td>{{ company.CommonDirectorCount ? company.CommonDirectorCount : '-' }}</td>
+                        <td>{{ company.DirectorDateOfAppnt ? company.DirectorDateOfAppnt : '-' }}</td> -->
+                                            </tr>
+
+                                        </ng-container>
+
+                                        <!-- Template to show when the director has no companies -->
+                                        <ng-template #noCompany>
+                                            <tr>
+                                                <td>{{ director.DirectorName ? director.DirectorName : '-' }}</td>
+                                                <td>{{ director.DirectorDin ? director.DirectorDin : '-' }}</td>
+                                                <td colspan="9">No company data available</td>
+                                            </tr>
+                                        </ng-template>
+
+                                    </ng-container>
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                        <div class="center-container">
+                            <div class="row g-3 align-items-center">
+                                <!-- <div class="col-md-4">
+           <label for="amount" class="form-label">Company CIN</label>
+           <input type="text" class="form-control custom-input" id="companyCin" formControlName="companyCin"
+               placeholder="Company CIN">
+       </div> -->
+                                <div class=""
+                                    *ngIf="smartAgentDetail.instafinancial && smartAgentDetail.instafinancial.isReportDownloaded === true && smartAgentDetail?.paidStatus === true">
+                                    <div class="ribbon-button" (click)="CreateOntherReport()">
+                                        <span>Create Another Report</span>
+                                    </div>
+                                </div>
+
+                                <div class=""
+                                    *ngIf="!checkStatus?.isDownloadable  && smartAgentDetail.instafinancial && 
+                             smartAgentDetail.instafinancial.isReportDownloaded === false && 
+                             smartAgentDetail.instafinancial.orderStatus !== 'Order Delivered' && smartAgentDetail?.paidStatus === true">
+                                    <div class="ribbon-button" (click)="downloadCheckStatus(id)">
+                                        <span>Check Status</span>
+                                    </div>
+                                </div>
+
+                                <div class="" *ngIf=" checkStatus?.isDownloadable ">
+                                    <div class="ribbon-button" (click)="downloadOrderReport(id)">
+                                        <span>Download Order Report</span>
+                                    </div>
+                                </div>
+
+                                <div class=""
+                                    *ngIf="!smartAgentDetail.instafinancial && smartAgentDetail?.paidStatus === true  ">
+                                    <div class="ribbon-button" (click)="CreateOntherReport()">
+                                        <span>Create Order Report</span>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                            <div class="ribbon-button" *ngIf="!smartAgentDetail.paidStatus === true">
+                                <span (click)="pay()">Pay Now & Check</span>
+                            </div>
+                        </div>
+
+
+
+                    </mat-tab>
+                </mat-tab-group>
+
+
+                <div class="col-md-12 d-flex justify-content-center" [ngClass]="isPopup ? 'mb-2' : 'mb-5'">
+                    <button class="btn1   btn-outline-primary mt-3" *ngIf="selectedIndex > 0" type="button"
+                        (click)="previousTab()">
+                        {{ 'common.previous' | translate }}
+                    </button>
+                    <button class="btn1  mt-3" type="button" (click)="onCancel()">
+                        {{ 'common.cancel' | translate }}
+                    </button>
+                    <button *ngIf="!id && !isType" class="btn btn-outline-primary float-end mt-3"
+                        (click)="selectedIndex == 0 ?  onSave1() : onSave()">
+                        {{ 'common.save' | translate }}
+                    </button>
+                    <button *ngIf="id && !isType" class="btn btn-outline-primary float-end mt-3" (click)="onSave()">
+                        {{ 'common.update' | translate }}
+                    </button>
+                    <button *ngIf="selectedIndex < 6" class="btn1   btn-outline-primary mt-3" type="button"
+                        (click)="selectedIndex == 0 && !id ? onSave1() : nextTab()">
+                        {{ 'common.next' | translate }}
+                    </button>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #content1 let-c="close" let-d="dismiss">
+    <div class="modal-content">
+        <div class="modal-header">
+
+            <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+
+            </button>
+        </div>
+        <div class="modal-body mt-4">
+            <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2"> </em> <span
+                class=" text-dark fs-6"> Are you sure you want to delete document?</span>
+        </div>
+        <div class="modal-footer">
+            <div class="text-center">
+                <button type="button" class="btn btn-secondary  btn-sm me-3" (click)="d('Cross click')">No</button>
+                <button type="button" class="btn btn-danger  btn-sm" (click)="c('yes')">Yes</button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+
+<ng-template #notesOverview let-c="close" let-d="dismiss">
+    <div class="p-4">
+        <div class="d-flex justify-content-between">
+            <h6 class="modal-title">Notes</h6>
+            <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+            </button>
+        </div>
+        <form [formGroup]="notesForm">
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <label for="notesRemark" class="form-label">Note<span class="text-danger">*</span></label>
+                    <textarea id="notesReamrk" name="notesReamrk" rows="1" cols="50" formControlName="notesRemark"
+                        class="form-control custom-input rounded-0"></textarea>
+                    <div *ngIf=" notesControls.name?.errors" class="invalid-feedback">
+                        <div *ngIf="notesControls.name?.errors?.required">{{ 'stolt.party-master.Name' |
+                            translate }} {{'common.isRequired'| translate}}</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label class="mb-0 p-0 form-label">Note Date</label>
+                    <mat-form-field appearance="outline" class="custom-date-picker">
+                        <div class="d-flex align-items-center  w-100">
+                            <input matInput readonly [matDatepicker]="pickernoteDate" formControlName="noteDate"
+                                class="h-0" placeholder="Note Date From" />
+                            <mat-datepicker-toggle matSuffix [for]="pickernoteDate"></mat-datepicker-toggle>
+                        </div>
+                        <mat-datepicker #pickernoteDate></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <button [disabled]="notesForm.invalid" class="btn btn-outline-primary float-end mt-3"
+                    (click)="addnotes()">
+                    Save
+                </button>
+            </div>
+        </form>
+    </div>
+</ng-template>
+
+<ng-template #dropdown let-c="close" let-d="dismiss">
+    <div class="p-4">
+        <div class="d-flex justify-content-between">
+            <h6 class="modal-title">{{ isEditMode ? 'Edit Data' : 'Add New' }}</h6>
+            <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+            </button>
+        </div>
+        <form [formGroup]="filterTableForm">
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <label for="failedField">Name<span class="text-danger">*</span></label>
+                    <input type="text" id="failedField" class="form-control" formControlName="name">
+                </div>
+                <div class="col-md-4">
+                    <div class="input-container input-field">
+                        <label for="stageField">Stage<span class="text-danger">*</span></label>
+                        <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="stage"
+                            id="stageField">
+                            <nz-option nzValue="Qualifying" nzLabel="Qualifying"></nz-option>
+                            <nz-option nzValue="Working" nzLabel="Working"></nz-option>
+                            <nz-option nzValue="Quoting" nzLabel="Quoting"></nz-option>
+                            <nz-option nzValue="Shipping" nzLabel="Shipping"></nz-option>
+                        </nz-select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label for="tagsField">Tags</label>
+                    <input type="text" id="tagsField" class="form-control" formControlName="tags">
+                </div>
+                <div class="col-md-4">
+                    <label for="phoneNumbersField">Phone Number<span class="text-danger">*</span></label>
+                    <input type="number" id="phoneNumbersField" maxlength="10"
+                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                        class="form-control" formControlName="overviewPhNo">
+                </div>
+                <div class="col-md-4">
+                    <label for="statusField">Status<span class="text-danger">*</span></label>
+                    <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="overviewStatus"
+                        id="statusField">
+                        <nz-option nzValue="active" nzLabel="Active"></nz-option>
+                        <nz-option nzValue="pending" nzLabel="Pending"></nz-option>
+                    </nz-select>
+                </div>
+                <div class="col-md-4">
+                    <label class="" for="date">Assign
+                        <span class="text-danger">*</span></label>
+                    <div class="">
+                        <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="overviewUser">
+                            <nz-option *ngFor="let opsCordinator of userList" [nzLabel]="opsCordinator.name"
+                                [nzValue]="opsCordinator.userId"></nz-option>
+                        </nz-select>
+                        <div *ngIf="filterTableFormcontrols.overviewUser?.errors" class="invalid-feedback">
+                            <div *ngIf="filterTableFormcontrols.overviewUser?.errors?.required">{{'common.isRequired'|
+                                translate}}</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center">
+                <button [disabled]="filterTableForm?.invalid" class="btn btn-outline-primary float-end mt-3"
+                    (click)="addData()">
+                    Save
+                </button>
+            </div>
+        </form>
+    </div>
+</ng-template>
+
+
+<ng-template #AddState let-modal>
+    <div class="modal-content">
+        <div class="modal-headers mt-2">
+            <h4 class="modal-title">
+                <ng-container *ngIf="!this.idToUpdate; else stateUpdate">
+                    {{ 'common.add' | translate }} {{
+                    "stolt.masters.STATE_MASTER.state"
+                    | translate
+                    }}
+                </ng-container>
+                <ng-template #stateUpdate>
+                    {{ 'common.edit' |
+                    translate }} {{
+                    "stolt.masters.STATE_MASTER.STATE_MASTER"
+                    | translate
+                    }}
+                </ng-template>
+            </h4>
+            <button type="button" class="btn-close shadow-none float-end" (click)="onSaves()"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="wrap-form-field padding-space">
+                <form class="row g-3" [formGroup]="addStateForm">
+                    <div class="col-md-4">
+                        <label class="form-label">State Code</label><span class="text-danger">*</span>
+                        <input type="text" class="form-control custom-input" id=" " formControlName="stateCode"
+                            placeholder="State Code" value=""
+                            [ngClass]="{ 'is-invalid': submittedq && fq.stateCode.errors }" />
+                        <div *ngIf="submittedq && fq.stateCode.errors" class="invalid-feedback">
+                            <div *ngIf="fq.stateCode.errors.required">
+                                State Code
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">State Name</label><span class="text-danger">*</span>
+                        <input type="text" class="form-control custom-input" id=" " formControlName="typeDescription"
+                            placeholder="State Name" value=""
+                            [ngClass]="{ 'is-invalid': submitted && fq.typeDescription.errors }" />
+                        <div *ngIf="submitted && fq.typeDescription.errors" class="invalid-feedback">
+                            <div *ngIf="fq.typeDescription.errors.required">
+                                State Code
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">State Short Name</label>
+                        <input type="text" class="form-control custom-input" id=" " formControlName="stateShortName"
+                            placeholder="State Short Name" value=""
+                            [ngClass]="{ 'is-invalid': submittedq && fq.stateShortName.errors }" />
+                        <div *ngIf="submitted && fq.stateShortName.errors" class="invalid-feedback">
+                            <div *ngIf="fq.stateShortName.errors.required">
+                                State Code
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">GSTN State Code</label>
+                        <input type="text" class="form-control custom-input" id=" " formControlName="GSTNCode"
+                            placeholder="GSTN State Code" value=""
+                            [ngClass]="{ 'is-invalid': submittedq && fq.GSTNCode.errors }" />
+                        <div *ngIf="submittedq && fq.GSTNCode.errors" class="invalid-feedback">
+                            <div *ngIf="fq.GSTNCode.errors.required">
+                                State Code
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <label class="form-label">Country Name</label><span class="text-danger">*</span>
+                        <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear
+                            nzPlaceHolder="Country Name" formControlName="countryCode"
+                            [ngClass]="{'is-invalid': submittedq && fq.countryCode.errors}">
+                            <nz-option *ngFor="let country of countryList" [nzLabel]="country?.countryName"
+                                [nzValue]="country?.countryId"></nz-option>
+                        </nz-select>
+                        <div *ngIf="submittedq && fq.countryCode.errors" class="invalid-feedback">
+                            <div *ngIf="fq.countryCode.errors.required">
+                                {{
+                                "stolt.masters.COUNTRY_MASTER.CountryMasterValidation.CountryNameValidation" | translate
+                                }}
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-4 d-flex align-items-center">
+                        <input type="checkbox" formControlName="isUnion" placeholder="Union Territory" />
+                        <label class="form-label px-1">Is Union Territory </label>
+                    </div>
+
+
+                    <div class="col-md-4 mobile-view-input-alignment">
+
+                    </div>
+                    <div class="form-group wrap-form-action mt-4">
+                        <button class="btn1 btn-lg float-end" (click)="onSaves()" type="submit">
+                            {{ "common.cancel" | translate }}
+                        </button>
+                        <button (click)="stateMasters()" *ngIf="show !== 'show'"
+                            class="btn btn-outline-primary btn-lg float-end" type="submit">
+                            <ng-container>
+                                {{ 'common.save' | translate }}
+                            </ng-container>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #AddCity let-modal>
+    <div class="modal-content nz-allSelect">
+        <div class="modal-headers mt-2">
+            <h4 class="modal-title">
+                <ng-container *ngIf="!this.idToUpdate; else stateUpdate">
+                    {{ 'common.add' | translate }} {{
+                    "stolt.masters.CITY_MASTER.CITY_MASTER"
+                    | translate
+                    }}
+                </ng-container>
+                <ng-template #stateUpdate>
+                    {{ 'common.edit' |
+                    translate }} {{
+                    "stolt.masters.CITY_MASTER.CITY_MASTER"
+                    | translate
+                    }}
+                </ng-template>
+            </h4>
+            <button type="button" class="btn-close shadow-none float-end" (click)="onSaves1()"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="wrap-form-field padding-space">
+                <form class="row g-3" [formGroup]="addCityForm">
+
+                    <div class="col-md-4">
+                        <label class="form-label">{{
+                            "stolt.masters.CITY_MASTER.city" | translate
+                            }}</label><span class="text-danger">*</span>
+                        <input type="text" class="form-control custom-input" id=" " formControlName="cityName"
+                            placeholder="City Name" value=""
+                            [ngClass]="{ 'is-invalid': submitted5 && f5.cityName.errors }" />
+                        <div *ngIf="submitted5 && f5.cityName.errors" class="invalid-feedback">
+                            <div *ngIf="f5.cityName.errors.required">
+                                {{
+                                "stolt.masters.STATE_CITY_MASTER.StateCityMasterValidation.CityMasterValidation" |
+                                translate
+                                }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 nz-select">
+                        <label class="form-label">{{
+                            "stolt.masters.STATE_MASTER.state" | translate
+                            }}</label><span class="text-danger">*</span>
+
+                        <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="State"
+                            formControlName="stateId" [ngClass]="{'is-invalid': submitted5 && f5.stateId.errors}">
+                            <nz-option *ngFor="let state of stateList" [nzLabel]="state?.typeDescription"
+                                [nzValue]="state?.stateId"></nz-option>
+                        </nz-select>
+
+                        <div *ngIf="submitted5 && f5.stateId.errors" class="invalid-feedback">
+                            <div *ngIf="f5.stateId.errors.required">
+                                {{
+                                "stolt.masters.STATE_CITY_MASTER.StateCityMasterValidation.StateMasterValidation" |
+                                translate
+                                }}
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group wrap-form-action mt-4">
+                        <button class="btn1 btn-lg float-end" (click)="clear()" type="submit">
+                            {{ "common.cancel" | translate }}
+                        </button>
+                        <button (click)="cityMasters()" *ngIf="show !== 'show'"
+                            class="btn btn-outline-primary btn-lg float-end" type="submit">
+                            <ng-container *ngIf="!this.idToUpdate; else commoditymst">
+                                {{ 'common.save' | translate }}
+                            </ng-container>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #addBank let-modal>
+    <div class="modal-content">
+        <div class="modal-headers mt-2">
+            <h4 class="modal-title">Add
+                Bank</h4>
+            <button type="button" class="btn-close shadow-none float-end" (click)="cancelBank()"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="wrap-form-field padding-space">
+                <form class="row g-3" [formGroup]="bankForm">
+
+                    <div class="col-md-4 ">
+                        <label class="form-label">Party Name</label><span class="text-danger">*</span>
+                        <input type="text" class="form-control custom-input" formControlName="partyName"
+                            [ngClass]="{ 'is-invalid': submitted4 && f4.partyName.errors }" placeholder="Party Name"
+                            appCapitalizeFirst />
+                        <div *ngIf="submitted4 && f4.partyName.errors" class="invalid-feedback">
+                            <div *ngIf="f4.partyName.errors.required">
+                                Party Name {{"common.isRequired" | translate}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 ">
+                        <label class="form-label">Bank Name</label><span class="text-danger">*</span>
+                        <input type="text" class="form-control custom-input" formControlName="bankName"
+                            [ngClass]="{ 'is-invalid': submitted4 && f4.bankName.errors }" placeholder="Bank Name"
+                            appCapitalizeFirst />
+                        <div *ngIf="submitted4 && f4.bankName.errors" class="invalid-feedback">
+                            <div *ngIf="f4.bankName.errors.required">
+                                Bank Name {{"common.isRequired" | translate}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 ">
+                        <label class="form-label">Bank Short Name</label><span class="text-danger">*</span>
+                        <input type="text" class="form-control custom-input" formControlName="bankShortName"
+                            [ngClass]="{ 'is-invalid': submitted4 && f4.bankShortName.errors }"
+                            placeholder="Bank Short Name" />
+                        <div *ngIf="submitted4 && f4.bankShortName.errors" class="invalid-feedback">
+                            <div *ngIf="f4.bankShortName.errors.required">
+                                Bank Short Name {{"common.isRequired" | translate}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 ">
+                        <label class="form-label">Bank Account Code</label><span class="text-danger">*</span>
+                        <input type="text" class="form-control custom-input" formControlName="bankCode"
+                            [ngClass]="{ 'is-invalid': submitted4 && f4.bankCode.errors }"
+                            placeholder="Bank Account Code" />
+                        <div *ngIf="submitted4 && f4.bankCode.errors" class="invalid-feedback">
+                            <div *ngIf="f4.bankCode.errors.required">
+                                Bank Account Code {{"common.isRequired" | translate}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 ">
+                        <label class="form-label">IFSC Code</label>
+                        <input type="text" class="form-control custom-input" formControlName="ifscCode"
+                            [ngClass]="{ 'is-invalid': submitted4 && f4.ifscCode.errors }" placeholder="IFSC Code" />
+                        <div *ngIf="submitted4 && f4.ifscCode.errors" class="invalid-feedback">
+                            <div *ngIf="f4.ifscCode.errors.required">
+                                IFSC Code {{"common.isRequired" | translate}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 ">
+                        <label class="form-label">Branch</label>
+                        <input type="text" class="form-control custom-input" formControlName="branch"
+                            [ngClass]="{ 'is-invalid': submitted4 && f4.branch.errors }" placeholder="Branch"
+                            appCapitalizeFirst />
+                        <div *ngIf="submitted4 && f4.branch.errors" class="invalid-feedback">
+                            <div *ngIf="f4.branch.errors.required">
+                                Branch Code {{"common.isRequired" | translate}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 ">
+                        <label class="form-label">Swift Code</label>
+                        <input type="text" class="form-control custom-input" formControlName="swiftCode"
+                            [ngClass]="{ 'is-invalid': submitted4 && f4.swiftCode.errors }" placeholder="Swift Code" />
+                        <div *ngIf="submitted4 && f4.swiftCode.errors" class="invalid-feedback">
+                            <div *ngIf="f4.swiftCode.errors.required">
+                                Swift Code {{"common.isRequired" | translate}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 ">
+                        <label class="form-label">Line ID</label>
+                        <input type="text" class="form-control custom-input" formControlName="lineID"
+                            [ngClass]="{ 'is-invalid': submitted4 && f4.lineID.errors }" placeholder="Line ID" />
+                    </div>
+                    <div class="col-md-4 ">
+                        <label class="form-label">FAS Ledger Code</label>
+                        <input type="text" class="form-control custom-input" formControlName="FASCode"
+                            [ngClass]="{ 'is-invalid': submitted4 && f4.FASCode.errors }"
+                            placeholder="FAS Ledger Code" />
+                    </div>
+                    <div class="form-group wrap-form-action mt-4">
+                        <button class="btn1 btn-lg float-end" (click)="cancelBank()" type="submit">
+                            {{ 'common.cancel' | translate }}
+                        </button>
+                        <button (click)="onSaveBank()" class="btn btn-outline-primary btn-lg float-end" type="submit">
+                            {{ 'common.save' | translate }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-template>

@@ -1,0 +1,180 @@
+@import '../../../../../assets/styles/mixins/global.scss';
+
+.border {
+  border: 1px solid black;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.separator {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid black;
+}
+
+
+.available-items,
+.selected-items {
+  display: flex;
+}
+
+.example-list {
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+  background: white;
+}
+
+.example-box {
+  background: white;
+  padding: 20px;
+  margin-right: 10px;
+  cursor: move;
+}
+
+.example-box:first-child {
+  margin-left: 0;
+}
+
+.example-box:last-child {
+  margin-right: 0;
+}
+
+.logo-drop-zone,
+.body-drop-zone,
+.footer-drop-zone {
+  border: 1px dashed #ccc;
+  margin-top: 20px;
+  padding: 20px;
+  text-align: center;
+}
+
+.logo-box,
+.body-box,
+.footer-box {
+  background-color: lightblue;
+  border: 1px solid blue;
+  padding: 20px;
+}
+
+.selected-items {
+  display: flex;
+  flex-direction: column;
+}
+
+.example-box {
+  margin-bottom: 10px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+}
+
+.header,
+.body,
+.footer {
+  margin-bottom: 10px;
+}
+
+.header {
+  top: 0;
+  left: 0;
+  width: 15%;
+  height: 15%;
+  display: inline-block;
+}
+
+.header img {
+  vertical-align: bottom;
+  margin-left: 1246px;
+}
+
+.footer {
+  align-items: center;
+  text-align: center;
+}
+
+.footer p {
+  margin: 5px 0;
+  
+}
+
+
+.NgxEditor__Wrapper1 {
+  height: 100px;
+  
+  border: 1px solid #ccc;
+  
+  border-radius: 5px;
+  
+  padding: 10px;
+ 
+  box-sizing: border-box;
+ 
+}
+
+
+ngx-editor-menu {
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+
+.NgxEditor__Wrapper1 .NgxEditor .NgxEditor__Content {
+  overflow: auto;
+  height: 50px;
+}
+
+
+.save-button {
+  margin-bottom: 10px;
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 3px;
+  margin-left: auto;
+}
+
+.save-button:hover {
+  background-color: #45a049;
+}
+
+.save-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.example-box {
+  position: relative;
+}
+
+.remove-icon {
+  position: absolute;
+  font-size: 15px;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+  color: red;
+  
+}
+
+.subject-input {
+  
+  width: 100%; 
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.error-message {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+}

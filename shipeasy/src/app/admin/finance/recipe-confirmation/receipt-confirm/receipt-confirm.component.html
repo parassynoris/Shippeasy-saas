@@ -1,0 +1,522 @@
+<div class="col"><button class="new-action btn btn-outline-primary float-end" (click)="backbtn()">{{ 'common.back' | translate }}</button></div>
+
+<div class="text-center my-3">
+  <h2 class="headeing-txt">RECEIPT ID- {{ paymentData?._source?.paymentNo }}</h2>
+  <p><strong>Voucher No.- {{ paymentData?._source?.voucherNo }}</strong></p>
+</div>
+<div class="card">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-sm-4"><strong>{{ "smartagent.job.list.reciept.receipt_type" | translate }} </strong></div>
+      <div class="col-sm-4">{{ paymentData?._source?.receiptType }}</div>
+    </div>
+    <div class="row" *ngIf="showVoucherDate">
+      <div class="col-sm-4"><strong>{{ "smartagent.job.list.reciept.voucher_date" | translate }} </strong></div>
+      <div class="col-sm-4">{{ paymentData?._source?.voucherDate }}</div>
+
+    </div>
+
+    <div class="row" *ngIf="showDate">
+      <div class="col-sm-4"><strong>{{ "smartagent.job.list.reciept.trans_date" | translate }} </strong></div>
+      <div class="col-sm-4">15 JUN 2022</div>
+
+    </div>
+
+    <div class="row">
+      <div class="col-sm-4"><strong>{{ "smartagent.job.list.reciept.receipt_entry_date" | translate }} </strong></div>
+      <div class="col-sm-4">{{ paymentData?._source?.receiptEntryDate }}</div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4"><strong>{{ "smartagent.job.list.reciept.department" | translate }} </strong></div>
+      <div class="col-sm-4">{{ paymentData?._source?.department }}</div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4"><strong>{{ "smartagent.job.list.reciept.deposit_bank" | translate }} </strong></div>
+      <div class="col-sm-4">H{{ paymentData?._source?.bankName }}</div>
+    </div>
+  </div>
+</div>
+<div class=""><strong>
+    <h1 class="my-2">Remittance Details</h1>
+  </strong></div>
+<div class="card">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-6">
+            <div><strong>{{ "smartagent.job.list.reciept.remittance_type" | translate }} </strong></div>
+          </div>
+          <div class="col-md-6">
+            <div>{{ paymentData?._source?.paymentType }}</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div><strong>{{ "smartagent.job.list.reciept.remittance_date" | translate }} </strong></div>
+          </div>
+          <div class="col-md-6">
+            <div>{{ paymentData?._source?.paymentDate }}</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div><strong>{{ "smartagent.job.list.reciept.remittance_party" | translate }} </strong></div>
+          </div>
+          <div class="col-md-6">
+            <div>{{ paymentData?._source?.paymentFromName }}</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div><strong>Principal Name</strong></div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <select name="" id="" class=" border-0 border-bottom">
+                <option value="">{{ paymentData?._source?.PrincipalName?.value?.principalName }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-6">
+            <div><strong>{{ "smartagent.job.list.reciept.remittance_bank" | translate }}</strong></div>
+          </div>
+          <div class="col-md-6">
+            <div>{{ paymentData?._source?.bankName }}</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div><strong>{{ "smartagent.job.list.reciept.location" | translate }} </strong></div>
+          </div>
+          <div class="col-md-6">
+            <div>{{ paymentData?._source?.location?.value?.locationName }}</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div><strong>{{ "smartagent.job.list.reciept.remittance_country" | translate }} </strong></div>
+          </div>
+          <div class="col-md-6">
+            <div>{{ paymentData?._source?.country?.value?.countryName }}</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div><strong>{{ "smartagent.job.list.reciept.remittance_ref_no" | translate }}</strong></div>
+          </div>
+          <div class="col-md-6">
+            <div>{{ paymentData?._source?.remittingRefNo }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row wrap-form-field">
+      <div class="my-1"><h6>{{ "smartagent.job.list.reciept.remarks" | translate }} </h6></div>
+      <div class="col-md-8">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-md-6">
+                <div>{{ "smartagent.job.list.reciept.currency" | translate }}  </div>
+              </div>
+              <div class="col-md-6">
+                {{ paymentData?._source?.currency }}
+              </div>
+            </div>
+
+          </div>
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-md-6">
+                <div>{{ "smartagent.job.list.reciept.ex_rate" | translate }}  </div>
+              </div>
+              <div class="col-md-6">
+                {{ paymentData?._source?.exchangeRate }}
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="row">
+
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-md-6">
+                <div>{{ "smartagent.job.list.reciept.amount" | translate }} </div>
+              </div>
+              <div class="col-md-6 form-group">
+                <input type="number" class="border-0 border-bottom" placeholder="" value="{{ paymentData?._source?.paymentAmount }}">
+              </div>
+            </div>
+
+          </div>
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-md-6">
+                <div>{{ "smartagent.job.list.reciept.amountInr" | translate }} </div>
+              </div>
+              <div class="col-md-6">
+                {{ paymentData?._source?.amtInr }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="loginID === 'agent'">
+  <div class="accordion" id="accordionExample">
+    <div class="accordion-item my-2" *ngIf="Advance">
+      <h2 class="accordion-header " id="headingOne">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+          aria-expanded="true" aria-controls="collapseOne" (click)="openWindow('advance')">
+          ADVANCE
+        </button>
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+        data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          <form [formGroup]="advancePayment">
+            <div class="col-md-12 table-with-gheading">
+              <div class="table-responsive">
+                <div class="wrap-table-area wrap-table-design wrap-form-field costtable">
+                  <table aria-describedby="mytable">
+                    <thead>
+                      <tr class="bg-primary">
+                        <th scope="col"  class="text-lefetpy-2"> {{ "smartagent.job.list.reciept.department" | translate }}</th>
+                        <th scope="col" rowspan="2" class="text-left">{{ "smartagent.job.list.reciept.job_no" | translate }}</th>
+                        <th scope="col" rowspan="2" class="text-left">{{ "smartagent.job.list.reciept.voyage" | translate }}</th>
+                        <th scope="col" rowspan="2" class="text-left">{{ "smartagent.job.list.reciept.port" | translate }}</th>
+                        <th scope="col" rowspan="2" class="text-left">{{ "smartagent.job.list.reciept.ETA/ETD" | translate }}</th>
+                        <th scope="col" rowspan="2" class="text-left">{{ "smartagent.job.list.reciept.pdaamtinr" | translate }}</th>
+                        <th scope="col" rowspan="2" class="text-left">
+                          {{ "smartagent.job.list.reciept.amountRECInr" | translate }}
+                        </th>
+                        <th scope="col" rowspan="2" class="text-left"> {{ "smartagent.job.list.reciept.tds_year" | translate }}</th>
+                        <th scope="col" rowspan="2" class="text-left"> {{ "smartagent.job.list.reciept.tds_amt" | translate }}</th>
+                        <th scope="col" rowspan="2" class="text-left"> {{ "smartagent.job.list.reciept.igst" | translate }}</th>
+                        <th scope="col" rowspan="2" class="text-left"> {{ "smartagent.job.list.reciept.cgst" | translate }}</th>
+                        <th scope="col" rowspan="2" class="text-left"> {{ "smartagent.job.list.reciept.sgst" | translate }}</th>
+                        <th scope="col" rowspan="2" class="text-left"> {{ "smartagent.job.list.reciept.ex_chain" | translate }}</th>
+                        <th scope="col" rowspan="2" class="text-left"> {{ "smartagent.job.list.reciept.ex_loss" | translate }}</th>
+                        <th scope="col" rowspan="2" class="text-left"> {{ "smartagent.job.list.reciept.bank_charge" | translate }}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>{{ paymentData?._source?.department }}</td>
+                        <td>{{ paymentData?._source?.jobNumber }}</td>
+                        <td>{{ jobDetails?._source?.vesselDetails?.voyageNo }}</td>
+                        <td>{{ jobDetails?._source?.portDetails?.portName }}</td>
+                        <td>{{ jobDetails?._source?.vesselDetails?.eta | date:'MMM d, y' }}/{{ jobDetails?._source?.vesselDetails?.etd | date:'MMM d, y' }}</td>
+                        <td>{{ totalPriceAmount | currency: "INR" }}</td>
+                        <td>{{ daData?._source?.pdaAdvance | currency: "INR" }}</td>
+                        <td>2022</td>
+                        <td class="d-flex justify-content-between">
+                          {{ 1523 | currency: "INR" }}
+                        </td>
+                        <td>6.5%</td>
+                        <td>6.5%</td>
+                        <td>6.5%</td>
+                        <td>6.5%</td>
+                        <td>0%</td>
+                        <td>3%</td>
+                      </tr>
+                    </tbody>
+                    <tr>
+                      <td class="border-0">Remark</td>
+                      <td class="border-0">
+                        <input type="textarea" class="custom-input border" formControlName="remarks" />
+                      </td>
+                      <td colspan="4" class="text-end border-bottom-0 border-start-0"> Total </td>
+                      <td class="">{{ daData?._source?.pdaAdvance | currency: "INR" }}</td>
+                      <td class=""></td>
+                      <td>
+                        {{ 1523 | currency: "INR" }}
+                      </td>
+                      <td>6.5%</td>
+                      <td>6.5%</td>
+                      <td>6.5%</td>
+                      <td>6.5%</td>
+                      <td>0%</td>
+                      <td>3%</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+
+              <div class="remark-input-grid mt-3">
+                <div class="custom-form-control">
+                  <label class="form-label"> {{ "smartagent.job.list.reciept.fas_clear" | translate }}</label>
+                  <input class="form-control custom-input" type="text" placeholder="" formControlName="fas_clear" />
+                </div>
+                <div class="custom-form-control">
+                  <label class="form-label"> {{ "smartagent.job.list.reciept.receipt_amount" | translate }}</label>
+                  <input class="form-control custom-input" type="number" placeholder=""  formControlName="receipt_amount" />
+                </div>
+                <div class="custom-form-control">
+                  <label class="form-label"> {{ "smartagent.job.list.reciept.fas_no" | translate }}</label>
+                  <input class="form-control custom-input" type="number" placeholder=""  formControlName="fas_no" />
+                </div>
+                <div class="custom-form-control">
+                  <label class="form-label"> {{ "smartagent.job.list.reciept.Previously" | translate }}</label>
+                  <input class="form-control custom-input" type="number" placeholder="" formControlName="Previously"/>
+                </div>
+                <div class="custom-form-control">
+                  <label class="form-label"> {{ "smartagent.job.list.reciept.current_adj" | translate }}</label>
+                  <input class="form-control custom-input" type="number" placeholder="" formControlName="current_adj"/>
+                </div>
+                <div class="custom-form-control">
+                  <label class="form-label"> {{ "smartagent.job.list.reciept.bal_amt" | translate }}</label>
+                  <input class="form-control custom-input" type="number" placeholder="" formControlName="bal_amt"/>
+                </div>
+              </div>
+              <div class="button-center-alignment-custom btn1">
+                <button (click)="cancel()" type="submit">
+                  {{ "common.cancel" | translate }}
+                </button>
+                <button (click)="ReceptPostAdvance()" type="submit">
+                {{'common.save'|translate}}
+                </button>
+              </div>
+
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item my-2" *ngIf="Settlement">
+      <h2 class="accordion-header" id="headingTwo">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+          aria-expanded="false" aria-controls="collapseTwo" (click)="openWindow('settlement')">
+          SETTLEMENT
+        </button>
+      </h2>
+      <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+        data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          <form [formGroup]="settlementPayment">
+            <div class="col-md-12 table-with-gheading">
+              <div class="table-responsive">
+                <div class="wrap-table-area wrap-table-design wrap-form-field costtable">
+                  <table aria-describedby="mytable1">
+                    <thead>
+                      <tr class="bg-primary">
+                        <th scope="col"  class="text-left">Sr. No.</th>
+                        <th scope="col"  class="text-left py-2">{{ "smartagent.job.list.reciept.department" | translate }}</th>
+                        <th scope="col" rowspan="2" class="text-left">
+                          {{ "smartagent.job.list.reciept.amountRECInr" | translate }}
+                        </th>
+                        <th scope="col" rowspan="2" class="text-left">
+                          {{ "smartagent.job.list.reciept.invoice_amount" | translate }}
+                        </th>
+                        <th scope="col" rowspan="2" class="text-left">
+                          {{ "smartagent.job.list.reciept.tds_year" | translate }}
+                        </th>
+                        <th scope="col" rowspan="2" class="text-left"> {{ "smartagent.job.list.reciept.tds_amt" | translate }}</th>
+                        <th scope="col" rowspan="2" class="text-left"> {{ "smartagent.job.list.reciept.igst" | translate }}</th>
+                        <th scope="col" rowspan="2" class="text-left"> {{ "smartagent.job.list.reciept.cgst" | translate }}</th>
+                        <th scope="col" rowspan="2" class="text-left"> {{ "smartagent.job.list.reciept.sgst" | translate }}</th>
+                        <th scope="col" rowspan="2" class="text-left"> {{ "smartagent.job.list.reciept.ex_chain" | translate }}</th>
+                        <th scope="col" rowspan="2" class="text-left"> {{ "smartagent.job.list.reciept.ex_loss" | translate }}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>1.</td>
+                        <td>{{ paymentData?._source?.department }}</td>
+                        <td>
+                          <input class="form-control custom-input" type="number" placeholder="" formControlName="amountRecievedInr"/></td>
+                        <td>{{ paymentData?._source?.paymentAmount | currency: "INR" }}</td>
+
+                        <td>2022</td>
+                        <td>{{ 3589 | currency: "INR" }}</td>
+                        <td>6.5%</td>
+                        <td>6.5%</td>
+                        <td>6.5%</td>
+                        <td>10%</td>
+                        <td>6.5%</td>
+
+
+                      </tr>
+                    </tbody>
+
+                    <tr>
+                      <td class="border-0">{{ "smartagent.job.list.reciept.remarks" | translate }}</td>
+                      <td class="border-0 ">
+                        <input type="textarea" class="custom-input border" formControlName="remarks"/>
+                      </td>
+                      <td colspan="1" class="text-end border-bottom-0 border-start-0"> Total </td>
+                      <td class="">{{ paymentData?._source?.paymentAmount | currency: "INR" }}</td>
+                      <td class=""></td>
+                      <td>
+                        {{ 1523 | currency: "INR" }}
+                      </td>
+                      <td>6.5%</td>
+                      <td>6.5%</td>
+                      <td>6.5%</td>
+                      <td>6.5%</td>
+                      <td>6.5%</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div class="remark-input-grid remark-input-grid-top-alignment mt-3">
+                <div class="custom-form-control">
+                  <label>{{ "smartagent.job.list.reciept.fas_clear" | translate }}</label>
+                  <input class="" type="text" placeholder="" formControlName="fas_clear"/>
+                </div>
+                <div class="custom-form-control">
+                  <label>{{ "smartagent.job.list.reciept.receipt_amount" | translate }}</label>
+                  <input class="" type="number" placeholder="" formControlName="receipt_amount"/>
+                </div>
+                <div class="custom-form-control">
+                  <label>{{ "smartagent.job.list.reciept.fas_no" | translate }}</label>
+                  <input class="" type="number" placeholder="" formControlName="fas_no"/>
+                </div>
+                <div class="custom-form-control">
+                  <label>{{ "smartagent.job.list.reciept.Previously" | translate }}</label>
+                  <input class="" type="number" placeholder=""  formControlName="Previously" />
+                </div>
+                <div class="custom-form-control">
+                  <label>{{ "smartagent.job.list.reciept.current_adj" | translate }}</label>
+                  <input class="" type="number" placeholder=""  formControlName="current_adj" />
+                </div>
+                <div class="custom-form-control">
+                  <label>{{ "smartagent.job.list.reciept.bal_amt" | translate }}</label>
+                  <input class="" type="number" placeholder=""  formControlName="bal_amt" />
+                </div>
+              </div>
+
+              <div class="button-center-alignment-custom">
+                <button class="btn1 btn-lg mx-2" type="button" (click)="cancel()">
+                  {{ "common.cancel" | translate }}
+                </button>
+                <button class="btn btn-outline-primary btn-lg" type="submit" (click)="ReceptPostSettlement()">
+                  Save
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item my-2" *ngIf="OnAccount">
+      <h2 class="accordion-header" id="headingThree">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" (click)="openWindow('onaccount')">
+          ON ACCOUNT
+        </button>
+      </h2>
+      <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+        data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          <form [formGroup]="onAccountPayment">
+            <div class="col-md-12 table-with-gheading">
+              <div class="table-responsive">
+                <div class="wrap-table-area  wrap-table-design wrap-form-field costtable">
+                  <table aria-describedby="mytable2">
+                    <thead>
+                      <tr class="bg-primary">
+                        <th scope="col"  class="text-left py-2">{{ "smartagent.job.list.reciept.department" | translate }}</th>
+                        <th scope="col" rowspan="2" class="text-left">
+                          {{ "smartagent.job.list.reciept.amountRECInr" | translate }}
+                        </th>
+                        <th scope="col" rowspan="2" class="text-left"> {{ "smartagent.job.list.reciept.tds" | translate }}</th>
+                        <th scope="col" rowspan="2" class="text-left"> {{ "smartagent.job.list.reciept.tds_year" | translate }}</th>
+                        <th scope="col" rowspan="2" class="text-left"> {{ "smartagent.job.list.reciept.tds_amt" | translate }}</th>
+                        <th scope="col" rowspan="2" class="text-left"> {{ "smartagent.job.list.reciept.igst" | translate }}</th>
+                        <th scope="col" rowspan="2" class="text-left"> {{ "smartagent.job.list.reciept.cgst" | translate }}</th>
+                        <th scope="col" rowspan="2" class="text-left"> {{ "smartagent.job.list.reciept.sgst" | translate }}</th>
+                        <th scope="col" rowspan="2" class="text-left"> {{ "smartagent.job.list.reciept.remarks" | translate }}</th>
+                        <th scope="col" rowspan="2" class="text-left"> {{ "smartagent.job.list.reciept.ex_chain" | translate }}</th>
+                        <th scope="col" rowspan="2" class="text-left"> {{ "smartagent.job.list.reciept.bank_charge" | translate }}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>{{ paymentData?._source?.department }}</td>
+                        <td><input class="form-control custom-input" type="number" placeholder="" formControlName="amountRecievedInr"/></td>
+                        <td>10%</td>
+                        <td>2022</td>
+                        <td>{{ 3584 | currency: "INR" }}</td>
+                        <td>6.5%</td>
+                        <td>6.5%</td>
+                        <td>6.5%</td>
+                        <td>{{ paymentData?._source?.remarks }}</td>
+                        <td>6.5%</td>
+                        <td>3%</td>
+                        </tr>
+                    </tbody>
+                  
+                    <tr>
+                      <td colspan="1" class="text-end border-bottom-0 border-start-0"> Total </td>
+                      <td><input disabled class="form-control custom-input" type="number" placeholder="" formControlName="amountRecievedInr"/></td>
+                        <td>10%</td>
+                        <td>2022</td>
+                        <td>{{ 3584 | currency: "INR" }}</td>
+                        <td>6.5%</td>
+                        <td>6.5%</td>
+                        <td>6.5%</td>
+                        <td>{{ paymentData?._source?.remarks }}</td>
+                        <td>6.5%</td>
+                        <td>3%</td>
+                    </tr>
+                    
+                    <tr>
+                      <td class="border-0">Remark</td>
+                      <td class="border-0 ">
+                        <input type="textarea" class="custom-input border"  formControlName="remarks"/>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div class="remark-input-grid mt-3">
+                <div class="custom-form-control">
+                  <label class="form-label">{{ "smartagent.job.list.reciept.fas_clear" | translate }} </label>
+                  <input class="form-control custom-input" type="text" placeholder=""  formControlName="fas_clear" />
+                </div>
+                <div class="custom-form-control">
+                  <label class="form-label">{{ "smartagent.job.list.reciept.receipt_amount" | translate }}</label>
+                  <input class="form-control custom-input" type="number" placeholder="" formControlName="receipt_amount" />
+                </div>
+                <div class="custom-form-control">
+                  <label class="form-label">{{ "smartagent.job.list.reciept.fas_no" | translate }}</label>
+                  <input class="form-control custom-input" type="number" placeholder="" formControlName="fas_no" />
+                </div>
+                <div class="custom-form-control">
+                  <label class="form-label">{{ "smartagent.job.list.reciept.Previously" | translate }} </label>
+                  <input class="form-control custom-input" type="number" placeholder="" formControlName="Previously" />
+                </div>
+                <div class="custom-form-control">
+                  <label class="form-label">{{ "smartagent.job.list.reciept.current_adj" | translate }}  </label>
+                  <input class="form-control custom-input" type="number" placeholder="" formControlName="current_adj" />
+                </div>
+                <div class="custom-form-control">
+                  <label class="form-label">{{ "smartagent.job.list.reciept.bal_amt" | translate }} </label>
+                  <input class="form-control custom-input" type="number" placeholder="" formControlName="bal_amt" />
+                </div>
+              </div>
+              <div class="button-center-alignment-custom btn1">
+                <button type="button" (click)="cancel()">
+                  {{ "common.cancel" | translate }}
+                </button>
+                <button type="submit" (click)="ReceptPostOnAccount()">
+                  {{'common.save'|translate}}
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

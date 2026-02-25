@@ -1,0 +1,28 @@
+.table-with-gheading{
+    min-height: auto;
+}
+
+
+::ng-deep {
+
+  .cdk-overlay-container,
+  .cdk-overlay-pane {
+    z-index: 2000 !important;
+  }
+  .wrap-modal-datepicker nz-date-picker{
+    input, select{
+        padding: 0 0px !important;
+        border-bottom: 0px !important;
+      }
+  }
+
+
+}
+.ng-invalid~.invalid-feedback{
+  display: block;
+}
+
+
+.table-with-gheading .wrap-table-area .form-select {
+   font-family:  inherit !important; 
+}

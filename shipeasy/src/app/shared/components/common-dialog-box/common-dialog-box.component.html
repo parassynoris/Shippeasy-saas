@@ -1,0 +1,28 @@
+ 
+    <div   class="modal-content nz-allSelect vessel-master-component open-box">
+      <!-- <div class="modal-headers mt-2 pb-0">
+        <h4 class="modal-title">
+          Change History
+        </h4>
+        <button type="button" class="btn-close shadow-none float-end" (click)="cancel()" aria-label="Close"></button>
+      </div> -->
+      <div class="modal-body">
+        <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view pb-0">
+  
+          <div class="col-md-12 p-0">
+            <div class="text-css">
+                {{data?.updateByName}} has made changes to this job. Your changes will not be saved now. We kindly request you to refresh your browser to view the latest saved information.
+            </div>
+ 
+          </div>
+  
+          <div class="form-group wrap-form-action mt-2 mb-0  text-center">
+            <button class="btn1 btn-lg text-center" (click)="cancel()">
+              {{ "Refresh" | translate }}
+            </button>
+          </div>
+  
+        </div>
+      </div>
+    </div>
+ 

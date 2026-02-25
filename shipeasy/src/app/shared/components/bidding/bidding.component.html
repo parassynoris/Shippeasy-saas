@@ -1,0 +1,58 @@
+<div class="table-charge">
+    <table class="custom-row" aria-describedby="mytable" class="gfg">
+        <thead>
+            <tr class="field-name">
+                <th scope="col" class="text-center">#</th>
+                <th scope="col">Inquiry No.</th>
+                <th scope="col">Transporter</th>
+                <th scope="col">Origin</th>
+                <th scope="col">ETD</th>
+                <th scope="col">Destination</th>
+                <th scope="col">ETA</th>
+                <th scope="col">Bidding Due Date</th>
+                <th scope="col">Rate</th>
+                <th scope="col">Remarks</th>
+                <th scope="col">Status</th>
+                <th scope="col" class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="collapse-ui" *ngFor="let row of enquiryList; let i=index">
+                <td class="text-center">{{i+1}}</td>
+                <td>{{row?.transportinquiryNo}}</td>
+                <td>{{row?.name}}</td>
+                <td>{{row?.origin?.locationType === 'address' ? (row?.origin?.address || row?.origin?.addressId) : row?.origin.locationName}}  </td>
+                <td>{{row?.origin.etd | date:'dd-MM-YYYY'}}</td>
+                <td>{{ row?.destination?.locationType === 'address' ? (row?.destination?.address ||  row?.destination?.addressId) : row?.destination.locationName}}  </td>
+                <td>{{row?.destination.eta| date:'dd-MM-YYYY'}}</td>
+                <td>{{row?.biddingDueDate| date:'dd-MM-YYYY'}}</td>
+                <td>{{row?.rate}} {{row?.currency?.currencyName }}</td>
+                <td>{{row?.remark}}</td>
+                <td> <span class="status-bar" [ngClass]="row?.adminStatus">{{row?.adminStatus}}</span></td>
+                <td class="action-field"> 
+                    <em *ngIf="row.carrierStatus === 'Submitted'" class="bi bi-three-dots dots-color-change cursor-pointer wrap-batch1 border px-1 em-icon" [matMenuTriggerFor]="menu"  #menuTrigger="matMenuTrigger"
+                    [class]="menuTrigger.menuOpen ? 'clicked' : ''">
+                    </em> 
+                    <mat-menu #menu="matMenu" class="wrap-open">
+                      <ng-container  >
+                        <button mat-menu-item class="wrap-inside" (click)="saveAction(row)">
+                            <a><em class="bi bi-check-circle"></em>
+                                Accept</a>
+                        </button>
+                      </ng-container> 
+                      <ng-container  >
+                        <button mat-menu-item class="wrap-inside" (click)="rejectRow(row)">
+                            <a><em class="bi  bi-x-circle"></em>
+                                Reject</a>
+                        </button>
+                      </ng-container> 
+                    </mat-menu>
+ 
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="no-data-availble" *ngIf="enquiryList.length === 0">
+        {{'common.no_data' | translate}}
+    </div>
+</div>

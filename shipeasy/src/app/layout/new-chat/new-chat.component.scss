@@ -1,0 +1,53 @@
+.new-group-chat-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  background-color: #f7f7f7;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  padding: 5px 8px;
+}
+
+.back-arrow {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  margin-right: 5px;
+  color: #e0e0e0;
+  width: 40px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
+.back-arrow:hover {
+  color: #007BFF;
+}
+
+.search-input {
+  border: none;
+  outline: none;
+  flex-grow: 1;
+  font-size: 16px;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+  color: #333;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-input:focus {
+  background-color: white;
+}

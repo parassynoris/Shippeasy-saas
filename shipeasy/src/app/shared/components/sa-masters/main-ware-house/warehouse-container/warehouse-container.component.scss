@@ -1,0 +1,84 @@
+/* Fix for button hover effects */
+.max-con.new-action.btn.btn-outline-primary {
+  color: #0d6efd !important;
+  border-color: #0d6efd !important;
+  background-color: transparent !important;
+  transition: all 0.3s ease;
+}
+
+.max-con.new-action.btn.btn-outline-primary:hover {
+  color: #ffffff !important;
+  background-color: #0d6efd !important;
+  border-color: #0d6efd !important;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(13, 110, 253, 0.2);
+}
+
+.max-con.new-action.btn.btn-outline-primary:focus {
+  color: #ffffff !important;
+  background-color: #0d6efd !important;
+  border-color: #0d6efd !important;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.max-con.new-action.btn.btn-outline-primary:active {
+  color: #ffffff !important;
+  background-color: #0a58ca !important;
+  border-color: #0a53be !important;
+}
+
+/* Alternative approach - more specific targeting */
+.wrap-inside .max-con.new-action {
+  color: #0d6efd !important;
+  border: 1px solid #0d6efd !important;
+  background-color: white !important;
+  text-decoration: none !important;
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  margin: 0 2px;
+  transition: all 0.3s ease-in-out;
+}
+
+.wrap-inside .max-con.new-action:hover {
+  color: white !important;
+  background-color: #0d6efd !important;
+  border-color: #0d6efd !important;
+  text-decoration: none !important;
+}
+
+/* If using different colors for different actions */
+.gate-in-btn {
+  color: #198754 !important;
+  border-color: #198754 !important;
+}
+
+.gate-in-btn:hover {
+  color: white !important;
+  background-color: #198754 !important;
+  border-color: #198754 !important;
+}
+
+.inward-btn {
+  color: #fd7e14 !important;
+  border-color: #fd7e14 !important;
+}
+
+.inward-btn:hover {
+  color: white !important;
+  background-color: #fd7e14 !important;
+  border-color: #fd7e14 !important;
+}
+
+.gate-out-btn {
+  color: #dc3545 !important;
+  border-color: #dc3545 !important;
+}
+
+.gate-out-btn:hover {
+  color: white !important;
+  background-color: #dc3545 !important;
+  border-color: #dc3545 !important;
+}
+.status-badge {
+  font-size: 0.688rem;
+}

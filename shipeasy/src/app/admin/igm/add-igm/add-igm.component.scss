@@ -1,0 +1,198 @@
+@import '../../../../assets/styles/mixins/global.scss';
+
+.form-check-input:checked {
+    border-color: var(--link-text-color);
+}
+.table-responsive {
+    margin-top: 20px;
+    max-height: 320px;
+
+    table {
+        border-spacing: 0 0px;
+
+        td {
+            border: 0;
+            border-bottom: 1px solid #e3e3e3;
+
+            &:first-child,
+            &:last-child {
+                border-radius: 0;
+            }
+        }
+    }
+}
+
+.table-responsive-main {
+    margin-top: 20px;
+
+    table {
+        border-spacing: 0 0px;
+
+        td {
+            border: 0;
+            border-bottom: 1px solid #e3e3e3;
+
+            &:first-child,
+            &:last-child {
+                border-radius: 0;
+            }
+        }
+    }
+}
+
+.costtable table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.costtable th {
+    background-color: #f5f5f5
+}
+
+.costtable th,
+.costtable td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #e0e0e0;
+}
+
+.costtable td.bnull {
+    border: 0px !important;
+    border-bottom: 1px solid #bbb !important;
+}
+
+@media only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px) {
+
+    .costtable table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+
+    .costtable table thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    .costtable table tr {
+        border: 1px solid var(--theme-globally-border-color);
+        margin: 0 0 1rem 0;
+    }
+
+    .costtable table td {
+        /* Behave like a "row" */
+        border: none;
+        border-bottom: 1px solid var(--theme-globally-border-color);
+        position: relative;
+        padding-left: 50%;
+    }
+
+    .costtable table td:before {
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        width: fit-content;
+        padding-right: 10px;
+        white-space: nowrap;
+    }
+
+    .costtable table .action-field {
+        text-align: left;
+    }
+
+    .costtable td:nth-of-type(1):before {
+        content: "Optional Charge";
+    }
+
+    .costtable td:nth-of-type(2):before {
+        content: "Charge Name";
+    }
+
+    .costtable td:nth-of-type(3):before {
+        content: "Vessel Unit";
+    }
+
+    .costtable td:nth-of-type(4):before {
+        content: "Unit";
+    }
+
+    .costtable td:nth-of-type(5):before {
+        content: "Zero";
+    }
+
+    .costtable td:nth-of-type(6):before {
+        content: "Currency";
+    }
+
+    .costtable td:nth-of-type(7):before {
+        content: "Exc.Rate";
+    }
+
+    .costtable td:nth-of-type(8):before {
+        content: "QTY";
+
+    }
+
+    .costtable td:nth-of-type(9):before {
+        content: "Rate Unit";
+
+    }
+
+    .costtable td:nth-of-type(10):before {
+        content: "AMT in FC";
+
+    }
+
+    .costtable td:nth-of-type(11):before {
+        content: "AMT in INR";
+
+    }
+
+    .costtable td:nth-of-type(12):before {
+        content: "GST";
+
+    }
+
+    .costtable td:nth-of-type(13):before {
+        content: "Action";
+    }
+
+}
+
+
+::ng-deep {
+    .wrap-modal-autosearch {
+        nz-select {
+
+            input,
+            select {
+                padding: 0 0px !important;
+                border: 1px solid rgb(207 202 202) !important;
+            }
+        }
+
+        .nz-form-select.wrap-inline-select nz-select-top-control {
+            height: 32px !important;
+        }
+    }
+
+    .cdk-overlay-container,
+    .cdk-overlay-pane {
+        z-index: 2000 !important;
+    }
+}
+
+.nz-select-width {
+    width: 100%;
+}
+.taggle {
+    label {
+        margin-left: 40px;
+    }
+}
+

@@ -1,0 +1,112 @@
+<form [formGroup]="newenquiryForm">
+  <div class="modal-dialog custom-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{isTypeForm}} {{ 'stolt.batch.charges.headings' | translate }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">{{ 'stolt.batch.charges.new.ChargeGroup' | translate }}<span
+                  class="text-danger">*</span> </label>
+              <select formControlName="charge_group" [disabled]="isshowDetails" class="form-select custom-input"
+                [ngClass]="{'is-invalid': submitted && f.charge_group.errors}">
+                <option selected></option>
+              </select>
+              <div *ngIf="submitted && f.charge_group.errors" class="invalid-feedback">
+                <div *ngIf="f.charge_group.errors.required">{{ 'stolt.batch.charges.new.ChargeGroup' | translate }} is
+                  required</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">{{ 'stolt.batch.charges.new.ChargeName' | translate }}<span
+                  class="text-danger">*</span> </label>
+              <select formControlName="charge_name" [disabled]="isshowDetails" class="form-select custom-input"
+                [ngClass]="{'is-invalid': submitted && f.charge_name.errors}">
+                <option selected></option>
+              </select>
+              <div *ngIf="submitted && f.charge_name.errors" class="invalid-feedback">
+                <div *ngIf="f.charge_name.errors.required">{{ 'stolt.batch.charges.new.ChargeName' | translate }} is
+                  required</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-field-section">
+              <label class="form-label">{{ 'stolt.batch.charges.new.Currency' | translate }}<span
+                  class="text-danger">*</span> </label>
+              <select formControlName="currency" class="form-select custom-input rounded-0"
+                [ngClass]="{'is-invalid': submitted && f.currency.errors}">
+                <option selected>INR</option>
+              </select>
+              <div *ngIf="submitted && f.currency.errors" class="invalid-feedback">
+                <div *ngIf="f.currency.errors.required">{{ 'stolt.batch.charges.new.Currency' | translate }} is required
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="col-md-4">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">{{ 'stolt.batch.charges.column.STC_amount' | translate }}
+              </label>
+              <input type="text" class="form-control custom-input rounded-0" id="Principal " placeholder="" value="120">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-field-section">
+              <label class="form-label">{{ 'stolt.batch.charges.column.JMB_amount' | translate }}</label>
+              <input type="text" class="form-control custom-input rounded-0" id="Principal " placeholder="" value="120">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-field-section">
+              <label class="form-label">{{ 'stolt.batch.charges.new.ChargeTerm' | translate }}<span
+                  class="text-danger">*</span> </label>
+              <select formControlName="charge_term" class="form-select custom-input rounded-0"
+                [ngClass]="{'is-invalid': submitted && f.charge_term.errors}">
+                <option selected>PI</option>
+              </select>
+              <div *ngIf="submitted && f.charge_term.errors" class="invalid-feedback">
+                <div *ngIf="f.charge_term.errors.required">{{ 'stolt.batch.charges.new.ChargeTerm' | translate }} is
+                  required</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">{{ 'stolt.batch.charges.column.payableAt' | translate }}
+              </label>
+              <input type="text" class="form-control custom-input rounded-0" id="Principal " placeholder="" value="18%">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">{{ 'stolt.batch.charges.column.gst' | translate }} </label>
+              <input type="text" class="form-control custom-input rounded-0 " id="Principal " placeholder=""
+                value="15000  ">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="wrap-form-field">
+          <div class="form-group wrap-form-action">
+            <button (click)="onClose($event)" class="btn1 btn-lg float-end" data-bs-dismiss="modal"
+              type="submit">
+              {{ 'common.cancel' | translate }}
+            </button>
+            <button (click)="onSave()" class="btn btn-outline-primary btn-lg float-end" type="submit">
+              {{ 'common.save' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

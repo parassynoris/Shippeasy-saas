@@ -1,0 +1,351 @@
+<div class="">
+  <div class="wrap-table-area">
+    <div class="row">
+      <div class="col-md-12">
+        <div class=" d-flex flex-column flex-sm-row gap-3">
+          <div class="col-md-4">
+          </div>
+          <div class="col-md-8 ">
+            <div class="wrap-form-field d-flex gap-3 wrap-pagination justify-content-end alignment
+                       " *ngIf="!show">
+             
+              <div class="mt-2" *ngIf="isAddNewSection">
+                <a class="new-action" routerLink="">{{ 'stolt.batch.charges.action.autoLoadCharge' | translate }}</a>
+              </div>
+             
+              <div class="mt-2">
+                <a class="new-action" *ngIf="chargesData.length === 0" (click)="onOpen(freightModal, 0)"> Add Freight</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="table-responsive">
+          <table aria-describedby="mytable" class="gfg">
+            <thead>
+              <tr class="field-name ">
+                <th scope="col" class="text-start">{{ 'stolt.batch.charges.column.chargeName' | translate }}</th>
+                <th scope="col" class="text-center">{{ 'stolt.batch.charges.column.Currency' | translate }}</th>
+                <th scope="col" class="text-end">{{ 'stolt.batch.charges.column.STC_amount' | translate }}</th>
+                <th scope="col" class="text-end">{{ 'stolt.batch.charges.column.JMB_amount' | translate }}</th>
+                <th scope="col" class="text-center">{{ 'stolt.batch.charges.column.chargeTerm' | translate }}</th>
+                <th scope="col" class="text-center">{{ 'stolt.batch.charges.column.gst' | translate }}</th>
+                <th scope="col" class="text-center"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-template ngFor let-charges [ngForOf]="chargesData">
+                <tr class="collapse-ui">
+                  <td class="text-start">{{charges.costItemName}}</td>
+                  <td class="text-center">{{charges.currency}}</td>
+                  <td class="text-end">{{charges.stcAmount}}</td>
+                  <td class="text-end">{{charges.jmbAmount}}</td>
+                  <td class="text-center">{{charges.chargeTerm}}</td>
+                  <td class="text-center">{{charges.gst}}</td>
+                  <td class="action-field" *ngIf="!show">
+                    <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}"  class="mtop"><a
+                        (click)="onOpen(freightModal,charges)" ><em class="bi bi-pencil color-pencil-red"></em> </a>
+                    </span>
+                    <span nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}" class="mtop"><a><em
+                          class="bi bi-trash color-pencil-red" (click)="onDelete(content1,charges )"></em></a>
+                    </span>
+                    <span *ngIf="isAddNewSection" nz-tooltip nzTooltipTitle="{{ 'common.toggle' | translate }}"
+                      class="mtop boot-icon">
+                      <a *ngIf="charges.id !== isShow" (click)="onShowdetails(charges.id)">
+                        <em class="bi bi-arrow-down"></em></a>
+                      <a *ngIf="charges.id === isShow" (click)="onShowdetails('')">
+                        <em class="bi bi-arrow-up"></em></a>
+                    </span>
+                  </td>
+                </tr>
+              </ng-template>
+            </tbody>
+          </table>
+        </div>
+        <div class="no-data-availble" *ngIf="chargesData.length === 0">
+          {{'common.no_data' | translate}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #freightModal let-c="close" let-d="dismiss">
+  <form [formGroup]="newenquiryForm">
+    <div class="modal-content nz-allSelect">
+      <div class="modal-header">
+        <h5 class="modal-title modal-title text-capitalize">
+         SHIPEASY Freight
+        </h5>
+     </div>
+      <ng-container *ngIf="!popUp"> 
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-4 nz-select" *ngIf="false">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">{{ 'stolt.batch.charges.new.ChargeGroup' | translate }}<span
+                  class="text-danger">*</span></label>
+
+
+              <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="chargeGroup"
+                [ngClass]="{'is-invalid': submitted && f.chargeGroup.errors}">
+                <nz-option *ngFor="let data of  sort(costHeadList ,'costheadName')" [nzLabel]="data.costheadName"
+                  [nzValue]="data.costheadId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.chargeGroup.errors" class="invalid-feedback">
+                <div *ngIf="f.chargeGroup.errors.required">{{ 'stolt.batch.charges.new.ChargeGroup' | translate }} is
+                  required</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 nz-select">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">{{ 'stolt.batch.charges.new.ChargeName' | translate }}<span
+                  class="text-danger">*</span></label>
+
+              <nz-select nzDisabled class="form-select" nzShowSearch nzAllowClear formControlName="chargeName"
+                [ngClass]="{'is-invalid': submitted && f.chargeName.errors}">
+                <nz-option *ngFor="let data of  sort(chargeName ,'costitemName')" [nzLabel]="data.costitemName"
+                  [nzValue]="data.costitemId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.chargeName.errors" class="invalid-feedback">
+                <div *ngIf="f.chargeName.errors.required">{{ 'stolt.batch.charges.new.ChargeName' | translate }} is
+                  required</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label">{{ "stolt.batch.charges.column.STC_amount" | translate }}
+              </label>
+              <input (keyup)="changeJMB();calcuGST($event);" type="number" formControlName="stcAmount" 
+                class="form-control custom-input rounded-0" 
+                [ngClass]="{ 'is-invalid': submitted && f.stcAmount.errors }"/>
+                <div *ngIf="submitted && f.stcAmount.errors" class="invalid-feedback">
+                  <div *ngIf="f.stcAmount.errors.required">{{ "stolt.batch.charges.column.STC_amount" | translate }} is required
+                  </div>
+                </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-field-section">
+              <label class="form-label">{{
+                "stolt.batch.charges.column.JMB_amount" | translate
+                }}</label>
+              <input type="number" (keyup)="calcuGST($event)" formControlName="jmbAmount" class="form-control custom-input rounded-0"
+                placeholder="" value="" />
+            </div>
+          </div>
+         
+          <div class="col-md-2 nz-select">
+            <div class="form-field-section">
+              <label class="form-label">{{ 'stolt.batch.charges.new.Currency' | translate }} <span
+                  class="text-danger">*</span></label>
+
+              <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="currency"
+               (ngModelChange)="setCustExchange()"
+               >
+                <nz-option *ngFor="let data of  sort(currencyList ,'currencyShortName')" [nzLabel]="data.currencyShortName"
+                  [nzValue]="data.currencyId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.currency.errors" class="error-msg">
+                <div *ngIf="f.currency.errors.required">{{ 'stolt.batch.charges.new.Currency' | translate }} is required
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4" *ngIf="false">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">Exchange Rate <span class="text-danger">*</span></label>
+              <input formControlName="exchangeRate" type="number" class="form-control custom-input rounded-0t"
+                [ngClass]="{ 'is-invalid': submitted && f.exchangeRate.errors }">
+              <div *ngIf="submitted && f.exchangeRate.errors" class="invalid-feedback">
+                <div *ngIf="f.exchangeRate.errors.required">Exchange Rate is required
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4" *ngIf="false">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">Container No</label>
+            
+              <ng-multiselect-dropdown [settings]="settings" [data]="containerList"
+                [ngClass]="{ 'is-invalid': submitted && lisyOfContainer.length === 0 }"
+                [ngModelOptions]="{standalone: true}" [(ngModel)]="lisyOfContainer">
+              </ng-multiselect-dropdown>
+            </div>
+          </div>
+          <div class="col-md-4"  *ngIf="false">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">{{ 'stolt.batch.charges.column.Quantity' | translate }} <span
+                  class="text-danger">*</span>
+              </label>
+              <input formControlName="quantity" type="number" class="form-control custom-input rounded-0" disabled
+                [ngClass]="{ 'is-invalid': submitted && f.quantity.errors }">
+              <div *ngIf="submitted && f.quantity.errors" class="invalid-feedback">
+                <div *ngIf="f.quantity.errors.required">{{ 'stolt.batch.charges.column.Quantity' | translate }} is
+                  required
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4" *ngIf="false">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">Rate <span class="text-danger">*</span></label>
+              <input type="number" formControlName="rate" (keyup)="calcuTotal($event)"
+                class="form-control custom-input rounded-0t" [ngClass]="{ 'is-invalid': submitted && f.rate.errors }">
+              <div *ngIf="submitted && f.rate.errors" class="invalid-feedback">
+                <div *ngIf="f.rate.errors.required">Rate is required
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4"  *ngIf="false">
+            <div class="form-field-section">
+              <label class="form-label">{{ 'stolt.batch.charges.column.amount' | translate }}</label>
+              <input type="number" [ngClass]="{ 'is-invalid': submitted && f.amount.errors }" formControlName="amount"
+                class="form-control custom-input rounded-0t" (keyup)="calcuGST($event)">
+            <div *ngIf="submitted && f.amount.errors" class="invalid-feedback">
+                <div *ngIf="f.amount.errors.required">Amount is required
+                </div>
+              </div>
+            </div>
+          </div> 
+
+         
+
+          <div class="col-md-4">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">{{ 'stolt.batch.charges.column.gst_percentage' | translate }}
+                <span class="text-danger">*</span>
+              </label>
+              <input formControlName="gstPercentage" placeholder="%" (keyup)="calcuGST()" type="number"
+                class="form-control custom-input rounded-0" id="Principal " placeholder=""
+                [ngClass]="{ 'is-invalid': submitted && f.gstPercentage.errors }">
+              <div *ngIf="submitted && f.gstPercentage.errors" class="invalid-feedback">
+                <div *ngIf="f.gstPercentage.errors.required">{{ 'stolt.batch.charges.column.gst_percentage' | translate
+                  }} is required
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">GST Amount</label>
+              <input type="text" disabled formControlName="gst" class="form-control custom-input rounded-0 "
+                id="Principal " placeholder="">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">{{ 'stolt.batch.charges.new.TotalAmount' | translate }}
+              </label>
+              <input type="text" disabled formControlName="totalAmount" class="form-control custom-input rounded-0"
+                id="Principal " placeholder="">
+            </div>
+          </div>
+          <div class="col-md-4" *ngIf="false">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label">Payable At
+              </label>
+              <input type="text" formControlName="payableAt" class="form-control custom-input rounded-0" placeholder=""
+                value="" />
+            </div>
+          </div>
+
+          <div class="col-md-4 nz-select">
+            <div class="form-field-section">
+              <label class="form-label">Freight Charge Term<span class="text-danger">*</span></label>
+              <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="chargeTerm"
+                [ngClass]="{'is-invalid': submitted && f.chargeTerm.errors}">
+                <nz-option *ngFor="let data of chargeTermList" [nzLabel]="data.typeName"
+                  [nzValue]="data.typeName"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.chargeTerm.errors" class="invalid-feedback">
+                <div *ngIf="f.chargeTerm.errors.required">{{ 'stolt.batch.charges.new.ChargeTerm' | translate }} is
+                  required</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">Remarks</label>
+              <input formControlName="remarks" class="form-control custom-input rounded-0t">
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="wrap-form-field">
+          <div class="form-group wrap-form-action">
+            <button (click)="closePopUp()" class="btn1 btn-lg float-end" data-bs-dismiss="modal"
+              type="button">
+              {{ "common.cancel" | translate }}
+            </button>
+            <button (click)="onSave(true)" class="btn btn-outline-primary btn-lg float-end" type="submit">
+              {{ "common.save" | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+      <ng-container *ngIf="popUp"> 
+      <div class="modal-body mt-4">
+        <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2"> </em> <span
+           class=" text-dark fs-6">AGENT amount is less than SHIPEASY amount. Are you sure you want to continue ? </span>
+     </div>
+     <div class="modal-footer">
+        <div class="text-center">
+           <button type="button" class="btn btn-secondary  btn-sm me-3"
+              (click)="popUp = false">{{'common.no'|translate}}</button>
+           <button type="button" class="btn btn-danger  btn-sm" (click)="popUp = false;onSave(false)">{{'common.yes'|translate}}</button>
+        </div>
+     </div>
+    </ng-container>
+
+    </div>
+  </form>
+</ng-template>
+
+<ng-template #content1 let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+      </button>
+    </div>
+    <div class="modal-body mt-4">
+      <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2"> </em> <span
+        class=" text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary  btn-sm me-3" (click)="d('Cross click')">No</button>
+        <button type="button" class="btn btn-danger  btn-sm" (click)="c('yes')">Yes</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #check let-c="close" let-d="dismiss">
+  <div class="modal-content">
+     <div class="modal-header">
+        <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+        </button>
+     </div>
+     <div class="modal-body mt-4">
+        <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2"> </em> <span
+           class=" text-dark fs-6">AGENT amount is less than SHIPEASY amount. {{ "error.you_sure" | translate }} you want to continue </span>
+     </div>
+     <div class="modal-footer">
+        <div class="text-center">
+           <button type="button" class="btn btn-secondary  btn-sm me-3"
+              (click)="d('Cross click')">{{'common.no'|translate}}</button>
+           <button type="button" class="btn btn-danger  btn-sm" (click)="c('yes')">{{'common.yes'|translate}}</button>
+        </div>
+     </div>
+  </div>
+</ng-template>

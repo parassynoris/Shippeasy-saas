@@ -1,0 +1,7 @@
+/node_modules
+/temp.js
+.dev.env
+.demo.env
+.prod.env
+dump
+.env

@@ -1,0 +1,129 @@
+<div class="table-with-gheading" *ngIf="currentUrl === 'local-tariff'">
+    <div class="wrap-table-area">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="float-clear-mobile-view d-flex flex-column flex-sm-row gap-3 float-start search-section">
+            <div class="input-group custom-input">
+              <input type="text" class="form-control" placeholder="Search" aria-label="Search" />
+            </div>
+          </div>
+          <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2">
+
+            <!-- Screen is under developement so do not remove commented code  -->
+
+            <!-- <div class="mt-2">
+              <span>
+                <h5>{{ fromSize }}-{{ count }} of {{ toalLength }}</h5>
+              </span>
+            </div> -->
+            <!-- <div class="mt-2">
+              <span class="prv" [class.disable-arrow-sign]="fromSize === 1" (click)="prev()"><em
+                  class="typcn typcn-chevron-left"></em></span>
+              <span class="prv" [class.disable-arrow-sign]="count === toalLength" (click)="next()"><em
+                  class="typcn typcn-chevron-right"></em></span>
+            </div> -->
+            <!-- <div class="mt-2">
+              <select class="form-select form-select-sm" (change)="filter($event)">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+            </div> -->
+            <!-- <div class="mt-2">
+              <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="openPDF()">{{
+                'common.print' | translate }} {{
+                  'common.list' | translate }}</a>
+            </div>
+            <div class="mt-2">
+              <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="exportAsExcelFile()">{{
+                'common.exportToExcel' | translate }}</a>
+            </div> -->
+            <div class="mt-2">
+              <a class="new-action" (click)="open('add')">{{'common.add' | translate}} Rule</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="table-responsive" id="htmlData">
+            <table aria-describedby="mytable" class="">
+              <thead>
+                <tr class="field-name">
+                  <th scope="col" class="width15 text-center">Action</th>
+                  <th scope="col" class="width15">{{'stolt.masters.ShippingLine.name' | translate }}   <em class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                  <th scope="col" class="width10">Short Name <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col" class="width15">NOA Shipping Line<em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col" class="width15">SCAC Code<em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col" class="width10">Email<em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col" class="width10">
+                    Status  <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                </tr>
+                <!-- <tr>
+                  <th scope="col"></th>
+                  <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="name"
+                      (keydown.enter)="search()" /></th>
+                  <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="country"
+                      (keydown.enter)="search()" /></th>
+                  <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="preCarriage"
+                      (keydown.enter)="search()" /></th>
+  
+                  <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="loadPort"
+                      (keydown.enter)="search()" /></th>
+                  <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="entryPort"
+                      (keydown.enter)="search()" /></th>
+  
+                  <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="status"
+                      (keydown.enter)="search()" /></th>
+                  <th scope="col" class="wrap-table-btn">
+                    <button type="button" class="bi bi-search btn btn-outline-primary btn-sm rounded-pill" (click)="search()">
+  
+                    </button>
+                    <a routerLink="#" class="bi bi-arrow-clockwise btn btn-outline-primary btn-sm rounded-pill" (click)="clear()"></a>
+                  </th>
+                </tr> -->
+              </thead>
+              <tbody>
+                <tr *ngFor="let shippingLine of shippinglineData; let i = index">
+                  <td class="action-field">
+                    <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop boot-icon"><a
+                        (click)="open(AddClause, shippingLine)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                    </span>
+                    <!-- <span nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}" class="mtop"><a (click)="delete(deleteshippingLine, shippingLine)"><em
+                          class="typcn typcn-trash"></em></a>
+                    </span> -->
+                    <span nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}"><a
+                      (click)="open(AddClause,shippingLine,'show')"><em
+                          class="bi bi-eye globally-change-icon-color"></em></a></span>
+                    <span class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                        (change)="changeStatus(shippingLine,i)" [checked]="shippingLine._source?.status" />
+                      <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                    </span>
+                  </td>
+                  <td>{{ shippingLine._source?.name }}</td>
+                  <td>{{ shippingLine._source?.shortName }}</td>
+                  <td>{{ shippingLine._source?.shippingLine }}</td>
+                  <td>{{ shippingLine._source?.scacCode }}</td>
+                  <td>{{ shippingLine._source?.email }}</td>
+                  <td>{{ shippingLine._source?.status }}</td>
+  
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="no-data-availble" *ngIf="shippinglineData.length === 0">
+            {{'common.no_data' | translate}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-container *ngIf="currentUrl === 'add' || currentUrl === 'edit' || currentUrl === 'show'">
+    <app-new-local-tariff (onCloseInvoiceSection)="onCloseNew()" [isType]="currentUrl"></app-new-local-tariff>
+  </ng-container>

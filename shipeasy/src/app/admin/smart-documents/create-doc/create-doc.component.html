@@ -1,0 +1,1426 @@
+<div class="mat-table-with-gheading">
+    <div class="wrapper">
+        <div class="container-fluid">
+            <div class="wrap-content">
+                <div class="row mb-5">
+                    <div class="col-md-12 mb-3">
+                        <div class="d-flex justify-content-between">
+                            <h6>{{returnDocType()}} - {{ selectedDocument == 'BL' ? quotationForm.get('blNumber')?.value
+                                : quotationForm.get('quoteNumber')?.value }}</h6>
+                            <div class="row gap-3">
+                                <button mat-raised-button class="btn btn-outline-secondary"
+                                    (click)="back()">Back</button>
+                                <button mat-raised-button class="btn btn-outline-secondary"
+                                    (click)="preview(smartDocDetails)">Preview</button>
+                                <button mat-raised-button class="btn btn-outline-secondary"
+                                    (click)="download(smartDocDetails)">Download</button>
+                                <button mat-raised-button class="btn btn-outline-primary-save"
+                                    (click)="openSave(documentName)">Save</button>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <mat-card>
+                            <!-- Form Section -->
+                            <form [formGroup]="quotationForm">
+                                <div class="row b-grid-2">
+                                    <!-- Left Section -->
+                                    <div class="row ">
+                                        <div class="col-md-12" *ngIf="selectedDocument !== 'VGM'">
+                                            <label class="form-label">{{selectedDocument === 'Commercial' ||
+                                                selectedDocument === 'Packing' || selectedDocument === 'BL' ?
+                                                'Consignee' : selectedDocument === 'HBL' ? 'Consignee/(or order)'
+                                                : 'To'}} <span class="text-danger"></span></label>
+                                            <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                formControlName="to"
+                                                [ngClass]="{'is-invalid': submitted && f.to.errors}">
+                                                <nz-option *ngFor="let test of partyList" [nzLabel]="test?.name"
+                                                    [nzValue]="test?.partymasterId"></nz-option>
+                                            </nz-select>
+                                            <div *ngIf="submitted && f.to.errors" class="invalid-feedback">
+                                                <div *ngIf="f.to.errors.required">To is
+                                                    required</div>
+                                            </div>
+                                        </div>
+
+                                        <!-- <div class="col-md-12">
+                                            <label class="form-label">{{selectedDocument === 'Commercial' ||
+                                                selectedDocument === 'Packing' || selectedDocument === 'Certificate' ?
+                                                'Exporter' : selectedDocument === 'BL'
+                                                || selectedDocument === 'VGM'
+                                                ? 'Shipper' : selectedDocument === 'HBL' ? 'Consigner/Shipper' :
+                                                'From'}} <span class="text-danger"></span></label>
+
+                                            <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                formControlName="from"
+                                                [ngClass]="{'is-invalid': submitted && f.from.errors}">
+                                                <nz-option *ngFor="let test of partyList" [nzLabel]="test?.name"
+                                                    [nzValue]="test?.partymasterId"></nz-option>
+                                            </nz-select>
+                                            <div *ngIf="submitted && f.from.errors" class="invalid-feedback">
+                                                <div *ngIf="f.from.errors.required">From is
+                                                    required</div>
+                                            </div>
+                                        </div> -->
+                                    </div>
+                                    <div>
+                                        <div class="f-grid-2">
+                                            <div class=" " *ngIf="selectedDocument === 'HBL'">
+                                                <label class="form-label">{{ selectedDocument }} No.<span
+                                                        class="text-danger"></span> </label>
+                                                <input type="text" formControlName="mtdNo"
+                                                    [ngClass]="{'is-invalid': submitted && f.mtdNo.errors}"
+                                                    class="form-control custom-input" />
+                                                <div *ngIf="submitted && f.mtdNo.errors" class="invalid-feedback">
+                                                    <div *ngIf="f.mtdNo.errors.required">{{ selectedDocument}} is
+                                                        required</div>
+                                                </div>
+                                            </div>
+
+                                            <div class=" " *ngIf="selectedDocument !== 'BL'">
+                                                <label class="form-label">{{ selectedDocument === 'HBL' ? 'Shipment Reference Number' : selectedDocument }} No.<span
+                                                        class="text-danger"></span> </label>
+                                                <input type="text" formControlName="quoteNumber"
+                                                    [ngClass]="{'is-invalid': submitted && f.quoteNumber.errors}"
+                                                    class="form-control custom-input" />
+                                                <div *ngIf="submitted && f.quoteNumber.errors" class="invalid-feedback">
+                                                    <div *ngIf="f.quoteNumber.errors.required">{{ selectedDocument}} is
+                                                        required</div>
+                                                </div>
+                                            </div>
+                                            <div class=""
+                                                *ngIf="selectedDocument !== 'BL' && selectedDocument !== 'VGM'">
+                                                <label class="form-label">Date<span class="text-danger"></span></label>
+                                                <nz-date-picker nzShowTime nzPlaceHolder="Date"
+                                                    class="form-select custom-input height32"
+                                                    nzFormat="dd-MM-yyyy HH:mm:ss" formControlName="date">
+                                                </nz-date-picker>
+                                            </div>
+                                            <div class=" "
+                                                *ngIf="selectedDocument === 'Commercial' || selectedDocument === 'Packing' || selectedDocument === 'BL'">
+                                                <label class="form-label">BL No.<span class="text-danger"></span>
+                                                </label>
+                                                <input type="text" formControlName="blNumber"
+                                                    [ngClass]="{'is-invalid': submitted && f.blNumber.errors}"
+                                                    class="form-control custom-input" />
+                                                <div *ngIf="submitted && f.blNumber.errors" class="invalid-feedback">
+                                                    <div *ngIf="f.blNumber.errors.required">BL No. is
+                                                        required</div>
+                                                </div>
+                                            </div>
+
+                                            <div class=""
+                                                *ngIf=" selectedDocument === 'BL' || selectedDocument === 'VGM'">
+                                                <label class="form-label">{{ 'Shipper Reference' | translate }} </label>
+                                                <input type="text" formControlName="shipperReference"
+                                                    [ngClass]="{'is-invalid': submitted && f.shipperReference.errors}"
+                                                    class="form-control custom-input" />
+                                                <div *ngIf="submitted && f.shipperReference.errors"
+                                                    class="invalid-feedback">
+                                                    <div *ngIf="f.shipperReference.errors.required">{{ ' Reference'
+                                                        |
+                                                        translate }} is
+                                                        required</div>
+                                                </div>
+                                            </div>
+
+                                            <div class="" *ngIf=" selectedDocument === 'Purchase'">
+                                                <label class="form-label">{{ 'Supplier Reference' | translate }}
+                                                </label>
+                                                <input type="text" formControlName="supplierReference"
+                                                    [ngClass]="{'is-invalid': submitted && f.supplierReference.errors}"
+                                                    class="form-control custom-input" />
+                                                <div *ngIf="submitted && f.supplierReference.errors"
+                                                    class="invalid-feedback">
+                                                    <div *ngIf="f.supplierReference.errors.required">{{ ' Supplier
+                                                        Reference'
+                                                        |
+                                                        translate }} is
+                                                        required</div>
+                                                </div>
+                                            </div>
+
+                                            <div class="" *ngIf="selectedDocument === 'BL'">
+                                                <label class="form-label">{{ 'Carrier Reference' | translate }} </label>
+                                                <input type="text" formControlName="carrierReference"
+                                                    [ngClass]="{'is-invalid': submitted && f.carrierReference.errors}"
+                                                    class="form-control custom-input" />
+                                                <div *ngIf="submitted && f.carrierReference.errors"
+                                                    class="invalid-feedback">
+                                                    <div *ngIf="f.carrierReference.errors.required">{{ 'Carrier
+                                                        Reference'
+                                                        |
+                                                        translate }} is
+                                                        required</div>
+                                                </div>
+                                            </div>
+
+                                            <div class="" *ngIf="selectedDocument === 'BL'">
+                                                <label class="form-label">{{ 'Unique Consignment Reference' | translate
+                                                    }} </label>
+                                                <input type="text" formControlName="consigneeRef"
+                                                    [ngClass]="{'is-invalid': submitted && f.consigneeRef.errors}"
+                                                    class="form-control custom-input" />
+                                                <div *ngIf="submitted && f.consigneeRef.errors"
+                                                    class="invalid-feedback">
+                                                    <div *ngIf="f.consigneeRef.errors.required">{{ 'Unique Consignment
+                                                        Reference'
+                                                        |
+                                                        translate }} is
+                                                        required</div>
+                                                </div>
+                                            </div>
+
+                                            <div class="" *ngIf="selectedDocument === 'Certificate'">
+                                                <label class="form-label">{{ 'Letter Of Credit No' | translate
+                                                    }} </label>
+                                                <input type="text" formControlName="letterOfCreditNo"
+                                                    [ngClass]="{'is-invalid': submitted && f.letterOfCreditNo.errors}"
+                                                    class="form-control custom-input" />
+                                                <div *ngIf="submitted && f.letterOfCreditNo.errors"
+                                                    class="invalid-feedback">
+                                                    <div *ngIf="f.letterOfCreditNo.errors.required">{{ 'Letter Of Credit
+                                                        No'
+                                                        |
+                                                        translate }} is
+                                                        required</div>
+                                                </div>
+                                            </div>
+
+
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row b-grid-2">
+                                    <div class="row ">
+                                        
+                                        <div class="col-md-6 mt-2"
+                                            *ngIf="selectedDocument === 'Commercial' || selectedDocument === 'Packing' ">
+                                            <label class="form-label">{{ ' Reference' | translate }} </label>
+                                            <input type="text" formControlName="reference"
+                                                [ngClass]="{'is-invalid': submitted && f.reference.errors}"
+                                                class="form-control custom-input" />
+                                            <div *ngIf="submitted && f.reference.errors" class="invalid-feedback">
+                                                <div *ngIf="f.reference.errors.required">{{ ' Reference'
+                                                    |
+                                                    translate }} is
+                                                    required</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 mt-2"
+                                            *ngIf="selectedDocument === 'Proforma' || selectedDocument === 'Commercial' || selectedDocument === 'Packing' ">
+                                            <label class="form-label">{{ 'Buyer Reference' | translate }} </label>
+                                            <input type="text" formControlName="buyerReference"
+                                                [ngClass]="{'is-invalid': submitted && f.buyerReference.errors}"
+                                                class="form-control custom-input" />
+                                            <div *ngIf="submitted && f.buyerReference.errors" class="invalid-feedback">
+                                                <div *ngIf="f.buyerReference.errors.required">{{ 'Buyer Reference'
+                                                    |
+                                                    translate }} is
+                                                    required</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12  mt-2"
+                                            *ngIf="selectedDocument === 'Certificate' || selectedDocument === 'Commercial' || selectedDocument === 'Packing'">
+                                            <label class="form-label">Buyer (If not consignee) <span
+                                                    class="text-danger"></span></label>
+                                            <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                formControlName="buyer"
+                                                [ngClass]="{'is-invalid': submitted && f.buyer.errors}">
+                                                <nz-option *ngFor="let test of partyList" [nzLabel]="test?.name"
+                                                    [nzValue]="test?.partymasterId"></nz-option>
+                                            </nz-select>
+                                            <div *ngIf="submitted && f.buyer.errors" class="invalid-feedback">
+                                                <div *ngIf="f.buyer.errors.required">Buyer is
+                                                    required</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12  mt-2" *ngIf="selectedDocument === 'Certificate'">
+                                            <label class="form-label">{{ 'Packing Information' | translate }} </label>
+                                            <textarea class="form-control custom-input"
+                                                formControlName="packingInformation" rows="5" cols="30">
+                                            </textarea>
+                                            <div *ngIf="submitted && f.packingInformation.errors"
+                                                class="invalid-feedback">
+                                                <div *ngIf="f.packingInformation.errors.required">{{ 'Packing
+                                                    Information'
+                                                    |
+                                                    translate }} is
+                                                    required</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12  mt-2" *ngIf="selectedDocument === 'BL' || selectedDocument === 'HBL'">
+                                            <label class="form-label">Notify Party (If not Consignee)<span
+                                                    class="text-danger"></span></label>
+                                            <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                formControlName="notifyParty"
+                                                [ngClass]="{'is-invalid': submitted && f.notifyParty.errors}">
+                                                <nz-option *ngFor="let test of partyList" [nzLabel]="test?.name"
+                                                    [nzValue]="test?.partymasterId"></nz-option>
+                                            </nz-select>
+                                            <div *ngIf="submitted && f.notifyParty.errors" class="invalid-feedback">
+                                                <div *ngIf="f.notifyParty.errors.required">Notify Party is
+                                                    required</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12  mt-2" *ngIf="selectedDocument === 'BL'">
+                                            <label class="form-label">Additional Notify Party<span
+                                                    class="text-danger"></span></label>
+                                            <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                formControlName="notifyParty1"
+                                                [ngClass]="{'is-invalid': submitted && f.notifyParty1.errors}">
+                                                <nz-option *ngFor="let test of partyList" [nzLabel]="test?.name"
+                                                    [nzValue]="test?.partymasterId"></nz-option>
+                                            </nz-select>
+                                            <div *ngIf="submitted && f.notifyParty1.errors" class="invalid-feedback">
+                                                <div *ngIf="f.notifyParty1.errors.required">Additional Notify Party is
+                                                    required</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="" *ngIf="selectedDocument === 'BL'">
+                                            <label class="form-label">{{ 'Additional Information' | translate
+                                                }} </label>
+                                            <input type="text" formControlName="additionalInfoBL"
+                                                [ngClass]="{'is-invalid': submitted && f.additionalInfoBL.errors}"
+                                                class="form-control custom-input" />
+                                            <div *ngIf="submitted && f.additionalInfoBL.errors"
+                                                class="invalid-feedback">
+                                                <div *ngIf="f.additionalInfoBL.errors.required">{{ 'Additional
+                                                    Information'
+                                                    |
+                                                    translate }} is
+                                                    required</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12  mt-2"
+                                            *ngIf="selectedDocument === 'Commercial' || selectedDocument === 'Packing'">
+                                            <label class="form-label">Country Of Origin of Goods <span
+                                                    class="text-danger"></span></label>
+                                            <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                formControlName="countryOG"
+                                                [ngClass]="{'is-invalid': submitted && f.countryOG.errors}">
+                                                <nz-option *ngFor="let test of cityListLand" [nzLabel]="test?.cityName"
+                                                    [nzValue]="test?.cityId"></nz-option>
+                                            </nz-select>
+                                            <div *ngIf="submitted && f.countryOG.errors" class="invalid-feedback">
+                                                <div *ngIf="f.countryOG.errors.required">Country Of Origin of Goods is
+                                                    required</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12  mt-2"
+                                            *ngIf="selectedDocument === 'Commercial' || selectedDocument === 'Packing'">
+                                            <label class="form-label">Country of Final Destination <span
+                                                    class="text-danger"></span></label>
+                                            <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                formControlName="countryFD"
+                                                [ngClass]="{'is-invalid': submitted && f.countryFD.errors}">
+                                                <nz-option *ngFor="let test of cityListLand" [nzLabel]="test?.cityName"
+                                                    [nzValue]="test?.cityId"></nz-option>
+                                            </nz-select>
+                                            <div *ngIf="submitted && f.countryFD.errors" class="invalid-feedback">
+                                                <div *ngIf="f.countryFD.errors.required">Country of Final Destination is
+                                                    required</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6  mt-2" *ngIf="selectedDocument === 'Commercial' ">
+                                            <label class="form-label">Method of Payment <span
+                                                    class="text-danger"></span></label>
+                                            <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                formControlName="paymentMethod"
+                                                [ngClass]="{'is-invalid': submitted && f.paymentMethod.errors}">
+                                                <nz-option *ngFor="let test of paymentModeList"
+                                                    [nzLabel]="test?.typeName"
+                                                    [nzValue]="test?.systemtypeId"></nz-option>
+                                            </nz-select>
+                                            <div *ngIf="submitted && f.paymentMethod.errors" class="invalid-feedback">
+                                                <div *ngIf="f.paymentMethod.errors.required">Method of Payment is
+                                                    required</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6  mt-2" *ngIf="selectedDocument === 'Commercial'  ">
+                                            <label class="form-label">Place of Origin <span
+                                                    class="text-danger"></span></label>
+                                            <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                formControlName="placeOrigin"
+                                                [ngClass]="{'is-invalid': submitted && f.placeOrigin.errors}">
+                                                <nz-option *ngFor="let places of places" [nzLabel]="places.locationName"
+                                                    [nzValue]="places.locationId"></nz-option>
+                                            </nz-select>
+                                            <div *ngIf="submitted && f.placeOrigin.errors" class="invalid-feedback">
+                                                <div *ngIf="f.placeOrigin.errors.required">Place of Origin is
+                                                    required</div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div>
+                                        <div class="f-grid-2">
+                                            <div class=""
+                                                *ngIf=" selectedDocument !== 'BL' && selectedDocument !== 'VGM' && selectedDocument !== 'HBL'">
+                                                <label class="form-label">Method of Dispatch <span
+                                                        class="text-danger"></span></label>
+                                                <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                    formControlName="methodOfDispatch" (ngModelChange)="shipmentType()"
+                                                    [ngClass]="{'is-invalid': submitted && f.methodOfDispatch.errors}">
+                                                    <nz-option *ngFor="let method of dispatchMethods"
+                                                        [nzLabel]="method.typeName"
+                                                        [nzValue]="method.systemtypeId"></nz-option>
+                                                </nz-select>
+                                                <div *ngIf="submitted && f.methodOfDispatch.errors"
+                                                    class="invalid-feedback">
+                                                    <div *ngIf="f.methodOfDispatch.errors.required">Method of Dispatch
+                                                        is
+                                                        required</div>
+                                                </div>
+                                            </div>
+
+                                            <div class=""
+                                                *ngIf=" selectedDocument !== 'BL' && selectedDocument !== 'VGM' && selectedDocument !== 'HBL'">
+                                                <label class="form-label">Type of Shipment <span
+                                                        class="text-danger"></span></label>
+                                                <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                    formControlName="typeOfShipment"
+                                                    [ngClass]="{'is-invalid': submitted && f.typeOfShipment.errors}">
+                                                    <nz-option *ngFor="let Type of shipmentTypes"
+                                                        [nzLabel]="Type.typeName"
+                                                        [nzValue]="Type.systemtypeId"></nz-option>
+                                                </nz-select>
+                                                <div *ngIf="submitted && f.typeOfShipment.errors"
+                                                    class="invalid-feedback">
+                                                    <div *ngIf="f.typeOfShipment.errors.required">Type of Shipment is
+                                                        required</div>
+                                                </div>
+                                            </div>
+
+                                            <!-- <div class="" *ngIf=" selectedDocument === 'Commercial'">
+                                                <label class="form-label">Transport <span
+                                                        class="text-danger"></span></label>
+                                                <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                    formControlName="typeOfShipment"
+                                                    [ngClass]="{'is-invalid': submitted && f.typeOfShipment.errors}">
+                                                    <nz-option *ngFor="let Type of TransportTypes"
+                                                        [nzLabel]="Type.typeName"
+                                                        [nzValue]="Type.systemtypeId"></nz-option>
+                                                </nz-select>
+                                                <div *ngIf="submitted && f.typeOfShipment.errors"
+                                                    class="invalid-feedback">
+                                                    <div *ngIf="f.typeOfShipment.errors.required">Transport is
+                                                        required</div>
+                                                </div>
+                                            </div> -->
+
+
+                                            <div class="" *ngIf="selectedDocument !== 'VGM'">
+                                                <label class="form-label">Port of Loading <span
+                                                        class="text-danger"></span></label>
+                                                <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                    formControlName="portOfLoading"
+                                                    [ngClass]="{'is-invalid': submitted && f.portOfLoading.errors}">
+                                                    <nz-option *ngFor="let port of ports" [nzLabel]="port.portName"
+                                                        [nzValue]="port.portId"></nz-option>
+                                                </nz-select>
+                                                <div *ngIf="submitted && f.portOfLoading.errors"
+                                                    class="invalid-feedback">
+                                                    <div *ngIf="f.portOfLoading.errors.required">Port of Loading is
+                                                        required</div>
+                                                </div>
+                                            </div>
+
+                                            <div class="" *ngIf="selectedDocument !== 'VGM'">
+                                                <label class="form-label">Port of Discharge <span
+                                                        class="text-danger"></span></label>
+                                                <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                    formControlName="portOfDischarge"
+                                                    [ngClass]="{'is-invalid': submitted && f.portOfDischarge.errors}">
+                                                    <nz-option *ngFor="let port of ports" [nzLabel]="port.portName"
+                                                        [nzValue]="port.portId"></nz-option>
+                                                </nz-select>
+                                                <div *ngIf="submitted && f.portOfDischarge.errors"
+                                                    class="invalid-feedback">
+                                                    <div *ngIf="f.portOfDischarge.errors.required">Port of Discharge is
+                                                        required</div>
+                                                </div>
+                                            </div>
+
+                                            <div class=""
+                                                *ngIf="selectedDocument === 'Certificate' || selectedDocument === 'Commercial' || selectedDocument === 'Packing'">
+                                                <label class="form-label">Date of Departure<span
+                                                        class="text-danger"></span></label>
+                                                <nz-date-picker nzShowTime nzPlaceHolder="Date"
+                                                    class="form-select custom-input height32"
+                                                    nzFormat="dd-MM-yyyy HH:mm:ss" formControlName="dateofDeparture">
+                                                </nz-date-picker>
+                                            </div>
+
+                                            <div class=""
+                                                *ngIf="selectedDocument === 'Certificate' || selectedDocument === 'Commercial' || selectedDocument === 'Packing'">
+                                                <label class="form-label">Final Destination <span
+                                                        class="text-danger"></span></label>
+                                                <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                    formControlName="finalDestination"
+                                                    [ngClass]="{'is-invalid': submitted && f.finalDestination.errors}">
+                                                    <nz-option *ngFor="let places of places"
+                                                        [nzLabel]="places.locationName"
+                                                        [nzValue]="places.locationId"></nz-option>
+                                                </nz-select>
+                                                <div *ngIf="submitted && f.finalDestination.errors"
+                                                    class="invalid-feedback">
+                                                    <div *ngIf="f.finalDestination.errors.required">Final Destination is
+                                                        required</div>
+                                                </div>
+                                            </div>
+
+                                            <div class=" " *ngIf="selectedDocument === 'BL'">
+                                                <label class="form-label">Carrier Name<span
+                                                        class="text-danger"></span></label>
+                                                <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                    formControlName="carrier"
+                                                    [ngClass]="{'is-invalid': submitted && f.carrier.errors}">
+                                                    <nz-option *ngFor="let test of partyList" [nzLabel]="test?.name"
+                                                        [nzValue]="test?.partymasterId"></nz-option>
+                                                </nz-select>
+                                                <div *ngIf="submitted && f.carrier.errors" class="invalid-feedback">
+                                                    <div *ngIf="f.carrier.errors.required">Carrier Name is
+                                                        required</div>
+                                                </div>
+                                            </div>
+
+                                            <div class=" "
+                                                *ngIf="selectedDocument == 'HBL' ||selectedDocument === 'Certificate' || selectedDocument === 'Commercial' || selectedDocument === 'Packing' || selectedDocument === 'BL'">
+                                                <label class="form-label">{{ selectedDocument == 'HBL' ? 'Vessel and Voyage' : 'Voyage No.' | translate }} </label>
+                                                <input type="text" formControlName="voyageNo"
+                                                    [ngClass]="{'is-invalid': submitted && f.voyageNo.errors}"
+                                                    class="form-control custom-input" />
+                                                <div *ngIf="submitted && f.voyageNo.errors" class="invalid-feedback">
+                                                    <div *ngIf="f.voyageNo.errors.required">{{ 'Voyage No.'
+                                                        |
+                                                        translate }} is
+                                                        required</div>
+                                                </div>
+                                            </div>
+
+                                            <div class=" " *ngIf="selectedDocument === 'BL'">
+                                                <label class="form-label">{{ 'Pre-Carriage By' | translate }} </label>
+                                                <input type="text" formControlName="preCarriageBy"
+                                                    [ngClass]="{'is-invalid': submitted && f.preCarriageBy.errors}"
+                                                    class="form-control custom-input" />
+                                                <div *ngIf="submitted && f.preCarriageBy.errors"
+                                                    class="invalid-feedback">
+                                                    <div *ngIf="f.preCarriageBy.errors.required">{{ 'Pre-Carriage By'
+                                                        |
+                                                        translate }} is
+                                                        required</div>
+                                                </div>
+                                            </div>
+
+                                            <div class="" *ngIf=" selectedDocument === 'BL' || selectedDocument == 'HBL'">
+                                                <label class="form-label">Place of Receipt <span
+                                                        class="text-danger"></span></label>
+                                                <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                    formControlName="placeOfReceipt"
+                                                    [ngClass]="{'is-invalid': submitted && f.placeOfReceipt.errors}">
+                                                    <nz-option *ngFor="let places of places"
+                                                        [nzLabel]="places.locationName"
+                                                        [nzValue]="places.locationId"></nz-option>
+                                                </nz-select>
+                                                <div *ngIf="submitted && f.placeOfReceipt.errors"
+                                                    class="invalid-feedback">
+                                                    <div *ngIf="f.placeOfReceipt.errors.required">Place of Receipt is
+                                                        required</div>
+                                                </div>
+                                            </div>
+
+                                            <div class=" " *ngIf=" selectedDocument === 'BL'">
+                                                <label class="form-label">Place of Origin <span
+                                                        class="text-danger"></span></label>
+                                                <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                    formControlName="placeOrigin"
+                                                    [ngClass]="{'is-invalid': submitted && f.placeOrigin.errors}">
+                                                    <nz-option *ngFor="let places of places"
+                                                        [nzLabel]="places.locationName"
+                                                        [nzValue]="places.locationId"></nz-option>
+                                                </nz-select>
+                                                <div *ngIf="submitted && f.placeOrigin.errors" class="invalid-feedback">
+                                                    <div *ngIf="f.placeOrigin.errors.required">Place of Origin is
+                                                        required</div>
+                                                </div>
+                                            </div>
+
+                                            <div class=" " *ngIf=" selectedDocument === 'Commercial' ">
+                                                <label class="form-label">{{ ' Marine Cover Policy No.' | translate }}
+                                                </label>
+                                                <input type="text" formControlName="marinCoverPolicy"
+                                                    [ngClass]="{'is-invalid': submitted && f.marinCoverPolicy.errors}"
+                                                    class="form-control custom-input" />
+                                                <div *ngIf="submitted && f.marinCoverPolicy.errors"
+                                                    class="invalid-feedback">
+                                                    <div *ngIf="f.marinCoverPolicy.errors.required">{{ ' Marine Cover
+                                                        Policy No.'
+                                                        |
+                                                        translate }} is
+                                                        required</div>
+                                                </div>
+                                            </div>
+
+                                            <div class=" " *ngIf=" selectedDocument === 'Commercial'">
+                                                <label class="form-label">{{ ' Letter Of Credit No' | translate }}
+                                                </label>
+                                                <input type="text" formControlName="letterCreditNo"
+                                                    [ngClass]="{'is-invalid': submitted && f.letterCreditNo.errors}"
+                                                    class="form-control custom-input" />
+                                                <div *ngIf="submitted && f.letterCreditNo.errors"
+                                                    class="invalid-feedback">
+                                                    <div *ngIf="f.letterCreditNo.errors.required">{{ ' Letter Of Credit
+                                                        No'
+                                                        |
+                                                        translate }} is
+                                                        required</div>
+                                                </div>
+                                            </div>
+
+                                            <div class="" *ngIf="selectedDocument == 'HBL'">
+                                                <label class="form-label">Place of Delivery <span
+                                                        class="text-danger"></span></label>
+                                                <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                    formControlName="placeOfDelivery"
+                                                    [ngClass]="{'is-invalid': submitted && f.placeOfDelivery.errors}">
+                                                    <nz-option *ngFor="let places of places"
+                                                        [nzLabel]="places.locationName"
+                                                        [nzValue]="places.locationId"></nz-option>
+                                                </nz-select>
+                                                <div *ngIf="submitted && f.placeOfDelivery.errors"
+                                                    class="invalid-feedback">
+                                                    <div *ngIf="f.placeOfDelivery.errors.required">Place of Delivery is
+                                                        required</div>
+                                                </div>
+                                            </div>
+
+                                            <div class=""
+                                            *ngIf="selectedDocument == 'HBL'">
+                                            <label class="form-label">Date or Period of Delivery<span class="text-danger"></span></label>
+                                            <!-- <nz-date-picker nzShowTime  
+                                                class="form-select custom-input height32"
+                                                nzFormat="dd-MM-yyyy HH:mm:ss" formControlName="periodOfDelivery">
+                                            </nz-date-picker> -->
+                                            <nz-range-picker nzShowTime class="form-select custom-input height32"  nzFormat="dd-MM-yyyy HH:mm:ss"
+                                              formControlName="periodOfDelivery"  ></nz-range-picker>
+                                        </div>
+
+                                            <div class="" *ngIf="selectedDocument == 'HBL'">
+                                                <label class="form-label">Route / place of Transhipment <span
+                                                        class="text-danger"></span></label>
+                                                <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                    formControlName="placeOfTranshipment"
+                                                    [ngClass]="{'is-invalid': submitted && f.placeOfTranshipment.errors}">
+                                                    <nz-option *ngFor="let places of places"
+                                                        [nzLabel]="places.locationName"
+                                                        [nzValue]="places.locationId"></nz-option>
+                                                </nz-select>
+                                                <div *ngIf="submitted && f.placeOfTranshipment.errors"
+                                                    class="invalid-feedback">
+                                                    <div *ngIf="f.placeOfTranshipment.errors.required">Route / place of Transhipment is
+                                                        required</div>
+                                                </div>
+                                            </div>
+
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="method-css" *ngIf="selectedDocument === 'VGM'">
+                                    <div>
+                                        <div class="mb-2">
+                                            METHOD 1 </div>
+                                        <div>
+                                            Weighing the packed container using calibrated and certified weighing
+                                            wquipment (e.g. weighbridges, load cell sensing technologies etc).
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <input type="checkbox" [checked]="f.method1.value"
+                                            (change)="onCheckboxChange('method1')" formControlName="method1">
+                                    </div>
+
+                                </div>
+                                <div class="method-css" *ngIf="selectedDocument === 'VGM'">
+                                    <div>
+                                        <div class="mb-2">
+                                            METHOD 2 </div>
+                                        <div>
+                                            Weighing all packages and cargo items, including the mass of pallets,
+                                            dunnage and other securing material to be packed in the container and
+                                            adding
+                                            the tare mass of the container to the sum of the single masses, using a
+                                            certified method approved by the Country competent Authority (Marine and
+                                            Coastguard Agency (MCA) or its authorized body).
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <input type="checkbox" [checked]="f.method2.value"
+                                            (change)="onCheckboxChange('method2')" formControlName="method2">
+                                    </div>
+                                </div>
+
+
+
+
+                                <!-- Product Section -->
+                                <mat-card class="product-section my-2" *ngIf="selectedDocument !== 'VGM'">
+                                    <div class="vgm-text mb-2">Charges</div>
+                                    <div class="products">
+                                        <div formArrayName="products"
+                                            *ngFor="let product of products.controls; let i = index">
+                                            <div [formGroupName]="i" class="row product-row mb-2">
+
+                                                <div class="d-flex align-items-end">
+                                                    <div class="col-md-3 ">
+                                                        <!-- <label class="form-label">{{ selectedDocument === 'Certificate' || selectedDocument === 'HBL'
+                                                            ? 'Marks & Numbers' : 'Product Code' | translate }}<span
+                                                                class="text-danger"></span>
+                                                        </label> -->
+                                                        <!-- <input type="text" formControlName="code"
+                                                            class="form-control custom-input"
+                                                            [ngClass]="{'is-invalid': submitted && product?.get('code')?.errors}" />
+                                                        <div *ngIf="submitted && product?.get('code')?.errors"
+                                                            class="invalid-feedback">
+                                                            <div *ngIf="product?.get('code')?.errors.required">{{
+                                                                'Product
+                                                                Code' |
+                                                                translate }} is
+                                                                required</div>
+                                                        </div> -->
+                                                        <label class="form-label">Charge Item<span
+                                                            class="text-danger"></span>
+                                                    </label>
+                                                        <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="chargeId"
+                                                        (ngModelChange)="setGSTtoRow(i,true)"
+                                                        [ngClass]="{'is-invalid': submitted && product?.get('chargeId')?.errors}">
+                                                        <nz-option *ngFor="let data of  chargeName " [nzLabel]="data.costitemName"
+                                                          [nzValue]="data.costitemId"></nz-option>
+                                                      </nz-select>
+                                                    </div>
+                                                    <div class=" col-md-3">
+                                                        <label class="form-label">{{ selectedDocument === 'HBL' ? 'Description of Goods' : 'Description' | translate }}<span
+                                                                class="text-danger"></span>
+                                                        </label>
+                                                        <input type="text" formControlName="description"
+                                                            class="form-control custom-input"
+                                                            [ngClass]="{'is-invalid': submitted && product?.get('description')?.errors}" />
+                                                        <div *ngIf="submitted && product?.get('description')?.errors"
+                                                            class="invalid-feedback">
+                                                            <div *ngIf="product?.get('description')?.errors.required">{{
+                                                                '
+                                                                Description' |
+                                                                translate }} is
+                                                                required</div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div [class]="selectedDocument === 'Certificate'  ? 'col-md-2' : selectedDocument === 'HBL' ?  'col-md-3': 'col-md-1' "
+                                                        *ngIf="selectedDocument !== 'BL'">
+                                                        <label class="form-label">{{ selectedDocument === 'Certificate' || selectedDocument === 'HBL'
+                                                            ? 'Kind & No of Packages' : 'Unit Qty' | translate }}<span
+                                                                class="text-danger"></span> </label>
+                                                        <input type="number" formControlName="unitQty"
+                                                            class="form-control custom-input"
+                                                            (keyup)="setRowAmount(i)"
+                                                            [ngClass]="{'is-invalid': submitted && product?.get('unitQty')?.errors}" />
+                                                        <div *ngIf="submitted && product?.get('unitQty')?.errors"
+                                                            class="invalid-feedback">
+                                                            <div *ngIf="product?.get('unitQty')?.errors.required">{{ '
+                                                                Unit Qty'
+                                                                |
+                                                                translate }} is
+                                                                required</div>
+                                                        </div>
+                                                    </div>
+                                                    <ng-container *ngIf="selectedDocument === 'Certificate' ||  selectedDocument === 'HBL'">
+
+                                                        <div class="col-md-2 " *ngIf="selectedDocument === 'Certificate'">
+                                                            <label class="form-label">{{ 'Tariff Code' | translate
+                                                                }}<span class="text-danger"></span>
+                                                            </label>
+                                                            <input type="text" formControlName="codeTariff"
+                                                                class="form-control custom-input"
+                                                                [ngClass]="{'is-invalid': submitted && product?.get('codeTariff')?.errors}" />
+                                                            <div *ngIf="submitted && product?.get('codeTariff')?.errors"
+                                                                class="invalid-feedback">
+                                                                <div
+                                                                    *ngIf="product?.get('codeTariff')?.errors.required">
+                                                                    {{
+                                                                    'Tariff Code' |
+                                                                    translate }} is
+                                                                    required</div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-2" *ngIf="selectedDocument === 'Certificate'">
+                                                            <label class="form-label">{{ 'Gross Weight of Package (Kg)'
+                                                                |
+                                                                translate }}<span class="text-danger"></span> </label>
+                                                            <input type="number" formControlName="grossWt"
+                                                                class="form-control custom-input"
+                                                                [ngClass]="{'is-invalid': submitted && product?.get('grossWt')?.errors}" />
+
+                                                            <div *ngIf="submitted && product?.get('grossWt')?.errors"
+                                                                class="invalid-feedback">
+                                                                <div *ngIf="product?.get('grossWt')?.errors.required">
+                                                                    {{ 'Gross Weight of Package (Kg)' |
+                                                                    translate }} is
+                                                                    required</div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 " *ngIf="selectedDocument === 'HBL'">
+                                                            <label class="form-label">{{ 'Chargeable' | translate
+                                                                }}<span class="text-danger"></span>
+                                                            </label>
+                                                            <input type="text" formControlName="chargeable"
+                                                                class="form-control custom-input"
+                                                                [ngClass]="{'is-invalid': submitted && product?.get('chargeable')?.errors}" />
+                                                            <div *ngIf="submitted && product?.get('chargeable')?.errors"
+                                                                class="invalid-feedback">
+                                                                <div
+                                                                    *ngIf="product?.get('chargeable')?.errors.required">
+                                                                    {{
+                                                                    'Chargeable' |
+                                                                    translate }} is
+                                                                    required</div>
+                                                            </div>
+                                                        </div>
+
+                                                    </ng-container>
+                                                    <ng-container
+                                                        *ngIf="selectedDocument === 'Packing' || selectedDocument === 'BL'">
+
+                                                        <div class="col-md-2">
+                                                            <label class="form-label">{{ 'Kind & No of Packages' |
+                                                                translate }}<span class="text-danger"></span> </label>
+                                                            <div
+                                                                [ngClass]="{'f-grid-2': selectedDocument === 'Packing'}">
+                                                                <input type="number" formControlName="noOfPackage"
+                                                                    placeholder="Carton"
+                                                                    class="form-control custom-input"
+                                                                    [ngClass]="{'is-invalid': submitted && product?.get('noOfPackage')?.errors}" />
+
+                                                                <input *ngIf="selectedDocument === 'Packing'"
+                                                                    type="number" formControlName="packageQty"
+                                                                    placeholder="Qty" class="form-control custom-input"
+                                                                    [ngClass]="{'is-invalid': submitted && product?.get('packageQty')?.errors}" />
+
+                                                            </div>
+                                                            <div *ngIf="submitted && product?.get('noOfPackage')?.errors"
+                                                                class="invalid-feedback">
+                                                                <div
+                                                                    *ngIf="product?.get('noOfPackage')?.errors.required">
+                                                                    {{ 'Kind & No of Packages' |
+                                                                    translate }} is
+                                                                    required</div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-1 ">
+                                                            <label class="form-label">{{ 'Net Weight of Package (Kg)' |
+                                                                translate }}<span class="text-danger"></span> </label>
+                                                            <input type="number" formControlName="netWt"
+                                                                class="form-control custom-input"
+                                                                [ngClass]="{'is-invalid': submitted && product?.get('netWt')?.errors}" />
+
+                                                            <div *ngIf="submitted && product?.get('netWt')?.errors"
+                                                                class="invalid-feedback">
+                                                                <div *ngIf="product?.get('netWt')?.errors.required">
+                                                                    {{ 'Net Weight of Package (Kg)' |
+                                                                    translate }} is
+                                                                    required</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1 ">
+                                                            <label class="form-label">{{ 'Gross Weight of Package (Kg)'
+                                                                |
+                                                                translate }}<span class="text-danger"></span> </label>
+                                                            <input type="number" formControlName="grossWt"
+                                                                class="form-control custom-input"
+                                                                [ngClass]="{'is-invalid': submitted && product?.get('grossWt')?.errors}" />
+
+                                                            <div *ngIf="submitted && product?.get('grossWt')?.errors"
+                                                                class="invalid-feedback">
+                                                                <div *ngIf="product?.get('grossWt')?.errors.required">
+                                                                    {{ 'Gross Weight of Package (Kg)' |
+                                                                    translate }} is
+                                                                    required</div>
+                                                            </div>
+                                                        </div>
+                                                        <div [class]="selectedDocument === 'BL' ? 'col-md-2' : 'col-md-1' ">
+                                                            <label class="form-label">{{ 'Measurements of Package (m3)'
+                                                                |
+                                                                translate }}<span class="text-danger"></span> </label>
+                                                            <input type="number" formControlName="measurPackage"
+                                                                class="form-control custom-input"
+                                                                [ngClass]="{'is-invalid': submitted && product?.get('measurPackage')?.errors}" />
+
+                                                            <div *ngIf="submitted && product?.get('measurPackage')?.errors"
+                                                                class="invalid-feedback">
+                                                                <div
+                                                                    *ngIf="product?.get('measurPackage')?.errors.required">
+                                                                    {{ 'Measurements of Package (m3)' |
+                                                                    translate }} is
+                                                                    required</div>
+                                                            </div>
+                                                        </div>
+
+                                                    </ng-container>
+                                                    <ng-container
+                                                        *ngIf="selectedDocument !== 'HBL' &&selectedDocument !== 'Certificate' && selectedDocument !== 'Packing' && selectedDocument !== 'BL'">
+                                                        <div class="col-md-1 ">
+                                                            <label class="form-label">{{ ' Unit' | translate }}<span
+                                                                    class="text-danger"></span> </label>
+                                                            <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                                formControlName="unitType"
+                                                                [ngClass]="{'is-invalid': submitted && product?.get('unitType')?.errors}">
+                                                                <nz-option *ngFor="let Type of uomData"
+                                                                    [nzLabel]="Type.uomShort"
+                                                                    [nzValue]="Type.uomId"></nz-option>
+                                                            </nz-select>
+
+                                                            <div *ngIf="submitted && product?.get('unitType')?.errors"
+                                                                class="invalid-feedback">
+                                                                <div *ngIf="product?.get('unitType')?.errors.required">
+                                                                    {{ '
+                                                                    Unit' |
+                                                                    translate }} is
+                                                                    required</div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-1 ">
+                                                            <label class="form-label">{{ 'Currency' | translate }}<span
+                                                                    class="text-danger"></span> </label>
+                                                            <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                                formControlName="currency" (ngModelChange)="buyCurrChange(i)"
+                                                                [ngClass]="{'is-invalid': submitted && product?.get('currency')?.errors}">
+                                                                <nz-option *ngFor="let currency of currencyList"
+                                                                [nzLabel]="currency.currencyShortName"
+                                                                [nzValue]="currency.currencyId"></nz-option>
+                                                            </nz-select>
+
+                                                            <div *ngIf="submitted && product?.get('currency')?.errors"
+                                                                class="invalid-feedback">
+                                                                <div *ngIf="product?.get('currency')?.errors.required">
+                                                                    {{ '
+                                                                    Unit' |
+                                                                    translate }} is
+                                                                    required</div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-1 ">
+                                                            <label class="form-label">{{ 'Ex. Rate' | translate }}<span
+                                                                    class="text-danger"></span> </label>
+                                                            <input readonly type="number" formControlName="exRate"
+                                                                (keyup)="setRowAmount(i)"
+                                                                class="form-control custom-input"
+                                                                [ngClass]="{'is-invalid': submitted && product?.get('exRate')?.errors}" />
+                                                            <div *ngIf="submitted && product?.get('exRate')?.errors"
+                                                                class="invalid-feedback">
+                                                                <div *ngIf="product?.get('exRate')?.errors.required">{{ '
+                                                                    exRate'
+                                                                    |
+                                                                    translate }} is
+                                                                    required</div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-1 ">
+                                                            <label class="form-label">{{ 'Price' | translate }}<span
+                                                                    class="text-danger"></span> </label>
+                                                            <input type="number" formControlName="price"
+                                                                (keyup)="setRowAmount(i)"
+                                                                class="form-control custom-input"
+                                                                [ngClass]="{'is-invalid': submitted && product?.get('price')?.errors}" />
+                                                            <div *ngIf="submitted && product?.get('price')?.errors"
+                                                                class="invalid-feedback">
+                                                                <div *ngIf="product?.get('price')?.errors.required">{{ '
+                                                                    Price'
+                                                                    |
+                                                                    translate }} is
+                                                                    required</div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-1 ">
+                                                            <label class="form-label">{{ 'Amount' | translate }}<span
+                                                                    class="text-danger"></span> </label>
+                                                            <input type="number" formControlName="amount"
+                                                                class="form-control custom-input" readonly
+                                                                [ngClass]="{'is-invalid': submitted &&  product?.get('amount')?.errors}" />
+                                                            <div *ngIf="submitted &&  product?.get('amount')?.errors"
+                                                                class="invalid-feedback">
+                                                                <div *ngIf=" product?.get('amount')?.errors.required">{{
+                                                                    '
+                                                                    Amount' |
+                                                                    translate }} is
+                                                                    required</div>
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+
+                                                </div>
+                                                <div class="d-flex align-items-end" *ngIf="i !== 0">
+                                                    <button mat-icon-button color="warn" (click)="removeProduct(i)">
+                                                        <em class="bi bi-trash color-pencil-red"></em>
+                                                    </button>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mt-3">
+                                        <button mat-button class="btn btn-outline-secondary" (click)="addProduct()"><em
+                                                class="bi bi-plus"></em> Add Field</button>
+                                        <span class="vgm-text"
+                                            *ngIf="selectedDocument !== 'HBL' && selectedDocument !== 'Packing' && selectedDocument !== 'BL' && selectedDocument !== 'Certificate'">
+                                            Total
+                                            amount: {{ totalAmount }}</span>
+                                    </div>
+                                    <div class="row mt-2" *ngIf="selectedDocument === 'Certificate'">
+                                        <div class="col-md-12">
+                                            <label class="form-label">{{ 'Total gross weight (kg)' | translate }}<span
+                                                    class="text-danger"></span> </label>
+                                            <input type="number" [value]="totalGrWt" formControlName="totalGWt"
+                                                class="form-control custom-input" readonly />
+                                        </div>
+                                    </div>
+                                   
+                                    <div class="row mt-2"
+                                        *ngIf="selectedDocument === 'Packing' || selectedDocument === 'BL'">
+                                        <div class="col-md-3" *ngIf="selectedDocument === 'Packing'">
+                                            <label class="form-label">{{ 'Total Unit Q-ty' | translate }}<span
+                                                    class="text-danger"></span> </label>
+                                            <input type="number" [value]="totalQty" formControlName="totalUnitQty"
+                                                class="form-control custom-input" readonly />
+                                        </div>
+                                        <div [class]="selectedDocument === 'BL' ? 'col-md-4' : 'col-md-3'">
+                                            <label class="form-label">{{ 'Total net weight (kg)' | translate }}<span
+                                                    class="text-danger"></span> </label>
+                                            <input type="number" [value]="totalNetWt" formControlName="totalNetWt"
+                                                class="form-control custom-input" readonly />
+                                        </div>
+                                        <div [class]="selectedDocument === 'BL' ? 'col-md-4' : 'col-md-3'">
+                                            <label class="form-label">{{ 'Total gross weight (kg)' | translate }}<span
+                                                    class="text-danger"></span> </label>
+                                            <input type="number" [value]="totalGrWt" formControlName="totalGWt"
+                                                class="form-control custom-input" readonly />
+                                        </div>
+                                        <div [class]="selectedDocument === 'BL' ? 'col-md-4' : 'col-md-3'">
+                                            <label class="form-label">{{ 'Total volume (m³)' | translate }}<span
+                                                    class="text-danger"></span> </label>
+                                            <input type="number" [value]="totalMeasurement"
+                                                formControlName="totalVolume" class="form-control custom-input"
+                                                readonly />
+                                        </div>
+                                    </div>
+                                </mat-card>
+
+                            
+
+                                <mat-card class="product-section" *ngIf="selectedDocument === 'VGM' || selectedDocument === 'HBL'">
+                                    <div class="row mt-2">
+                                        <div class="col-md-3">
+                                            <label class="form-label">{{  selectedDocument === 'HBL' ? 'Container No(s)' :'Container Number' | translate }}<span
+                                                    class="text-danger"></span> </label>
+                                            <input type="text" formControlName="containerNo"
+                                                class="form-control custom-input" />
+                                        </div>
+                                        <div class="col-md-2" *ngIf="selectedDocument === 'HBL'">
+                                            <label class="form-label">{{ 'Container Tare (kg)' | translate }}<span
+                                                    class="text-danger"></span> </label>
+                                            <input type="text" formControlName="sealNo"
+                                                class="form-control custom-input" />
+                                        </div>
+                                        <div class="col-md-3" *ngIf="selectedDocument === 'VGM'">
+                                            <label class="form-label">{{ 'Container Tare (kg)' | translate }}<span
+                                                    class="text-danger"></span> </label>
+                                            <input type="number" formControlName="containerTare"
+                                                class="form-control custom-input" />
+                                        </div>
+                                        <div class="col-md-3" *ngIf="selectedDocument === 'VGM'">
+                                            <label class="form-label">{{ 'Cargo Weight (kg)' | translate }}<span
+                                                    class="text-danger"></span> </label>
+                                            <input type="number" formControlName="cargoWT"
+                                                class="form-control custom-input" />
+                                        </div>
+                                        <div class="col-md-2" *ngIf="selectedDocument === 'HBL'">
+                                            <label class="form-label">{{ 'Kind & No of Packages' | translate }}<span
+                                                    class="text-danger"></span> </label>
+                                            <input type="number" formControlName="kindNoofPackage"
+                                                class="form-control custom-input" />
+                                        </div>
+                                        <div [class]="selectedDocument === 'HBL' ? 'col-md-2' : 'col-md-3'">
+                                            <label class="form-label">{{ 'Gross Weight (kg)' | translate }}<span
+                                                    class="text-danger"></span> </label>
+                                            <input type="number" formControlName="grossWt"
+                                                class="form-control custom-input" />
+                                        </div>
+                                        <div class="col-md-2" *ngIf="selectedDocument === 'HBL'">
+                                            <label class="form-label">{{ 'Measurement' | translate }}<span
+                                                    class="text-danger"></span> </label>
+                                            <input type="text" formControlName="measurement"
+                                                class="form-control custom-input" />
+                                        </div>
+                                    </div>
+                                </mat-card>
+
+
+
+                                <div class="row b-grid-2 mt-3" *ngIf="selectedDocument === 'Certificate'">
+                                    <div>
+                                        <div class="mb-2 vgm-text">Declaration By The Chamber</div>
+                                        The undersigned certifies on the basis of information provided by the
+                                        exporter that to the best of it’s knowledge and belief, the goods are of
+                                        designated origin, production or manufacture.
+                                    </div>
+
+                                    <div>
+                                        <div class="mb-2 vgm-text">Declaration By The Exporter</div>
+                                        I, the undersigned, being duly authorized by the Consignor, and having
+                                        made the necessary enquiries hereby certify that based on the rules of
+                                        origin of the country of destination, all the goods listed originate in
+                                        the country and place of designated. I further declare that I will
+                                        furnish to the Customs authorities of the importing or their nominee,
+                                        for inspection at any time, such as evidence as may be required for the
+                                        purpose of verifying this certificate.<br>
+
+                                        The goods where produced/manufactured at <br>
+                                        <input type="text" formControlName="declarationExporter"
+                                            [ngClass]="{'is-invalid': submitted && f.declarationExporter.errors}"
+                                            class="form-control custom-input" />
+                                    </div>
+
+                                </div>
+                                <div class="row b-grid-2 mt-3">
+                                    <!-- Left Section -->
+                                    <div *ngIf="selectedDocument !== 'VGM' && selectedDocument !== 'Certificate' && selectedDocument !== 'HBL'">
+                                        <div class="" >
+                                            <label class="form-label">{{ 'Additional Information' | translate }}
+                                            </label>
+                                            <textarea class="form-control custom-input" formControlName="additionalInfo"
+                                                rows="5" cols="30">
+                                            </textarea>
+                                            <div *ngIf="submitted && f.additionalInfo.errors" class="invalid-feedback">
+                                                <div *ngIf="f.additionalInfo.errors.required">{{ 'Additional
+                                                    Information'
+                                                    |
+                                                    translate }} is
+                                                    required</div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2"
+                                            *ngIf="selectedDocument === 'Proforma' || selectedDocument === 'Commercial' ">
+                                            <label class="form-label">{{ 'Bank Details' | translate }} </label>
+                                            <textarea class="form-control custom-input" formControlName="bankDetails"
+                                                rows="5" cols="30">
+                                            </textarea>
+                                            <div *ngIf="submitted && f.bankDetails.errors" class="invalid-feedback">
+                                                <div *ngIf="f.bankDetails.errors.required">{{ 'Bank Details'
+                                                    |
+                                                    translate }} is
+                                                    required</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class=" " *ngIf="selectedDocument === 'HBL'">
+                                        <label class="form-label">Delivery Agent<span
+                                                class="text-danger"></span></label>
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear
+                                            formControlName="deliveryAgent"
+                                            [ngClass]="{'is-invalid': submitted && f.deliveryAgent.errors}">
+                                            <nz-option *ngFor="let test of partyList" [nzLabel]="test?.name"
+                                                [nzValue]="test?.partymasterId"></nz-option>
+                                        </nz-select>
+                                        <div *ngIf="submitted && f.deliveryAgent.errors" class="invalid-feedback">
+                                            <div *ngIf="f.deliveryAgent.errors.required">Delivery Agent is
+                                                required</div>
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="selectedDocument === 'VGM'">
+                                        <div class="mb-2 vgm-text">VGM declaration</div>
+                                        In accordance with the International Maritime Organization(IMO) Safety of Life
+                                        at Sea(SOLAS) convention under regulation 2 of chapter VI which mandates the
+                                        declaration of the Verified Gross Mass(VGM), the shipper hereby certifies all
+                                        information on this Verified Gross Ma ss declaration is true and correct.
+                                    </div>
+                                    <div *ngIf="selectedDocument === 'Certificate'">
+
+                                        <div class="f-grid-2">
+
+                                            <div class="">
+                                                <label class="form-label">Place of Issue <span
+                                                        class="text-danger"></span></label>
+                                                <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                    formControlName="placeOfIssue1"
+                                                    [ngClass]="{'is-invalid': submitted && f.placeOfIssue1.errors}">
+                                                    <nz-option *ngFor="let places of places"
+                                                        [nzLabel]="places.locationName"
+                                                        [nzValue]="places.locationId"></nz-option>
+                                                </nz-select>
+                                                <div *ngIf="submitted && f.placeOfIssue1.errors"
+                                                    class="invalid-feedback">
+                                                    <div *ngIf="f.placeOfIssue1.errors.required">Place of Issue is
+                                                        required</div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="">
+                                                <label class="form-label">Date of Issue</label>
+                                                <nz-date-picker nzShowTime nzPlaceHolder="issueDate1"
+                                                    class="form-select custom-input height32"
+                                                    nzFormat="dd-MM-yyyy HH:mm:ss" formControlName="issueDate1">
+                                                </nz-date-picker>
+
+                                                <div *ngIf="submitted && f.issueDate1.errors" class="invalid-feedback">
+                                                    <div *ngIf="f.issueDate1.errors.required">{{ 'Date of Issue' |
+                                                        translate }} is
+                                                        required</div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+                                        <!-- <div class="mt-2">
+                                            <label class="form-label">{{ 'Signatory Company' | translate }} </label>
+                                            <input type="text" formControlName="signatoryCompany1"
+                                                [ngClass]="{'is-invalid': submitted && f.signatoryCompany1.errors}"
+                                                class="form-control custom-input" />
+                                            <div *ngIf="submitted && f.signatoryCompany1.errors"
+                                                class="invalid-feedback">
+                                                <div *ngIf="f.signatoryCompany1.errors.required">{{ 'Signatory
+                                                    Company' |
+                                                    translate }} is
+                                                    required</div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2">
+                                            <label class="form-label">{{ 'Authorized Signatory' | translate }}
+                                            </label>
+                                            <input type="text" formControlName="authorizedSignatory1"
+                                                [ngClass]="{'is-invalid': submitted && f.authorizedSignatory1.errors}"
+                                                class="form-control custom-input" />
+                                            <div *ngIf="submitted && f.authorizedSignatory1.errors"
+                                                class="invalid-feedback">
+                                                <div *ngIf="f.authorizedSignatory1.errors.required">{{ 'Authorized
+                                                    Signatory' |
+                                                    translate }} is
+                                                    required</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-2">
+                                            <app-signature-pad [savedSignature]="signitureOfCompany1"
+                                                (dataToParent)="receiveData1($event)"></app-signature-pad>
+                                        </div> -->
+                                    </div>
+                                    <div>
+
+                                        <div class="f-grid-2">
+
+                                            <div class="mt-2" *ngIf="selectedDocument === 'HBL'">
+                                                <label class="form-label">{{ 'Freight Amount' | translate }} </label>
+                                                <input type="number" formControlName="freightAmount"
+                                                    [ngClass]="{'is-invalid': submitted && f.freightAmount.errors}"
+                                                    class="form-control custom-input" />
+                                                <div *ngIf="submitted && f.freightAmount.errors"
+                                                    class="invalid-feedback">
+                                                    <div *ngIf="f.freightAmount.errors.required">{{ 'Freight Amount' |
+                                                        translate }} is
+                                                        required</div>
+                                                </div>
+                                            </div>
+
+                                            <div class="mt-2" *ngIf="selectedDocument === 'HBL'">
+                                                <label class="form-label">{{ 'No of Originals' | translate }} </label>
+                                                <input type="number" formControlName="noOfOriginals"
+                                                    [ngClass]="{'is-invalid': submitted && f.noOfOriginals.errors}"
+                                                    class="form-control custom-input" />
+                                                <div *ngIf="submitted && f.noOfOriginals.errors"
+                                                    class="invalid-feedback">
+                                                    <div *ngIf="f.noOfOriginals.errors.required">{{ 'No of Originals' |
+                                                        translate }} is
+                                                        required</div>
+                                                </div>
+                                            </div>
+
+                                            <div class="">
+                                                <label class="form-label">Place of Issue <span
+                                                        class="text-danger"></span></label>
+                                                <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                    formControlName="placeOfIssue"
+                                                    [ngClass]="{'is-invalid': submitted && f.placeOfIssue.errors}">
+                                                    <nz-option *ngFor="let places of places"
+                                                        [nzLabel]="places.locationName"
+                                                        [nzValue]="places.locationId"></nz-option>
+                                                </nz-select>
+                                                <div *ngIf="submitted && f.placeOfIssue.errors"
+                                                    class="invalid-feedback">
+                                                    <div *ngIf="f.placeOfIssue.errors.required">Place of Issue is
+                                                        required</div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="">
+                                                <label class="form-label">Date of Issue</label>
+                                                <nz-date-picker nzShowTime nzPlaceHolder="issueDate"
+                                                    class="form-select custom-input height32"
+                                                    nzFormat="dd-MM-yyyy HH:mm:ss" formControlName="issueDate">
+                                                </nz-date-picker>
+
+                                                <div *ngIf="submitted && f.issueDate.errors" class="invalid-feedback">
+                                                    <div *ngIf="f.issueDate.errors.required">{{ 'Date of Issue' |
+                                                        translate }} is
+                                                        required</div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="mt-2" *ngIf="selectedDocument === 'HBL'">
+                                            <label class="form-label">{{ 'Freight Payable At' | translate }} </label>
+                                            <input type="text" formControlName="freightPaybleAt"
+                                                [ngClass]="{'is-invalid': submitted && f.freightPaybleAt.errors}"
+                                                class="form-control custom-input" />
+                                            <div *ngIf="submitted && f.freightPaybleAt.errors"
+                                                class="invalid-feedback">
+                                                <div *ngIf="f.freightPaybleAt.errors.required">{{ 'Freight Payable At' |
+                                                    translate }} is
+                                                    required</div>
+                                            </div>
+                                        </div>
+
+                                        <!-- <div class="mt-2" *ngIf="selectedDocument !== 'HBL'">
+                                            <label class="form-label">{{ 'Signatory Company' | translate }} </label>
+                                            <input type="text" formControlName="signatoryCompany"
+                                                [ngClass]="{'is-invalid': submitted && f.signatoryCompany.errors}"
+                                                class="form-control custom-input" />
+                                            <div *ngIf="submitted && f.signatoryCompany.errors"
+                                                class="invalid-feedback">
+                                                <div *ngIf="f.signatoryCompany.errors.required">{{ 'Signatory Company' |
+                                                    translate }} is
+                                                    required</div>
+                                            </div>
+                                        </div> -->
+                                        <div class="f-grid-2 mt-2">
+                                        <div class="mt-2" *ngIf="selectedDocument !== 'HBL'">
+                                            <label for="" class="form-label">Company Stamp</label>
+                                            <div class="add-vendor-profile-image-upload1">
+                                                <img [src]="companyStampURL || 'default-stamp-placeholder.jpg'" alt="Company Stamp" />
+                                            </div>
+                                          </div>
+                                          
+                                            <div class="mt-2" *ngIf="selectedDocument !== 'HBL'">
+                                                <label for="" class="form-label">Email Signature</label>
+                                                <div class="add-vendor-profile-image-upload1">
+                                                  <img [src]="emailSignatureURL" alt="Email Signature" />
+                                                  </div>
+                                                  </div>
+                                                </div>
+                                        <!-- <div class="mt-2" *ngIf="selectedDocument !== 'HBL'">
+                                            <label class="form-label">{{ 'Authorized Signatory' | translate }} </label>
+                                            <input type="text" formControlName="authorizedSignatory"
+                                                [ngClass]="{'is-invalid': submitted && f.authorizedSignatory.errors}"
+                                                class="form-control custom-input" />
+                                            <div *ngIf="submitted && f.authorizedSignatory.errors"
+                                                class="invalid-feedback">
+                                                <div *ngIf="f.authorizedSignatory.errors.required">{{ 'Authorized
+                                                    Signatory' |
+                                                    translate }} is
+                                                    required</div>
+                                            </div>
+                                        </div> -->
+
+                                        <!-- <div class="mt-2">
+                                            <app-signature-pad [savedSignature]="signitureOfCompany"
+                                                (dataToParent)="receiveData($event)"></app-signature-pad>
+                                        </div> -->
+
+                                    </div>
+
+
+                                </div>
+                            </form>
+                        </mat-card>
+                    </div>
+                    <div class="col-md-3">
+                        <mat-card>
+                            <div class="documents-section">
+                                <mat-list>
+                                    <h3 mat-subheader>Documents</h3>
+                                    <mat-list-item *ngFor="let doc of documents" (click)="selectDocument(doc)"
+                                        [ngClass]="{'active-document': doc.key === selectedDocument}">
+                                        {{ doc.name }}  
+                                    </mat-list-item>
+                                </mat-list>
+                            </div>
+                        </mat-card>
+                    </div>
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #documentName let-c="close" let-d="dismiss">
+    <div class="modal-content p-0 nz-allSelect">
+        <div class="modal-header px-0 pt-2 d-flex justify-content-end">
+            <!-- <h6>Booking Cancel</h6> -->
+            <a type="button" aria-label="Close" (click)="d('Cross click')">
+                <em class="bi bi-x cursor-pointer"></em>
+            </a>
+        </div>
+        <div class="modal-body p-0 mt-2">
+            <div class="col-md-12 px-0">
+                <div class="row g-4">
+                    <div class="col-md-12 mb-2">
+                        <label class="form-label">Document Name<span class="text-danger"></span></label>
+                        <input type="text" [(ngModel)]="documentNameValue" class="form-control custom-input">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="my-2">
+            <div class="text-center">
+                <button type="button" class="btn btn-outline-secondary"
+                    (click)="d('Cross click')">{{'common.cancel'|translate}}</button>
+                <button type="button" [disabled]="!documentNameValue" class="btn btn-outline-primary-save"
+                    (click)="save()">{{'common.save'|translate}}</button>
+            </div>
+        </div>
+    </div>
+</ng-template>

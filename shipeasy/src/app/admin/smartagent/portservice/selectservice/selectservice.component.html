@@ -1,0 +1,62 @@
+<div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">{{ 'smartagent.smartAgent.portService.selectServicesforPort' | translate }} Jawaharlal Nehru Port (JNP)</h4>
+      <button type="button" class="btn-close shadow-none" (click)="onSave()" aria-label="Close">
+       
+       </button>
+      
+    </div>
+    <div class="modal-body">
+      <div class="table-with-gheading mb-4">
+
+        <div class="wrap-table-area ">  
+      <form class="row g-3 mt-3">
+              
+        <div class="col-md-12">
+            <label for="Principal" class="form-label">{{ 'smartagent.smartAgent.portService.principalName' | translate }} </label>
+            <div  class="input-group"><input type="text"  aria-label="Search" placeholder="{{ 'smartagent.smartAgent.portService.searchService' | translate }}" value="" class="form-control  custom-input">
+              <span class="input-group-text"><em class="bi bi-search"></em></span></div>
+          </div>
+         
+
+          <div class="col-md-12">
+            <div class="table-responsive">
+              <table aria-describedby="mytable" class="gfg">
+                <thead>
+                  <tr class="field-name">
+                    <th scope="col"></th>
+                    <th scope="col">{{ 'smartagent.smartAgent.portService.branch' | translate }}  <em class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                    <th scope="col">{{ 'smartagent.smartAgent.portService.serviceType' | translate }} <em class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                    <th scope="col">{{ 'smartagent.smartAgent.portService.serviceName' | translate }}  <em class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                    <th scope="col">{{ 'smartagent.smartAgent.portService.description' | translate }}  <em class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                                        
+                  </tr>
+            
+                </thead>
+                <tbody>
+                  <tr *ngFor="let service of serviceData">
+                    <td class="action-field"> 
+                      <input type="checkbox" id="inlineCheckbox1" value="option1" class="form-check-input">
+                                            
+                    </td>
+                    <td class="uppercase">{{service.branch}}</td>
+                    <td>{{service.servicetype}}</td>
+                    <td>{{service.servicename}}</td>
+                    <td>{{service.description}}</td>
+                   
+                 
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+              
+              <div class="col-md-12  wrap-form-action">
+                <button type="button" class="btn btn-outline-primary btn-lg float-end mt-3"  >{{ 'common.ok' | translate }}</button>
+                </div>
+            </form>
+       </div>
+    </div>
+  </div>
+  </div>

@@ -1,0 +1,96 @@
+button {
+    transition: 0.3s ease-in-out;
+    text-align: center;
+    cursor: pointer;
+}
+
+.btn-design {
+    button {
+        padding: 12px 24px;
+        background-color: var(--change-theme);
+        font-size: 12px;
+        border: none;
+        line-height: 20px;
+       color: var(--theme-white-text-color);
+        font-weight: 500;
+        border-radius: 6px;
+        transition: 0.3s ease-in-out;
+
+        &:hover {
+            transform: translate(0, -3px);
+        }
+    }
+}
+
+.btn-design-outline {
+    button {
+        padding: 12px 24px;
+        background-color: transparent;
+        font-size: 12px;
+        border: 1px solid var(--change-theme);
+        line-height: 20px;
+        color: var(--change-theme);
+        font-weight: 500;
+        border-radius: 6px;
+        transition: 0.3s ease-in-out;
+
+        a {
+        color: var(--change-theme) !important;
+        }
+
+        &:hover {
+            transform: translate(0, -3px);
+        }
+    }
+}
+.btn-design-outline-new-style {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 0 0 0;
+    button {
+        padding: 12px 24px;
+        background-color: transparent;
+        font-size: 12px;
+        border: 1px solid transparent;
+        line-height: 20px;
+        color: var(var(--change-theme));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 500;
+        border-radius: 6px;
+        transition: 0.3s ease-in-out;
+
+        a {
+        color: var(--change-theme) !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        }
+
+        &:hover {
+            transform: translate(0, -3px);
+        }
+    }
+}
+
+.input-button-design {
+    input {
+        padding: 12px 24px;
+        background-color: var(--change-theme);
+        font-size: 12px;
+        border: none;
+        line-height: 20px;
+        width: 100%;
+       color: var(--theme-white-text-color);
+        font-weight: 500;
+        border-radius: 6px;
+        transition: 0.3s ease-in-out;
+
+        &:hover {
+            transform: translate(0, -3px);
+        }
+    }
+}

@@ -1,0 +1,80 @@
+<div class="modal-dialog custom-modal">
+  <div class="modal-content">
+    <div class="modal-header pl-0">
+      <h5 class="modal-title" id="containerModalLabel">Select Container</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <div class="row" *ngfor="false">
+        <form [formGroup]="addContainerForm">
+          <div class="col-md-12">
+            <div class="form-field-section">
+              <label class="form-label">{{ 'stolt.batch.container.add_container.select_yard' | translate }}
+                <span class="text-danger">*</span></label>
+              <select formControlName="yard" class="form-select custom-input"
+                [ngClass]="{'is-invalid': submitted && f.yard.errors}" (change)="getContainerData()">
+                <option *ngFor="let yard of yardList" [value]="yard._source.yardId">
+                  {{yard._source.locationName}}</option>
+              </select>
+              <div *ngIf="submitted && f.yard.errors" class="invalid-feedback">
+                <div *ngIf="f.yard.errors.required">{{ 'stolt.batch.container.add_container.select_yard' |
+                  translate }} is required
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-field-section">
+              <label class="form-label">{{ 'stolt.batch.container.container_type' | translate }}
+                <span class="text-danger">*</span></label>
+              <select formControlName="containerType" class="form-select custom-input"
+                [ngClass]="{'is-invalid': submitted && f.containerType.errors}" (change)="getContainerData()">
+                <option *ngFor="let containerType of containerTypeList" [value]="containerType._source.systemtypeId">
+                  {{containerType._source.typeName}}</option>
+              </select>
+              <div *ngIf="submitted && f.containerType.errors" class="invalid-feedback">
+                <div *ngIf="f.containerType.errors.required">{{ 'stolt.batch.container.container_type' |
+                  translate }} is required
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+      <div class="table-responsive">
+        <table aria-describedby="mytable" class="gfg">
+          <thead>
+            <tr class="field-name">
+              <th scope="col"></th>
+              <th scope="col">Container No.</th>
+              <th scope="col">Container Type</th>
+              <th scope="col">Previous Corgo Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let container of containerList;">
+              <td><input class="form-check-input" [(ngModel)]="selectedContainer" type="radio"  name="flexRadioDefault" id="flexRadioDefault1" value="container._source.containerId"></td>
+              <td>{{container._source.containerNo}}</td>
+              <td>{{container._source.containerTypeName}}</td>
+              <td>{{container._source.cargoTypeName}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="wrap-form-field">
+        <div class="form-group wrap-form-action">
+          <button class="btn1 btn-lg float-end" data-bs-dismiss="modal" type="submit">
+            Cancel
+          </button>
+          <button class="btn btn-outline-primary btn-lg float-end" (click)="onSelectContainer($event)"
+            data-bs-dismiss="modal" type="submit">
+            Select
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

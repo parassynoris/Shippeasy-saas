@@ -1,0 +1,274 @@
+  <div class="modal-scrollbar">
+  <div class="modal-content nz-allSelect">
+        <div class="modal-header">
+            <h5 class="modal-title" id="containerModalLabel">Add Container</h5>
+            <button type="button" class="btn-close"  (click)="setClear()"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+              <form class="row g-3 align-items-center" [formGroup]="addContainerForm">
+                <div class="col-md-4">
+                  <label class="form-label"> {{ "stolt.masters.ContainerMaster.ContainerNo" | translate }} <span
+                      class="text-danger">*</span></label>
+                  <input type="text" class="form-control custom-input" id=" " formControlName="containerNo" value="" placeholder="Enter 4 letters followed by 7 digits"
+                    [ngClass]="{ 'is-invalid': submitted && f.containerNo.errors }" />
+                    <small class="hint">First 4 characters, followed by 7 digits.</small>
+                  <div *ngIf="submitted && f.containerNo.errors" class="invalid-feedback">
+                    <div *ngIf="f.containerNo.errors.required"> {{
+                      "stolt.masters.ContainerMaster.ContainerNo" |
+                      translate }} is required</div>
+                  </div>
+                  <div *ngIf="submitted && f.containerNo.errors" class="invalid-feedback">
+                    <div *ngIf="f.containerNo.errors.pattern"> {{
+                      "stolt.masters.ContainerMaster.ContainerNo" |
+                      translate }} is In-Valid</div>
+                  </div>
+                </div>
+                <div class="col-md-4  nz-select">
+                  <label class="form-label">Container Type <span class="text-danger">*</span></label>
+                  <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="containerType" nzPlaceHolder="Container Type"
+                    [ngClass]="{'is-invalid': submitted && f.containerType.errors}">
+                    <nz-option *ngFor="let containerType of  sort(containerTypeList ,'typeName')" [nzLabel]="containerType.typeName"
+                      [nzValue]="containerType.systemtypeId"></nz-option>
+                  </nz-select>
+                  <div *ngIf="submitted && f.containerType.errors" class="invalid-feedback">
+                    <div *ngIf="f.containerType.errors.required">Container Type is required</div>
+                  </div>
+                </div>
+                <div class="col-md-4 nz-select" *ngIf="false">
+                  <label class="form-label">{{ "stolt.masters.ContainerMaster.ContainerSize" | translate }} <span
+                      class="text-danger">*</span></label>
+                  <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="containerSize" nzPlaceHolder="container Size"
+                    [ngClass]="{'is-invalid': submitted && f.containerSize.errors}">
+                    <nz-option nzLabel="20" nzValue="20"></nz-option>
+                    <nz-option nzLabel="40" nzValue="40"></nz-option>
+                  </nz-select>
+                  <div *ngIf="submitted && f.containerSize.errors" class="invalid-feedback">
+                    <div *ngIf="f.containerSize.errors.required"> {{
+                      "stolt.masters.ContainerMaster.ContainerSize" |
+                      translate }} is required</div>
+                  </div>
+                </div>
+
+                <div class="col-md-4 nz-select">
+                  <label class="form-label">Tank Type</label>
+               
+                  <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="tankType" nzPlaceHolder="Container Type"
+                    [ngClass]="{ 'is-invalid': submitted && f.tankType.errors }">
+                    <nz-option *ngFor="let TankType of  sort(tanktypeList ,'typeName')" [nzLabel]="TankType.typeName"
+                      [nzValue]="TankType.systemtypeId"></nz-option>
+                  </nz-select>
+                  <div *ngIf="submitted && f.tankType.errors" class="invalid-feedback">
+                    <div *ngIf="f.tankType.errors.required"> {{
+                      "stolt.masters.ContainerMaster.TankType" |
+                      translate }} is required</div>
+                  </div>
+                </div>
+                <div class="col-md-4 nz-select" >
+                  <label class="form-label"> {{ "stolt.masters.ContainerMaster.TankStatus" | translate }} </label>
+                  <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="tankStatus" nzPlaceHolder="Container Status"
+                    [ngClass]="{ 'is-invalid': submitted && f.tankStatus.errors }">
+                    <nz-option *ngFor="let TankStatus of  sort(tankstatusList ,'typeName')" [nzLabel]="TankStatus.typeName"
+                      [nzValue]="TankStatus.systemtypeId"></nz-option>
+                  </nz-select>
+                  <div *ngIf="submitted && f.tankStatus.errors" class="invalid-feedback">
+                    <div *ngIf="f.tankStatus.errors.required"> {{
+                      "stolt.masters.ContainerMaster.TankStatus" |
+                      translate }} is required</div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label"> {{ "stolt.masters.ContainerMaster.TARWeight" | translate }}(KG)</label>
+                  <input type="number" min="1" max="9999" class="form-control custom-input" formControlName="tarWeight" id=" " value="" placeholder="TAR Weight" />
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label"> {{ "stolt.masters.ContainerMaster.TankCapacity" | translate }}(Ltr)</label>
+                  <input type="number" min="1" max="9999" class="form-control custom-input" id=" " formControlName="tankCapacity" value="" placeholder="Container Capacity" />
+                </div>
+                <div class="col-md-4 nz-select" >
+                  <label class="form-label"> {{ 'stolt.batch.container.add_container.select_yard' | translate }} </label>
+                  <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="yard"  nzPlaceHolder="Select Yard"
+                    [ngClass]="{ 'is-invalid': submitted && f.yard.errors }">
+                    <nz-option *ngFor="let yard of  sort(yardList ,'locationName')" [nzLabel]="yard.locationName"
+                      [nzValue]="yard.locationId"></nz-option>
+                  </nz-select>
+                </div>
+
+                
+                <div class="col-md-4 nz-select">
+                  <label class="mb-0 p-0 form-label">{{ "stolt.masters.ContainerMaster.OnhireDate" | translate }}<i class="bi bi-info-circle" matTooltip="On hire Date is required." matTooltipClass="custom-tooltip" style="padding-left: 4px; margin-bottom: 2px;"></i></label>
+                  <mat-form-field appearance="outline" class="custom-date-picker">
+                   <div class="d-flex align-items-center  w-100">
+                    <input matInput [matDatepicker]="pickerEta2" formControlName="exitOffHireDate" placeholder="On Hire Date"  class="h-0"/>
+                  <mat-datepicker-toggle matSuffix [for]="pickerEta2"></mat-datepicker-toggle>
+                   </div>
+                    <mat-datepicker #pickerEta2></mat-datepicker>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-4 nz-select">
+                  <label class="mb-0 p-0 form-label">{{ "stolt.masters.ContainerMaster.ExitOffhireDate" | translate }}<i  matTooltip="Exit / Off hire Date is required" matTooltipClass="custom-tooltip" style="padding-left: 4px; margin-bottom: 2px;"></i></label>
+                  <mat-form-field appearance="outline" class="custom-date-picker">
+                   <div class="d-flex align-items-center  w-100">
+                    <input matInput [matDatepicker]="pickerEta1" formControlName="exitOffHireDate" [min]="todayDate" class="h-0" placeholder="Of Hire Date"/>
+                  <mat-datepicker-toggle matSuffix [for]="pickerEta1"></mat-datepicker-toggle>
+                   </div>
+                    <mat-datepicker #pickerEta1></mat-datepicker>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-4">
+                  <label class="form-label"> Pay Loads Capacity (Ltr)</label>
+                  <input type="text" class="form-control custom-input" id=" " formControlName="loadCapacity" value="" placeholder="Pay Loads Capacity" />
+                </div>
+                <div class="col-md-4 d-flex align-items-center" style="margin-top: 34px;">
+                  <input class="" type="checkbox" role="switch" id="flexSwitchCheckChecked" formControlName="oneWay"
+                    (change)="clickOnOneWay($event)">
+                  <label class="form-label mx-1" style="margin-top: 4px;"> {{ "stolt.masters.ContainerMaster.OneWay" | translate }}</label>
+                </div>
+                <div class="col-md-4 nz-select">
+                  <label class="mb-0 p-0 form-label">{{ "stolt.masters.ContainerMaster.DateOfManufacture" | translate }}</label>
+                    <mat-form-field appearance="outline" class="custom-date-picker">
+                     <div class="d-flex align-items-center  w-100">
+                      <input matInput [matDatepicker]="pickerEta3" formControlName="dateOfManufacture" class="h-0" placeholder="Date Of Manu Facture"/>
+                    <mat-datepicker-toggle matSuffix [for]="pickerEta3"></mat-datepicker-toggle>
+                     </div>
+                      <mat-datepicker #pickerEta3></mat-datepicker>
+                    </mat-form-field>
+                 
+                </div>
+
+                <div class="col-md-4 nz-select">
+                  <label class="form-label">{{ "stolt.masters.ContainerMaster.ContainerOperator" | translate }} <span *ngIf="oneWay1"
+                    class="text-danger">*</span></label>
+                  <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="containerOperator" nzPlaceHolder="Container Operator"
+                    [ngClass]="{'is-invalid': submitted && f.containerOperator.errors && oneWay1}">
+                    <nz-option *ngFor="let oprator of  sort(containerOpratorList ,'name')" [nzLabel]="oprator?.name"
+                      [nzValue]="oprator?.partymasterId"></nz-option>
+                  </nz-select>
+                  <div *ngIf="submitted && f.containerOperator.errors && oneWay1" class="invalid-feedback">
+                    <div *ngIf="f.containerOperator.errors.required"> {{
+                      "stolt.masters.ContainerMaster.containermastervalidation.operatorvalidation" |
+                      translate }}</div>
+                  </div>
+                </div>
+                <div class="col-md-4 nz-select">
+                  <label class="form-label">{{ "stolt.masters.ContainerMaster.PickLocation" | translate }} <span *ngIf="oneWay1"
+                    class="text-danger">*</span></label>
+                    <nz-select class="form-select " nzShowSearch nzAllowClear formControlName="pickLocation" nzPlaceHolder="Pick Location"
+                    [ngClass]="{'is-invalid': submitted && f.pickLocation.errors && oneWay1}" >
+                     <nz-option *ngFor="let yard of   sort(yardList ,'locationName')" [nzLabel]="yard.locationName"
+                      [nzValue]="yard.locationId"></nz-option>
+                   </nz-select>
+
+                  <div *ngIf="submitted && f.pickLocation.errors && oneWay1" class="invalid-feedback">
+                    <div *ngIf="f.pickLocation.errors.required"> {{
+                      "stolt.masters.ContainerMaster.containermastervalidation.picklocationvalidation" | translate }}</div>
+                  </div>
+                </div>
+                <div class="col-md-4 nz-select">
+                  <label class="form-label">{{ "stolt.masters.ContainerMaster.DropLocation" | translate }} <span *ngIf="oneWay1"
+                    class="text-danger">*</span></label>
+                    <nz-select class="form-select " nzShowSearch nzAllowClear formControlName="dropLocation" nzPlaceHolder="Drop Location"
+                    [ngClass]="{'is-invalid': submitted && f.dropLocation.errors && oneWay1}" >
+                     <nz-option *ngFor="let yard of  sort(yardList ,'locationName')" [nzLabel]="yard.locationName"
+                      [nzValue]="yard.locationId"></nz-option>
+                   </nz-select>
+
+
+
+                  <div *ngIf="submitted && f.dropLocation.errors && oneWay1" class="invalid-feedback">
+                    <div *ngIf="f.dropLocation.errors.required"> {{
+                      "stolt.masters.ContainerMaster.containermastervalidation.droplocationvalidation"
+                      | translate }}</div>
+                  </div>
+                </div>
+                <div class="col-md-4 d-flex align-items-center" style="margin-top: 37px;">
+                  <input class="" type="checkbox" role="switch" id="flexSwitchCheckChecked" (change)="chageSoc($event)"
+                    formControlName="soc">
+                  <label class="form-label mx-1" style="margin-top: 5px;">{{ "stolt.masters.ContainerMaster.SOC" | translate }}</label>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label"> {{ "stolt.masters.ContainerMaster.MaximumGrossWeight" | translate }} <span *ngIf="soc"
+                    class="text-danger">*</span></label>
+                  <input type="text" class="form-control custom-input" maxlength="50" id=" " formControlName="maxGrossWeight" placeholder="Gross Weight"
+                    value="" [ngClass]="{ 'is-invalid': submitted && f.maxGrossWeight.errors && soc }" />
+                  <div *ngIf="submitted && f.maxGrossWeight.errors && soc" class="invalid-feedback">
+                    <div *ngIf="f.maxGrossWeight.errors.required && soc">{{
+                      "stolt.masters.ContainerMaster.containermastervalidation.maxgrossweightvalidation" | translate }}</div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label"> {{ "stolt.masters.ContainerMaster.MaximumPayload" | translate }} <span *ngIf="soc"
+                    class="text-danger">*</span></label>
+                  <input type="text" class="form-control custom-input" maxlength="50" id=" " formControlName="maxPayload" placeholder="Maximum Payload"
+                    value="" [ngClass]="{ 'is-invalid': submitted && f.maxPayload.errors && soc }" />
+                  <div *ngIf="submitted && f.maxPayload.errors && soc" class="invalid-feedback">
+                    <div *ngIf="f.maxPayload.errors.required && soc"> {{
+                      "stolt.masters.ContainerMaster.containermastervalidation.maxpayloadvalidation" | translate }}</div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label"> {{ "stolt.masters.ContainerMaster.Remarks" | translate }}</label> 
+                    <textarea  class="form-control  "
+                    formControlName="remarks" rows="3"
+                   cols="30" PlaceHolder="Remarks">
+                     </textarea>
+
+                </div>
+                <div class="col-md-4 d-flex align-items-center" *ngIf="false">
+                  <div class="taggle form-check form-switch">
+                    <label class="form-check-label" for="flexSwitchCheckDefault"> {{
+                      "stolt.masters.ContainerMaster.ContainerCreationDate" | translate }}</label>
+                    <div class="input-group date" id="datepicker">
+                      <input type="date" disabled formControlName="creationDate" class="form-control custom-input"
+                        id="date" />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4 d-flex align-items-center" *ngIf="false">
+                  <div class="taggle form-check form-switch">
+                    <label class="form-check-label" for="flexSwitchCheckDefault"> {{
+                      "stolt.masters.ContainerMaster.ContainerCreationUserID" | translate }}</label>
+                    <input type="text" disabled class="form-control custom-input" maxlength="50" id=" "
+                      formControlName="creationUserId" />
+                  </div>
+                </div>
+                <div class="col-md-4 d-flex align-items-center" *ngIf="false">
+                  <div class="taggle form-check form-switch">
+                    <label class="form-check-label" for="flexSwitchCheckDefault"> {{
+                      "stolt.masters.ContainerMaster.ContainerLastUpdatedDate" | translate }}</label>
+                    <div class="input-group date" id="datepicker">
+                      <input type="date" disabled formControlName="lastUpdatedDate" class="form-control custom-input"
+                        id="date" />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4 d-flex align-items-center" *ngIf="false">
+                  <div class="taggle form-check form-switch">
+                    <label class="form-check-label" for="flexSwitchCheckDefault"> {{
+                      "stolt.masters.ContainerMaster.ContainerLastUpdatedUserID" | translate }}</label>
+                    <input type="text" class="form-control custom-input" maxlength="50" id=" "
+                      formControlName="lastupdatedUserId" disabled />
+                  </div>
+                </div>
+
+                <div class="col-md-4 d-flex align-items-center" style="margin-top: 35px;">
+                  <input class="" type="checkbox" formControlName="baffles">
+                  <label class="form-label mx-1" style="margin-top: 5px;">{{ "stolt.masters.ContainerMaster.Baffles" | translate }}</label>
+                </div>
+                <div class="form-group wrap-form-action mt-4">
+                  <button class="btn1 btn-lg float-end" (click)="setClear()" type="submit">
+                    {{ "common.cancel" | translate }}
+                  </button>
+                  <button (click)="containerMaster()" class="btn btn-outline-primary btn-lg float-end" type="submit"
+                   >
+                    {{ "common.save" | translate }}
+                  </button>
+
+                </div>
+              </form>
+            </div>
+        </div>
+    </div>
+  </div>

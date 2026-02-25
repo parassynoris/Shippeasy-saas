@@ -1,0 +1,89 @@
+<div class="container">
+  <div class="collapse navbar-collapse wrap-customer-menu">
+    <div class="wrap-menu">
+      <ul id="nav" class=" center-alignment-header-wrap nav nav-pills mobile-view-show-tab">
+        <li class="nav-item mb-0">
+          <a *ngFor="let tabName of tablist"(click)="getdatabyType(tabName)"  class="nav-link" [ngClass]="{'active': activeTab === tabName}">
+            {{tabName}}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="d-lg-flex flex-lg-row flex-sm-column flex-md-column justify-content-between">
+   
+
+    <div class="d-flex align-items-center">
+      <h5 class=" companytitle heading-text-color-style py-3 mb-0 mr-2 font-16">Booking</h5>
+      
+      <div class="input-container">
+        <input [(ngModel)]="searchText" class="form-control custom-input search-input" type="text"  placeholder="Search here.."  (input)="searchGlobal($event)"  autocomplete="off">
+        <button *ngIf="searchText" class="clear-icon" (click)="getData();searchText =''"><em class="bi bi-x-circle-fill"></em></button>
+       </div> 
+    </div>
+    <div class="d-flex align-items-center justify-content-between">
+      <!-- <div class="input-field wrap-top-filter input-icon dropdown-icon">
+        <select>
+          <option selected value="desc">Latest</option>
+          <option value="asc">Oldest</option>
+        </select>
+      </div> -->
+      <span class="wrap-filter-area">
+        <a class="show-filter" [class.close-section]="isShowSerch" (click)="isShowSerch = !isShowSerch">
+          <em *ngIf="!isShowSerch" class="bi bi-filter-left"></em>
+          <em *ngIf="isShowSerch" class="bi bi-x"></em>
+        </a>
+        <div *ngIf="isShowSerch" class="show-filter-section container" id="filter-modal" tabindex="-1"
+          aria-labelledby="exampleModalLabel" aria-hidden="false"> 
+            <app-dashboard-filter-modal [type]="'booking'" (filterbody)="onFilterSubmit($event)"
+            (onCloseSection)="isShowSerch = false" (onCloseData)="onCloseData($event)" (onClearFilter)="onClearFilter()"
+            [bookingTag]="bookingTag" [freightTypeTag]="freightTypeTag"
+            ></app-dashboard-filter-modal>
+        </div>
+      </span>
+    </div>
+  </div>
+  <div class="" [ngClass]="isShowSerch === false ? '' : 'minheight'">
+    <div *ngIf="!isShowSerch">
+      <div class="row pb-4" *ngIf="productData.length > 0; else noBookingData">
+        <ng-container *ngFor="
+                          let product of productData | paginate: { itemsPerPage: 10, currentPage: pageCount }
+                             
+                        ">
+          <app-dashboard-overview-card [type]="'booking'" [Data]="product" (click)="setPageNo(pageCount)" [routerLink]="[product?.batchId]">
+          </app-dashboard-overview-card>
+        </ng-container>
+        <div class="d-flex w-100 justify-content-center mt-3 pagination">
+          <pagination-controls [autoHide]="true" (pageChange)="onPageChange($event)"></pagination-controls>
+        </div>
+        <ng-container *ngIf="filterPagination">
+          <div class="text-center">
+            <div class="mt-2">
+              <div class="max-con-style">
+                <span class="first-section me-2">
+                  <h5 class="text--subtext color--text80">{{ fromSize }}-{{ count }} of {{ total }}</h5>
+                </span>
+                <span class="prv" [class.disable-arrow-sign]="fromSize===1" (click)="onFirstClick()">
+                  << </span>
+                    <span class="prv" [class.disable-arrow-sign]="fromSize===1" (click)="onPrevClick()">
+                      < </span>
+                        <span class="text--subtext color--secondary mx-1"> {{ page +1}}</span>
+                        <span class="prv" [class.disable-arrow-sign]="count===total" (click)="onNextClick()"> > </span>
+                        <span class="prv" [class.disable-arrow-sign]="count===total" (click)="onLastClick()"> >> </span>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <ng-template #noBookingData>
+      <!-- <app-loader></app-loader> -->
+      <div class="container align-items-center py-5"  >
+        <h2 class="heading--h2 text-center py-5 color--label text-capitalize">
+         {{loading? _gc?.LOADER_TEXT :'No bookings Available'}}
+        </h2>
+      </div>
+    </ng-template>
+  </div>
+
+</div>

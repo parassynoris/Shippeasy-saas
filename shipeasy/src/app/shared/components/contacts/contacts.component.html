@@ -1,0 +1,123 @@
+<div class="table-with-gheading">
+  <div class="wrap-table-area">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2">
+          <div class="mt-2">
+            <span>
+              <span nz-tooltip nzTooltipTitle="{{ 'common.upload' | translate }}" class="mtop"><a><em class="ti-export"
+                    style="margin-right: 15px"></em></a></span>
+              <span nz-tooltip nzTooltipTitle="{{ 'common.print' | translate }}" class="mtop">
+                <a (click)="printData()"><em class="ti-printer"></em></a></span>
+            </span>
+          </div>
+          <div class="mt-2">
+            <span>
+              <h5>{{ fromSize }}-{{ count }} of {{ toalLength }}</h5>
+            </span>
+          </div>
+          <div class="mt-2">
+            <span class="prv" [class.disable-arrow-sign]="fromSize === 1" (click)="prev()"
+            ><em class="typcn typcn-chevron-left"></em
+          ></span>
+          <span class="prv" [class.disable-arrow-sign]="count === toalLength" (click)="next()"
+            ><em class="typcn typcn-chevron-right"></em
+          ></span>
+          </div>
+          <div class="mt-2">
+            <select class="form-select form-select-sm" (change)="filter($event)">
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+          <div class="mt-2">
+            <a class="new-action" (click)="openContact('')">{{
+              "smartagent.smartAgent.contact.addContact" | translate
+              }}</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="table-responsive">
+          <table aria-describedby="mytable" class="gfg" id="tablerecords">
+            <thead>
+              <tr class="field-name">
+               <th scope="col" [appSort]="contactData" data-order="desc" data-name="principalName">
+                  {{ "smartagent.smartAgent.contact.contactName" | translate
+                  }} <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                </th>
+                <th scope="col" [appSort]="contactData" data-order="desc" data-name="contactPhone">
+                  {{ "smartagent.smartAgent.contact.contactPhone" | translate }}
+                   <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                </th>
+                <th scope="col" [appSort]="contactData" data-order="desc" data-name="contactEmail">
+                  {{ "smartagent.smartAgent.contact.contactEmail" | translate }}
+                   <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                </th>
+                <th scope="col" [appSort]="contactData" data-order="desc" data-name="contactEmail">
+                  Remark
+                   <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                </th>
+                <th scope="col"></th>
+              </tr>
+              <tr>
+             <th scope="col">
+                  <input type="text" class="form-control" id="" [(ngModel)]="principalName" />
+                </th>
+                <th scope="col">
+                  <input type="text" class="form-control" id="" [(ngModel)]="contactPhone" />
+                </th>
+                <th scope="col">
+                  <input type="text" class="form-control" id="" [(ngModel)]="contactEmail" />
+                </th>
+                <th scope="col">
+                  <input type="text" class="form-control" id="" [(ngModel)]="contactRemark" />
+                </th>
+                <th scope="col" class="wrap-table-btn">
+                  <button type="button" class="btn btn-outline-primary" (click)="search()">
+                    {{ "common.search_btn" | translate }}
+                  </button>
+                  <a (click)="clear()" class="clearbtn">{{
+                    "common.clear" | translate
+                    }}</a>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let contact of contactData">
+                <td>{{ contact.contactName }}</td>
+                <td>{{ contact.contactPhone }}</td>
+                <td>{{ contact.contactEmail }}</td>
+                <td>{{ contact.contactRemarks }}</td>
+                <td class="action-field">
+                  <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop"><a
+                      (click)="onEdit(contact)" ><em
+                        class="bi bi-pencil color-pencil-red"></em></a>
+                  </span>
+                <span class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" (change)="
+                        statusChange(
+                          $event,
+                          contact?.contactId,
+                          contact
+                        )
+                      " id="flexSwitchCheckChecked" [(ngModel)]="contact.isActive" />
+                    <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="no-data-availble" *ngIf="contactData.length === 0">
+          {{ "common.no_data" | translate }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #addcontacts let-modal>
+  <app-addcontact [isTypeForm]="isHoldType" [parentpath]="prentPath"></app-addcontact>
+</ng-template>

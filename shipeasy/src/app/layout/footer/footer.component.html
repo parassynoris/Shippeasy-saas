@@ -1,0 +1,22 @@
+<footer>
+  <div class="wrap-footer">
+    <p style="text-align: start;" class="text aligncenter">Copyright &copy; {{year}} ShipEasy.</p>
+  </div>
+</footer>
+
+<div class="set-position">
+  <div *ngIf="customerUser" class="set-buttons">
+    <button class="w-100 border-bottom btn btn-primary rotate-up" type="button" (click)="onOpenHelp()">Support</button>
+  </div>
+</div>
+
+<div class="set-position" *ngIf="!superAdmin">
+  <div class="seticons">
+    <button class="border-0 bg-transparent" *ngIf="!isOpenChat" type="button" (click)="onWebchat()">
+      <i class="bi bi-chat-dots-fill setcomments"></i>
+    </button>
+    <div class="send-msg" *ngIf="!isOpenChat && (badgeData?.unReadMessageCount + groupMessageCount) > 0">
+      <span>{{ badgeData?.unReadMessageCount + groupMessageCount }}</span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,280 @@
+<div [formGroup]="dispatchForm">
+  <!-- Gate Out Pass No - Only for Bonded Type -->
+  <div class="row mt-3" *ngIf="type === 'Bonded'">
+    <div class="col-md-3">
+      <label class="form-label">Gate Out Pass No. <span class="text-danger">*</span></label>
+      <div class="form-field-section">
+        <nz-select class="nz-form-select nz-select-width"
+          style="border-bottom: none !important; width: 100% !important;" formControlName="gateOutPassNo" nzShowSearch
+          nzAllowClear nzPlaceHolder="Gate Pass No." [ngClass]="{ 'is-invalid': submitted && f.gateOutPassNo?.errors }">
+          <nz-option *ngFor="let warehouse of gateInEntries" [nzLabel]="warehouse.gatePassNumber"
+            [nzValue]="warehouse.gatePassNumber">
+          </nz-option>
+        </nz-select>
+        <div *ngIf="submitted && f.gateOutPassNo?.errors" class="invalid-feedback">
+          Gate Out Pass No. is required
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Available Stock Display - Only for Non-Bonded Type -->
+  <div class="row mt-3" *ngIf="type !== 'Bonded'">
+    <div class="col-md-12">
+      <div>
+        <div>
+          <strong>Available Stock Summary:</strong>
+        </div>
+        <div class="d-flex gap-4">
+          <div>
+            <span>
+              Total Packages: {{ totalAvailablePackages }} {{ totalPackagesUnit }}
+            </span>
+          </div>
+          <div>
+            <span>
+              Total Gross Weight: {{ totalAvailableGrossWeight }} {{ totalGrossWeightUnit }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Form Fields Row 1 -->
+  <div class="row mt-3">
+    <!-- Dispatch Date -->
+    <div class="col-md-3">
+      <label class="form-label">Dispatch Date <span class="text-danger">*</span></label>
+      <nz-date-picker class="form-control custom-input" nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss"
+        formControlName="dispatchDate" [ngClass]="{ 'is-invalid': submitted && f.dispatchDate?.errors }">
+      </nz-date-picker>
+      <div *ngIf="submitted && f.dispatchDate?.errors" class="invalid-feedback">
+        Dispatch Date is required
+      </div>
+    </div>
+
+    <!-- Surveyor Name -->
+    <div class="col-md-3">
+      <label class="form-label">Surveyor Name <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" formControlName="surveyorName"
+        [ngClass]="{ 'is-invalid': submitted && f.surveyorName?.errors }" placeholder="Surveyor Name" />
+      <div *ngIf="submitted && f.surveyorName?.errors" class="invalid-feedback">
+        Surveyor Name is required
+      </div>
+    </div>
+
+    <!-- Qty -->
+    <div class="col-md-2">
+      <label class="form-label">Qty <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" formControlName="qty"
+        [ngClass]="{ 'is-invalid': submitted && f.qty?.errors }" placeholder="Qty" />
+      <div *ngIf="submitted && f.qty?.errors" class="invalid-feedback">
+        Qty is required
+      </div>
+    </div>
+
+    <!-- Package Type -->
+    <div class="col-md-1">
+      <label class="form-label">Package Type <span class="text-danger">*</span></label>
+      <nz-select class="nz-form-select nz-select-width" style="width: 100% !important;" formControlName="packageType"
+        nzShowSearch nzAllowClear [ngClass]="{ 'is-invalid': submitted && f.packageType?.errors }">
+        <nz-option *ngFor="let enquiryType of weighthData" [nzLabel]="enquiryType.uomShort"
+          [nzValue]="enquiryType.uomId">
+        </nz-option>
+      </nz-select>
+      <div *ngIf="submitted && f.packageType?.errors" class="invalid-feedback">
+        Package Type is required
+      </div>
+    </div>
+
+    <!-- Container No - Only show for Bonded type -->
+    <div class="col-md-3" *ngIf="type === 'Bonded'">
+      <label class="form-label">Container No <span class="text-danger">*</span></label>
+      <nz-select class="nz-form-select nz-select-width" style="width: 100% !important;" formControlName="containerNo"
+        nzShowSearch nzAllowClear [ngClass]="{ 'is-invalid': submitted && f.containerNo?.errors }">
+        <nz-option *ngFor="let type of ContainerTypeList" [nzLabel]="type.label" [nzValue]="type.value">
+        </nz-option>
+      </nz-select>
+      <div *ngIf="submitted && f.containerNo?.errors" class="invalid-feedback">
+        Container No is required
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Form Fields Row 2 -->
+  <div class="row mt-3">
+    <!-- Vehicle No. -->
+    <div class="col-md-3">
+      <label class="form-label">Vehicle No. <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" formControlName="vehicleNo" [readonly]="type === 'Bonded'"
+        [ngClass]="{ 'is-invalid': submitted && f.vehicleNo?.errors }"
+        [placeholder]="type === 'Bonded' ? 'Auto-fetched from Gate out' : 'Vehicle No.'" />
+      <div *ngIf="submitted && f.vehicleNo?.errors" class="invalid-feedback">
+        Vehicle No is required
+      </div>
+    </div>
+
+    <!-- Transporter Ledger - NOT MANDATORY -->
+    <div class="col-md-3">
+      <label class="form-label">Transporter Ledger</label>
+      <input type="text" class="form-control" formControlName="transporterLedger" placeholder="Transporter Ledger" />
+    </div>
+
+    <!-- To Location -->
+    <div class="col-md-3">
+      <label class="form-label">To Location <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" formControlName="toLocation"
+        [ngClass]="{ 'is-invalid': submitted && f.toLocation?.errors }" placeholder="To Location" />
+      <div *ngIf="submitted && f.toLocation?.errors" class="invalid-feedback">
+        To Location is required
+      </div>
+    </div>
+  </div>
+
+  <!-- Warehouse Weightment Details Section -->
+  <div class="border mt-3 p-3">
+    <h6 class="mb-3">Warehouse Weightment Details</h6>
+    <div class="row">
+      <!-- Weightbridge Name -->
+      <div class="col-md-3">
+        <label class="form-label">Weightbridge Name <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="weightbridgeName"
+          [ngClass]="{ 'is-invalid': submitted && f.weightbridgeName?.errors }" placeholder="Weightbridge Name" />
+        <div *ngIf="submitted && f.weightbridgeName?.errors" class="invalid-feedback">
+          Weightbridge Name is required
+        </div>
+      </div>
+
+      <!-- Weightment Slip -->
+      <div class="col-md-3">
+        <label class="form-label">Weightment Slip <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="weightmentSlip"
+          [ngClass]="{ 'is-invalid': submitted && f.weightmentSlip?.errors }" placeholder="Weightment Slip" />
+        <div *ngIf="submitted && f.weightmentSlip?.errors" class="invalid-feedback">
+          Weightment Slip is required
+        </div>
+      </div>
+
+      <!-- Gross Weight -->
+      <div class="col-md-2">
+        <label class="form-label">Gross Weight <span class="text-danger">*</span></label>
+        <input type="number" class="form-control" formControlName="grossWeight"
+          [ngClass]="{ 'is-invalid': submitted && f.grossWeight?.errors }" placeholder="Gross Weight"
+          (input)="calculateNetWeight()" />
+        <div *ngIf="submitted && f.grossWeight?.errors" class="invalid-feedback">
+          Gross Weight is required
+        </div>
+      </div>
+
+      <!-- Tare Weight -->
+      <div class="col-md-2">
+        <label class="form-label">Tare Weight <span class="text-danger">*</span></label>
+        <input type="number" class="form-control" formControlName="tareWeight"
+          [ngClass]="{ 'is-invalid': submitted && f.tareWeight?.errors }" placeholder="Tare Weight"
+          (input)="calculateNetWeight()" />
+        <div *ngIf="submitted && f.tareWeight?.errors" class="invalid-feedback">
+          Tare Weight is required
+        </div>
+      </div>
+
+      <!-- Net Weight -->
+      <div class="col-md-2">
+        <label class="form-label">Net Weight</label>
+        <input type="number" class="form-control" formControlName="netWeight" readonly placeholder="Auto-calculated" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Combined Labour/Vendor/Machine Details Section -->
+  <div class="border mt-3 p-3 mb-4">
+    <div class="row">
+      <div class="col-md-12">
+        <h6 class="mb-3">Labour/Vendor/Machine Details</h6>
+
+        <div formArrayName="labourDetails">
+          <div *ngFor="let detail of labourDetails.controls; let i = index" [formGroupName]="i"
+            class="row mb-3 align-items-end">
+
+            <!-- Type Selection Dropdown -->
+            <div class="col-md-2">
+              <label class="form-label">Type <span class="text-danger">*</span></label>
+              <div class="form-field-section">
+                <nz-select class="nz-form-select nz-select-width"
+                  style="border-bottom: none !important; width: 100% !important;" formControlName="type" nzShowSearch
+                  nzAllowClear [ngClass]="{'is-invalid': submitted && detail.get('type')?.errors}"
+                  nzPlaceHolder="Select Type" (ngModelChange)="onTypeChange(i, $event)">
+                  <nz-option nzLabel="Labour" nzValue="labour"></nz-option>
+                  <nz-option nzLabel="Vendor" nzValue="vendor"></nz-option>
+                  <nz-option nzLabel="Machine" nzValue="machine"></nz-option>
+                </nz-select>
+                <div *ngIf="submitted && detail.get('type')?.errors" class="invalid-feedback">
+                  Type is required
+                </div>
+              </div>
+            </div>
+
+            <!-- Name Field (Dynamic based on type) -->
+            <div class="col-md-4">
+              <label class="form-label">
+                {{ getTypeLabel(detail.get('type')?.value) }} Name
+                <span class="text-danger">*</span>
+              </label>
+              <input type="text" class="form-control" formControlName="name"
+                [ngClass]="{ 'is-invalid': submitted && detail.get('name')?.errors }"
+                [placeholder]="getNamePlaceholder(detail.get('type')?.value)" />
+              <div *ngIf="submitted && detail.get('name')?.errors" class="invalid-feedback">
+                {{ getTypeLabel(detail.get('type')?.value) }} Name is required
+              </div>
+            </div>
+
+            <!-- Remarks Field -->
+            <div class="col-md-4" *ngIf="detail.get('type')?.value">
+              <label class="form-label">Remarks <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" formControlName="remarks"
+                [ngClass]="{ 'is-invalid': submitted && detail.get('remarks')?.errors }" placeholder="Enter Remarks" />
+              <div *ngIf="submitted && detail.get('remarks')?.errors" class="invalid-feedback">
+                Remarks is required
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="col-md-2 p-0 d-flex" style="width:fit-content; gap: 0.5rem;">
+              <!-- Add Button -->
+              <button type="button" class="max-con new-action btn btn-outline-primary btn-sm rounded-pill"
+                (click)="addLabourRow()" title="Add Row">
+                <em class="bi bi-plus-circle globally-change-icon-color"></em>
+              </button>
+
+              <!-- Delete Button -->
+              <button type="button" class="max-con new-action btn btn-outline-primary btn-sm rounded-pill"
+                (click)="removeLabourRow(i)" *ngIf="labourDetails.length > 1" title="Remove Row">
+                <em class="bi bi-trash globally-change-icon-color"></em>
+              </button>
+            </div>
+          </div>
+
+          <!-- Empty State Message -->
+          <div *ngIf="labourDetails.length === 0" class="alert alert-info">
+            No labour/vendor/machine details added. Click "Add Row" to add details.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="btn-onscreen wrap-form-action my-3 d-flex justify-content-end">
+    <button type="submit" class="max-con new-action btn btn-outline-primary btn-sm rounded-pill me-2 text-nowrap"
+      (click)="addDispatch()">
+      {{ editIndex !== null ? 'Update' : 'Save' }}
+    </button>
+    <button *ngIf="type !== 'Bonded'" (click)="printData()" class="btn btn-outline-primary float-end" type="button">
+      Print
+    </button>
+    <button type="button" class="btn1 btn-lg" (click)="onCancelEdit()">
+      Cancel
+    </button>
+  </div>
+
+</div>

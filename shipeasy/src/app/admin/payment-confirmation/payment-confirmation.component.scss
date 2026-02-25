@@ -1,0 +1,109 @@
+@import ' ../../../../../assets/styles/common/common.scss';
+$labelColor : #353D5C;
+
+.accordion-header {
+    .accordion-button {
+        font-family: "Roboto Condensed",sans-serif;
+        padding: 5px 0;
+        font-size: 12px;
+        font-weight: 700;
+        color: $labelColor;
+
+        &::after {
+            width: 12px;
+            height: 12px;
+            background-size: 12px;
+        }
+    }
+}
+.wrap-itmes.bank-info{
+    background: white;
+    border-radius: 5px;
+}
+.float-label-custom{
+   ::ng-deep{ 
+       igx-date-picker igx-input-group input{
+        border-bottom: 0;
+      }
+    }
+    .bg-hide{
+        position: absolute;
+        top: 14px;
+        font-size: 16px;
+    }
+    &.auto-label-shift{
+        label{
+            top: -11px;
+            font-size: 14px;
+            font-family: "Mulish",sans-serif;
+            color: #6963a6;
+        }
+    }
+}
+select {
+    padding: 2px;
+  }
+
+.accordion-item {
+    border: none !important;
+
+    //  border-bottom: 1px solid #EDEEF5 !important;
+    .accordion-header {
+        border-bottom: 1px solid #E8EAF2;
+    }
+
+    .accordion-body {
+        padding: 5px 0;
+    }
+}
+
+
+.accordion-button {
+    color: black;
+}
+
+.accordion-button:active,
+.accordion-button:focus {
+    box-shadow: none !important;
+    border-color: none !important;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: transparent !important;
+    //  border-bottom: 1px solid #EDEEF5 !important;
+    box-shadow: none !important;
+}
+
+.payment{
+    background-color: #fff;
+    border-radius: 10px;
+}
+.header{
+    height: 270px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #F7F7FA;
+}
+.btn-link{
+    font-family: 'Mulish',sans-serif !important;
+    font-style: normal;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+}
+
+.wrap-top-image{
+    // background: url('../../assets/images/home-bottom.svg') no-repeat;
+    background-color: #F7F7FA;
+    background-position: right 0% bottom 0%;
+    background-blend-mode: hard-light;
+    background-size: cover;
+    min-height: 520px;
+}
+.bg-class{
+    background: #F0F0F5;
+.wrap-card-section{
+position: relative;
+top: -205px;
+}
+}

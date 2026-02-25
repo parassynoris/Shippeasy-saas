@@ -1,0 +1,31 @@
+export interface Invoice{
+    invoice_no: number,
+    invoice_type: string,
+    bill_to: string,
+    bill_from: string,
+    invoice_date: string,
+    payment_terms: string,
+}
+
+export interface Payment{
+    Bill_no: string,
+    reciept_no: string,
+    payment_mode: string,
+    paymentreference_no: string,
+    paymentreference_date: string,
+    amount: string,
+    remitance_bank: string,
+    beneficiary_bank: string,
+    invoice_party: string,
+    recieved_from: string,
+    invoice_no: string,
+    batch_no: string,
+    remarks: string,
+    currency: string,
+    move_no: string,
+    upload_document: string,
+    status: string,
+    document_name: string,
+    document_tag: string,
+    cheque_amount: string,
+}

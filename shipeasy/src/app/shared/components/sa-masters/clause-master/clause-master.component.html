@@ -1,0 +1,481 @@
+<!-- <div class="table-with-gheading">
+  <div class="wrap-table-area">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="float-clear-mobile-view d-flex flex-column flex-sm-row gap-3 float-start search-section">
+          <div class="input-group custom-input">
+            <input type="text" class="form-control" placeholder="Search" aria-label="Search" />
+          </div>
+        </div>
+        <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2">
+          <div class="mt-2">
+            <span>
+              <h5>{{ fromSize }}-{{ count }} of {{ toalLength }}</h5>
+            </span>
+          </div>
+          <div class="mt-2">
+            <span class="prv" [class.disable-arrow-sign]="fromSize === 1" (click)="prev()"><i class="fas fa-arrow-left"></i>
+            </span>
+            <span class="prv" [class.disable-arrow-sign]="count === toalLength" (click)="next()"><i class="fas fa-arrow-right"></i>
+            </span>
+          </div>
+          <div class="mt-2">
+            <select class="form-select form-select-sm" (change)="filter($event)">
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+          <div class="mt-2">
+            <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="openPDF()">{{
+              'common.print' | translate }} {{
+                'common.list' | translate }}</a>
+          </div>
+          <div class="mt-2">
+            <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="exportAsExcelFile()">{{
+              'common.exportToExcel' | translate }}</a>
+          </div>
+          <div class="mt-2 ">
+            <a class="new-action btn-outline-primary btn-sm rounded-pill" appAccessControl featureCode="['STM0117']" accessType="add"
+            (click)="open(AddClause, '')">{{"common.add"|translate}} {{
+              "stolt.masters.CLAUSE_MASTER.CLAUSE_MASTER" | translate }}</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="table-responsive" id="htmlData">
+          <table aria-describedby="mytable" class="gfg">
+            <thead>
+              <tr class="field-name">
+                <th scope="col" class="text-center">Action 
+                </th>
+                <th scope="col">
+                  {{ "stolt.masters.CLAUSE_MASTER.PORT_ID" | translate }}
+                   <em (click)="sortList(clauseData,'port_Id')" class="fas typcn typcn-arrow-unsorted arrow-iconssort"></em>
+                </th>
+                <th scope="col">
+                  {{ "stolt.masters.CLAUSE_MASTER.REMARKS" | translate }}
+                   <em (click)="sortList(clauseData,'remarks')" class="fas typcn typcn-arrow-unsorted arrow-iconssort"></em>
+                </th>
+                <th scope="col">
+                  {{ "stolt.masters.CLAUSE_MASTER.CREATED_BY" | translate }}
+                   <em (click)="sortList(clauseData,'createdBy')" class="fas typcn typcn-arrow-unsorted arrow-iconssort"></em>
+                </th>
+                <th scope="col">
+                  {{ "stolt.masters.CLAUSE_MASTER.CREATED_DATE" | translate }}
+                   <em (click)="sortList(clauseData,'createdOn')" class="fas typcn typcn-arrow-unsorted arrow-iconssort"></em>
+                </th>
+                <th scope="col">
+                  {{
+                  "stolt.masters.CLAUSE_MASTER.LAST_UPDATED_BY" | translate
+                  }}
+                   <em (click)="sortList(clauseData,'updatedBy')" class="fas typcn typcn-arrow-unsorted arrow-iconssort"></em>
+                </th>
+                <th scope="col">
+                  {{
+                  "stolt.masters.CLAUSE_MASTER.LAST_UPDATED_DT" | translate
+                  }}
+                   <em (click)="sortList(clauseData,'updatedOn')" class="fas typcn typcn-arrow-unsorted arrow-iconssort"></em>
+                </th>
+                <th scope="col">
+                  {{ "stolt.masters.CLAUSE_MASTER.PORT_OPTION" | translate }}
+                   <em (click)="sortList(clauseData,'portOption')" class="fas typcn typcn-arrow-unsorted arrow-iconssort"></em>
+                </th>
+               
+                <th scope="col">
+                  {{ "stolt.masters.CLAUSE_MASTER.CLAUSES_NAME" | translate }}
+                   <em (click)="sortList(clauseData,'clauseName')" class="fas typcn typcn-arrow-unsorted arrow-iconssort"></em>
+                </th>
+                <th scope="col">
+                  {{ "stolt.masters.CLAUSE_MASTER.clause_type" | translate }}
+                   <em (click)="sortList(clauseData,'clauseType')" class="fas typcn typcn-arrow-unsorted arrow-iconssort"></em>
+                </th>
+
+                <th scope="col"></th>
+              </tr>
+              <tr>
+                <th scope="col"><input type="text" disabled class="form-control" id=""  /></th>
+                <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="port_id"
+                    (keydown.enter)="search()" /></th>
+                <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="reamkrs" (keydown.enter)="search()"/></th>
+                <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="created_by" (keydown.enter)="search()" /></th>
+                <th scope="col"><input type="date" class="form-control" id="" [(ngModel)]="created_date" (change)="search()" /></th>
+                <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="last_updated" (keydown.enter)="search()"/></th>
+                <th scope="col"><input type="date" class="form-control" id="" [(ngModel)]="last_updated_date" (change)="search()"/></th>
+                <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="port_option"(keydown.enter)="search()" /></th>
+                <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="clause_name"(keydown.enter)="search()" /></th>
+                <th scope="col"><input type="text" class="form-control" id="" [(ngModel)]="clause_type" (keydown.enter)="search()"/></th>
+
+                <th scope="col" class="wrap-table-btn">
+                  <button type="button" class="bi bi-search btn btn-outline-primary btn-sm rounded-pill" (click)="search()">
+                    
+                  </button>
+                  <a routerLink="#" class="bi bi-arrow-clockwise btn btn-outline-primary btn-sm rounded-pill" (click)="clear()">
+                    </a>
+                </th>
+              </tr>
+            </thead>
+            <tbody *ngIf="clauseData">
+              <tr *ngFor="let clause of clauseData; let i = index">
+                <td class="action-field">
+                  <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop">
+                    <a appAccessControl featureCode="['STM0117']" accessType="update"
+                      (click)="open(AddClause, clause)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                  </span>
+                  <span nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}">
+                    <a appAccessControl featureCode="['STM0117']" accessType="view"
+                    (click)="open(AddClause,clause,'show')"><em
+                        class="bi bi-eye globally-change-icon-color"></em></a></span>
+                
+                  <span class="form-check form-switch">
+                    <input appAccessControl featureCode="['STM0117']" accessType="update"
+                     class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                      (change)="changeStatus(clause,i)" [checked]="clause?.status" />
+                    <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                  </span>
+                </td>
+                <td class="wrap">{{ clause?.port_Id }}</td>
+                <td class="wrap1">{{ clause?.remarks }}</td>
+                <td class="wrap2">{{ clause?.createdBy }}</td>
+                <td class="wrap3 text-end">
+                  {{ clause?.createdOn | date:"dd-MM-YYYY,hh:mm" }}
+                </td>
+                <td class="wrap4">{{ clause?.updatedBy }}</td>
+                <td class="text-end">
+                  {{ clause?.updatedOn | date:"dd-MM-YYYY,hh:mm" }}
+                </td>
+                <td class="">{{ clause?.portOption }}</td>
+                <td class="">{{ clause?.clauseName }}</td>
+                <td class="wrap6">{{ clause?.clauseType }}</td>
+
+                
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="no-data-availble" *ngIf="clauseData.length === 0">
+          {{'common.no_data' | translate}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<ng-template #AddClause let-modal>
+  <div class="modal-content">
+    <div class="modal-headers mt-2">
+      <h4 class="modal-title">
+        <ng-container *ngIf="!this.clauseIdToUpdate; else clauseUpdate">
+          {{ 'common.add' | translate }} {{"stolt.masters.CLAUSE_MASTER.CLAUSE_MASTER" | translate}}
+        </ng-container>
+        <ng-template #clauseUpdate>
+          {{ 'common.edit' | translate }} {{"stolt.masters.CLAUSE_MASTER.CLAUSE_MASTER" | translate}}
+        </ng-template>
+
+
+      </h4>
+      <button type="button" class="btn-close shadow-none float-end" (click)="onSave()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <div class="wrap-form-field padding-space">
+        <form class="row g-3" [formGroup]="addClauseForm">
+          <div class="col-md-4">
+            <label class="form-label">{{ "stolt.masters.CLAUSE_MASTER.clause_type" | translate
+              }}<span class="text-danger">*</span></label>
+            <nz-select class="form-select"  nzShowSearch nzAllowClear nzPlaceHolder="Clause Type" formControlName="clauseType"
+              [ngClass]="{ 'is-invalid': submitted && f.clauseType.errors }">
+              <nz-option *ngFor="let port of clauseTypeData" [nzLabel]="port?.typeName" [nzValue]="port?.typeName">
+              </nz-option>
+            </nz-select>
+            <div *ngIf="submitted && f.clauseType.errors" class="invalid-feedback">
+              <div *ngIf="f.clauseType.errors.required">
+                {{
+                "stolt.masters.CLAUSE_MASTER.ClauseMasterValidation.clauseType_IDValidation"
+                | translate
+                }}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">{{ "stolt.masters.CLAUSE_MASTER.PORT_ID" | translate
+              }}<span class="text-danger">*</span></label>
+            <nz-select class="form-select"  nzShowSearch nzAllowClear nzPlaceHolder="Port Id" formControlName="port_Id"
+              [ngClass]="{ 'is-invalid': submitted && f.port_Id.errors }">
+              <nz-option *ngFor="let port of portData"[nzLabel]="port?.portDetails?.portName" [nzValue]="port?.portDetails?.portName">
+              </nz-option>
+            </nz-select>
+            <div *ngIf="submitted && f.port_Id.errors" class="invalid-feedback">
+              <div *ngIf="f.port_Id.errors.required">
+                {{
+                "stolt.masters.CLAUSE_MASTER.ClauseMasterValidation.PORT_IDValidation"
+                | translate
+                }}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">{{ "stolt.masters.CLAUSE_MASTER.REMARKS" | translate
+              }}</label>
+            <input type="text" class="form-control custom-input" id=" " formControlName="remarks" placeholder="Remarks"
+              value="" [ngClass]="{ 'is-invalid': submitted && f.remarks.errors }" />
+           
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">{{ "stolt.masters.CLAUSE_MASTER.PORT_OPTION" | translate
+              }}<span class="text-danger">*</span></label>
+            <input type="text" class="form-control custom-input" id=" " formControlName="portOption" placeholder="Port Option"
+              value="" [ngClass]="{ 'is-invalid': submitted && f.portOption.errors }" />
+            <div *ngIf="submitted && f.portOption.errors" class="invalid-feedback">
+              <div *ngIf="f.portOption.errors.required">
+                {{
+                "stolt.masters.CLAUSE_MASTER.ClauseMasterValidation.PORT_OPTIONValidation"
+                | translate
+                }}
+              </div>
+            </div>
+          </div>
+         
+          <div class="col-md-4">
+            <label class="form-label">{{ "stolt.masters.CLAUSE_MASTER.CLAUSES_NAME" | translate
+              }}<span class="text-danger">*</span></label>
+            <input type="text" class="form-control custom-input" id=" " formControlName="clauseName" placeholder="Clauses Name"
+              value="" [ngClass]="{ 'is-invalid': submitted && f.clauseName.errors }" appCapitalizeFirst/>
+            <div *ngIf="submitted && f.clauseName.errors" class="invalid-feedback">
+              <div *ngIf="f.clauseName.errors.required">
+                {{
+                "stolt.masters.CLAUSE_MASTER.ClauseMasterValidation.CLAUSES_NAMEValidation"
+                | translate
+                }}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mobile-view-input-alignment">
+            <div class="taggle form-check form-switch">
+              <label class="form-check-label" for="flexSwitchCheckDefault">{{ "stolt.masters.uom.status" | translate
+                }}</label>
+              <input class="form-check-input" formControlName="status" type="checkbox" id="flexSwitchCheckDefault">
+            </div>
+          </div>
+          <div class="form-group wrap-form-action mt-4">
+            <button class="btn1 btn-lg float-end" (click)="onSave()" type="submit">
+              {{ "common.cancel" | translate }}
+            </button>
+            <button (click)="clausesMasters()" *ngIf="show !== 'show'" class="btn btn-outline-primary btn-lg float-end" type="submit">
+              <ng-container *ngIf="!this.clauseIdToUpdate; else clauseUpdate1">
+                {{ 'common.save' | translate }}
+              </ng-container>
+              <ng-template #clauseUpdate1>
+                {{ 'common.update' | translate }}
+              </ng-template>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #deleteclause let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body mt-4">
+      <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2">
+      </em>
+      <span class="text-dark fs-6">{{"error.msg_delete" | translate}}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+          {{"common.no" | translate}}
+        </button>
+        <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+          {{"common.yes" | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+<div class="table-header-area">
+  <div class="mat-table-with-gheading">
+    <div class="wrapper">
+      <div class="container-fluid">
+        <div class=" pt-2">
+          <div class="wrap-mat-table-area">
+            <div class="table-header-area pt-2">
+              <div>
+                <table-filters [TDP]="[false, false, true, true]" (filterInput)="applyFilter($event)"
+                  (onClickExport)="exportAsExcelFile()">
+                </table-filters>
+              </div>
+              <div class="header-right">
+                <div class="mt-2">
+                  <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="openPDF()">{{
+                    'common.print' | translate }} {{
+                      'common.list' | translate }}</a>
+                </div>
+                <div class="mt-2">
+                <a class="new-action btn-outline-primary btn-sm rounded-pill" appAccessControl featureCode="['STM0117']" accessType="add"
+            (click)="open(AddClause, '')">{{"common.add"|translate}} {{
+              "stolt.masters.CLAUSE_MASTER.CLAUSE_MASTER" | translate }}</a>
+              </div>
+            </div>
+            </div>
+          </div>
+          <div class="table-card">
+            <div class="table-design example-container mat-elevation-z8">
+              <table mat-table [dataSource]="dataSource" matSort class="full-width-table" summary="agreement">
+                <ng-container matColumnDef="#">
+                  <th scope="col" mat-header-cell *matHeaderCellDef style="width: 3%;">
+                    # <em class="custom-tooltip" [attr.title]="'Toggle Filters'"
+                      (click)="toggleFilters = !toggleFilters" class="bi bi-search"></em>
+                  </th>
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    {{ element?.id}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                  <th scope="col" id="action" class="charterersPdfHead" mat-header-cell   *matHeaderCellDef
+                    style="width: 6%;">
+                    {{ 'Actions' }}
+                  </th>
+                 
+                    <td class="borderBottom" mat-cell *matCellDef="let element; let i = index">
+                      <div class="d-flex"  style="align-items: center;">
+                      <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop mx-1">
+                        <a appAccessControl featureCode="['STM0117']" accessType="update"
+                          (click)="open(AddClause, element)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                      </span>
+                      <span nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}" class="mx-1">
+                        <a appAccessControl featureCode="['STM0117']" accessType="view"
+                        (click)="open(AddClause,element,'show')"><em
+                            class="bi bi-eye globally-change-icon-color"></em></a></span>
+                    
+                      <span class="form-check form-switch mx1 mb-0 mt-1">
+                        <input appAccessControl featureCode="['STM0117']" accessType="update"
+                         class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                          (change)="changeStatus(element,i)" [checked]="element.status" />
+                        <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                      </span>
+                    </div>
+                    </td>
+                    
+                </ng-container>
+                <ng-container matColumnDef="port_Id">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Port Name  
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.port_Id }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="remarks">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Remarks
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.remarks}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="createdBy">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Created By
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.createdBy}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="createdOn">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Created Date 
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.createdOn | date:'dd/MM/yyyy' }}
+                  </td>                  
+                </ng-container>
+                <ng-container matColumnDef="updatedBy">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Last Updated By
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.updatedBy}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="updatedOn">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Last Updated Dt 
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.updatedOn | date:'dd/MM/yyyy'}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="portOption">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Port Option
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.portOption}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="clauseName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Clauses Name
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.clauseName}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="clauseType">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Clause Type
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.clauseType}}
+                  </td>
+                </ng-container>
+                <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index"
+                                        [matColumnDef]="headersFilter">
+                                        <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+                                            <div class="filters-container" [class.animate]="!toggleFilters">
+                                                <em *ngIf="i > 0 && i < displayedColumns1.length - 9" class="custom-tooltip"
+                                                [attr.title]="'Clear Filters'"
+                                                (click)="clearFilters();toggleFilters = !toggleFilters"
+                                                class="bi bi-x-circle"></em>
+                                                <div *ngIf="i > 1 && i < displayedColumns1.length - 0"
+                                                    appearance="outline">
+                                                    <input class="form-control input-txt"
+                                                        placeholder="Press 'Enter' to search"
+                                                        [(ngModel)]="filtersModel[i]" (keyup.enter)="searchColumns()">
+                                                </div>
+                                               
+                                            </div>
+                                        </th>
+                                    </ng-container>
+
+                <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumns">
+                </tr>
+                <tr mat-header-row class="no-default-height" *matHeaderRowDef="displayedColumns1"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns">
+                </tr>
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+                    <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+                    <span *ngIf="!loaderService?.isLoadingcircle && !dataSource?.data?.length">No data available</span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <div [ngClass]="{'display-none' : toalLength < 10}">
+              <mat-paginator [length]="toalLength" [pageSize]="pageSize" [pageIndex]="pageNumber-1"
+                (page)="onPageChange($event)"  [pageSizeOptions]="_gc.PAGINATOR_OPTIONS" showFirstLastButtons></mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

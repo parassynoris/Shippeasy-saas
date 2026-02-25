@@ -1,0 +1,31 @@
+.menuright {
+    position: fixed;
+    right: 0;
+    top: 40%;
+    width: 10px;
+    margin: -2.5em 0 0 0;
+    z-index: 5;
+    background: var(--theme-white-background-color);
+    color: var(--link-text-color);
+    font-weight: bold;
+    text-align: left;
+    padding: 10px 30px 10px 0px;
+    box-shadow: var(--theme-shadow);
+    border-radius: 10px 0 0px 10px;
+}
+.hidetab{
+    display: none;
+}
+.menuright li {
+    width: 30px;
+    border-bottom: 1px solid var(--theme-border-color-light);
+    list-style: none;
+    padding: 0px 0 0px 3px;
+}
+.menuright li:last-child {
+    border-bottom: 0;
+}
+.menuright li i {
+    font-size: 21px;
+    color: var(--link-text-color);
+}

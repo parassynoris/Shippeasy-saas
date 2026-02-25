@@ -1,0 +1,184 @@
+export interface Location{
+    id: string;
+    locationName:string;
+    portType:string;
+    country:string;
+}
+export interface Product{
+    product_Name:string;
+    productType:string;
+    product_Id:string;
+    stolt_ProductId:string;
+    imo_Class:string;
+    haz_Subclass:string;
+    un_Number:number;
+    density_Gravity:string;
+    flash_Point:string;
+    psn:string;
+    technicalName:string;
+    packingGroup:string;
+    msds:string;
+    msdsValidityDate:string;
+    approvalYes:string;
+    approvalNo:string;
+    emsNo:number;
+    emsCode:string;
+    portName:string;
+    localCurrency:string;
+    pciName:string;
+    hsCode:string;
+    mappingCustomerMaster:string;
+    productCreationDate:string;
+    productCreationUserId:string;
+    productLastUpdatedDate:string;
+    productLastUpdatedUserId:string;
+    productId:number;
+    productName:string;
+}
+
+export interface CostItems{
+    id:string;
+    itemCategory:string;
+    itemType:string;
+    itemTags:string;
+    itemName:string;
+    itemUnit:string;
+    itemImage:string;
+    isChargable:string;
+    financeCodeId:string;
+    itemGroup:string;
+    isActive:string;
+}
+export interface Uom{
+    UomId:string;
+    UomName:string;
+    UomShort:string;
+}
+export interface User{
+    UserName:string;
+    Name:string;
+    Email:string;
+    PhoneNo:string;
+    Branch:string;
+    Role:string;
+}
+export interface Roles{
+    RoleName:string;
+    RoleDescription:string;
+    RoleStatus:string;
+    RoleLevel:string;
+}
+export interface Vessels{
+    VesselId:number;
+    VesselFeeder:string;
+    VesselAbbr:string;
+    VesselFreeder:string;
+    VesselCode:string;
+    ShippingLine:string;
+    CrewCount:string;
+    VesselFlag:string;
+    VesselNational:string;
+    NetWeight:string;
+    CallSign:string;
+    VesselAgent:string;
+    VesselExName:string;
+    VesselCallSign:string;
+    VesselPortRegistration:string;
+    ImoNo:number;
+    VesselSatCom:string;
+    VesselHT:string;
+    VesselBeam:string
+    VesselHtuom:string;
+    VesselBeamUom:string;
+    VesselLoa:string;
+    VesselLoauom:string;
+    VesselLbp:string;
+    VesselLBPUOM:string;
+    VesselLmaxdraft:string;
+    VesselLmaxdraftUOM:string;
+
+    VesselBallast:string;
+    VesselManifold:string;
+    VesselManifoldUOM:string;
+    VesselGrossWeight:string;
+    VesselGrossWeightUOM:string;
+    VesselNetWeight:string;
+    VesselNetWeightUOM:string;
+    VesselDeadWeight:string;
+    VesselTeuCapacity:string;
+    VesselBidGate:string;
+    VesselBidGplace:string;
+    VesselOwner:string;
+    VesselClassification:string;
+    VesselWeatherSBT:string;
+    VesselReduceGT:string;
+    VesselIPTCLUB:string;
+    VesselEngineType:string;
+    VesselEngineCount:string;
+    VesselEnginePower:string;
+    VesselPropulationType:string;
+    VesselPropullersCount:string;
+    VesselSpeed:string;
+    VesselBowPower:string;
+    VesselBowThrusterCount:string;
+    VesselStreamPower:string;
+
+    VesselStern:string;
+    VesselShopping:string;
+    VesselSubType:string;
+    VesselGrt:string;
+    VesselNrt:string;
+    VesselPreferedBerthSide:string;
+    VesselTropicalMaxDraft:string;
+    VesselTropicalDeadDraft:string;
+    VesselShipcertNo:number;
+    VesselCertValidity:string;
+    VesselLightHouseNo:string;
+    VesselSafetyMgtNo:string;
+    VesselSafetyValidTill:string;
+    VesselRemarks:string;
+    VesselPortDuereceipt:string;
+    VesselMoNumber:number;
+    VesselNoofHatches:string;
+    VesselNoofHatchesCover:string;
+    VesselNoofHold:string;
+    VesselMaxSpeed:number;
+    Vessel20FtCapapcity:string;
+    Vessel40FtCapapcity:string;
+    VesselRefferPlugPoint:string;
+    VesselRefferVoltage:string;
+
+    VesselReferPlugType:string;
+    VesselCellular:string;
+    VesselBowMainFoldDist:string;
+    VesselHeight:string;
+    VesselHatchCoverType:string;
+    VesselGeared:string;
+    VesselRegistrationDate:string;
+    VesselPiAddress:string;
+    VesselPiPhone:number;
+    VesselPiFax:string;
+    VesselPiEmail:string;
+    VesselLocalAddress:string;
+    VesselLocalPhone:string;
+    VessellocalFax:string;
+    VesselLocalEmail:string;
+    VesselPurposeCallCode:number;
+    IsActive:string;
+    AddressId:string;
+    TenantId:string;
+
+
+}
+export interface Services{
+    ServiceCategory:string;
+    ServiceType:string;
+    ServiceTags:string;
+    ServiceDescription:string;
+    ServiceName:string;
+    ServiceUnit:string;
+    ServiceImage:string;
+    ServiceParentId:string;
+    ServiceStatus:string;
+    IsParent:string;
+}

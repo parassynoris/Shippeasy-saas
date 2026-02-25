@@ -1,0 +1,111 @@
+ 
+
+.inp-grp{
+    border: 1px solid rgba(115, 123, 125, 0.3);
+    box-sizing: border-box;
+    border-radius: 8px;
+  
+    span,select{
+        background-color: transparent;
+        color: black;
+        border-radius: 0;
+        border: none;
+    }
+    input{
+        border: none;
+        border-radius: 8px;
+        border-left: 1px solid black;
+    }
+    select{
+        font-size: 14px;
+        font-weight: bold;
+        box-shadow: none;
+  
+    }
+  }
+  .text-no-wrap{
+    text-wrap: nowrap;
+  }
+    .text-list{
+      font-weight: 800;
+      font-size: 14px;
+      line-height: 140%;
+    }
+    .text-normal{
+      font-size: 16px;
+      line-height: 140%;
+    }
+  
+  
+  
+    .bg-grey{
+      color:black;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 5px;
+      border-radius: 8px;
+      background-color: whitesmoke;
+    }
+  
+  
+  
+  
+  
+  
+    :host {
+      font-family: 'Jost', sans-serif !important;
+    }
+    
+    .text-center {
+      text-align: center;
+    }
+    
+    .list {
+      max-width: 550px;
+      margin: auto;
+    }
+    
+    li {
+      margin-bottom: 5px;
+    }
+
+
+    ::ng-deep {
+      .pagination {
+        display: flex;
+        list-style: none;
+        padding: 0;
+      }
+      
+     
+      .pagination li {
+        margin-right: 5px;  
+      }
+      
+     
+      .pagination a {
+        display: inline-block;
+        padding: 5px 10px;
+        text-decoration: none;
+        color: #333;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+      }
+      
+     
+      .pagination .current {
+        background-color: #007BFF !important;
+        color: #fff;
+        border-color: #007BFF !important;
+      }
+      
+     
+      .pagination .disabled {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+      }
+      .font-16{
+        font-size: 16px !important;
+        font-family: 'Roboto';
+      }

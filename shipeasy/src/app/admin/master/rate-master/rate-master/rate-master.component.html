@@ -1,0 +1,579 @@
+<div class="table-with-gheading">
+  <!-- <div class="wrap-table-area">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2">
+          <div class="mt-2">
+            <span>
+              <h5>{{ fromSize }}-{{ count }} of {{ toalLength }}</h5>
+            </span>
+          </div>
+          <div class="mt-2">
+            <span class="prv" [class.disable-arrow-sign]="fromSize === 1" (click)="prev()"><i class="fas fa-arrow-left"></i>
+            </span>
+            <span class="prv" [class.disable-arrow-sign]="count === toalLength" (click)="next()"><i class="fas fa-arrow-right"></i>
+            </span>
+          </div>
+          <div class="mt-2">
+            <select class="form-select form-select-sm" (change)="filter($event)">
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+
+          <div class="mt-2">
+            <a class="new-action btn btn-outline-primary btn-sm rounded-pill" appAccessControl featureCode="['STM0126']" accessType="add"
+              (click)="open(AddClause)">{{ 'common.add' | translate }} Rate-master</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+  <!-- <div class="col-md-12">
+    <div class="table-responsive" id="htmlData">
+      <table aria-describedby="mytable" class="">
+        <thead>
+          <tr class="field-name">
+            <th scope="col" class="text-center">Action</th>
+            <th scope="col" class="text-center">origin</th>
+            <th scope="col" class="text-center">destination</th>
+            <th scope="col" class="text-center">container size</th>
+            <th scope="col" class="text-center">Shipping Line</th>
+            <th scope="col" class="text-center">price</th>
+            
+            <th scope="col" class="text-center"></th>
+          </tr>
+          <tr>
+            <th scope="col" class="wrap-table-btn">
+            </th>
+            <th scope="col">
+              <input type="text" class="form-control" id="" [(ngModel)]="origin" (keydown.enter)="search()" />
+            </th>
+            <th scope="col">
+              <input type="text" class="form-control" id="" [(ngModel)]="destination" (keydown.enter)="search()" />
+            </th>
+            <th scope="col">
+              <input type="text" class="form-control" id="" [(ngModel)]="containerSize" (keydown.enter)="search()" />
+            </th>
+            <th scope="col">
+              <input type="text" class="form-control" id="" [(ngModel)]="shippingLine" (keydown.enter)="search()" />
+            </th>
+            <th scope="col">
+              <input type="text" class="form-control" disabled="" id="" [(ngModel)]="price" (keydown.enter)="search()" />
+            </th>
+             
+            <th scope="col">
+              <button type="button" class="bi bi-search btn btn-outline-primary btn-sm rounded-pill"
+                (click)="search()">
+
+              </button>
+              <a class="bi bi-arrow-clockwise btn btn-outline-primary btn-sm rounded-pill" (click)="clear()">
+              </a>
+            </th>
+          
+          </tr>
+        </thead>
+        <tbody *ngIf="rateDate">
+          <tr *ngFor="let ratemaster of rateMasterList ; let i = index">
+            <td class="action-field">
+              <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop">
+                <a (click)="open(AddClause, ratemaster)"><em class="bi bi-pencil color-pencil-red"></em></a>
+              </span>
+              <span class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                  (change)="changeStatus(ratemaster,i)" [checked]="ratemaster.status" />
+                <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+              </span>
+              <a   (click)="onDelete(deletedata,ratemaster)" appAccessControl  accessType="delete"><i class="bi bi-trash color-pencil-red"></i></a>
+            </td>
+            <td class="wrap1 text-center">{{ratemaster.fromLocationName}}</td>
+            <td class="wrap2 text-center">{{ratemaster.toLocationName}}</td>
+            <td class="wrap text-center">{{ratemaster.containerSize}}</td>
+            <td class="wrap text-center">{{ratemaster.shippinglineName}}</td> -->
+  <!-- <td>{{systemType.typeActive ? "Yes" : "No"}}</td> -->
+  <!-- <td class="wrap3 text-end">{{ratemaster.estimatedRate}}</td> -->
+  <!-- <td>{{systemType.typeParentType}}</td> -->
+
+
+  <!-- </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="no-data-availble" *ngIf="rateDate.length === 0">
+      {{'common.no_data' | translate}}
+    </div>
+  </div> -->
+
+  <ng-template #AddClause let-modal>
+    <div class="modal-content nz-allSelect">
+      <div class="modal-headers mt-2">
+        <h4 class="modal-title" *ngIf="!isEdit">Add Rate Master
+        </h4>
+        <h4 class="modal-title" *ngIf="isEdit">Edit Rate Master
+        </h4>
+        <button type="button" class="btn-close shadow-none" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+
+          <form class="row g-3" [formGroup]="addratemaster">
+            <div class="col-md-4">
+              <label class="form-label">Freight Type
+                <span class="text-danger">*</span></label>
+              <nz-select class="form-select" nzShowSearch nzAllowClear (ngModelChange)="shipmentType()"
+                formControlName="shipment_Type" nzPlaceHolder="Freight Type" [ngClass]="{'is-invalid': submitted && f.shipment_Type.errors}">
+                <nz-option *ngFor="let test of shipmentTypes" [nzLabel]="test?.typeName" [nzValue]="test?.systemtypeId"
+                  [ngClass]="{'is-invalid': submitted && f.shipment_Type.errors}"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.shipment_Type.errors" class="invalid-feedback">
+                <div *ngIf="f.shipment_Type.errors.required">Freight Type is required</div>
+              </div>
+
+            </div>
+            <div class="col-md-4  nz-select">
+              <label class="form-label">Load Type<span class="text-danger">*</span></label>
+              <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Load Type"
+                formControlName="freightTerm" [ngClass]="{'is-invalid': submitted && f.freightTerm.errors}"
+                (ngModelChange)="getTabs($event)">
+                <nz-option *ngFor="let cust of loadTypeList" [nzLabel]="cust?.typeName"
+                  [nzValue]="cust?.systemtypeId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.freightTerm.errors" class="invalid-feedback">
+                <div *ngIf="f.freightTerm.errors.required">Load Type is required</div>
+              </div>
+            </div>
+            <div class="col-md-4  nz-select">
+              <label class="form-label">Price ({{agentCurrency?.currencyName}})</label>
+              <input type="number" class="form-control custom-input" disabled formControlName="estimatedRate"
+                placeholder="Price" value="" />
+            </div>
+
+            <div class="col-md-4 nz-select">
+              <label class="form-label">From Location<span
+                  class="text-danger">*</span></label>
+              <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="From Location" formControlName="fromLocationName"
+                [ngClass]="{'is-invalid': submitted && f.fromLocationName.errors}">
+                <nz-option *ngFor="let port of portList | filterByFlag: activeFrightAir"
+                  [nzLabel]="port?.portName" [nzValue]="port.portId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.fromLocationName.errors" class="invalid-feedback">
+                <div *ngIf="f.fromLocationName.errors.required">From Location is required</div>
+              </div>
+            </div>
+            <div class="col-md-4  nz-select">
+              <label class="form-label">To Location<span
+               class="text-danger">*</span></label>
+              <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="To Location" formControlName="toLocationName" 
+                [ngClass]="{'is-invalid': submitted && f.toLocationName.errors}">
+                <nz-option *ngFor="let port of  portList | filterByFlag: activeFrightAir"
+                  [nzLabel]="port?.portName" [nzValue]="port.portId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.toLocationName.errors" class="invalid-feedback">
+                <div *ngIf="f.toLocationName.errors.required">To Location is required</div>
+              </div>
+            </div>
+            <!-- <div class="col-md-4  nz-select">
+              <label class="form-label">Currency<span class="text-danger">*</span></label>
+              <nz-select class="form-select" [nzDisabled]="true" nzShowSearch nzAllowClear nzPlaceHolder="Currency" formControlName="currencyShortName"
+                [ngClass]="{'is-invalid': submitted && f.currencyShortName.errors}">
+                <nz-option *ngFor="let cust of currencyList" [nzLabel]="cust?.currencyShortName"
+                  [nzValue]="cust?.currencyId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.currencyShortName.errors" class="invalid-feedback">
+                <div *ngIf="f.currencyShortName.errors.required">currency Short Name is required</div>
+              </div>
+            </div> -->
+
+            <!-- <div class="col-md-4">
+              <label class="form-label">Estimated Margin %<span class="text-danger">*</span></label>
+              <input type="number" class="form-control custom-input" formControlName="estimatedMargin" placeholder="Estimated Margin %" value="" [ngClass]="{'is-invalid': submitted && f.estimatedMargin.errors}" />
+              <div *ngIf="submitted && f.estimatedMargin.errors" class="invalid-feedback">
+                <div *ngIf="f.estimatedMargin.errors.required">estimated Margin is required</div>
+              </div>
+            </div> -->
+
+            <div class="col-md-4  nz-select" *ngIf="types==='FCL'">
+              <label class="form-label">Container Type<span class="text-danger">*</span></label>
+              <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Container Type"
+                formControlName="containerType" [ngClass]="{'is-invalid': submitted && f.containerType.errors}">
+                <nz-option *ngFor="let cust of containerTypeList" [nzLabel]="cust?.typeName"
+                  [nzValue]="cust?.systemtypeId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.containerType.errors" class="invalid-feedback">
+                <div *ngIf="f.containerType.errors.required">Container Type is required</div>
+              </div>
+            </div>
+            <div class="col-md-4  nz-select" *ngIf="types==='ULD Container'">
+              <label class="form-label">Container Type<span class="text-danger">*</span></label>
+              <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Container Type"
+                formControlName="containerType" [ngClass]="{'is-invalid': submitted && f.containerType.errors}">
+                <nz-option *ngFor="let cust of ULDcontainerlist" [nzLabel]="cust?.typeName"
+                  [nzValue]="cust?.systemtypeId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.containerType.errors" class="invalid-feedback">
+                <div *ngIf="f.containerType.errors.required">Container Type is required</div>
+              </div>
+            </div>
+            <div class="col-md-4  nz-select" *ngIf="types === 'FWL'">
+              <label class="form-label">Wegon Type<span class="text-danger">*</span></label>
+              <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Wegon Type"
+                formControlName="wegonType" [ngClass]="{'is-invalid': submitted && f.wegonType.errors}">
+                <nz-option *ngFor="let cust of wagonTypeList" [nzLabel]="cust?.typeName"
+                  [nzValue]="cust?.systemtypeId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.wegonType.errors" class="invalid-feedback">
+                <div *ngIf="f.wegonType.errors.required">Wegon Type is required</div>
+              </div>
+            </div>
+            <div class="col-md-4  nz-select" *ngIf="types === 'FTL'">
+              <label class="form-label">Truck Type<span class="text-danger">*</span></label>
+              <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Truck Type"
+                formControlName="truckType" [ngClass]="{'is-invalid': submitted && f.truckType.errors}">
+                <nz-option *ngFor="let cust of truckTypeList" [nzLabel]="cust?.typeName"
+                  [nzValue]="cust?.systemtypeId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.truckType.errors" class="invalid-feedback">
+                <div *ngIf="f.truckType.errors.required">Truck Type is required</div>
+              </div>
+            </div>
+            <div class="col-md-4 nz-select">
+              <label class="form-label">Cargo Type<span class="text-danger">*</span></label>
+              <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="cargoType"
+                [ngClass]="{'is-invalid': submitted && f.cargoType.errors}" nzPlaceHolder="Cargo Type">
+                <nz-option *ngFor="let enquiryType of cargoTypeList" [nzLabel]="enquiryType?.typeName | uppercase"
+                  [nzValue]="enquiryType?.systemtypeId"></nz-option>
+              </nz-select>
+
+              <div *ngIf="submitted && f.cargoType.errors" class="invalid-feedback">
+                <div *ngIf="f.cargoType.errors.required">cargo Type is
+                  required</div>
+              </div>
+            </div>
+            <div class="col-md-4  nz-select">
+              <label class="form-label">Shipping Line<span class="text-danger">*</span></label>
+              <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Shipping Line"
+                formControlName="shippingline" [ngClass]="{'is-invalid': submitted && f.shippingline.errors}">
+                <nz-option *ngFor="let cust of shippingLineList | filterByType : 'ShipmentTypeName': activeFright"
+                  [nzLabel]="cust?.name" [nzValue]="cust?.shippinglineId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.shippingline.errors" class="invalid-feedback">
+                <div *ngIf="f.shippingline.errors.required">Shipping Line is required</div>
+              </div>
+            </div>
+
+
+
+            <div class="col-md-4 margin">
+              <input class="" type="checkbox" formControlName="isCustomOrigin">
+              <label class="form-label mx-1">Custom Origin</label>
+            </div>
+            <div class="col-md-4 margin">
+              <input class="" type="checkbox" formControlName="isCustomDestination">
+              <label class="form-label mx-1">Custom Destination</label>
+            </div>
+            <div class="basicdetails">
+              <div class="row">
+                <div class="col-6">
+                  <h6 class="basic mb-4">Add Charge</h6>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <form [formGroup]="userTable">
+                    <div class="row">
+                      <div class="col-12">
+                        <table class="table table-border">
+                          <thead class="text-nowrap">
+                            <th></th>
+                            <th>Charge Item</th>
+                            <th>Charge Basis</th>
+                            <th>Quantity</th>
+                            <th>Currency</th>
+                            <th>Exchange rate</th>
+                            <th>Price</th>
+                          </thead>
+                          <tbody>
+                            <ng-container formArrayName="tableRows"
+                              *ngFor="let group of getFormControls.controls; let i = index">
+                              <tr [formGroupName]="i">
+                                <td>
+                                  <input type="checkbox" formControlName="checkboxs" class="Margin" />
+                                </td>
+                                <td>
+                                  <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="chargeName"
+                                    [ngClass]="{'is-invalid': submitted && group?.get('chargeName')?.errors}">
+                                    <nz-option *ngFor="let data of   sort(chargeName ,'costitemName')"
+                                      [nzLabel]="data.costitemName" [nzValue]="data.costitemId"></nz-option>
+                                  </nz-select>
+                                  <div *ngIf="submitted && group?.get('chargeName')?.errors" class="invalid-feedback">
+                                    <div *ngIf="group?.get('chargeName')?.errors.required">Charge is
+                                      required</div>
+                                  </div>
+                                </td>
+                                <td>
+                                  <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="basis"
+                                    [ngClass]="{'is-invalid': submitted && group?.get('basis')?.errors}">
+                                    <nz-option *ngFor="let data of   sort(chargeType ,'typeName')"
+                                      [nzLabel]="data.typeName" [nzValue]="data.typeName"></nz-option>
+                                  </nz-select>
+                                  <div *ngIf="submitted && group?.get('basis')?.errors" class="invalid-feedback">
+                                    <div *ngIf="group?.get('basis')?.errors.required">Charge Basis is
+                                      required</div>
+                                  </div>
+                                </td>
+                                <td>
+                                  <input type="number" class="form-control custom-input" formControlName="qty"
+                                    disabled />
+                                </td>
+                                <td>
+                                  <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Currency"
+                                    formControlName="currency" (ngModelChange)="currChange(i)" [ngClass]="{'is-invalid': submitted && group?.get('currency')?.errors}">
+                                    <nz-option *ngFor="let cust of currencyList" [nzLabel]="cust?.currencyShortName"
+                                      [nzValue]="cust?.currencyId"></nz-option>
+                                  </nz-select>
+                                  <div *ngIf="submitted && group?.get('currency')?.errors" class="invalid-feedback">
+                                    <div *ngIf="group?.get('currency')?.errors.required">Currency is
+                                      required</div>
+                                  </div>
+                                </td>
+                                <td>
+                                  <input type="number" class="form-control custom-input" formControlName="exchange" 
+                                  [ngClass]="{'is-invalid': submitted && group?.get('exchange')?.errors}" />
+                                  <div *ngIf="submitted && group?.get('exchange')?.errors" class="invalid-feedback">
+                                    <div *ngIf="group?.get('exchange')?.errors.required">ExChange Rate is
+                                      required</div>
+                                  </div>
+                                </td>
+                                <td>
+                                  <input type="number" class="form-control custom-input" formControlName="price" 
+                                  [ngClass]="{'is-invalid': submitted && group?.get('price')?.errors}"
+                                    (keyup)="handlePriceTotal()" />
+                                    <div *ngIf="submitted && group?.get('price')?.errors" class="invalid-feedback">
+                                      <div *ngIf="group?.get('price')?.errors.required">Price is
+                                        required</div>
+                                    </div>
+                                </td>
+                              </tr>
+                            </ng-container>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </form>
+                  <div class="row">
+                    <div class="col-12 mb-1 d-flex">
+                      <button (click)="addRow()" class="btn btn-outline-secondary mr-2">Add Row</button>
+                      <button (click)="deleteRows()" [disabled]="!isAnyCheckboxChecked()"
+                        class="btn btn-outline-secondary">
+                        Delete Row
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+            <div class="form-group wrap-form-action mt-4">
+              <button class="btn1 btn-lg float-end" (click)="closeModal()" type="submit">
+                {{ "common.cancel" | translate }}
+              </button>
+              <button *ngIf="!isEdit" (click)="onSave()" class="btn btn-outline-primary btn-lg float-end" type="submit">
+                {{ "common.save" | translate }}
+              </button>
+              <button *ngIf="isEdit" (click)="onSave()" class="btn btn-outline-primary btn-lg float-end" type="submit">
+                Update
+              </button>
+
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #deletedata let-c="close" let-d="dismiss">
+    <div class="modal-content">
+      <button type="button" class="btn-close shadow-none position-absolute top-0 end-0 m-2" aria-label="Close" (click)="d('Cross click')"></button>
+      <div class="modal-body mt-4 d-flex flex-column align-items-center justify-content-center text-center">
+        <h4 class="modal-title text-center mb-3">{{ "error.msg_delete" | translate }}</h4>
+        <span class="text-dark fs-8">This action cannot be undone.</span>
+      </div>
+      <div class="modal-footer d-flex justify-content-right">
+        <button type="button" class="custom-btn btn btn-sm" (click)="c('yes')">
+          {{ "common.yes" | translate }}
+        </button>
+        <button type="button" class="custom-btn btn btn-sm me-3" (click)="d('Cross click')">
+          {{ "common.no" | translate }}
+        </button>
+      </div>
+    </div>
+  </ng-template>
+
+  <div class="table-header-area">
+    <div class="mat-table-with-gheading">
+      <div class="wrapper">
+        <div class="container-fluid">
+          <div class="pt-2">
+            <div class="wrap-mat-table-area">
+              <div class="table-header-area pt-2">
+                <div>
+                  <table-filters [TDP]="[false, false, true, true]" (filterInput)="applyFilter($event)"
+                    (onClickExport)="exportAsExcelFile()">
+                  </table-filters>
+                </div>
+                <div class="header-right">
+                  <div class="mt-2">
+                    <a class="new-action btn btn-outline-primary btn-sm rounded-pill" appAccessControl
+                      featureCode="['STM0126']" accessType="add" (click)="open(AddClause)">{{ 'common.add' | translate
+                      }} Rate Master</a>
+                  </div>
+                </div>
+              </div>
+              <div class="table-card">
+                <div class="table-design example-container mat-elevation-z8">
+                  <table mat-table [dataSource]="dataSource" matSort class="full-width-table" summary="agreement">
+                    <ng-container matColumnDef="#">
+                      <th scope="col" mat-header-cell *matHeaderCellDef style="width: 3%;">
+                        # <em class="custom-tooltip" [attr.title]="'Toggle Filters'"
+                          (click)="toggleFilters = !toggleFilters" class="bi bi-search"></em>
+                      </th>
+                      <td mat-cell *matCellDef="let element; let i = index">
+                        {{ element?.id}}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="action">
+                      <th scope="col" id="action" class="charterersPdfHead" mat-header-cell *matHeaderCellDef
+                        style="width: 6%;">
+                        {{ 'Actions' }}
+                      </th>
+                      <td class="borderBottom" mat-cell *matCellDef="let element; let i = index">
+                        <div class="d-flex" style="align-items: center;">
+                          <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop mx-1">
+                            <a (click)="open(AddClause, element)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                          </span>
+                          <a class="mx-1" (click)="onDelete(deletedata,element)" appAccessControl accessType="delete"><i
+                              class="bi bi-trash color-pencil-red"></i></a>
+                          <span class="mx-1"></span>
+                          <span class="form-check form-switch mx1 mb-0 mt-1">
+                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                              (change)="changeStatus(element,i)" [checked]="element?.status" />
+                            <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                          </span>
+
+                        </div>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="fromLocationName">
+                      <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;">
+                        origin
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element?.fromLocationName }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="toLocationName">
+                      <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;">
+                        destination
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element?.toLocationName}}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="ShipmentTypeName">
+                      <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;">
+                        Freight Type
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element?.ShipmentTypeName}}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="freightTermName">
+                      <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;">
+                        Load Type
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element?.freightTermName}}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="cargoType">
+                      <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;">
+                        Cargo Type
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element?.cargoType}}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="containerSize">
+                      <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;">
+                        size
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        <span *ngIf="element?.containerSize">{{element?.containerSize}} </span>
+                        <span *ngIf="element?.wegonSize">{{element?.wegonSize}}</span>
+                        <span *ngIf="element?.truckSize">{{element?.truckSize}}</span>
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="shippinglineName">
+                      <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;">
+                        Shipping Line
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element?.shippinglineName}}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="estimatedRate">
+                      <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;">
+                        price
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element?.estimatedRate}}
+                      </td>
+                    </ng-container>
+
+                    <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index"
+                      [matColumnDef]="headersFilter">
+                      <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+                        <div class="filters-container" [class.animate]="!toggleFilters">
+                          <em *ngIf="i > 0 && i < displayedColumns1.length - 8" class="custom-tooltip"
+                            [attr.title]="'Clear Filters'" (click)="clearFilters();toggleFilters = !toggleFilters"
+                            class="bi bi-x-circle"></em>
+                          <div *ngIf="i > 1 && i < displayedColumns1.length - 0" appearance="outline">
+                            <input class="form-control input-txt" placeholder="Press 'Enter' to search"
+                              [(ngModel)]="filtersModel[i]" (keyup.enter)="searchColumns()">
+                          </div>
+
+                        </div>
+                      </th>
+                    </ng-container>
+
+                    <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumns">
+                    </tr>
+                    <tr mat-header-row class="no-default-height" *matHeaderRowDef="displayedColumns1"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns">
+                    </tr>
+                    <tr class="mat-row" *matNoDataRow>
+                      <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+                        <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+                        <span *ngIf="!loaderService?.isLoadingcircle && !dataSource?.data?.length">No data
+                          available</span>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <div [ngClass]="{'display-none' : toalLength < 10}">
+                  <mat-paginator [length]="toalLength" [pageSize]="pageSize" [pageIndex]="pageNumber-1"
+                    (page)="onPageChange($event)" [pageSizeOptions]="_gc.PAGINATOR_OPTIONS"
+                    showFirstLastButtons></mat-paginator>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

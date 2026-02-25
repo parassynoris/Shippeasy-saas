@@ -1,0 +1,358 @@
+.wrap-form-field.padding-space {
+    padding-bottom: 50px;
+
+    @media screen and (max-width: 767px) {
+      padding-bottom: 120px;
+    }
+  }
+
+
+  .setper-header {
+    border-bottom: 1px solid var(--theme-border-color-light);
+    padding: 10px 25px;
+    margin: 0px 0px 10px 0;
+  }
+.marginb{
+  margin-top: 28px;
+}
+  .setper-contant {
+    padding: 10px 25px 30px 25px;
+
+    @media screen and (max-width: 767px) {
+      padding: 15px;
+    }
+  }
+
+  .chk {
+    margin-right: 10px;
+  }
+
+  .input-group-text {
+    display: flex;
+    align-items: center;
+    padding: 0;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--link-text-color);
+    text-align: center;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 1px solid var(--theme-border-color-light);
+    border-top: 0;
+    border-right: 0;
+    border-radius: 0;
+    cursor: pointer;
+  }
+
+  select.form-select.custom-select {
+
+    border: 1px solid var(--theme-border-color-light);
+    padding-left: 10px;
+
+  }
+
+  .Email {
+    margin-top: 56px;
+  }
+
+  .mail {
+    margin-right: 10px;
+  }
+
+  .new-action {
+    background-color: transparent;
+    border: 0;
+    color: var(--link-text-color);
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 12px;
+    &:disabled{
+      color: grey;
+    }
+  }
+
+  .form-group.wrap-form-action {
+    right: 0;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .modal-header {
+
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .modal-footer {
+
+    border-top: 0;
+    justify-content: center;
+
+  }
+
+  .modal-title {
+    color: var(--link-text-color);
+  }
+
+  .btn-close {
+
+    color: var(--link-text-color);
+  }
+
+  .modal-body {
+    padding-top: 0px;
+
+  }
+
+  table.scroll {
+    width: 100%
+  }
+
+  table.scroll tbody,
+  table.scroll thead tr {
+    display: block;
+  }
+
+  table.scroll tbody {
+    height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #ebebeb;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background-color:#a9a9a9 ;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: black;
+  }
+
+  h6 {
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .btn-sm {
+
+    border-radius: 30px;
+  }
+
+  .form-accordian h2 button {
+    padding: 7px 15px !important;
+    box-shadow: none !important;
+    font-size: 14px !important;
+    color: var(--theme-black-320) !important;
+  background-color: var(--theme-light-bg) !important;
+  }
+
+  .form-accordian .accordion-button::after {
+    filter: none !important;
+  }
+
+  .form-accordian .accordion-item {
+    margin-bottom: 25px;
+    border: 0;
+  }
+
+  .form-accordian .accordion-item:last-child {
+    margin-bottom: 0px;
+  }
+
+  .form-group.wrap-form-action {
+    padding: 0 20px 60px 0;
+  }
+
+  nz-select {
+    width: 100%;
+  }
+
+  nz-divider {
+    margin: 6px 0;
+  }
+
+  .container {
+    display: flex;
+    flex-wrap: nowrap;
+    padding: 8px;
+    text-transform: capitalize;
+  }
+
+  .add-item {
+    flex: 0 0 auto;
+    padding: 8px;
+    display: block;
+  }
+
+  .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+    position: relative;
+    background-color: var(--theme-white-background);
+    padding: 0;
+    border: 0 !important;
+    border-bottom: 1px solid #ced4da !important;
+    border-radius: 0px !important;
+    transition: all .3s cubic-bezier(.645, .045, .355, 1);
+    height: 34px !important;
+  }
+  .ant-select-single .ant-select-selector .ant-select-selection-search {
+    position: absolute;
+    top: 0;
+    right: 11px;
+    bottom: 0;
+    left: 0px !important;
+  }
+
+  .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
+    border-color: #40a9ff;
+    border-right-width: 0px !important;
+    outline: 0;
+    box-shadow: none !important
+  }
+
+  .ant-picker-input>input:focus {
+    outline: 0 !important;
+    box-shadow: none !important;
+    border-right-width: 0px !important;
+
+  }
+
+  .veselother h2 {
+    padding: 7px 15px !important;
+    box-shadow: none !important;
+    font-size: 14px !important;
+    color: var(--theme-black-320) !important;
+  background-color: var(--theme-light-bg) !important;
+  }
+
+  .form-select.is-invalid:not([multiple]):not([size]) {
+    background-repeat: no-repeat !important;
+  }
+
+  .multiselect-dropdown .dropdown-btn .dropdown-multiselect__caret {
+    margin: 5px !important;
+  }
+
+  .multiselect-dropdown .dropdown-btn {
+    padding: 8px 10px !important;
+  }
+
+  .costtable table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  .costtable th {
+    background-color: #f5f5f5
+  }
+
+  .costtable th,
+  .costtable td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #e0e0e0;
+  }
+
+  .costtable td.bnull {
+    border: 0px !important;
+    border-bottom: 1px solid #bbb !important;
+  }
+
+ 
+
+  .no-data-availble {
+    border: 1px solid var(--theme-border-color-light);
+    padding: 33px;
+    margin-top: 15px;
+    background: var(--theme-light-background-800);
+    text-align: center;
+    border-radius: 4px;
+    text-transform: capitalize;
+    color: #393339;
+  }
+
+  .show{
+    display: block;
+  }
+
+.form-check {
+  display: flex;
+
+  input[type="checkbox"] {
+    margin-right: 5px; 
+  }
+
+  .form-check-label {
+    margin: 0; 
+  }
+}
+
+.col-md-2 {
+  padding: 0 10px; 
+}
+
+::ng-deep {
+  .cdk-overlay-container,
+  .cdk-overlay-pane {
+    z-index: 2000 !important;
+  }
+ 
+}
+
+.globally-chnage-mobile-view{
+  margin-bottom: 10px;
+}
+
+.action-field{
+  white-space:wrap;
+  width:260px;
+}
+
+.uppercase1{
+  white-space:wrap;
+  width:300px;
+}
+
+.uppercase2{
+  white-space:wrap;
+  width:200px;
+}
+.modal-body .wrap-form-field .custom-input {
+  outline: 0;
+  border-radius: 5px;
+  border: 1px solid #e0e0e0;
+  padding: 5px;
+  font-size: 12px;
+  height: 31px;
+  color: #3B3939;
+  font-size: 12px;
+  font-weight: normal;
+}
+ .border{
+  border: 4px solid #c9c9c9 !important;
+  padding: 0 0px !important;
+}
+::ng-deep.modal-content {
+  padding: 0 0px !important;
+}
+
+::ng-deep.padding1{
+  padding: 10px 10px !important;
+    border: 0 !important;
+}
+.border1{
+  border: 4px solid #c9c9c9 !important;
+  // padding: 0 0px !important;
+}

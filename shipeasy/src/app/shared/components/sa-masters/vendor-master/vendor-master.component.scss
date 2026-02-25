@@ -1,0 +1,87 @@
+@import '../../../../../assets/styles/mixins/global.scss';
+
+::ng-deep {
+
+  .cdk-overlay-container,
+  .cdk-overlay-pane {
+    z-index: 2000 !important;
+  }
+
+
+}
+.new-action{
+  // background: #e9e6e6;
+  border-radius: 2px;
+  padding: 6px;
+  // margin-top: 17px;
+  .wrap-text, .wrap-btn{
+   width: 49%;
+   display: inline-block;
+   vertical-align: middle;
+  }
+  .wrap-btn{
+    text-align: right; 
+  }
+}
+.form-accordian h2 button {
+  padding: 7px 15px !important;
+  box-shadow: none !important;
+  font-size: 14px !important;
+  color: var(--theme-black-320) !important;
+  background-color: var(--theme-light-bg) !important;
+}
+
+.form-accordian .accordion-button::after {
+  filter: none !important;
+}
+
+.form-accordian .accordion-item {
+  margin-bottom: 25px;
+  border: 0;
+}
+
+.form-accordian .accordion-item:last-child {
+  margin-bottom: 0px;
+}
+
+.accordion-item {
+  button {
+    width: 100% !important;
+    display: flex;
+    align-items: center;
+    @include new-heading-14;
+  }
+}
+
+.wrap-add-btn {
+  padding: 6px 0 10px 0;
+  text-align: right;
+  color: var(--theme-red-color);
+}
+
+.wrap{
+  white-space:wrap;
+  width:350px;
+}
+
+.wrap1{
+  white-space:wrap;
+  width:450px;
+}
+
+
+::ng-deep .col-5 {
+  
+  position: relative;
+  width: 100%;
+  padding-right: 5px !important;
+  padding-left: 3px !important;
+
+}
+
+::ng-deep .set-1 {
+position: relative;
+width: 100%;
+padding-right: 6px !important;
+padding-left: 3px !important;
+}

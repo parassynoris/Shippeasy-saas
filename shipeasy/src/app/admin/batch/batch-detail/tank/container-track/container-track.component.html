@@ -1,0 +1,89 @@
+ 
+    <div class="modal-content nz-allSelect p-0">
+        <div class="modal-header">
+            <h5 class="modal-title" id="containerModalLabel">Container Tracking</h5>
+            <button type="button" *ngIf="showCloseButton" class="btn-close" (click)="setClear()"></button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content p-0">
+                    <div>
+                    </div>
+                    <div class="modal-body p-0">
+                        <div class="row">
+                            <div class="col-md-4 overflow-y-scroll">
+                                <div class="accordion form-accordian" id="accordionPanelsStayOpenExample">
+                                    <ng-container *ngIf="seqData && seqData.length > 0; else noData">
+                                        <div class="accordion-item" *ngFor="let i of seqData; let index=index">
+                                            <h2 class="accordion-header" id="datails">
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                    [data-bs-target]="index" aria-expanded="true"
+                                                    [aria-controls]="index">
+                                                    <ng-container *ngIf="i?.transportmode === 'TRUCK'">
+                                                        <i class="bi bi-truck">{{i?.transportmode}}</i>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="i?.transportmode === 'VESSEL'">
+                                                        <img src="../../../../../../assets/img/icons/ship-solid.svg" width="16px"
+                                                            height="16px" alt="">
+                                                        {{i?.transportmode}}
+                                                    </ng-container>
+                                                    <ng-container *ngIf="i?.transportmode === 'RAIL'">
+                                                        <img src="../../../../../../assets/img/icons/ship-solid.svg" width="16px"
+                                                            height="16px" alt="">
+                                                        {{i?.transportmode}}
+                                                    </ng-container>
+                                                    <ng-container *ngIf="i?.transportmode === 'FEEDER'">
+                                                        <img src="../../../../../../assets/img/icons/ship-solid.svg" width="16px"
+                                                            height="16px" alt="">
+                                                        {{i?.transportmode}}
+                                                        
+                                                    </ng-container>
+                                                    <!-- <ng-container *ngIf="i?.transportmode !== 'TRUCK' && i?.transportmode !== 'VESSEL'">
+                                                        Tracking container not found
+                                                    </ng-container> -->
+                                                </button>
+                                            </h2>
+                                            <div [id]="index" class="accordion-collapse collapse show"
+                                                aria-labelledby="datails" data-bs-parent="#accordionPanelsStayOpenExample">
+                                                <div class="accordion-body p-0">
+                                                    <div class="wrap-form-field">
+                                                        <div class="history-tl-container">
+                                                            <ul class="tl">
+                                                                <li class="tl-item" >
+                                                                    <div class="item-title">{{ i.eventname }}</div>
+                                                                    <div class="item-detail">{{ converDate(i.timestamptimezone)}}</div>
+                                                                    <!-- <div class="item-title">{{ event.eventSeq }}</div> -->
+                                                                    <div class="item-title">{{ i.currentlocation }}</div>
+                                                                    <!-- <div class="item-title">{{ event.transportmode }}</div> -->
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                    <ng-template #noData>
+                                        <div class="alert alert-warning" role="alert">
+                                            Tracking container not found.
+                                        </div>
+                                    </ng-template>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-8">
+                                <div>
+                                    <div class="custom-canvas">
+                                        <div class="map" id="map" class="match-parent"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+  

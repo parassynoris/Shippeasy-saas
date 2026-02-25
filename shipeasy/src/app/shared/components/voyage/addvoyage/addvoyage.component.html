@@ -1,0 +1,333 @@
+<div class="table-with-gheading">
+
+  <div class="wrap-table-area">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="float-clear-mobile-view d-flex flex-column flex-sm-row gap-3 float-start search-section">
+          <div class="input-group custom-input">
+            <input type="text" class="form-control" placeholder="Search" aria-label="Search">
+          </div>
+        </div>
+        <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2 ">
+          <div class="mt-2">
+            <span>
+              <h5>1-10 of 80</h5>
+            </span>
+          </div>
+          <div class="mt-2">
+            <span class="prv"><em class="typcn typcn-chevron-left"></em></span>
+            <span class="prv"><em class="typcn typcn-chevron-right"></em></span>
+          </div>
+          <div class="mt-2"><select class="form-select form-select-sm ">
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select></div>
+          <div class="mt-2">
+            <a class="new-action">Add Role</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="table-responsive">
+          <table aria-describedby="mytable" class="">
+            <thead>
+              <tr class="field-name">
+                  <th  scope="col"  class="width10">Terminal ID  <em class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                  <th  scope="col"  class="width10">Voyage ID <em class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                  <th  scope="col"  class="width5">Sequence <em class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                  <th  scope="col"  class="width10">ETA</th>
+                  <th  scope="col"  class="width10">ETD</th>
+                  <th  scope="col"  class="width10">ATA</th>
+                  <th  scope="col"  class="width10">ATD</th>
+                  <th  scope="col"  class="width10"></th>
+                </tr>
+            </thead>
+            <tbody>
+              <ng-template ngFor let-voyage [ngForOf]="userRoleData">
+                <tr class="responsive-ui">
+                  <td>{{voyage.terminal_id}}</td>
+                  <td>{{voyage.voyage_id}}</td>
+                  <td>{{voyage.sequence}}</td>
+                  <td><input type="date" class="form-control custom-input border-0" placeholder="Product Id" value="362"></td>
+                  <td><input type="date" class="form-control custom-input border-0" placeholder="Product Id" value="362"></td>
+                  <td><input type="date" class="form-control custom-input border-0" placeholder="Product Id" value="362"></td>
+                  <td><input type="date" class="form-control custom-input border-0" placeholder="Product Id" value="362"></td>
+                  <td class="action-field">
+                    <span class="mtop"><a routerLink="#"><em class="typcn typcn-trash"></em></a>
+                    </span>
+                    <span class="mtop boot-icon"><a (click)="onShowPermission(voyage.id)"><em
+                          class="bi bi-arrow-down"></em></a>
+                    </span>
+                  </td>
+                </tr>
+                <tr *ngIf="voyage.id === isShow">
+                  <th scope="col" colspan="10" class="border rounded p-2">
+                    <div class="wrap-checklist">
+                      <div class="wrap-table-area wrap-form-field">
+                      <div class="row">
+                        <div class="col-md-2 wrap-m">  
+                          <div class="frm1">                      
+                          <label class="form-label">Ration No</label>
+                          <input type="text" class="form-control custom-input inp-tag rounded-0" placeholder="Product Id" value="259987">
+                          </div>
+                        </div>
+                        <div class="col-md-2 wrap-m">     
+                          <div class="frm1">                     
+                          <label class="form-label">Port Cutoff</label>
+                          <input type="date" class="form-control custom-input inp-tag rounded-0" placeholder="Product Id" value="362">
+                        </div>
+                        </div>
+                        <div class="col-md-2 wrap-m">    
+                          <div class="frm1">                       
+                          <label class="form-label">DOCS Cutoff</label>
+                          <input type="date" class="form-control custom-input inp-tag rounded-0" placeholder="Product Id" value="362">
+                        </div>
+                        </div>
+                        <div class="col-md-2 wrap-m">    
+                          <div class="frm1">                       
+                          <label class="form-label">AMS Cutoff</label>
+                          <input type="date" class="form-control custom-input inp-tag rounded-0" placeholder="Product Id" value="362">
+                        </div>
+                        </div>
+                        <div class="col-md-2 wrap-m"> 
+                          <div class="frm1">                          
+                          <label class="form-label">ATP</label>
+                          <input type="date" class="form-control custom-input inp-tag rounded-0" placeholder="Product Id" value="362">
+                        </div>
+                        </div>
+                        <div class="col-md-2 wrap-m">    
+                          <div class="frm1 pb-3">                       
+                          <label class="form-label">TR Cutoff</label>
+                          <input type="date" class="form-control custom-input inp-tag rounded-0" placeholder="Product Id" value="362">
+                        </div>
+                        </div>
+                      </div>
+                     </div>
+                    </div>
+                  </th>
+                </tr>
+              </ng-template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+  
+    </div>
+
+    </div>
+    <div class="wrap-table-area wrap-form-field">
+      <div class="row">
+    
+        <div class="col-md-12">
+          <form class="row g-3 mt-3">
+    
+            <div class="col-md-4">
+              <label class="form-label">Shipping Line Code</label>
+              <input type="text" class="form-control custom-input" placeholder="Product Id" value="698574">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Shipping Agent Code</label>
+              <input type="text" class="form-control custom-input" placeholder="SHIPEASY Product Id" value="1362">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Manual Rotation No</label>
+              <input type="text" class="form-control custom-input" placeholder="SHIPEASY Product Id" value="Product 123">
+            </div>
+              <div class="col-md-2">
+              <label class="form-label">Auto or Manual ETA </label>
+              <input type="date" class="form-control custom-input" placeholder="IMCO Class" value="258">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Auto or Manual ETA </label>
+              <input type="date" class="form-control custom-input" placeholder="IMCO Class" value="258">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Skipped Port Flag</label>
+              <input type="text" class="form-control custom-input" placeholder="UN Number" value="1299">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Po Number</label>
+              <input type="text" class="form-control custom-input" placeholder="Density/ Specific Gravity" value="1299">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Move Count</label>
+              <input type="text" class="form-control custom-input" placeholder="Flash Point" value="90">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Brok PO Date</label>
+              <input type="date" class="form-control custom-input" placeholder="PSN(Proper Shipping Name)"
+                value="JARDEN INDIA">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Call SEQ</label>
+              <input type="text" class="form-control custom-input" placeholder="IMCO Class" value="258">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Voyage ID </label>
+              <input type="text" class="form-control custom-input" placeholder="IMCO Class" value="258">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Vessel ID</label>
+              <input type="text" class="form-control custom-input" placeholder="UN Number" value="1299">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Voyage Start</label>
+              <input type="date" class="form-control custom-input" placeholder="Density/ Specific Gravity" value="1299">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Voyage END</label>
+              <input type="text" class="form-control custom-input" placeholder="Flash Point" value="90">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Voyage No</label>
+              <input type="text" class="form-control custom-input" placeholder="PSN(Proper Shipping Name)"
+                value="JARDEN INDIA">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">TDR No</label>
+              <input type="text" class="form-control custom-input" placeholder="IMCO Class" value="258">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Feeder Reff No</label>
+              <input type="text" class="form-control custom-input" placeholder="IMCO Class" value="258">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Create By</label>
+              <input type="text" class="form-control custom-input" placeholder="UN Number" value="1299">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Modified Date</label>
+              <input type="date" class="form-control custom-input" placeholder="Density/ Specific Gravity" value="1299">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Create Date</label>
+              <input type="date" class="form-control custom-input" placeholder="Flash Point" value="90">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">EGM No</label>
+              <input type="text" class="form-control custom-input" placeholder="PSN(Proper Shipping Name)"
+                value="JARDEN INDIA">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">EGM Date</label>
+              <input type="date" class="form-control custom-input" placeholder="IMCO Class" value="258">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Cap Name</label>
+              <input type="text" class="form-control custom-input" placeholder="IMCO Class" value="258">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Light House DUE</label>
+              <input type="text" class="form-control custom-input" placeholder="UN Number" value="1299">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Birth Name</label>
+              <input type="date" class="form-control custom-input" placeholder="Density/ Specific Gravity" value="1299">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Trans Voyage</label>
+              <input type="text" class="form-control custom-input" placeholder="Flash Point" value="90">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Services Type</label>
+              <input type="text" class="form-control custom-input" placeholder="PSN(Proper Shipping Name)"
+                value="JARDEN INDIA">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">EXP IMP Flag</label>
+              <input type="text" class="form-control custom-input" placeholder="IMCO Class" value="258">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Voyage Lock</label>
+              <input type="text" class="form-control custom-input" placeholder="IMCO Class" value="258">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Voyage Lock Date</label>
+              <input type="date" class="form-control custom-input" placeholder="UN Number" value="1299">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Voyage Lock User ID</label>
+              <input type="text" class="form-control custom-input" placeholder="Density/ Specific Gravity" value="1299">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Cap Nationality</label>
+              <input type="text" class="form-control custom-input" placeholder="Flash Point" value="90">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Vessel Optr</label>
+              <input type="text" class="form-control custom-input" placeholder="PSN(Proper Shipping Name)"
+                value="JARDEN INDIA">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">DA ID</label>
+              <input type="text" class="form-control custom-input" placeholder="IMCO Class" value="258">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">CFC Location</label>
+              <input type="text" class="form-control custom-input" placeholder="IMCO Class" value="258">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Get in Status</label>
+              <input type="text" class="form-control custom-input" placeholder="UN Number" value="1299">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Common Voyage ID</label>
+              <input type="text" class="form-control custom-input" placeholder="Density/ Specific Gravity" value="1299">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Vessel Type</label>
+              <input type="text" class="form-control custom-input" placeholder="Flash Point" value="90">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Same Bottom Cargo</label>
+              <input type="text" class="form-control custom-input" placeholder="PSN(Proper Shipping Name)"
+                value="JARDEN INDIA">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Ship Store Declaration</label>
+              <input type="text" class="form-control custom-input" placeholder="Density/ Specific Gravity" value="1299">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Crew List Declaration</label>
+              <input type="text" class="form-control custom-input" placeholder="Flash Point" value="90">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Passenger List</label>
+              <input type="text" class="form-control custom-input" placeholder="PSN(Proper Shipping Name)"
+                value="JARDEN INDIA">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Crew Effect Declaration</label>
+              <input type="text" class="form-control custom-input" placeholder="Density/ Specific Gravity" value="1299">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Maritime Declaration</label>
+              <input type="text" class="form-control custom-input" placeholder="Flash Point" value="90">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Bond PCC</label>
+              <input type="text" class="form-control custom-input" placeholder="PSN(Proper Shipping Name)"
+                value="JARDEN INDIA">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">SL Cutoff Date</label>
+              <input type="date" class="form-control custom-input" placeholder="PSN(Proper Shipping Name)"
+                value="JARDEN INDIA">
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="form-group wrap-form-action mb-5 pb-5 mt-3">
+        <button (click)="onCloseInvoice($event)" class="btn btn-outline-secondary btn-lg float-end" type="submit">
+          Cancel
+        </button>
+        <button (click)="onCloseInvoice($event)" class="btn btn-outline-primary btn-lg float-end" type="submit">
+          Save
+        </button>
+      </div>
+    </div>
+    
+    </div>
+    

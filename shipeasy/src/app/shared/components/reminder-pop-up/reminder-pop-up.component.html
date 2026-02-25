@@ -1,0 +1,55 @@
+<!-- <div class="modal-content nz-select border-style">
+    <div class="modal-header py-2 px-0">
+        <h5 class="modal-title" id="containerModalLabel">Reminder for {{reminderData?.reminderType}}...!</h5>
+        <button type="button" class="btn-close" (click)="cancel()" aria-label="Close"></button>
+    </div>
+    <div  class="row">
+        <div class="modal-body">
+            <div class="row">
+                <span>Job No. : {{reminderData?.batchNo}}</span><br>
+                <span>{{reminderData?.description}}</span>
+            </div>
+        </div>
+        <div class="modal-footer justify-content-center  ">
+            <div class="wrap-form-field">
+                <div class="form-group wrap-form-action text-center mb-0">
+                    <button class="btn btn-outline-primary " (click)="save(true)">
+                        Close.
+                    </button>
+                    <button *ngIf="reminderData?.reminderTime !== 'Custom Date'" class="btn btn-outline-primary " (click)="save(false)">
+                        Remind me later.
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<div class="reminder-container" *ngIf="reminders?.length > 0" [ngClass]="{'blinking-card ': reminders?.length > 0}">
+    <div class="d-flex justify-content-between">
+        <h6>Reminders</h6>
+        <button class="expand-all text-end" (click)="clearReminders()">Clear All</button> 
+    </div>
+
+    <div class="reminders">
+        <div class="reminder-card" *ngFor="let reminder of reminders">
+            <div class="row">
+                <span>Job No. : <span class="text-header">{{reminder?.batchNo}}</span></span><br>
+                <span class="text-desc">{{reminder?.description}}</span>
+            </div>
+            <div class="row mt-1">
+                <div class="wrap-form-field">
+                    <div class="form-group wrap-form-action text-end mb-0">
+                        <button class="expand-all mx-1" (click)="save(reminder,true)">
+                            Close
+                        </button>
+                        <button *ngIf="reminder?.reminderTime !== 'Custom Date'" class="expand-all mx-2"
+                            (click)="save(reminder,false)">
+                            Remind me later.
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

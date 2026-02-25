@@ -1,0 +1,18 @@
+
+        <div class="modal-content">
+            <div class="modal-header pb-0">
+                <h5 class="modal-title" id="staticBackdropLabel">Payment Method</h5>
+                <span type="button" class="btn-close" (click)="onCloseModal()" aria-label="Close"></span>
+            </div>
+            <div class="modal-body">
+                Select Payment method of your choice.
+            </div>
+            <div class="modal-footer">
+                <!-- *ngIf="_cognito.isIndianCustomer()"  -->
+                <button type="button" class="btn btn-primary" (click)="setPay('online')" >Pay Online</button>
+                <button type="button" class="btn btn-primary" (click)="setPay('offline')"  >Pay Offline</button>
+                <button  type="button" (click)="setPay('credable')" class="btn btn-primary">Pay Via Credable</button>
+                <!-- *ngIf="isPayCreadable" -->
+            </div>
+        </div>
+    

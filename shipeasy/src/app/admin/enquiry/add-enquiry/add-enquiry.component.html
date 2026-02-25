@@ -1,0 +1,28 @@
+<div class="table-with-gheading">
+  <div class="wrapper">
+    <div class="container-fluid">
+      <div class="wrap-content">
+        <div class="row">
+          <div class="col-sm-12 mb-5">
+            <div class="page-title-box">
+              <div class="btn-group mt-2">
+                <ol class="breadcrumb hide-phone p-0 m-0">
+                  <!-- <li class="breadcrumb-item">{{ 'stolt.heading' | translate }}</li> -->
+                  <li class="breadcrumb-item active">{{ 'stolt.enquiry.heading' | translate }}</li>
+                  <li class="breadcrumb-item active color-red">{{currentUrl}} {{ 'stolt.enquiry.heading' | translate }}</li>
+                </ol>
+              </div>
+            </div>
+           
+            <app-new-enquiry [isshowDetails]="false" (onCloseNew)="onClose()"></app-new-enquiry>
+          </div>
+        </div>
+        <!-- <ul class="menuright">
+          <li><a ><em class="mdi mdi-folder-upload "></em></a></li>
+          <li><a (click)="calculator()" ><em class="mdi mdi-calculator"></em></a></li>
+          <li><a ><em class="mdi mdi-comment-text "></em></a></li>
+          </ul> -->
+      </div>
+    </div>
+  </div>
+</div>

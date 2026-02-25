@@ -1,0 +1,241 @@
+<div class="modal-content nz-allSelect">
+  <div class="modal-headers mt-2">
+    <h4 class="modal-title">
+      Schedule Report
+    </h4>
+    <button type="button" class="btn-close shadow-none float-end" (click)="cancel()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <div class="wrap-form-field padding-space">
+      <form class="row g-3 wrap-modal-autosearch" [formGroup]="addScheduleForm">
+        <div class="col-md-12">
+          <mat-radio-group formControlName="type" class="d-flex flex-column" (change)="setValidation()">
+            <mat-radio-button class="example-margin" value="recurringEmail">
+              Schedule recurring email for this report
+            </mat-radio-button>
+            <mat-radio-button class="example-margin" value="oneTime">
+              Send a one-time email for this report
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+
+        <div class="col-md-6" *ngIf="f.type.value == 'recurringEmail'&&false">
+          <label class="form-label">Select Template </label>
+          <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="template"
+            [ngClass]="{ 'is-invalid': submitted && f.template.errors }"
+            nzPlaceHolder="Select Template To Prefill values">
+            <nz-option *ngFor="let data of templateList" [nzLabel]="data.name"
+              [nzValue]="data.partymasterId"></nz-option>
+          </nz-select>
+          <div *ngIf="submitted && f.template.errors" class="invalid-feedback">
+            <div *ngIf="f.template.errors.required">Select Template is required.</div>
+          </div>
+        </div>
+
+        <div class="col-md-6" *ngIf="f.type.value == 'recurringEmail'">
+          <label class="form-label">Email Subscription Name</label><span class="text-danger">*</span>
+          <input type="text" class="form-control custom-input" formControlName="subscriptionName"
+            placeholder="Give a name to your recurring email subscription"
+            [ngClass]="{ 'is-invalid': submitted && f.subscriptionName.errors }" />
+          <div *ngIf="submitted && f.subscriptionName.errors" class="invalid-feedback">
+            <div *ngIf="f.subscriptionName.errors.required">Email Subscription Name is required.</div>
+          </div>
+        </div>
+
+        <div class="col-md-6" *ngIf="f.type.value == 'recurringEmail'">
+          <label class="form-label">Linked To </label>
+          <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="linkTo"
+            [ngClass]="{ 'is-invalid': submitted && f.linkTo.errors }" nzPlaceHolder="Linked To">
+            <nz-option *ngFor="let data of linkToList" [nzLabel]="data.name" [nzValue]="data.partymasterId"></nz-option>
+          </nz-select>
+          <div *ngIf="submitted && f.linkTo.errors" class="invalid-feedback">
+            <div *ngIf="f.linkTo.errors.required">Linked To is required.</div>
+          </div>
+        </div>
+
+        <div class="col-md-6" *ngIf="f.type.value == 'recurringEmail'">
+          <label class="form-label">Select the Report<span class="text-danger">*</span></label>
+          <nz-select class="form-select" nzDisabled nzShowSearch nzAllowClear formControlName="reportType"
+            [ngClass]="{ 'is-invalid': submitted && f.reportType.errors }" nzPlaceHolder="Select the Report">
+            <nz-option *ngFor="let data of reportList" [nzLabel]="data.name" [nzValue]="data.id"></nz-option>
+          </nz-select>
+          <div *ngIf="submitted && f.reportType.errors" class="invalid-feedback">
+            <div *ngIf="f.reportType.errors.required">Select the Report is required.</div>
+          </div>
+        </div>
+
+        <div class="col-md-6" *ngIf="f.type.value == 'recurringEmail' && false">
+          <label class="form-label">Report Filtered on Field</label>
+          <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="filterField"
+            nzPlaceHolder="Report Filtered on Field">
+            <nz-option *ngFor="let data of filterFields" [nzLabel]="data.name" [nzValue]="data.value"></nz-option>
+          </nz-select>
+        </div>
+
+
+        <div class="col-md-6" *ngIf="f.type.value == 'recurringEmail'">
+          <label class="form-label">Summary On</label>
+          <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="summaryOn"
+            nzPlaceHolder="Summary On">
+            <nz-option *ngFor="let data of summaryList" [nzLabel]="data" [nzValue]="data"></nz-option>
+          </nz-select>
+        </div>
+
+        <div class="col-md-12">
+          <label class="form-label">Email Recipients<span class="text-danger">*</span></label>
+      
+          <mat-form-field   appearance="outline">
+            <mat-chip-list #chipList>
+              <mat-chip
+                *ngFor="let email of emails"
+                [removable]="true"
+                (removed)="removeEmail(email)"
+              >
+                {{ email }}
+                <mat-icon matChipRemove *ngIf="email">cancel</mat-icon>
+              </mat-chip>
+      
+              <input
+                placeholder="Email Recipients"
+                [matChipInputFor]="chipList"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="true"
+                formControlName="emailRecipients"
+                (matChipInputTokenEnd)="addEmail($event)"
+              />
+            </mat-chip-list> 
+          </mat-form-field>
+          <span class="set-error-msg" *ngIf="submitted && emails?.length == 0">
+            Email is required
+          </span>
+          <span class="set-error-msg" *ngIf="submitted && f?.emailRecipients?.hasError('email')">
+            Invalid email format
+          </span>
+        </div>
+      
+        <div class="col-md-12">
+          <label class="form-label">CC Emails</label>
+      
+          <mat-form-field   appearance="outline">
+            <mat-chip-list #chipListCC>
+              <mat-chip
+                *ngFor="let email of emailsCC"
+                [removable]="true"
+                (removed)="removeEmailCC(email)"
+              >
+                {{ email }}
+                <mat-icon matChipRemove *ngIf="email">cancel</mat-icon>
+              </mat-chip>
+      
+              <input
+                placeholder="CC Emails"
+                [matChipInputFor]="chipListCC"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="true"
+                formControlName="ccEmail"
+                (matChipInputTokenEnd)="addEmailCC($event)"
+              />
+            </mat-chip-list> 
+          </mat-form-field>
+          <span class="set-error-msg" *ngIf="submitted && f?.ccEmail?.hasError('required')">
+            Email is required
+          </span>
+          <span class="set-error-msg" *ngIf="submitted && f?.ccEmail?.hasError('email')">
+            Invalid email format
+          </span>
+        </div>
+        <div class="col-md-12">
+          <label class="form-label">Subject</label><span class="text-danger">*</span>
+          <input type="text" class="form-control custom-input" formControlName="subject" placeholder="Subject"
+            [ngClass]="{ 'is-invalid': submitted && f.subject.errors }" />
+          <div *ngIf="submitted && f.subject.errors" class="invalid-feedback">
+            <div *ngIf="f.subject.errors.required">Subject is required.</div>
+          </div>
+        </div>
+
+        <div class="col-md-6" *ngIf="f.type.value == 'recurringEmail'">
+          <label class="form-label">Schedule<span class="text-danger">*</span></label>
+          <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="schedule" nzPlaceHolder="Schedule"
+          (ngModelChange)="setValidation1()"
+            [ngClass]="{ 'is-invalid': submitted && f.schedule.errors }">
+            <nz-option *ngFor="let data of scheduleList" [nzLabel]="data" [nzValue]="data"></nz-option>
+          </nz-select>
+          <div *ngIf="submitted && f.schedule.errors" class="invalid-feedback">
+            <div *ngIf="f.schedule.errors.required">Schedule is required.</div>
+          </div>
+        </div>
+
+        <div class="col-md-6" *ngIf="f.type.value == 'recurringEmail'">
+          <label class="form-label">Time of Day<span class="text-danger">*</span></label>
+          <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="timeofDay"
+            nzPlaceHolder="Time of Day" [ngClass]="{ 'is-invalid': submitted && f.timeofDay.errors }">
+            <nz-option *ngFor="let data of timeofDayList" [nzLabel]="data" [nzValue]="data"></nz-option>
+          </nz-select>
+          <div *ngIf="submitted && f.timeofDay.errors" class="invalid-feedback">
+            <div *ngIf="f.timeofDay.errors.required">Time of Day is required.</div>
+          </div>
+        </div>
+
+        <div class="col-md-6" *ngIf="f.type.value == 'recurringEmail' && f.schedule.value == 'Weekly'">
+          <label class="form-label">Weekday<span class="text-danger">*</span></label>
+          <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="weekDay" nzPlaceHolder="WeekDay"
+            [ngClass]="{ 'is-invalid': submitted && f.weekDay.errors }">
+            <nz-option *ngFor="let data of weekdaysList" [nzLabel]="data" [nzValue]="data"></nz-option>
+          </nz-select>
+
+          <div *ngIf="submitted && f.weekDay.errors" class="invalid-feedback">
+            <div *ngIf="f.weekDay.errors.required">WeekDay is required.</div>
+          </div>
+        </div>
+
+
+        <label class="form-label" *ngIf="false">Filters </label>
+        <div class="filter-row mt-0 mb-2" formArrayName="filters" *ngIf="false">
+          <div class="row mb-2" *ngFor="let filter of filtersFormArray.controls; let i = index" [formGroupName]="i">
+            <div class="col-md-3">
+              <nz-select formControlName="field" class="form-select" nzPlaceHolder="Select a field"
+                [ngClass]="{'is-invalid': submitted && row?.get('field')?.errors}">
+                <nz-option *ngFor="let field of fields" [nzValue]="field" [nzLabel]="field"> </nz-option>
+              </nz-select>
+              <div *ngIf="submitted && row?.get('field')?.errors" class="invalid-feedback">
+                <div *ngIf="row?.get('field')?.errors.required">Field is
+                  required</div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <nz-select formControlName="condition" class="form-select" nzPlaceHolder="Select a condition"
+                [ngClass]="{'is-invalid': submitted && row?.get('condition')?.errors}">
+                <nz-option *ngFor="let condition of conditions" [nzValue]="condition" [nzLabel]="condition">
+                </nz-option>
+              </nz-select>
+              <div *ngIf="submitted && row?.get('condition')?.errors" class="invalid-feedback">
+                <div *ngIf="row?.get('condition')?.errors.required">Field is
+                  required</div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <button *ngIf="filtersFormArray.length > 1" (click)="removeFilter(i)" class=" btn-primary-link"
+                type="button">
+                <em class="bi bi-trash"></em>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <button *ngIf="false" class=" btn-primary-link" (click)="addFilter()" type="button">
+          + Add more filter
+        </button>
+
+
+        <div>
+          <ckeditor placeholder="Type here" formControlName="message" [editor]="Editor"></ckeditor>
+        </div>
+        <div class="form-group wrap-form-action mt-4">
+          <button class="btn1 btn-lg float-end" type="button" (click)="submitFilters()">
+            {{ id ? "Update Subscriptions": f.type.value != 'recurringEmail' ? 'Send Email' :"Create Subscriptions"  }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

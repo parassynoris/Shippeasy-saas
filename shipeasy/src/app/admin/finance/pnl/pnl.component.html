@@ -1,0 +1,209 @@
+<div class="table-with-gheading">
+  <div class="wrap-table-area">
+ 
+    <div class="wrap-form-field">
+      <div class="row">
+        <div class="col-md-12 text-end">
+          <button class="btn btn-outline-primary" (click)="downloadCSV()">Download CSV</button>
+        </div>
+      </div>
+      <div class="row">
+
+        <div class="col-md-4">
+          <label class="form-label">From-To Date</label>
+          <nz-range-picker [(ngModel)]="dateRange" (ngModelChange)="getBatchList(false)"
+            style="width: 100%;height: 30px;"></nz-range-picker>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Select Quarterly</label>
+          <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Select Range" [(ngModel)]="quotarlyDate"
+          (ngModelChange)="onDateRangeChange($event)" > 
+          <nz-option nzLabel="Current Month" nzValue="current_month"></nz-option> 
+          <nz-option nzLabel="Last 3 Months" nzValue="last_3_months"></nz-option>
+          <nz-option nzLabel="Last 6 Months" nzValue="last_6_months"></nz-option>
+          <nz-option nzLabel="1 Year" nzValue="last_year"></nz-option>
+        </nz-select>
+        </div>
+
+        <div *ngIf="false" class="col-md-4  form-bottom-alignment-mobile-devices">
+          <label class="form-label">Job No</label>
+          <ng-multiselect-dropdown [placeholder]="'Select Template'" [data]="batchData" [(ngModel)]="batchForm"
+            [settings]="templateDropdownSettings" (onSelect)="getInvoices($event)" (onDeSelect)="getInvoices($event)">
+          </ng-multiselect-dropdown>
+        </div>
+
+        <div class="col-md-4  form-bottom-alignment-mobile-devices">
+          <label class="form-label">Job No</label>
+          <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Job Number" [(ngModel)]="batchForm"
+            (ngModelChange)="getInvoices($event)">
+            <nz-option *ngFor="let data of  batchData" [nzLabel]="data?.batchNo" [nzValue]="data?.batchId"></nz-option>
+          </nz-select>
+        </div>
+       
+
+      </div>
+
+    </div>
+
+
+    <div class="row mt-2">
+      <div class="col-md-12 mb-5">
+        <div class="row mb-4 mt-2">
+          <div class="col-md-2">
+            <div class="d-grid-2 pro-card">
+              <span class="header">Prov. Income :</span>
+              <span class="text font-weight-bold green font-14"> {{sellTotal || '0' | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}} </span>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="d-grid-2 pro-card">
+              <span class="header">Prov. Expense :</span>
+              <span class="text font-weight-bold red font-14"> {{buyTotal || '0' | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}} </span>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="d-grid-2 pro-card">
+              <span class="header">Prov. Margin :</span>
+              <span class="text font-weight-bold font-14" [ngStyle]="{'color': billAmount < 0 ? 'red' : 'green'}">
+                {{billAmount || '0' | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}
+              </span>
+            </div>
+          </div>
+         
+          <div class="col-md-5"  >
+            <div>
+              <div id="main" style="width: auto;height: 250px;"></div> 
+            </div>
+          </div>
+        </div>
+        <div class="table-design">
+          <table aria-describedby="mytable" class="gfg "  id="dataTable">
+            <thead>
+              <tr class="field-name sticky-tr">
+                <th scope="col" class="text-center"># </th>
+                <th scope="col" class="text-center">Batch No. </th>
+                <th scope="col" class="text-center">Invoice No. </th>
+                <th scope="col" class="text-center">Invoice Status</th>
+                <th scope="col" class="text-center">Payment Status</th>
+                <th scope="col" class="text-center">Invoice Tax Amount</th>
+                <th scope="col" class="text-center">Invoice Amount</th>
+                <!-- <th scope="col" class="text-center">Buy Estimated Total Amount</th>
+                <th scope="col" class="text-center">Sell Estimated Total Amount</th>
+                <th scope="col" class="text-center">P&L</th> -->
+                <th scope="col" class="text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let row of invoiceData; let i=index">
+              <tr class="collapse-ui" >
+                <td>{{i+1}} </td>
+                <td> {{row.batchNo}} </td>
+                <td> {{row?.invoiceNo}} </td>
+                <td class="text-center">
+                  <span *ngIf="row?.statusOfinvoice" class="status-bar1 {{row?.statusOfinvoice}}">
+                    {{row?.statusOfinvoice}}
+                  </span>
+                </td>
+                <td class="text-center"> <span *ngIf="row?.paymentStatus" class="status-bar1 {{row?.paymentStatus}}">
+                    {{row?.paymentStatus}}
+                  </span>
+                </td>
+
+                <td class="text-end">
+                  {{row.invoiceTaxAmount || '0' | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode }}
+                </td>
+                <td class="text-end ">
+                  {{row.invoiceAmount|| '0' | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}
+                </td>
+
+                <!-- <td class="text-end red">
+                  {{row.buyEstimates  || '0' | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}
+                </td>
+                <td class="text-end green">
+                  {{row.selEstimates  || '0' | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode }}
+                </td>
+                <td class="text-end" [ngStyle]="{'color': (row?.selEstimates - row.buyEstimates < 0) ? 'red' : 'green'}">
+                  {{(row?.selEstimates - row.buyEstimates || '0') | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode }}
+                </td> -->
+                <td>
+                  <em class="bi bi-three-dots dots-color-change cursor-pointer ml-2 border px-1" (click)="chargeIndex = chargeIndex == i ? null : i"></em>
+                </td>
+
+              </tr>
+
+              <ng-container *ngIf="i === chargeIndex" >
+                <tr class="field-name">
+                  <th colspan="4" class="border-0"></th>
+                  <th scope="col" class="text-center">Charge</th> 
+                  <th scope="col" class="text-center">Tax Amount</th> 
+                  <th scope="col" class="text-center">Total Amount</th>  
+                </tr>
+
+                <tr class="collapse-ui" *ngFor="let costItem of row?.costItems; let c=index"> 
+
+                  <td colspan="4" class="border-0"></td>
+                  <td> {{costItem.costItemName}} </td>  
+                  <td class="text-end" *ngIf="row?.type == 'buyerInvoice'">
+                    {{costItem?.buyEstimates?.igst || '0' | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode }}
+                  </td>
+                  <td class="text-end" *ngIf="row?.type != 'buyerInvoice'">
+                    {{costItem?.selEstimates?.igst  || '0' | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}
+                  </td>
+                  <td class="text-end " *ngIf="row?.type == 'buyerInvoice'">
+                    {{costItem?.buyEstimates?.totalAmount || '0' | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}
+                  </td> 
+                  <td class="text-end" *ngIf="row?.type != 'buyerInvoice'">
+                    {{costItem?.selEstimates?.totalAmount  || '0' | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode }}
+                  </td> 
+                   
+                </tr>
+
+              </ng-container> 
+            </ng-container>
+           
+            </tbody>
+            <tfoot>
+              <tr *ngIf="invoiceData.length > 0">
+                <td  colspan="5">Total</td>  
+                <td class="text-end font-weight-bold">{{invoiceTaxTotal || '0' | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td>
+                <td class="text-end font-weight-bold">{{invoiceTotal || '0' | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td>
+                <!-- <td class="text-end font-weight-bold red">{{buyTotal|| '0' | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td>
+                <td class="text-end font-weight-bold green">{{sellTotal|| '0' | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td>
+                <td class="text-end font-weight-bold" [ngStyle]="{'color': billAmount < 0 ? 'red' : 'green'}">
+                  {{billAmount|| '0' | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td> -->
+                  <td  ></td>
+              </tr>
+            </tfoot>  
+          </table>
+          <div class="no-data-availble" *ngIf="invoiceData?.length === 0">
+            {{'common.no_data' | translate}}
+          </div>
+        </div>
+
+        <!-- <div class="row mt-4">
+          <div class="col-md-4  remark-section">
+            <label class="form-label">{{ 'stolt.finance.p&l.remarks' | translate }}</label>
+            <input class="form-control custom-input" type="text" placeholder="Remarks" [(ngModel)]="pnLRemarks">
+          </div>
+        </div> -->
+
+
+      </div>
+    </div>
+
+    
+
+
+    <!-- <div class="wrap-form-field btn-onscreen mb-3">
+      <div class="form-group wrap-form-action">
+        <button *ngIf="creditList?.length && batchData 'Job Closed'" class="btn btn-outline-primary btn-lg float-end"
+          type="submit" (click)="closeBatch()">
+          {{ 'stolt.batch.batchClose.closeBatch' | translate }}
+        </button>
+      </div>
+    </div> -->
+
+
+  </div>
+</div>

@@ -1,0 +1,43 @@
+.table-responsive {
+    margin-top: 20px;
+    overflow: overlay;
+    max-height: 250px;
+
+    table {
+        border-spacing: 0 0px;
+        width: -webkit-fill-available;
+
+        th {
+            padding: 5px;
+            font-family: "Roboto", sans-serif;
+            color: var(--theme-black-400);
+
+        }
+
+        td {
+            padding: 5px;
+            border: 0;
+            font-size: 12px;
+            color: var(--theme-black-400);
+            font-family: "Roboto", sans-serif;
+            border-bottom: 1px solid #d0d0d0;
+
+            &:first-child,
+            &:last-child {
+                border-radius: 0;
+            }
+        }
+        .tbHeader{
+            th{
+                color: white;
+                background-color: var(--theme-red-color);
+            }
+        }
+        .tbBody{
+            td{
+                border: 1px solid #d0d0d0;
+            }
+          
+        }
+    }
+}

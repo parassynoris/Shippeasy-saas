@@ -1,0 +1,199 @@
+ 
+
+.inp-grp{
+    border: 1px solid rgba(115, 123, 125, 0.3);
+    box-sizing: border-box;
+    border-radius: 8px;
+  
+    span,select{
+        background-color: transparent;
+        color: black;
+        border-radius: 0;
+        border: none;
+    }
+    input{
+        border: none;
+        border-radius: 8px;
+        border-left: 1px solid black;
+    }
+    select{
+        font-size: 14px;
+        font-weight: bold;
+        box-shadow: none;
+  
+    }
+  }
+  
+    .text-list{
+      font-weight: 800;
+      font-size: 14px;
+      line-height: 140%;
+    }
+    .text-normal{
+      font-size: 16px;
+      line-height: 140%;
+    }
+  
+  
+  
+    .bg-grey{
+      color:black;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 5px;
+      border-radius: 8px;
+      background-color: whitesmoke;
+    }
+  
+  
+  
+  
+  
+  
+    :host {
+      font-family: 'Jost', sans-serif !important;
+    }
+    
+    .text-center {
+      text-align: center;
+    }
+    
+    .list {
+      max-width: 550px;
+      margin: auto;
+    }
+    
+    li {
+      margin-bottom: 5px;
+    }
+    ::ng-deep {
+      .pagination {
+        display: flex;
+        list-style: none;
+        padding: 0;
+      }
+      
+     
+      .pagination li {
+        margin-right: 5px;  
+      }
+      
+     
+      .pagination a {
+        display: inline-block;
+        padding: 5px 10px;
+        text-decoration: none;
+        color: #333;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+      }
+      
+     
+      .pagination .current {
+        background-color: var(--change-theme) !important;
+        color: #fff;
+        border-color: var(--change-theme) !important;
+      }
+      
+     
+      .pagination .disabled {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+      }
+      .font-10 {
+        font-size: 12px !important;
+        font-family: 'Roboto';
+    }
+    .font-12{
+        font-size: 10px !important;
+        font-family: 'Roboto';
+    }
+    .font-16{
+      font-size: 16px !important;
+        font-family: 'Roboto';
+    }
+    .wrap-customer-menu{ 
+      display: flex !important;
+      justify-content: center !important;
+      margin: 10px 0;
+      background: transparent;
+          .wrap-menu{
+              color: #181824;
+              padding: 5px 15px;
+              border-radius: 50px;
+              background: linear-gradient(0deg, rgba(60, 38, 191, .02), rgba(60, 38, 191, .02)), #ffffff;
+              box-shadow: 0px 2px 24px rgba(0, 0, 0, 0.1);
+              li {
+                  border: none;
+                  height: 40px;
+                  display: flex;
+                  align-items: center;
+                  &:last-child {
+                      border-right: 0;
+                  }
+          
+                  a {
+                      border-radius: 35px;
+                      color: #181824;
+                      font-size: 12px;
+                      text-align: center;
+                      padding: 8px 20px;
+                      opacity: 0.9;
+                      transition: 0.3s ease-in-out;
+                      &.active,&.hover {
+                          opacity: 1;
+                          background-color: transparent;
+                          color: var(--change-theme);
+                          font-weight: 600;
+                      }
+                  }
+              }
+          }
+       
+      }
+  
+      .wrap-menu {
+        background: #fff;
+        padding: 5px 15px;
+        box-shadow: var(--theme-shadow);
+    
+        li {
+            border: none;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            &:last-child {
+                border-right: 0;
+            }
+    
+            a {
+                border-radius: 35px;
+                color: var(--theme-gray-800);
+                font-size: 12px;
+                text-align: center;
+                padding: 8px 14px;
+                font-weight: 600;
+    
+                transition: 0.3s ease-in-out;
+    
+                img {
+                    filter: sepia(1);
+                }
+                &.active {
+                    opacity: 1;
+                    background-color: transparent;
+                    color: var(--change-theme);
+    
+                    img {
+                        filter: initial;
+                    }
+                }
+            }
+        }
+    }
+  
+    .nav-link.active {
+      color: var(--change-theme);
+      font-weight: bold; 
+    }

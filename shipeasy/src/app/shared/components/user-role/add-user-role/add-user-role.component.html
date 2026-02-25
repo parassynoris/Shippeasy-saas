@@ -1,0 +1,941 @@
+<div class="" *ngIf="currentUrl === 'add' || currentUrl === 'edit'">
+  <!-- <div class="modal-headers mt-2">
+
+      <h4 class="modal-title" *ngIf="this.RoleIdToUpdate !== ''">{{'common.edit'|
+        translate}} {{ 'masters.roles.role' | translate }} </h4>
+      <h4 class="modal-title" *ngIf="this.RoleIdToUpdate === ''">{{'common.add'|
+        translate}} {{ 'masters.roles.role' | translate }}</h4>
+    </div> -->
+  <div>
+    <div class="wrap-form-field padding-space pb-5">
+      <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+        <div>
+          <form class="form" name="form" class="row g-3" [formGroup]="form">
+            <div class="col-md-5">
+              <label for="Name" class="form-label">{{ 'masters.roles.role_name' | translate }} <span
+                  class="text-danger">*</span></label>
+              <input type="text" class="form-control custom-input" formControlName="Name" id="Name"
+                [ngClass]="{ 'is-invalid': submitted && form.controls['Name'].errors?.required }" placeholder="Name">
+              <div *ngIf="submitted && form.controls['Name'].errors?.required" class="invalid-feedback">
+                <div *ngIf="form.controls['Name'].errors?.required">{{
+                  'masters.roles.role_name_required' | translate }}</div>
+              </div>
+            </div>
+            <div class="col-md-5">
+              <label for="Description" class="form-label">{{ 'masters.roles.role_description' | translate
+                }}</label>
+              <input type="text" class="form-control custom-input" formControlName="Description" id="Description"
+                placeholder="Description">
+            </div>
+            <div class="col-md-2 d-flex align-items-center margin-top">
+              <span>{{ 'masters.roles.role_status' | translate }}</span>
+              <label class="switch mb-0" style=" margin-left: 20px;">
+                <input type="checkbox" checked formControlName="IsActive">
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </form>
+          <hr>
+
+
+          <div class="text-end">
+            <button *ngIf="!callapseALL" (click)="callapseALL = !callapseALL" #expand class="btn expand-all p-1"
+              type="button" data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded="false"
+              [attr.aria-controls]="expandKeys">Expand All</button>
+
+
+            <button *ngIf="callapseALL" (click)="callapseALL = !callapseALL" class="btn expand-all p-1" type="button"
+              data-bs-toggle="collapse" data-bs-target="#collapse0" aria-expanded="true" aria-controls="collapse0">
+              Collapse All
+            </button>
+          </div>
+
+          <div class="accordion form-accordian mb-5" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                  aria-expanded="true" aria-controls="collapseOne">
+                  Feature List
+                </button>
+              </h2>
+              <div id="collapseOne" class="multi-collapse accordion-collapse collapse show"
+                data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+
+                  <div class="col-md-3 my-3 px-0">
+                    <div class="input-container">
+                      <input [(ngModel)]="searchText" class="form-control custom-input search-input" type="text"
+                        placeholder="Search module here.." autocomplete="off">
+                      <button *ngIf="searchText" class="clear-icon" (click)="searchText = ''"><em
+                          class="bi bi-x-circle-fill"></em></button>
+
+                    </div>
+                  </div>
+                  <div class="table-design ">
+                    <table aria-describedby="mytable1">
+                      <thead>
+                        <tr class=" sticky-tr">
+                          <th class="text-center" scope="col"><span class="d-flex align-items-center justify-content-center">
+                            Sr No.<input type="checkbox" class="ml-1" [disabled]="show === 'show'"
+                            (change)="selectAllModule($event,featureList,featureListAll)"
+                            [checked]="checkAllChecked(featureList)" [(ngModel)]="featureListAll">
+                          </span></th>
+
+                          <th scope="col">Module</th>
+                          <th scope="col" class="bg-color-single-th" *ngIf="!currentLogin"> <span class="d-flex align-items-center ">
+                            <input type="checkbox" [disabled]="show === 'show'" class="mr-1"
+                              (change)="selectExportModule($event,featureList,featureListExport)"
+                              [checked]="checkExportChecked(featureList)" [(ngModel)]="featureListExport"> Export
+                          </span>
+                          </th>
+
+                          <th scope="col" class="bg-color-single-th" *ngIf="!currentLogin" > <span class="d-flex align-items-center ">
+                            <input type="checkbox" [disabled]="show === 'show'" class="mr-1"
+                              (change)="selectImportModule($event,featureList,featureListImport)"
+                              [checked]="checkImportChecked(featureList)" [(ngModel)]="featureListImport"> Import
+                          </span>
+                          </th>
+
+                          <th scope="col" class="bg-color-single-th" *ngIf="!currentLogin"> <span class="d-flex align-items-center">
+                            <input type="checkbox" [disabled]="show === 'show'" class="mr-1"
+                              (change)="selectTransModule($event,featureList,featureListTrans)"
+                              [checked]="checkTransChecked(featureList)" [(ngModel)]="featureListTrans"> Transport
+                          </span>
+                          </th>
+
+                          <th scope="col" class="bg-color-single-th"> <span class="d-flex align-items-center">
+                            <input type="checkbox" [disabled]="show === 'show'" class="mr-1"
+                              (change)="selectWareModule($event,featureList,featureListTrans)"
+                              [checked]="checkWareChecked(featureList)" [(ngModel)]="featureListWares"> Warehouse
+                          </span>
+                          </th>
+
+                          <th scope="col"  *ngFor="let permission of permissionDTO">
+                           <span class="d-flex align-items-center">
+                            <input type="checkbox" [disabled]="show === 'show'"
+                            (change)="ngOnSelectAllPermissionModuleVise(permission,featureList)"
+                            [(ngModel)]="permission.IsChecked">&nbsp;
+                          {{permission.Label | capitalizes }}
+                           </span>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          *ngFor="let projectModule of sort(featureList , 'featureName') | searchfilter : searchText ;let i =index ">
+                          <td class="text-center"><span class="d-flex align-items-center justify-content-center">
+                            {{i+1}}. <input type="checkbox" [disabled]="show === 'show'" class="ml-1"
+                              [checked]="checkSelectedRow(projectModule)"
+                              (change)="ngOnSelectAllModulePermission(projectModule,featureList)"
+                              [(ngModel)]="projectModule.IsChecked">
+                          </span>
+                          </td>
+
+                          <td> {{ projectModule.featureName == 'Batch' ? 'Job' : projectModule.featureName |
+                            capitalizes}}</td>
+
+                          <td class="bg-color-single-td" *ngIf="!currentLogin"><input *ngIf="projectModule?.isExport" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isExport1"></td>
+                          <td class="bg-color-single-td" *ngIf="!currentLogin"><input *ngIf="projectModule?.isImport" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isImport1"></td>
+                          <td class="bg-color-single-td" *ngIf="!currentLogin"><input *ngIf="projectModule?.isTransport" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isTransport1"></td>
+                          <td class="bg-color-single-td"><input 
+                            *ngIf="projectModule?.isWarehouse" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isWarehouse1"></td>
+
+                          <td *ngFor="let permission of projectModule.PermissionList">
+
+                            <input *ngIf="!permission.IsDropDown" [disabled]="show === 'show'" type="checkbox"
+                              [(ngModel)]="permission.IsChecked">
+                            <div *ngIf="permission.IsDropDown">
+                              <div *ngFor="let stage of projectModule.StageList">
+                                <input type="checkbox" [(ngModel)]="stage.IsChecked">{{stage.Label}}
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="no-data-availble" *ngIf="(featureList | searchfilter : searchText)?.length === 0">
+                      {{'common.no_data' | translate}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1"
+                  aria-expanded="true" aria-controls="collapse1">
+                  Job List
+                </button>
+              </h2>
+              <div id="collapse1" class="multi-collapse accordion-collapse collapse show"
+                data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+
+                  <div class="col-md-3 my-3 px-0">
+                    <div class="input-container">
+                      <input [(ngModel)]="searchText9" class="form-control custom-input search-input" type="text"
+                        placeholder="Search module here.." autocomplete="off">
+                      <button *ngIf="searchText9" class="clear-icon" (click)="searchText9 = ''"><em
+                          class="bi bi-x-circle-fill"></em></button>
+
+                    </div>
+                  </div>
+                  <div class="table-design ">
+                    <table aria-describedby="mytable1">
+                      <thead>
+                        <tr class=" sticky-tr">
+                          <th class="text-center" scope="col"><span class="d-flex justify-content-center align-items-center">
+                            Sr No.<input type="checkbox" [disabled]="show === 'show'" class="ml-1"
+                            (change)="selectAllModule($event,jobList,jobListAll)" [checked]="checkAllChecked(jobList)"
+                            [(ngModel)]="jobListAll">
+                          </span>
+                            </th>
+                          <th scope="col">Module</th>
+                          
+                          <th class="bg-color-single-th" scope="col" *ngIf="!currentLogin"> <span class="d-flex align-items-center">
+                            <input type="checkbox" [disabled]="show === 'show'" class="mr-1"
+                            (change)="selectExportModule($event,jobList,jobListExport)"
+                            [checked]="checkExportChecked(jobList)" [(ngModel)]="jobListExport"> Export
+                          </span>
+                        </th>
+
+                        <th class="bg-color-single-th" scope="col" *ngIf="!currentLogin"> <span class="d-flex align-items-center">
+                          <input type="checkbox" [disabled]="show === 'show'" class="mr-1"
+                            (change)="selectImportModule($event,jobList,jobListImport)"
+                            [checked]="checkImportChecked(jobList)" [(ngModel)]="jobListImport"> Import
+                        </span>
+                        </th>
+
+                        <th class="bg-color-single-th" scope="col" *ngIf="!currentLogin"> <span class="d-flex align-items-center">
+                          <input type="checkbox" [disabled]="show === 'show'" class="mr-1"
+                            (change)="selectTransModule($event,jobList,jobListTrans)"
+                            [checked]="checkTransChecked(jobList)" [(ngModel)]="jobListTrans"> Transport
+                        </span>
+                        </th>
+                        <th class="bg-color-single-th" scope="col" > <span class="d-flex align-items-center">
+                          <input type="checkbox" [disabled]="show === 'show'" class="mr-1"
+                            (change)="selectWareModule($event,jobList,jobListTrans)"
+                            [checked]="checkWareChecked(jobList)" [(ngModel)]="jobListWares"> Warehouse
+                        </span>
+                        </th>
+                        
+                          <th scope="col" *ngFor="let permission of permissionDTO">
+                            <span class="d-flex align-items-center">
+                              <input type="checkbox" [disabled]="show === 'show'"
+                              (change)="ngOnSelectAllPermissionModuleVise(permission,jobList)"
+                              [(ngModel)]="permission.IsChecked">&nbsp;
+                            {{permission.Label | capitalizes }}
+                            </span>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          *ngFor="let projectModule of sort(jobList , 'featureName') | searchfilter : searchText9 ;let i =index ">
+                          <td class="text-center"><span class="d-flex align-items-center justify-content-center">
+                            {{i+1}}. <input type="checkbox" [disabled]="show === 'show'"
+                              [checked]="checkSelectedRow(projectModule)" class="ml-1"
+                              (change)="ngOnSelectAllModulePermission(projectModule,jobList)"
+                              [(ngModel)]="projectModule.IsChecked">
+                          </span>
+                          </td>
+                          <td> {{ projectModule.featureName == 'Batch' ? 'Job' : projectModule.featureName |
+                            capitalizes}}</td>
+
+                            <td class="bg-color-single-td" *ngIf="!currentLogin"><input *ngIf="projectModule?.isExport" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isExport1"></td>
+                            <td class="bg-color-single-td" *ngIf="!currentLogin"><input *ngIf="projectModule?.isImport" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isImport1"></td>
+                            <td class="bg-color-single-td" *ngIf="!currentLogin"><input *ngIf="projectModule?.isTransport" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isTransport1"></td>
+                            <td class="bg-color-single-td"><input 
+                              *ngIf="projectModule?.isWarehouse"  type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isWarehouse1"></td>
+
+                          <td *ngFor="let permission of projectModule.PermissionList">
+
+                            <input *ngIf="!permission.IsDropDown" [disabled]="show === 'show'" type="checkbox"
+                              [(ngModel)]="permission.IsChecked">
+                            <div *ngIf="permission.IsDropDown">
+                              <div *ngFor="let stage of projectModule.StageList">
+                                <input type="checkbox" [(ngModel)]="stage.IsChecked">{{stage.Label}}
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="no-data-availble" *ngIf="(jobList | searchfilter : searchText9)?.length === 0">
+                      {{'common.no_data' | translate}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse8"
+                  aria-expanded="true" aria-controls="collapse8">
+                  Finance List
+                </button>
+              </h2>
+              <div id="collapse8" class="multi-collapse accordion-collapse collapse show"
+                data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+
+                  <div class="col-md-3 my-3 px-0">
+                    <div class="input-container">
+                      <input [(ngModel)]="searchText8" class="form-control custom-input search-input" type="text"
+                        placeholder="Search module here.." autocomplete="off">
+                      <button *ngIf="searchText8" class="clear-icon" (click)="searchText8 = ''"><em
+                          class="bi bi-x-circle-fill"></em></button>
+
+                    </div>
+                  </div>
+                  <div class="table-design ">
+                    <table aria-describedby="mytable1">
+                      <thead>
+                        <tr class=" sticky-tr">
+                          <th class="text-center" scope="col"><span class="d-flex align-items-center justify-content-center">
+                            Sr No.<input type="checkbox" [disabled]="show === 'show'" class="ml-1"
+                            (change)="selectAllModule($event,financeList,financeListAll)"
+                            [checked]="checkAllChecked(financeList)" [(ngModel)]="financeListAll">
+                          </span></th>
+                          <th scope="col">Module</th>
+                          <th scope="col" class="bg-color-single-th" *ngIf="!currentLogin"> <span class="d-flex align-items-center">
+                            <input type="checkbox" [disabled]="show === 'show'"
+                            (change)="selectExportModule($event,financeList,financeListExport)" class="mr-1"
+                            [checked]="checkExportChecked(financeList)" [(ngModel)]="financeListExport"> Export
+                          </span>
+                        </th>
+
+                        <th scope="col" class="bg-color-single-th" *ngIf="!currentLogin"> <span class="d-flex align-items-center">
+                          <input type="checkbox" [disabled]="show === 'show'"
+                            (change)="selectImportModule($event,financeList,financeListImport)" class="mr-1"
+                            [checked]="checkImportChecked(financeList)" [(ngModel)]="financeListImport"> Import
+                        </span>
+                        </th>
+
+                        <th scope="col" class="bg-color-single-th" *ngIf="!currentLogin"> <span class="d-flex align-items-center">
+                          <input type="checkbox" [disabled]="show === 'show'"
+                            (change)="selectTransModule($event,financeList,financeListTrans)" class="mr-1"
+                            [checked]="checkTransChecked(financeList)" [(ngModel)]="financeListTrans"> Transport
+                        </span>
+                        </th>
+
+                        <th scope="col" class="bg-color-single-th"> <span class="d-flex align-items-center">
+                          <input type="checkbox" [disabled]="show === 'show'"
+                            (change)="selectWareModule($event,financeList,financeListWares)" class="mr-1"
+                            [checked]="checkWareChecked(financeList)" [(ngModel)]="financeListWares"> Warehouse
+                        </span>
+                        </th>
+                        
+
+                          <th scope="col" *ngFor="let permission of permissionDTO">
+                           <span class="d-flex align-items-center">
+                            <input type="checkbox" [disabled]="show === 'show'"
+                            (change)="ngOnSelectAllPermissionModuleVise(permission,financeList)"
+                            [(ngModel)]="permission.IsChecked">&nbsp;
+                          {{permission.Label | capitalizes }}
+                           </span>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          *ngFor="let projectModule of sort(financeList , 'featureName') | searchfilter : searchText8 ;let i =index ">
+                          <td class="text-center"><span class="d-flex justify-content-center align-items-center">
+                            {{i+1}}. <input type="checkbox" [disabled]="show === 'show'"
+                              [checked]="checkSelectedRow(projectModule)" class="ml-1"
+                              (change)="ngOnSelectAllModulePermission(projectModule,financeList)"
+                              [(ngModel)]="projectModule.IsChecked">
+                          </span>
+                          </td>
+                          <td> {{ projectModule.featureName == 'Batch' ? 'Job' : projectModule.featureName |
+                            capitalizes}}</td>
+
+                            <td class="bg-color-single-td" *ngIf="!currentLogin"><input *ngIf="projectModule?.isExport" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isExport1"></td>
+                            <td class="bg-color-single-td" *ngIf="!currentLogin"><input *ngIf="projectModule?.isImport" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isImport1"></td>
+                            <td class="bg-color-single-td" *ngIf="!currentLogin"><input *ngIf="projectModule?.isTransport" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isTransport1"></td>
+                            <td class="bg-color-single-td"><input 
+                              *ngIf="projectModule?.isWarehouse" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isWarehouse1"></td>
+                          <td *ngFor="let permission of projectModule.PermissionList">
+
+                            <input *ngIf="!permission.IsDropDown" [disabled]="show === 'show'" type="checkbox"
+                              [(ngModel)]="permission.IsChecked">
+                            <div *ngIf="permission.IsDropDown">
+                              <div *ngFor="let stage of projectModule.StageList">
+                                <input type="checkbox" [(ngModel)]="stage.IsChecked">{{stage.Label}}
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="no-data-availble" *ngIf="(financeList | searchfilter : searchText8)?.length === 0">
+                      {{'common.no_data' | translate}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item"> 
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                  Operations Master Features
+                </button>
+              </h2>
+              <div id="collapseTwo" class="multi-collapse accordion-collapse collapse show"
+                data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+
+                  <div class="col-md-3 my-3 px-0">
+                    <div class="input-container">
+                      <input [(ngModel)]="searchText1" class="form-control custom-input search-input" type="text"
+                        placeholder="Search module here.." autocomplete="off">
+                      <button *ngIf="searchText1" class="clear-icon" (click)="searchText1 = ''"><em
+                          class="bi bi-x-circle-fill"></em></button>
+
+                    </div>
+                  </div>
+                  <div class="table-design ">
+                    <table aria-describedby="mytable1">
+                      <thead>
+                        <tr class=" sticky-tr">
+                          <th class="text-center" scope="col"><span class="d-flex align-items-center justify-content-center">
+                            Sr No.<input type="checkbox" [disabled]="show === 'show'" class="ml-1"
+                              (change)="selectAllModule($event,operationList,operationListAll)"
+                              [checked]="checkAllChecked(operationList)" [(ngModel)]="operationListAll">
+                          </span></th>
+                          <th scope="col">Module</th>
+                          <th scope="col" class="bg-color-single-th" *ngIf="!currentLogin"> <span class="d-flex align-items-center">
+                            <input type="checkbox" [disabled]="show === 'show'" class="mr-1"
+                            (change)="selectExportModule($event,operationList,operationListExport)"
+                            [checked]="checkExportChecked(operationList)" [(ngModel)]="operationListExport"> Export
+                          </span>
+                        </th>
+
+                        <th scope="col" class="bg-color-single-th" *ngIf="!currentLogin"> <span class="d-flex align-items-center">
+                          <input type="checkbox" [disabled]="show === 'show'"
+                            (change)="selectImportModule($event,operationList,operationListImport)" class="mr-1"
+                            [checked]="checkImportChecked(operationList)" [(ngModel)]="operationListImport"> Import
+                        </span>
+                        </th>
+
+                        <th scope="col" class="bg-color-single-th" *ngIf="!currentLogin"> <span class="d-flex align-items-center">
+                          <input type="checkbox" [disabled]="show === 'show'"
+                            (change)="selectTransModule($event,operationList,operationListTrans)" class="mr-1"
+                            [checked]="checkTransChecked(operationList)" [(ngModel)]="operationListTrans"> Transport
+                        </span>
+                        </th>
+                        <th scope="col" class="bg-color-single-th"> <span class="d-flex align-items-center">
+                          <input type="checkbox" [disabled]="show === 'show'"
+                            (change)="selectWareModule($event,operationList,operationListWares)" class="mr-1"
+                            [checked]="checkWareChecked(operationList)" [(ngModel)]="operationListWares"> Warehouse
+                        </span>
+                        </th>
+
+                          <th scope="col" *ngFor="let permission of permissionDTO">
+                            <span class="d-flex align-items-center">
+                              <input type="checkbox" [disabled]="show === 'show'"
+                              (change)="ngOnSelectAllPermissionModuleVise(permission,operationList)"
+                              [(ngModel)]="permission.IsChecked">&nbsp;
+                            {{permission.Label | capitalizes }}
+                            </span>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          *ngFor="let projectModule of sort(operationList , 'featureName') | searchfilter : searchText1 ;let i =index ">
+                          <td class="text-center"><span class="d-flex justify-content-center align-items-center">
+                            {{i+1}}. <input type="checkbox" [disabled]="show === 'show'"
+                              [checked]="checkSelectedRow(projectModule)" class="mr-1"
+                              (change)="ngOnSelectAllModulePermission(projectModule,operationList)"
+                              [(ngModel)]="projectModule.IsChecked">
+                          </span>
+                          </td>
+                          <td> {{ projectModule.featureName | capitalizes}}</td>
+                          <td class="bg-color-single-td" *ngIf="!currentLogin"><input *ngIf="projectModule?.isExport" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isExport1"></td>
+                          <td class="bg-color-single-td" *ngIf="!currentLogin"><input *ngIf="projectModule?.isImport" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isImport1"></td>
+                          <td class="bg-color-single-td" *ngIf="!currentLogin"><input *ngIf="projectModule?.isTransport" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isTransport1"></td>
+                          <td class="bg-color-single-td"><input 
+                            *ngIf="projectModule?.isWarehouse" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isWarehouse1"></td>
+                          <td *ngFor="let permission of projectModule.PermissionList">
+
+                            <input *ngIf="!permission.IsDropDown" [disabled]="show === 'show'" type="checkbox"
+                              [(ngModel)]="permission.IsChecked">
+                            <div *ngIf="permission.IsDropDown">
+                              <div *ngFor="let stage of projectModule.StageList">
+                                <input type="checkbox" [(ngModel)]="stage.IsChecked">{{stage.Label}}
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="no-data-availble" *ngIf="(operationList | searchfilter : searchText1)?.length === 0">
+                      {{'common.no_data' | translate}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+                  General Master Features
+                </button>
+              </h2>
+              <div id="collapse3" class="multi-collapse accordion-collapse collapse show"
+                data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+
+                  <div class="col-md-3 my-3 px-0">
+                    <div class="input-container">
+                      <input [(ngModel)]="searchText2" class="form-control custom-input search-input" type="text"
+                        placeholder="Search module here.." autocomplete="off">
+                      <button *ngIf="searchText2" class="clear-icon" (click)="searchText2 = ''"><em
+                          class="bi bi-x-circle-fill"></em></button>
+
+                    </div>
+                  </div>
+                  <div class="table-design ">
+                    <table aria-describedby="mytable1">
+                      <thead>
+                        <tr class=" sticky-tr">
+                          <th class="text-center" scope="col"><span class="d-flex align-items-center justify-content-center">
+                            Sr No.<input type="checkbox" [disabled]="show === 'show'" class="ml-1"
+                              (change)="selectAllModule($event,generalList,generalListAll)"
+                              [checked]="checkAllChecked(generalList)" [(ngModel)]="generalListAll">
+                          </span></th>
+                          <th scope="col">Module</th>
+                          <th scope="col" class="bg-color-single-th" *ngIf="!currentLogin"> <span class="d-flex align-items-center">
+                            <input type="checkbox" [disabled]="show === 'show'"
+                            (change)="selectExportModule($event,generalList,generalListExport)" class="mr-1"
+                            [checked]="checkExportChecked(generalList)" [(ngModel)]="generalListExport"> Export
+                          </span>
+                        </th>
+
+                        <th scope="col" class="bg-color-single-th" *ngIf="!currentLogin"> <span class="d-flex align-items-center">
+                          <input type="checkbox" [disabled]="show === 'show'"
+                            (change)="selectImportModule($event,generalList,generalListImport)" class="mr-1"
+                            [checked]="checkImportChecked(generalList)" [(ngModel)]="generalListImport"> Import
+                        </span>
+                        </th>
+
+                        <th scope="col" class="bg-color-single-th" *ngIf="!currentLogin"> <span class="d-flex align-items-center">
+                          <input type="checkbox" [disabled]="show === 'show'"
+                            (change)="selectTransModule($event,generalList,generalListTrans)" class="mr-1"
+                            [checked]="checkTransChecked(generalList)" [(ngModel)]="generalListTrans"> Transport
+                        </span>
+                        </th>
+                        <th scope="col" class="bg-color-single-th"> <span class="d-flex align-items-center">
+                          <input type="checkbox" [disabled]="show === 'show'"
+                            (change)="selectWareModule($event,generalList,generalListWares)" class="mr-1"
+                            [checked]="checkWareChecked(generalList)" [(ngModel)]="generalListWares"> Warehouse
+                        </span>
+                        </th>
+
+                          <th scope="col" *ngFor="let permission of permissionDTO">
+                            <span class="d-flex align-items-center">
+                              <input type="checkbox" [disabled]="show === 'show'"
+                              (change)="ngOnSelectAllPermissionModuleVise(permission,generalList)"
+                              [(ngModel)]="permission.IsChecked">&nbsp;
+                            {{permission.Label | capitalizes }}
+                            </span>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          *ngFor="let projectModule of sort(generalList , 'featureName') | searchfilter : searchText2 ;let i =index ">
+                          <td class="text-center"><span class="d-flex align-items-center justify-content-center">
+                            {{i+1}}. <input type="checkbox" [disabled]="show === 'show'" class="ml-1"
+                              [checked]="checkSelectedRow(projectModule)"
+                              (change)="ngOnSelectAllModulePermission(projectModule,generalList)"
+                              [(ngModel)]="projectModule.IsChecked">
+                          </span>
+                          </td>
+                          <td> {{ projectModule.featureName | capitalizes}}</td>
+                          <td class="bg-color-single-td" *ngIf="!currentLogin"><input *ngIf="projectModule?.isExport" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isExport1"></td>
+                          <td class="bg-color-single-td" *ngIf="!currentLogin"><input *ngIf="projectModule?.isImport" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isImport1"></td>
+                          <td class="bg-color-single-td" *ngIf="!currentLogin"><input *ngIf="projectModule?.isTransport" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isTransport1"></td>
+                          <td class="bg-color-single-td"><input 
+                            *ngIf="projectModule?.isWarehouse" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isWarehouse1"></td>
+                          <td *ngFor="let permission of projectModule.PermissionList">
+
+                            <input *ngIf="!permission.IsDropDown" [disabled]="show === 'show'" type="checkbox"
+                              [(ngModel)]="permission.IsChecked">
+                            <div *ngIf="permission.IsDropDown">
+                              <div *ngFor="let stage of projectModule.StageList">
+                                <input type="checkbox" [(ngModel)]="stage.IsChecked">{{stage.Label}}
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="no-data-availble" *ngIf="(generalList | searchfilter : searchText2)?.length === 0">
+                      {{'common.no_data' | translate}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
+                  Account Master Features
+                </button>
+              </h2>
+              <div id="collapse4" class="multi-collapse accordion-collapse collapse show"
+                data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+
+                  <div class="col-md-3 my-3 px-0">
+                    <div class="input-container">
+                      <input [(ngModel)]="searchText3" class="form-control custom-input search-input" type="text"
+                        placeholder="Search module here.." autocomplete="off">
+                      <button *ngIf="searchText3" class="clear-icon" (click)="searchText3 = ''"><em
+                          class="bi bi-x-circle-fill"></em></button>
+
+                    </div>
+                  </div>
+                  <div class="table-design ">
+                    <table aria-describedby="mytable1">
+                      <thead>
+                        <tr class=" sticky-tr">
+                          <th class="text-center" scope="col"><span class="d-flex align-items-center justify-content-center">
+                            Sr No.<input type="checkbox" [disabled]="show === 'show'" class="ml-1"
+                              (change)="selectAllModule($event,accountList,accountListAll)"
+                              [checked]="checkAllChecked(accountList)" [(ngModel)]="accountListAll">
+                          </span></th>
+                          <th scope="col">Module</th>
+                          <th scope="col" class="bg-color-single-th" *ngIf="!currentLogin"> <span class="d-flex align-items-center">
+                            <input type="checkbox" [disabled]="show === 'show'"
+                            (change)="selectExportModule($event,accountList,accountListExport)" class="mr-1"
+                            [checked]="checkExportChecked(accountList)" [(ngModel)]="accountListExport"> Export
+                          </span>
+                        </th>
+
+                        <th scope="col" class="bg-color-single-th" *ngIf="!currentLogin"> <span class="d-flex align-items-center">
+                          <input type="checkbox" [disabled]="show === 'show'"
+                            (change)="selectImportModule($event,accountList,accountListImport)" class="mr-1"
+                            [checked]="checkImportChecked(accountList)" [(ngModel)]="accountListImport"> Import
+                        </span>
+                        </th>
+
+                        <th scope="col" class="bg-color-single-th" *ngIf="!currentLogin"> <span class="d-flex align-items-center">
+                          <input type="checkbox" [disabled]="show === 'show'"
+                            (change)="selectTransModule($event,accountList,accountListTrans)" class="mr-1"
+                            [checked]="checkTransChecked(accountList)" [(ngModel)]="accountListTrans"> Transport
+                        </span>
+                        </th>
+                        <th scope="col" class="bg-color-single-th"> <span class="d-flex align-items-center">
+                          <input type="checkbox" [disabled]="show === 'show'"
+                            (change)="selectWareModule($event,accountList,accountListWares)" class="mr-1"
+                            [checked]="checkWareChecked(accountList)" [(ngModel)]="accountListWares"> Warehouse
+                        </span>
+                        </th>
+
+                          <th scope="col" *ngFor="let permission of permissionDTO">
+                            <span class="d-flex align-items-center">
+                              <input type="checkbox" [disabled]="show === 'show'"
+                              (change)="ngOnSelectAllPermissionModuleVise(permission,accountList)"
+                              [(ngModel)]="permission.IsChecked">&nbsp;
+                            {{permission.Label | capitalizes }}
+                            </span>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          *ngFor="let projectModule of sort(accountList , 'featureName') | searchfilter : searchText3 ;let i =index ">
+                          <td class="text-center"><span class="d-flex justify-content-center align-items-center">
+                            {{i+1}}. <input type="checkbox" [disabled]="show === 'show'" class="ml-1"
+                              [checked]="checkSelectedRow(projectModule)"
+                              (change)="ngOnSelectAllModulePermission(projectModule,accountList)"
+                              [(ngModel)]="projectModule.IsChecked">
+                          </span>
+                          </td>
+                          <td> {{ projectModule.featureName | capitalizes}}</td>
+                          <td class="bg-color-single-td" *ngIf="!currentLogin"><input *ngIf="projectModule?.isExport" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isExport1"></td>
+                          <td class="bg-color-single-td" *ngIf="!currentLogin"><input *ngIf="projectModule?.isImport" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isImport1"></td>
+                          <td class="bg-color-single-td" *ngIf="!currentLogin"><input *ngIf="projectModule?.isTransport" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isTransport1"></td>
+                          <td class="bg-color-single-td"><input 
+                            *ngIf="projectModule?.isWarehouse"  type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isWarehouse1"></td>
+                          <td *ngFor="let permission of projectModule.PermissionList">
+
+                            <input *ngIf="!permission.IsDropDown" [disabled]="show === 'show'" type="checkbox"
+                              [(ngModel)]="permission.IsChecked">
+                            <div *ngIf="permission.IsDropDown">
+                              <div *ngFor="let stage of projectModule.StageList">
+                                <input type="checkbox" [(ngModel)]="stage.IsChecked">{{stage.Label}}
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="no-data-availble" *ngIf="(accountList | searchfilter : searchText3)?.length === 0">
+                      {{'common.no_data' | translate}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> 
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#collapse5" aria-expanded="false" aria-controls="collapse5">
+                  EQC Master Features
+                </button>
+              </h2>
+              <div id="collapse5" class="multi-collapse accordion-collapse collapse show"
+                data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+
+                  <div class="col-md-3 my-3 px-0">
+                    <div class="input-container">
+                      <input [(ngModel)]="searchText4" class="form-control custom-input search-input" type="text"
+                        placeholder="Search module here.." autocomplete="off">
+                      <button *ngIf="searchText4" class="clear-icon" (click)="searchText4 = ''"><em
+                          class="bi bi-x-circle-fill"></em></button>
+
+                    </div>
+                  </div>
+                  <div class="table-design ">
+                    <table aria-describedby="mytable1">
+                      <thead>
+                        <tr class=" sticky-tr">
+                          <th class="text-center" scope="col"><span class="d-flex align-items-center justify-content-center">
+                            Sr No.<input type="checkbox" [disabled]="show === 'show'" class="ml-1"
+                              (change)="selectAllModule($event,eqcList,eqcListAll)" [checked]="checkAllChecked(eqcList)"
+                              [(ngModel)]="eqcListAll">
+                          </span></th>
+                          <th scope="col">Module</th>
+
+                          <th scope="col" class="bg-color-single-th" *ngIf="!currentLogin"> <span class="d-flex align-items-center">
+                            <input type="checkbox" [disabled]="show === 'show'"
+                            (change)="selectExportModule($event,eqcList,eqcListExport)" class="mr-1"
+                            [checked]="checkExportChecked(eqcList)" [(ngModel)]="eqcListExport"> Export
+                          </span>
+                        </th>
+
+                        <th scope="col" class="bg-color-single-th" *ngIf="!currentLogin"> <span class="d-flex align-items-center">
+                          <input type="checkbox" [disabled]="show === 'show'"
+                            (change)="selectImportModule($event,eqcList,eqcListImport)" class="mr-1"
+                            [checked]="checkImportChecked(eqcList)" [(ngModel)]="eqcListImport"> Import
+                        </span>
+                        </th>
+
+                        <th scope="col" class="bg-color-single-th" *ngIf="!currentLogin"><span class="d-flex align-items-center">
+                          <input type="checkbox" [disabled]="show === 'show'"
+                          (change)="selectTransModule($event,eqcList,eqcListTrans)" class="mr-1"
+                          [checked]="checkTransChecked(eqcList)" [(ngModel)]="eqcListTrans"> Transport
+                        </span>
+                        </th>
+                        <th scope="col" class="bg-color-single-th"><span class="d-flex align-items-center">
+                          <input type="checkbox" [disabled]="show === 'show'"
+                          (change)="selectWareModule($event,eqcList,eqcListWares)" class="mr-1"
+                          [checked]="checkWareChecked(eqcList)" [(ngModel)]="eqcListWares"> Warehoue
+                        </span>
+                        </th>
+
+
+                          <th scope="col" *ngFor="let permission of permissionDTO">
+                            <span class="d-flex align-items-center">
+                              <input type="checkbox" [disabled]="show === 'show'"
+                              (change)="ngOnSelectAllPermissionModuleVise(permission,eqcList)"
+                              [(ngModel)]="permission.IsChecked">&nbsp;
+                            {{permission.Label | capitalizes }}
+                            </span>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          *ngFor="let projectModule of sort(eqcList , 'featureName') | searchfilter : searchText4 ;let i =index ">
+                          <td class="text-center"><span class="d-flex justify-content-center align-items-center">
+                            {{i+1}}. <input type="checkbox" [disabled]="show === 'show'" class="ml-1"
+                              [checked]="checkSelectedRow(projectModule)"
+                              (change)="ngOnSelectAllModulePermission(projectModule,eqcList)"
+                              [(ngModel)]="projectModule.IsChecked">
+                          </span>
+                          </td>
+                          <td> {{ projectModule.featureName | capitalizes}}</td>
+                          <td class="bg-color-single-td" *ngIf="!currentLogin"><input *ngIf="projectModule?.isExport" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isExport1"></td>
+                          <td class="bg-color-single-td" *ngIf="!currentLogin"><input *ngIf="projectModule?.isImport" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isImport1"></td>
+                          <td class="bg-color-single-td" *ngIf="!currentLogin"><input *ngIf="projectModule?.isTransport" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isTransport1"></td>
+                          <td class="bg-color-single-td"><input
+                            *ngIf="projectModule?.isWarehouse" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isWarehouse1"></td>
+                          <td *ngFor="let permission of projectModule.PermissionList">
+
+                            <input *ngIf="!permission.IsDropDown" [disabled]="show === 'show'" type="checkbox"
+                              [(ngModel)]="permission.IsChecked">
+                            <div *ngIf="permission.IsDropDown">
+                              <div *ngFor="let stage of projectModule.StageList">
+                                <input type="checkbox" [(ngModel)]="stage.IsChecked">{{stage.Label}}
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="no-data-availble" *ngIf="(eqcList | searchfilter : searchText4)?.length === 0">
+                      {{'common.no_data' | translate}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#collapse6" aria-expanded="false" aria-controls="collapse6">
+                  System Type Master Features
+                </button>
+              </h2>
+              <div id="collapse6" class="multi-collapse accordion-collapse collapse show"
+                data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+
+                  <div class="col-md-3 my-3 px-0">
+                    <div class="input-container">
+                      <input [(ngModel)]="searchText5" class="form-control custom-input search-input" type="text"
+                        placeholder="Search module here.." autocomplete="off">
+                      <button *ngIf="searchText5" class="clear-icon" (click)="searchText5 = ''"><em
+                          class="bi bi-x-circle-fill"></em></button>
+
+                    </div>
+                  </div>
+                  <div class="table-design ">
+                    <table aria-describedby="mytable1">
+                      <thead>
+                        <tr class=" sticky-tr">
+                          <th class="text-center" scope="col"><span class="d-flex justify-content-center align-items-center">
+                            Sr No.<input type="checkbox" [disabled]="show === 'show'" class="ml-1"
+                              (change)="selectAllModule($event,systemtypeList,systemtypeListAll)"
+                              [checked]="checkAllChecked(systemtypeList)" [(ngModel)]="systemtypeListAll">
+                          </span></th>
+                          <th scope="col">Module</th>
+
+                          <th scope="col" class="bg-color-single-th" *ngIf="!currentLogin"> <span class="d-flex align-items-center">
+                            <input type="checkbox" [disabled]="show === 'show'" class="mr-1"
+                            (change)="selectExportModule($event,systemtypeList,systemtypeListExport)"
+                            [checked]="checkExportChecked(systemtypeList)" [(ngModel)]="systemtypeListExport"> Export
+                          </span>
+                        </th>
+
+                        <th scope="col" class="bg-color-single-th" *ngIf="!currentLogin"> <span class="d-flex align-items-center">
+                          <input type="checkbox" [disabled]="show === 'show'"
+                            (change)="selectImportModule($event,systemtypeList,systemtypeListImport)" class="mr-1"
+                            [checked]="checkImportChecked(systemtypeList)" [(ngModel)]="systemtypeListImport"> Import
+                        </span>
+                        </th>
+
+                        <th scope="col" class="bg-color-single-th" *ngIf="!currentLogin"> <span class="d-flex align-items-center">
+                          <input type="checkbox" [disabled]="show === 'show'"
+                            (change)="selectTransModule($event,systemtypeList,systemtypeListTrans)" class="mr-1"
+                            [checked]="checkTransChecked(systemtypeList)" [(ngModel)]="systemtypeListTrans"> Transport
+                        </span>
+                        </th>
+
+                        <th scope="col" class="bg-color-single-th"> <span class="d-flex align-items-center">
+                          <input type="checkbox" [disabled]="show === 'show'"
+                            (change)="selectWareModule($event,systemtypeList,systemtypeListWares)" class="mr-1"
+                            [checked]="checkWareChecked(systemtypeList)" [(ngModel)]="systemtypeListWares"> Warehouse
+                        </span>
+                        </th>
+
+
+                          <th scope="col" *ngFor="let permission of permissionDTO">
+                           <span class="d-flex align-items-center">
+                            <input type="checkbox" [disabled]="show === 'show'"
+                            (change)="ngOnSelectAllPermissionModuleVise(permission,systemtypeList)"
+                            [(ngModel)]="permission.IsChecked">&nbsp;
+                          {{permission.Label | capitalizes }}
+                           </span>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          *ngFor="let projectModule of sort(systemtypeList , 'featureName') | searchfilter : searchText5 ;let i =index ">
+                          <td class="text-center"><span class="d-flex justify-content-center align-items-center">
+                            {{i+1}}. <input type="checkbox" [disabled]="show === 'show'"
+                              [checked]="checkSelectedRow(projectModule)" class="ml-1"
+                              (change)="ngOnSelectAllModulePermission(projectModule,systemtypeList)"
+                              [(ngModel)]="projectModule.IsChecked">
+                          </span>
+                          </td>
+                          <td> {{ projectModule.featureName | capitalizes}}</td>
+                          <td class="bg-color-single-td" *ngIf="!currentLogin"><input *ngIf="projectModule?.isExport" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isExport1"></td>
+                          <td class="bg-color-single-td" *ngIf="!currentLogin"><input *ngIf="projectModule?.isImport" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isImport1"></td>
+                          <td class="bg-color-single-td" *ngIf="!currentLogin"><input *ngIf="projectModule?.isTransport" type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isTransport1"></td>
+                          <td class="bg-color-single-td"><input
+                            *ngIf="projectModule?.isWarehouse"  type="checkbox" [disabled]="show === 'show'" [(ngModel)]="projectModule.isWarehouse1"></td>
+                          <td *ngFor="let permission of projectModule.PermissionList">
+
+                            <input *ngIf="!permission.IsDropDown" [disabled]="show === 'show'" type="checkbox"
+                              [(ngModel)]="permission.IsChecked">
+                            <div *ngIf="permission.IsDropDown">
+                              <div *ngFor="let stage of projectModule.StageList">
+                                <input type="checkbox" [(ngModel)]="stage.IsChecked">{{stage.Label}}
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="no-data-availble" *ngIf="(systemtypeList | searchfilter : searchText5)?.length === 0">
+                      {{'common.no_data' | translate}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item display-none">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#collapse0" aria-expanded="false" aria-controls="collapse0">
+                  Accordion Item #3
+                </button>
+              </h2>
+              <div id="collapse0" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
+
+
+
+          <div class="btn-onscreen mb-3">
+            <button type="button" class="btn1 btn-lg float-end" type="button" (click)="cancel()"> {{
+              'common.cancel' | translate }}</button>
+            <button *ngIf="this.RoleIdToUpdate === ''" type="button" class="btn btn-outline-primary btn-lg float-end"
+              (click)="ngOnSave()" type="submit">
+              {{
+              'common.save' |
+              translate }}
+            </button>
+            <button *ngIf="this.RoleIdToUpdate !== '' && show !== 'show'" type="button"
+              class="btn btn-outline-primary btn-lg float-end" (click)="ngOnSave()" type="submit">
+              {{
+              'common.update' |
+              translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

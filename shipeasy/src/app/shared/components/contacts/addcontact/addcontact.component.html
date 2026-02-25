@@ -1,0 +1,85 @@
+<div class="modal-content nz-allSelect">
+  <div class="modal-header">
+    <h4 class="modal-title">{{ title | translate }}</h4>
+    <button type="button" class="btn-close shadow-none" (click)="onClose()" aria-label="Close">
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="wrap-form-field padding-space  modal-bottom-alignment-for-mobile-view">
+      <form [formGroup]="addContactForm" (ngSubmit)="SaveContact()" class="row g-3 mt-3">
+       
+        <div class="col-md-6">
+          <label for="contactName" class="form-label">{{ 'smartagent.smartAgent.contact.contactName' | translate
+            }}</label><span class="text-danger">*</span>
+          <input type="text" formControlName="contactName" class="form-control custom-input" id="contactName"
+            placeholder="" value="" [ngClass]="{'is-invalid': submitted && f.contactName.errors}">
+          <div *ngIf="submitted && f.contactName.errors" class="invalid-feedback">
+            <div *ngIf="f.contactName.errors.required">{{ 'smartagent.smartAgent.contact.contactName' | translate }} is
+              required</div>
+          </div>
+        </div>
+
+        <div class="col-md-6 nz-select">
+          <label for="contactPhone" class="form-label">{{ 'smartagent.smartAgent.contact.contactPhone' | translate
+            }}</label><span class="text-danger">*</span>
+          <div class="input-group mb-3">
+            <div class="col ">
+              <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear > 
+              <nz-option nzLabel="+91"
+                nzValue="91"></nz-option> 
+            </nz-select>
+
+            </div>
+            <div class="col border-start">
+              <input type="number" maxlength="4" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+               class="form-control custom-input" formControlName="contactCode" onkeydown="return event.keyCode !== 69"
+                value="" [ngClass]="{'is-invalid': submitted && f.contactCode.errors}">
+                <div *ngIf="submitted && f.contactCode.errors" class="invalid-feedback d-flex">
+                  <div *ngIf="f.contactCode.errors.required">{{ 'smartagent.smartAgent.contact.contactPhone' | translate }}
+                    is required</div>
+                    <div *ngIf="f.contactCode.errors.pattern">{{'error.err_only_number' | translate}}</div>
+                  <div *ngIf="f.contactCode.errors.maxlength">{{'error.err_maxlength4' | translate}}</div>
+                </div>
+            </div>
+            <div class="col border-start">
+              <input  type="number" maxlength="11" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+               id="contactPhone" class="form-control custom-input" formControlName="contactPhone" value="" onkeydown="return event.keyCode !== 69"
+              [ngClass]="{'is-invalid': submitted && f.contactPhone.errors}">
+              <div *ngIf="submitted && f.contactPhone.errors" class="invalid-feedback d-flex" >
+                <div *ngIf="f.contactPhone.errors.required">{{ 'smartagent.smartAgent.contact.contactPhone' | translate }}
+                  is required</div>
+                <div *ngIf="f.contactPhone.errors.pattern">{{'error.err_only_number' | translate}}</div>
+                <div *ngIf="f.contactPhone.errors.maxlength">{{'error.err_maxlength11' | translate}}</div>
+              </div>
+            </div>
+           
+          
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="contactEmail " class="form-label">{{ 'smartagent.smartAgent.contact.contactEmail' | translate
+            }}</label><span class="text-danger">*</span>
+          <input type="text" formControlName="contactEmail" class="form-control custom-input" id="contactEmail "
+            placeholder="" value="" [ngClass]="{'is-invalid': submitted && f.contactEmail.errors}">
+          <div *ngIf="submitted && f.contactEmail.errors" class="invalid-feedback">
+            <div *ngIf="f.contactEmail.errors.required">{{ 'smartagent.smartAgent.contact.contactEmail' | translate }}
+              is required</div>
+            <div *ngIf="f.contactEmail.errors.pattern">{{'error.err_valid_email' | translate}}</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label for="contactRemarks " class="form-label">{{ 'smartagent.smartAgent.contact.contactRemarks' | translate
+            }}</label>
+          <input type="text" formControlName="contactRemarks" class="form-control custom-input" id="contactRemarks "
+            placeholder="" value="">
+        </div>
+        <div class="col-md-12">
+          <button type="submit" class="btn btn-outline-primary float-end mt-3" *ngIf="!editMode">Save</button>
+          <button type="submit" class="btn btn-outline-primary float-end mt-3" *ngIf="editMode">Update</button>
+
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

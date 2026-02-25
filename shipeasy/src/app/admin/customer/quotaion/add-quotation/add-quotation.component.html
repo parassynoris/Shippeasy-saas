@@ -1,0 +1,979 @@
+<div class="container mb-4">
+    <div class="row py-2 align-items-baseline">
+        <div class="col-6">
+            <h5 class="heading--h3  new-text-color-wt font-16">Inquiry</h5>
+        </div>
+        <div class="col-6 text-end">
+            <!-- <a data-bs-toggle="modal" data-bs-target="#search"
+                        class="heading--button color--secondary need-help" (click)="openWebChat()">
+                        Need Help?
+                    </a> -->
+            <button class="btn btn-outline-primary btn-lg float-end" appBackButton>Back</button>
+        </div>
+    </div>
+
+    <form [formGroup]="quotationform" class="wrap-qform">
+        <div class="qoutation-from-grid">
+            <div>
+                <label class="heading--formlabel text-uppercase color--black d-block text-start" for="date">Freight Type
+                    <span class="text-danger">*</span></label>
+                <div class="input-container input-field">
+                    <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="shipment_Type"
+                        (ngModelChange)="setselect($event)">
+                        <nz-option *ngFor="let test of shipmentTypes" [nzLabel]="test?.typeName"
+                            [nzValue]="test?.systemtypeId"></nz-option>
+                    </nz-select>
+                    <div *ngIf=" quotationform.controls['shipment_Type'].errors &&
+                    quotationform.controls['shipment_Type'].touched" class="invalid-error">
+                        <div *ngIf="quotationform.controls['shipment_Type'].errors.required">Freight Type is
+                            required</div>
+                    </div>
+                </div>
+
+            </div>
+            <div *ngIf="(setType() !== 'land' && setType() !== 'air')">
+                <label class="heading--formlabel text-uppercase color--black d-block text-start" for="from">
+                    Origin <span class="text-danger">*</span>
+                </label>
+                <div class="wrap-ngx-sets input-field">
+                    <div class="wrap-input">
+                        <ng-autocomplete (keydown)="setValueOrigin($event)" [data]="locationData" [initialValue]="''" [searchKeyword]="'portName'"
+                            formControlName="from" placeholder="Enter Port" [itemTemplate]="itemTemplate"
+                            [notFoundTemplate]="notFoundTemplate" (inputChanged)="onLocationSearch($event)">
+                        </ng-autocomplete>
+                        <ng-template #itemTemplate let-item>
+                            <a [innerHTML]="item.portName"></a>
+                        </ng-template>
+                        <ng-template #notFoundTemplate let-notFound>
+                            <div>No location Found</div>
+                        </ng-template>
+                    </div>
+                    <span *ngIf="quotationform.controls['from'].errors && quotationform.controls['from'].touched"
+                        class="invalid-error">
+                        <span *ngIf="quotationform.controls['from'].errors.required">{{ errorMessage }}</span>
+                    </span>
+                </div>
+            </div>
+            <div *ngIf="setType() === 'land'">
+                <label class="heading--formlabel text-uppercase color--black d-block text-start" for="from">
+                    Origin <span class="text-danger">*</span>
+                </label>
+                <div class="wrap-ngx-sets input-field">
+                    <div class="wrap-input">
+                        <ng-autocomplete (keydown)="setValueOrigin($event)" [data]="locationData" [initialValue]="''" [searchKeyword]="'portName'"
+                            formControlName="from" placeholder="Enter City" [itemTemplate]="itemTemplate"
+                            [notFoundTemplate]="notFoundTemplate" (inputChanged)="onLocationSearch($event)">
+                        </ng-autocomplete>
+                        <ng-template #itemTemplate let-item>
+                            <a [innerHTML]="item.portName"></a>
+                        </ng-template>
+                        <ng-template #notFoundTemplate let-notFound>
+                            <div>No location Found</div>
+                        </ng-template>
+                    </div>
+                    <span *ngIf="quotationform.controls['from'].errors && quotationform.controls['from'].touched"
+                        class="invalid-error">
+                        <span *ngIf="quotationform.controls['from'].errors.required">{{ errorMessage  }}</span>
+                    </span>
+                </div>
+            </div>
+
+            <div *ngIf="setType() === 'air'">
+                <label class="heading--formlabel text-uppercase color--black d-block text-start" for="from">
+                    Origin <span class="text-danger">*</span>
+                </label>
+                <div class="wrap-ngx-sets input-field">
+                    <div class="wrap-input">
+                        <ng-autocomplete (keydown)="setValueOrigin($event)" [data]="locationData" [initialValue]="''" [searchKeyword]="'portName'"
+                            formControlName="from" placeholder="Enter AirPort" [itemTemplate]="itemTemplate"
+                            [notFoundTemplate]="notFoundTemplate" (inputChanged)="onLocationSearch($event)">
+                        </ng-autocomplete>
+                        <ng-template #itemTemplate let-item>
+                            <a [innerHTML]="item.portName"></a>
+                        </ng-template>
+                        <ng-template #notFoundTemplate let-notFound>
+                            <div>No location Found</div>
+                        </ng-template>
+                    </div>
+                    <span *ngIf="quotationform.controls['from'].errors && quotationform.controls['from'].touched"
+                        class="invalid-error">
+                        <span *ngIf="quotationform.controls['from'].errors.required">{{ errorMessage }}</span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="pb-1">
+                <span class="btn-swap" (click)="
+                  onSwap(
+                    this.quotationform.value.fromType,
+                    this.quotationform.value.from,
+                    this.quotationform.value.toType,
+                    this.quotationform.value.to
+                  )
+                ">
+                    <em class="bi bi-arrow-left-right color--themecolor"></em>
+                </span>
+            </div>
+            <div *ngIf="setType() !== 'land' && setType() !== 'air'">
+                <label class="heading--formlabel text-uppercase color--black d-block text-start" for="to">Destination
+                    <span class="text-danger">*</span></label>
+                <div class=" wrap-ngx-sets input-field  ">
+                    <div class="wrap-input ">
+                        <ng-autocomplete  (keydown)="setValueDesti($event)" [data]="locationData" [initialValue]="" [searchKeyword]="'portName'"
+                            formControlName="to" placeholder="Enter Port" [itemTemplate]="itemTemplate"
+                            [notFoundTemplate]="notFoundTemplate" (inputChanged)="onLocationSearch($event)">
+                        </ng-autocomplete>
+                        <ng-template #itemTemplate let-item>
+                            <a [innerHTML]="item.portName"></a>
+                        </ng-template>
+
+                        <ng-template #notFoundTemplate let-notFound>
+                            <div>No location Found</div>
+                        </ng-template>
+
+                    </div>
+
+                    <span *ngIf="quotationform.controls['to'].errors && quotationform.controls['to'].touched"
+                        class="invalid-error">
+                        <span *ngIf="quotationform.controls['to'].errors.required">{{ errorMessage }}</span>
+                    </span>
+                </div>
+            </div>
+
+            <div *ngIf="setType() === 'land'">
+                <label class="heading--formlabel text-uppercase color--black d-block text-start" for="to">Destination
+                    <span class="text-danger">*</span></label>
+                <div class=" wrap-ngx-sets input-field  ">
+                    <div class="wrap-input ">
+                        <ng-autocomplete  (keydown)="setValueDesti($event)" [data]="locationData" [initialValue]="" [searchKeyword]="'portName'"
+                            formControlName="to" placeholder="Enter City" [itemTemplate]="itemTemplate"
+                            [notFoundTemplate]="notFoundTemplate" (inputChanged)="onLocationSearch($event)">
+                        </ng-autocomplete>
+                        <ng-template #itemTemplate let-item>
+                            <a [innerHTML]="item.portName"></a>
+                        </ng-template>
+
+                        <ng-template #notFoundTemplate let-notFound>
+                            <div>No location Found</div>
+                        </ng-template>
+
+                    </div>
+
+                        <span *ngIf="quotationform.controls['to'].errors && quotationform.controls['to'].touched" class="invalid-error">
+                            <span *ngIf="quotationform.controls['to'].errors.required">{{ errorMessagedest}}</span>
+                          </span>
+                </div>
+            </div>
+
+            <div *ngIf="setType() === 'air'">
+                <label class="heading--formlabel text-uppercase color--black d-block text-start" for="to">Destination
+                    <span class="text-danger">*</span></label>
+                <div class=" wrap-ngx-sets input-field  ">
+                    <div class="wrap-input ">
+                        <ng-autocomplete  (keydown)="setValueDesti($event)" [data]="locationData" [initialValue]="" [searchKeyword]="'portName'"
+                            formControlName="to" placeholder="Enter AirPort" [itemTemplate]="itemTemplate"
+                            [notFoundTemplate]="notFoundTemplate" (inputChanged)="onLocationSearch($event)">
+                        </ng-autocomplete>
+                        <ng-template #itemTemplate let-item>
+                            <a [innerHTML]="item.portName"></a>
+                        </ng-template>
+
+                        <ng-template #notFoundTemplate let-notFound>
+                            <div>No location Found</div>
+                        </ng-template>
+
+                    </div>
+
+                    <span *ngIf="quotationform.controls['to'].errors && quotationform.controls['to'].touched"
+                        class="invalid-error">
+                        <span *ngIf="quotationform.controls['to'].errors.required">{{ errorMessage }}</span>
+                    </span>
+                </div>
+            </div>
+            <div>
+                <label class="heading--formlabel text-uppercase color--black d-block text-start" for="date">Load
+                    <span class="text-danger">*</span></label>
+                <div class="input-container input-field">
+
+                    <input type="text" formControlName="load" readonly (click)="toggleDropdown()">
+                    <div *ngIf=" quotationform.controls['load'].errors &&
+                                quotationform.controls['load'].touched" class="invalid-error">
+                        <span *ngIf="quotationform.controls['load'].errors.required"> Please
+                            Select Load
+                        </span>
+                    </div>
+                    <div class="dropdown"
+                        *ngIf="isDropdownOpen && this.quotationform.value?.shipment_Type!== getTypeId('Rail') && this.quotationform.value?.shipment_Type"
+                        [ngClass]="{ 'dropdowns': this.types === 'loose' || this.types === 'PTL' ||this.types === 'LCL' }">
+                        <div class="d-flex justify-content-center"
+                            *ngIf="this.quotationform.value?.shipment_Type === getTypeId('Air')">
+                            <div class="d-flex mr-3">
+                                <input type="radio" formControlName="loadTypeID" id="loose" name="fav_language"
+                                    value="loose" class="w-0" (change)="dropdownchange('loose')">
+                                <label for="loose" class="mb-0 ml-1">Loose</label>
+                            </div>
+                            <div class="d-flex">
+                                <input type="radio" formControlName="loadTypeID" id="container" name="fav_language"
+                                    value="ULD container" class="w-0" (change)="dropdownchange('ULD container')">
+                                <label for="container" class="mb-0 ml-1">ULD Container </label><br>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center"
+                            *ngIf="this.quotationform.value?.shipment_Type === getTypeId('Ocean')">
+                            <div class="d-flex mr-3">
+                                <input type="radio" formControlName="loadTypeID" id="FCL" name="fav_language"
+                                    value="FCL" class="w-0" (change)="dropdownchange('FCL')">
+                                <label for="FCL" class="mb-0 ml-1">FCL</label>
+                            </div>
+                            <div class="d-flex mr-3">
+                                <input type="radio" formControlName="loadTypeID" id="LCL" name="fav_language"
+                                    value="LCL" class="w-0" (change)="dropdownchange('LCL')">
+                                <label for="LCL" class="mb-0 ml-1">LCL</label><br>
+                            </div>
+                            <div class="d-flex">
+                                <input type="radio" formControlName="loadTypeID" disabled id="breakbulk"
+                                    name="fav_language" value="breakbulk" class="w-0"
+                                    (change)="dropdownchange('breakbulk')">
+                                <label for="breakbulk" class="mb-0 ml-1">Breakbulk </label><br>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center"
+                            *ngIf="this.quotationform.value?.shipment_Type === getTypeId('Land')">
+                            <div class="d-flex mr-3">
+                                <input type="radio" formControlName="loadTypeID" id="FTL" name="fav_language"
+                                    value="FTL" class="w-0" (change)="dropdownchange('FTL')">
+                                <label for="FTL" class="mb-0 ml-1">FTL </label><br>
+                            </div>
+                            <div class="d-flex mr-3">
+                                <input type="radio" formControlName="loadTypeID" id="FCL" name="fav_language"
+                                    value="FCL" class="w-0" (change)="dropdownchange('FCL')">
+                                <label for="FCL" class="mb-0 ml-1">FCL</label>
+                            </div>
+                            <div class="d-flex mr-3">
+                                <input type="radio" formControlName="loadTypeID" id="PTL" name="fav_language"
+                                    value="PTL" class="w-0" (change)="dropdownchange('PTL')">
+                                <label for="PTL" class="mb-0 ml-1">{{isTransport ? 'PTL' : 'PTL'}}</label><br>
+                            </div>
+
+                        </div>
+                        <div *ngIf="types==='ULD container' || types==='FCL'">
+                            <div class="wrap-add-btn text-end">
+                                <a (click)="addNewBranch()" style="color: #007BFF;">
+                                    <em class="bi bi-plus"></em>
+                                    {{ "common.add" | translate }}
+                                </a>
+                            </div>
+                            <ng-container formArrayName="branch">
+                                <ng-container *ngFor="
+                             let branchForm of branch.controls;
+                             let i = index
+                           ">
+                                    <div class="grid-1" [formGroup]="branchForm">
+                                        <div class=" ">
+                                            <label class="form-label">Unit<span class="text-danger">*</span></label>
+                                            <input type="number" formControlName="unit"
+                                                [ngClass]="{ 'is-invalid': submitted && branchForm?.get('unit').errors }">
+                                        </div>
+                                        <div class="nz-select" *ngIf=" types==='FCL'">
+                                            <label class="form-label">Container type <span class="text-danger">*</span></label>
+                                            <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                nzPlaceHolder="Container Type" formControlName="containerType">
+                                                <nz-option *ngFor="let containerType of containerTypeList"
+                                                    [nzLabel]="containerType.typeName"
+                                                    [nzValue]="containerType.systemtypeId"></nz-option>
+                                            </nz-select>
+                                        </div>
+                                        <div class="nz-select" *ngIf="types==='ULD container'">
+                                            <label class="form-label">Container type  <span class="text-danger">*</span></label>
+                                            <nz-select class="form-select" nzShowSearch nzAllowClear
+                                                nzPlaceHolder="Container Type" formControlName="containerType">
+                                                <nz-option *ngFor="let containerType of ULDcontainerlist"
+                                                    [nzLabel]="containerType.typeName"
+                                                    [nzValue]="containerType.systemtypeId"></nz-option>
+                                            </nz-select>
+                                        </div>
+                                        <a *ngIf="i != 0" class="wrap-btn d-flex align-items-center"
+                                            (click)="deleteBranch(i)"><em
+                                                class="bi bi-trash color-pencil-red mt-4"></em></a>
+                                        <!-- <span *ngIf="!(branchForm?.get('containerType')?.value.length != 0 && branchForm?.get('unit').value)"  class="invalid-error">Please Select Unit and Type
+                                 </span>  -->
+
+                                    </div>
+                                </ng-container></ng-container>
+                            <div class="mt-2 text-end">
+                                <hr>
+                                <button (click)="closePopup()" class="btn1">
+                                    Close
+                                </button>
+                                <button class="btn btn-outline-primary" (click)="confirmLoad()">
+                                    Confirm Load
+                                </button>
+                            </div>
+                        </div>
+                        <div *ngIf="types === 'loose' || types === 'PTL' || types === 'LCL'">
+                            <div class="wrap-add-btn text-end">
+                                <a (click)="addNewBranchs()" style="color: #007BFF;">
+                                    <em class="bi bi-plus"></em>
+                                    {{ "common.add" | translate }}
+                                </a>
+                            </div>
+                            <ng-container formArrayName="branchs">
+                                <ng-container *ngFor="
+                             let branchForms of branchs.controls;
+                             let i = index
+                           ">
+                                    <div class=" align-items-center" [formGroup]="branchForms">
+                                        <div class="row align-items-baseline">
+                                            <div class="col-md-2">
+                                                <label class="form-label">Package type <span class="text-danger">*</span></label>
+                                                <nz-select
+                                                  class="form-select"
+                                                  nzShowSearch
+                                                  nzAllowClear
+                                                  formControlName="packageType"
+                                                  [ngClass]="{'is-invalid': submitted && branchForms.get('packageType').errors}">
+                                                  <nz-option nzLabel="Boxes" nzValue="Boxes"></nz-option>
+                                                  <nz-option nzLabel="Pallets" nzValue="Pallets"></nz-option>
+                                                </nz-select>
+                                                <div *ngIf="submitted && branchForms.get('packageType').errors" class="invalid-feedback">
+                                                  <div *ngIf="branchForms.get('packageType').errors?.required">This field is required</div>
+                                                </div>
+                                              </div>
+                                            <div class="col-md-2">
+                                                <label class="form-label">Unit <span
+                                                        class="text-danger">*</span></label>
+                                                <input type="number" formControlName="quantity"
+                                                    (change)="totalVolume($event, i)"
+                                                    [ngClass]="{ 'is-invalid': submitted && branchForms.get('quantity').errors }">
+
+                                            </div>
+                                            <div class="col-md-5">
+                                                <label class="form-label">Dimensions <span
+                                                        class="text-danger">*</span></label>
+                                                <div class="d-flex">
+                                                    <div class="form-field-section w-100">
+                                                        <input type="number" min="1" max="9999"
+                                                            class="form-control custom-input rounded-0 w-100"
+                                                            formControlName="length" (change)="totalVolume($event, i)"
+                                                            placeholder="L"
+                                                            [ngClass]="{ 'is-invalid': submitted && branchForms.get('length').errors }">
+                                                        <div *ngIf="submitted && branchForms.get('length').errors"
+                                                            class="invalid-feedback">
+                                                            <div *ngIf="branchForms.get('length').errors?.required">This
+                                                                field is required</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-field-section w-100">
+                                                        <input type="number" min="1" max="9999"
+                                                            class="form-control custom-input rounded-0 w-100"
+                                                            formControlName="width" (change)="totalVolume($event, i)"
+                                                            placeholder="W"
+                                                            [ngClass]="{'is-invalid': submitted && branchForms.get('width').errors}">
+                                                        <div *ngIf="submitted && branchForms.get('width').errors"
+                                                            class="invalid-feedback">
+                                                            <div *ngIf="branchForms.get('width').errors?.required">This
+                                                                field is required</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-field-section w-100">
+                                                        <input type="number" min="1" max="9999"
+                                                            class="form-control custom-input rounded-0 w-100"
+                                                            formControlName="height" (change)="totalVolume($event, i)"
+                                                            placeholder="H"
+                                                            [ngClass]="{'is-invalid': submitted && branchForms.get('height').errors}">
+                                                            <div *ngIf="submitted && branchForms.get('height').errors"
+                                                            class="invalid-feedback">
+                                                            <div *ngIf="branchForms.get('height').errors?.required">This
+                                                                field is required</div>
+                                                            </div>
+                                                    </div>
+                                                    <div class="form-field-section w-100">
+                                                        <nz-select class="nz-form-select nz-select-width"
+                                                            style="border-bottom: none !important; width: 100% !important;"
+                                                            formControlName="dimensionUnit"
+                                                            (ngModelChange)="totalVolume($event, i)" nzShowSearch
+                                                            nzAllowClear>
+                                                            <nz-option *ngFor="let containerType of lengthData"
+                                                                [nzLabel]="containerType?.uomShort"
+                                                                [nzValue]="containerType?.uomShort"></nz-option>
+                                                        </nz-select>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">Weight <span
+                                                        class="text-danger">*</span></label>
+                                                <div class="d-flex">
+                                                    <div class="pr-0">
+                                                        <div class="form-field-section">
+                                                            <input app appDecimalInput type="number" min="1" max="9999"
+                                                                class="form-control custom-input rounded-0"
+                                                                formControlName="weight" placeholder=""
+                                                                (change)="grossWeightpallet($event, i)"
+                                                                [ngClass]="{'is-invalid': submitted && branchForms.get('weight').errors}">
+                                                            <div *ngIf="submitted && branchForms.get('weight').errors"
+                                                                class="invalid-feedback">
+                                                                <div *ngIf="branchForms.get('weight').errors?.required">
+                                                                    This field is required</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="px-0">
+                                                        <div class="form-field-section">
+                                                            <nz-select class="nz-form-select nz-select-width"
+                                                                nzShowSearch nzAllowClear formControlName="unit"
+                                                                (ngModelChange)="grossWeightpallet($event, i)"
+                                                                style="border-bottom: none !important; width: 100% !important;">
+                                                                <nz-option [nzLabel]="'KG'"
+                                                                    [nzValue]="'KG'"></nz-option>
+                                                                <nz-option [nzLabel]="'LB'"
+                                                                    [nzValue]="'LB'"></nz-option>
+                                                            </nz-select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="">
+                                                        <a *ngIf="i != 0" class="wrap-btn d-flex align-items-center"
+                                                            (click)="deleteBranchs(i)"><em
+                                                                class="bi bi-trash color-pencil-red mt-1 ml-3"></em></a>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+
+                                        </div>
+                                        <div class="row mt-2 d-flex justify-content-end">
+
+                                            <div class="col-12 text-end mr-5">
+                                                <span *ngIf="branchForms.value?.volume"
+                                                    [appDecimalInput]="branchForms.value?.volume">
+                                                    Total Volume: {{branchForms.value?.volume | number:'1.2-2'}} CBM
+                                                </span>
+                                            </div>
+
+
+
+                                            <div class="col-md-4">
+                                                <div class="row align-items-center">
+
+                                                    <div class="col-6 d-none">
+                                                        <label class="form-label">Volume <span
+                                                                class="text-danger">*</span></label>
+                                                        <div class="d-flex">
+                                                            <div class="pr-0">
+                                                                <div class="form-field-section">
+                                                                    <input type="number" max="9999"
+                                                                        class="form-control custom-input rounded-0"
+                                                                        formControlName="volume" placeholder=""
+                                                                        [ngClass]="{'is-invalid': submitted && branchForms.get('volume').errors}">
+                                                                    <div *ngIf="submitted && branchForms.get('volume').errors"
+                                                                        class="invalid-feedback">
+                                                                        <div
+                                                                            *ngIf="branchForms.get('volume').errors?.required">
+                                                                            This field is required</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="px-0">
+                                                                <div class="form-field-section">
+                                                                    <nz-select class="nz-form-select nz-select-width"
+                                                                        nzShowSearch nzAllowClear
+                                                                        formControlName="volumes" [nzDisabled]="true"
+                                                                        style="border-bottom: none !important; width: 100% !important;">
+                                                                        <nz-option [nzLabel]="'CBM'"
+                                                                            [nzValue]="'CBM'"></nz-option>
+                                                                    </nz-select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <!-- <span *ngIf="!(branchForm?.get('containerType')?.value.length != 0 && branchForm?.get('unit').value)"  class="invalid-error">Please Select Unit and Type
+                                 </span>  -->
+
+                                    </div>
+                                </ng-container></ng-container>
+                            <div class="mt-2 text-end">
+                                <hr>
+                                <button (click)="closePopup()" class="btn1">
+                                    Close
+                                </button>
+                                <button class="btn btn-outline-primary" (click)="confirmLoad()">
+                                    Confirm Load
+                                </button>
+                            </div>
+                        </div>
+                        <div *ngIf="types==='FTL'">
+                            <div  class="wrap-add-btn text-end">
+                                <a (click)="addNewtrucks()" style="color: #007BFF;">
+                                    <em class="bi bi-plus"></em>
+                                    {{ "common.add" | translate }}
+                                </a>
+                            </div>
+                            <ng-container formArrayName="trucks">
+                                <ng-container *ngFor="
+                             let trucksForm of trucks.controls;
+                             let i = index
+                           ">
+                                    <div class="grid-1" [formGroup]="trucksForm">
+                                        <div>
+                                            <label class="form-label">Unit<span class="text-danger">*</span></label>
+                                            <input type="number" formControlName="trucksUnit"
+                                                [ngClass]="{ 'is-invalid': submitted && trucksForm?.get('trucksUnit').errors }">
+                                        </div>
+                                        <div class="nz-select">
+                                            <label class="form-label">Truck Type<span class="text-danger">*</span></label>
+                                            <nz-select class="form-select width" nzShowSearch nzAllowClear nzPlaceHolder="Truck Type"
+                                                formControlName="truckType">
+                                                <nz-option *ngFor="let truckType of truckTypeList" [nzLabel]="truckType.typeName"
+                                                    [nzValue]="truckType.systemtypeId"></nz-option>
+                                            </nz-select>
+                                        </div>
+                                        <a *ngIf="i != 0" class="wrap-btn d-flex align-items-center"
+                                            (click)="deletetrucks(i)"><em
+                                                class="bi bi-trash color-pencil-red mt-4"></em></a>
+                                    </div>
+                                </ng-container></ng-container>
+                            <div class="mt-2 text-end">
+                                <hr>
+                                <button (click)="closePopup()" class="btn1">
+                                    Close
+                                </button>
+                                <button class="btn btn-outline-primary" (click)="confirmLoad()">
+                                    Confirm Load
+                                </button>
+                            </div>
+                        </div>
+                        <!-- For future use FWL Load type -->
+
+                        <!-- <div *ngIf="this.quotationform.value?.shipment_Type === getTypeId('Rail')">
+                         <div class="wrap-add-btn text-end">
+                             <a class="" (click)="addNewwegon()"><em
+                                     class="bi bi-plus text-secondary"></em> {{
+                                 "common.add" | translate
+                                 }} </a>
+                         </div>
+                         <ng-container formArrayName="wegon">
+                             <ng-container *ngFor="
+                             let wegonForm of wegon.controls;
+                             let i = index
+                           ">
+                                 <div class="grid-1" [formGroup]="wegonForm">
+                                     <div class=" ">
+                                         <label class="form-label">Unit<span
+                                                 class="text-danger">*</span></label>
+                                         <input type="number" formControlName="wegonunit"
+                                             [ngClass]="{ 'is-invalid': submitted && wegonForm?.get('wegonunit').errors }">
+                                     </div>
+                                     <div class=" ">
+                                         <label class="form-label">Wagon Type<span
+                                                 class="text-danger">*</span></label>
+                                        <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Wegon Type"   formControlName="wegonType">
+                                         <nz-option *ngFor="let wegonType of wagonTypeList" [nzLabel]="wegonType.typeName"
+                                           [nzValue]="wegonType.systemtypeId"></nz-option>
+                                       </nz-select>
+                                     </div>
+                                     <a *ngIf="i != 0" class="wrap-btn"
+                                         (click)="deletewegon(i)"><em
+                                             class="bi bi-trash color-pencil-red"></em></a>
+
+                                 </div>
+                             </ng-container></ng-container>
+                         <div class="mt-2 text-end">
+                             <hr>
+                             <button (click)="CancelLoad()" class="btn1">
+                                 Cancel
+                             </button>
+                             <button class="btn btn-outline-primary" (click)="conirmLoad()">
+                                 Confirm Load
+                             </button>
+                         </div>
+                        </div> -->
+                    </div>
+                </div>
+
+
+            </div>
+
+
+        </div>
+        <div class="text-center">
+            <div class="mb-2" *ngIf="this.quotationform.value?.shipment_Type !== getTypeId('Land')">
+                <button class="btn btn-primary-outline" style="padding: 3px 3px 3px 8px !important;"
+                    (click)="searchquotation();seeDetailsView=false">
+                    Search <em class="bi bi-small bi-search mx-1"></em>
+                </button>
+            </div>
+            <div class="mb-2" *ngIf="this.quotationform.value?.shipment_Type === getTypeId('Land')">
+                <button class="btn btn-primary-outline" style="padding: 3px 3px 3px 3px !important;"
+                    (click)="sendQuotation();">Send Request
+                </button>
+            </div>
+        </div>
+    </form>
+
+
+    <div class="bg--bgprimary mt-5 bg-white">
+        <div class=" py-3">
+            <div class="row mx-1">
+
+                <div class="align-items-center py-4 bg-whites rounded" *ngIf="isapidata1 && quoteratelist.length === 0">
+                    <div class="heading--h2 color--label text-center break-line fs-6">
+                        <!-- <app-loader></app-loader> -->
+                        {{ error }}
+                    </div>
+                </div>
+                <div class="col-lg-3 desktop" *ngIf="!seeDetailsView">
+                    <div class="row g-0">
+                        <div *ngIf="isapidata">
+                            <div class="col b-bottom border--bordercolor mt-4 px-0" *ngIf="setType() !== 'air'">
+                                <span class="heading--labelsmall color--black text-uppercase">Shipping
+                                    Line</span>
+                            </div>
+                            <div class="col b-bottom border--bordercolor mt-4 px-0" *ngIf="setType() === 'air'">
+                                <span class="heading--labelsmall color--black text-uppercase">AIR
+                                    Line</span>
+                            </div>
+
+                            <div class="col-12 my-2 p-0 pl-2">
+                                <div class="row">
+                                    <div class="col-6 my-2 custom-checkbox">
+                                        <input type="checkbox" [id]="'alltype'" class="hidden" autocomplete="off"
+                                            [checked]="alltype" (change)="
+                      handleChangeFilter($event, 'shippingLine', 'alltype')
+                    " />
+                                        <label class="heading--smalltitle color--black mx-2" [for]="'alltype'">All
+                                        </label>
+                                    </div>
+
+                                    <div class="col-6 my-2 custom-checkbox"
+                                        *ngFor="let item of filters?.shippingLine; let i = index">
+                                        <input type="checkbox" [id]="'custom' + i" class="hidden" autocomplete="off"
+                                            (change)="handleChangeFilter($event, 'shippingLine', item)" />
+                                        <label class="heading--smalltitle color--black mx-2" [for]="'custom' + i">{{
+                                            item?.shippingLineName }}</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col b-bottom border--bordercolor mt-4 px-0">
+                                <span class="heading--labelsmall color--black text-uppercase">Customs
+                                    clearance</span>
+                            </div>
+
+                            <div class="col-12 my-2">
+                                <div class="row">
+                                    <div class="col-6 my-2"
+                                        *ngFor="let item of filters?.customclearance; let i = index">
+                                        <input type="checkbox" [id]="'custom' + i"
+                                            (change)="handleChangeFilter($event, 'customsclearance', item)" />
+                                        <label class="text--smalltext color--black mx-2" [for]="'custom' + i">{{
+                                            item?.typeName }}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-lg-9" *ngIf="!seeDetailsView">
+                    <div class="align-items-center py-5" *ngIf="isapidata && quoteratelist.length === 0">
+                        <div class="heading--h2 color--label text-center break-line">
+                            <!-- <app-loader></app-loader> -->
+                            <!-- {{ error }} -->
+                        </div>
+                    </div>
+                    <div class="card ids-card my-card my-4 my-sm-2" *ngFor="
+                          let quoterate of quoteratelist
+                            | paginate
+                              : {
+                                  itemsPerPage: 5,
+                                  currentPage: pagination,
+                                  totalItems: quoteratelist.length
+                                }
+                        ">
+                        <div class="row g-0">
+                            <div class="col-lg-8">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12 desktop">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <span class="heading--formlabel new-text-color-wt">{{
+                                                        quoterate?.fromPort?.portName
+                                                        }}</span>
+                                                </div>
+                                                <div class="col text-center">
+                                                    <img *ngIf="setType() !== 'air'"
+                                                        src="../../../../../assets/img/icons/Union.svg" alt="image" />
+                                                    <img *ngIf="setType() === 'air'" style="height: 18px;"
+                                                        src="../../../../../assets/img/icons/icons8-flight-50.png"
+                                                        alt="image" />
+                                                </div>
+                                                <div class="col text-end">
+                                                    <span class="heading--formlabel text-end new-text-color-wt">{{
+                                                        quoterate?.toPort?.portName }}</span>
+                                                </div>
+                                                <div class="col-lg-12 col-3">
+                                                    <div class="row g-0">
+                                                        <div class="col-auto">
+                                                            <span class="circles bg--themecolor"></span>
+                                                        </div>
+                                                        <div class="col">
+                                                            <span class="bar"></span>
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <span class="circles bg--themecolor"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 d-flex justify-content-center">
+                                                    <div class="text-center heading--formlabel new-text-color-wt">
+                                                        <span>{{quoterate?.cargoType}}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 mobile">
+                                            <div class="row g-0">
+                                                <div class="col-12">
+                                                    <div class="m-0 p-0">
+                                                        <span class="circles bg--themecolor">
+                                                        </span>
+                                                        <span class="mx-2 heading--formlabel new-text-color-wt">{{
+                                                            quoterate?.fromPort?.portName
+                                                            }}</span>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-12 my-2">
+                                                    <img class="mt-2 ship" *ngIf="setType() !== 'air'"
+                                                        src="../../../../../assets/img/icons/Union.svg" alt="image" />
+                                                        <img class="mt-2 ship" *ngIf="setType() === 'air'" style="height: 18px;"
+                                                        src="../../../../../assets/img/icons/icons8-flight-50.png" alt="image" />
+
+                                                </div>
+                                                <div class="col-12">
+                                                    <span class="circles bg--themecolor">
+                                                    </span>
+                                                    <span class="mx-2 heading--formlabel new-text-color-wt">{{
+                                                        quoterate?.toPort?.portName
+                                                        }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-lg-12">
+                                            <div class="row">
+                                                <div class="col-12 col-lg-8 text-lg-start mt-3 p-1"
+                                                    *ngIf="!(typesSearch === 'loose' || typesSearch === 'LCL')">
+                                                    <button type="button" class=" btn-secondary-yellow"
+                                                        *ngFor="let ct of quoterate?.containerType">
+                                                        <span class="heading--formlabel">{{
+                                                            ct?.containerSize
+                                                            ? ct?.containerSize
+                                                            : "N/A"
+                                                            }}</span>
+                                                    </button>
+                                                </div>
+                                                <div class="col-12 col-lg-8 text-lg-start mt-3 p-1"
+                                                    *ngIf="typesSearch === 'loose' || typesSearch === 'LCL'">
+                                                    <button type="button" class=" btn-secondary-yellow">
+                                                        <span class="heading--formlabel"> Transit Time - {{
+                                                            quoterate?.transitTime?.max
+                                                            ? quoterate?.transitTime?.max
+                                                            : "N/A"
+                                                            }}</span>
+                                                    </button>
+                                                </div>
+                                                <!-- <div class="col-lg-4 text-lg-end my-auto p-1">
+                                                            <span class="color--label heading--smalltitle">CO2
+                                                                Emission</span>
+                                                            <span class="mx-2 color--black text--subtext">{{
+                                                                (iscontainer40(quoterate?.containerCode)
+                                                                ? co2container40
+                                                                : co2container20
+                                                                ) | number
+                                                                }}
+                                                                T
+                                                            </span>
+                                                        </div> -->
+                                                <div class="col-lg-4 text-lg-end my-auto p-1"
+                                                    *ngIf="setType() !== 'air'">
+                                                    <span class="color--black heading--formlabel">Shipping
+                                                        Line-</span>
+                                                    <span
+                                                        class="mx-2  color--label heading--smalltitle font-10">{{quoterate?.shippingLineName
+                                                        }}</span>
+                                                </div>
+                                                <div class="col-lg-4 text-lg-end my-auto p-1"
+                                                    *ngIf="setType() === 'air'">
+                                                    <span class="color--black heading--formlabel">Air
+                                                        Line</span>
+                                                    <span class="mx-2  color--label heading--smalltitle"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-sm-12 p-1">
+                                <div class="bg--bgExplore h-100">
+                                    <div class="row">
+                                        <div class="col-12 col-lg-12 mx-lg-auto text-center mt-4"
+                                            *ngIf="!(typesSearch === 'loose' || typesSearch === 'PTL' || typesSearch === 'LCL')">
+                                            <h6 class="heading--h6 text-center new-text-color-wt">
+
+                                                {{ (quoterate?.cost || 0) | number : '1.2-2' |
+                                                customCurrency : customerCurrency
+                                                }}
+                                            </h6>
+                                            <div class="semibold--smalltitle text-center new-text-color-wt">
+                                                {{ ( quoterate?.cost * exRate || 0 ) | number : '1.2-2' |
+                                                customCurrency : agentCurrency
+                                                }}
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-lg-12 mx-lg-auto text-center mt-4"
+                                            *ngIf="typesSearch === 'loose' || typesSearch === 'PTL' || typesSearch === 'LCL'">
+                                            <h6 class="heading--h6 text-center new-text-color-wt">
+                                                {{ (quoterate?.priceEstimate?.min || 0 ) | number : '1.2-2' |
+                                                customCurrency : customerCurrency
+                                                }} - {{ (quoterate?.priceEstimate?.max || 0 ) | number : '1.2-2' |
+                                                customCurrency : customerCurrency
+                                                }}
+                                            </h6>
+                                            <div class="semibold--smalltitle text-center new-text-color-wt">
+
+                                                {{ ( quoterate?.priceEstimate?.min* exRate || 0) | number : '1.2-2' |
+                                                customCurrency : agentCurrency
+                                                }} - {{ ( quoterate?.priceEstimate?.max * exRate || 0) | number :
+                                                '1.2-2' |
+                                                customCurrency : agentCurrency
+                                                }}
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-center col-12 my-3">
+                                            <button class="btn btn-primary-outline" (click)="sendQuotation(quoterate)">
+                                                Request Quotation
+                                            </button>
+                                            <button
+                                                *ngIf="typesSearch === 'FCL' || typesSearch ==='ULD container'"
+                                                class="btn btn-primary-outline" (click)="seeDetails(quoterate)">
+                                                See Details
+                                            </button>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="pagination" class="text-center my-3">
+                        <pagination-controls class="paginations" previousLabel="Prev" nextLabel="Next" [autoHide]="true"
+                            (pageChange)="pageonchange($event)"></pagination-controls>
+                    </div>
+                </div>
+
+                <div class="col-lg-12" *ngIf="seeDetailsView">
+                    <div class="row ">
+                        <div class="col-lg-6">
+                            <span class="heading--h3 color--black font-16">Charge Details</span>
+                        </div>
+                        <div class="col-lg-6 text-end">
+                            <button class="btn backbutton" (click)="seeDetailsView = !seeDetailsView">Back</button>
+                        </div>
+
+                        <div class="col-lg-12 col-md-6 d-flex flex-column"
+                            *ngIf="!(typesSearch === 'loose' || typesSearch === 'PTL' || typesSearch === 'LCL')">
+                            <span class="heading--h5 color--black d-flex align-items-center font-12">
+                                Shipping Line -
+                                {{allChargeDetails?.shippingLineName }} </span>
+                        </div>
+                        <div class="col-lg-12 col-md-6 d-flex flex-column"
+                            *ngFor="let key  of allChargeDetails?.charges">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="heading--h5 color--black d-flex align-items-center font-12">
+                                    Container Type -
+                                    {{key?.conatiner}}  |
+                                    Unit -
+                                    {{key?.rates[0].qty}} </span>
+                                <div class="create-custom-switch-design">
+                                    <p>
+                                        <label class="toggleSwitch" (change)="showCustomerCurr = !showCustomerCurr">
+                                            <input type="checkbox" [value]="showCustomerCurr" />
+                                            <span>
+                                                <span>{{agentCurrency}}</span>
+                                                <span>{{customerCurrency}}</span>
+                                            </span>
+                                            <a></a>
+                                        </label>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center pb-2"
+                                *ngFor="let item of key?.rates">
+                                <span class="heading--label color--black d-flex align-items-center font-12"
+                                    style="white-space: nowrap">{{ item?.name }}</span>
+                                <!-- <div class="line self-line mx-3"></div> -->
+                                <span *ngIf="showCustomerCurr"
+                                    class="heading--label color--black d-flex align-items-center font-12">{{
+                                    ( item?.price * exRate || 0)
+                                    | number : '1.2-2' | customCurrency:
+                                    customerCurrency }} </span>
+                                <span *ngIf="!showCustomerCurr"
+                                    class="heading--label color--black d-flex align-items-center font-12">{{
+                                    item?.price
+                                    | number : '1.2-2' | customCurrency:
+                                    agentCurrency }} </span>
+
+
+                            </div>
+                        </div>
+                        <div class="col-lg-12  ">
+                            <hr>
+                        </div>
+
+                        <div class="col-lg-12 col-md-6 d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-center pb-2">
+                                <span class="heading--h4 color--black d-flex align-items-center font-12"
+                                    style="white-space: nowrap">Total -</span>
+                                <!-- <div class="line self-line mx-3"></div> -->
+                                <div class="text-end">
+                                    <span *ngIf="showCustomerCurr" class="heading--h4 color--black text-end font-12">{{
+                                        ( allChargeDetails?.cost * exRate || 0)
+                                        | number : '1.2-2' | customCurrency:
+                                        customerCurrency
+                                        }}
+                                    </span>
+                                    <span *ngIf="!showCustomerCurr" class="heading--h4 color--black text-end font-12"> {{
+                                        allChargeDetails?.cost
+                                        | number : '1.2-2' | customCurrency:
+                                        agentCurrency
+                                        }}
+                                    </span>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-3 d-flex justify-content-center text-center">
+                            <button class="btn btn-outline-secondary "
+                                (click)="seeDetailsView = !seeDetailsView">Cancel</button>
+                            <button class="btn btn-outline-primary " (click)="sendQuotation(allChargeDetails)">Request
+                                Quotation</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

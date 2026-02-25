@@ -1,0 +1,312 @@
+<div class="modal-content nz-allSelect">
+  <div class="modal-header">
+    <h4 class="modal-title">
+      <ng-container *ngIf="!isData">
+        {{ "common.add" | translate }} {{voyageType | titlecase }}
+        Voyage</ng-container>
+      <ng-container *ngIf="isData">
+        {{ "common.edit" | translate }} {{voyageType |titlecase }}
+        Voyage</ng-container>
+    </h4>
+    <button type="button" class="btn-close shadow-none float-end" (click)="onClose()"
+                aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+      <form [formGroup]="addVesselVoyage" class="row g-3 mt-3">
+        <div class="col-md-4 nz-select">
+          <label class="form-label">{{
+            "smartagent.smartAgent.vesselvoyage.VESSEL_NAME" | translate
+            }}</label><span class="text-danger">*</span>
+          <nz-select class="form-select " nzShowSearch nzAllowClear nzPlaceHolder="Vesse Name" formControlName="vesselId"
+            [ngClass]="{'is-invalid': submitted && f.vesselId.errors}">
+            <nz-option *ngFor="let data of  vesselMaster"
+              [nzLabel]="data?.vesselName" [nzValue]="data?.vesselId"></nz-option>
+          </nz-select>
+          <div *ngIf="submitted && f.vesselId.errors" class="invalid-feedback">
+            <div *ngIf="f.vesselId.errors.required">
+              {{ "smartagent.smartAgent.vesselvoyage.VESSEL_NAME" | translate }}
+              {{ "common.isRequired" | translate }}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Terminal Voyage Number</label><span class="text-danger">*</span>
+          <input formControlName="voyageNumber" type="text" class="form-control custom-input" placeholder="Voyage Number"
+            [ngClass]="{'is-invalid': submitted && f.voyageNumber.errors}" (change)="setVoyageNumber($event)"appCapitalizeFirst>
+          <div *ngIf="submitted && f.voyageNumber.errors" class="invalid-feedback">
+            <div *ngIf="f.voyageNumber.errors.required">{{ 'smartagent.smartAgent.vesselvoyage.Port_VOYAGE_NUMBER' |
+              translate
+              }} {{ 'common.isRequired' | translate }}</div>
+          </div>
+        </div>
+        <div class="col-md-4 nz-select">
+          <label class="form-label">Port/Terminal</label>
+          <nz-select class="form-select " nzShowSearch nzAllowClear nzPlaceHolder="Port Terminal" formControlName="port"
+            [ngClass]="{'is-invalid': submitted && f.port.errors}">
+            <nz-option *ngFor="let data of  portData"
+              [nzLabel]="data?.portDetails?.portName" [nzValue]="data?.portId"></nz-option>
+          </nz-select>
+        </div>
+        <div class="col-md-4" *ngIf="false">
+          <label class="form-label">{{
+            "smartagent.smartAgent.vesselvoyage.Terminal" | translate
+            }}</label>
+          <select formControlName="terminal_name" class="form-select custom-input">
+            <ng-container *ngFor="let port of portData">
+              <option *ngFor="let term of port.terminal" [value]="term?.name">
+                {{ term?.name }}
+              </option>
+            </ng-container>
+          </select>
+        </div>
+        <div class="col-md-4 wrap-modal-datepicker">
+          <label class="form-label">{{
+            "smartagent.smartAgent.vesselvoyage.ETA" | translate
+            }}</label><span class="text-danger">*</span>
+          <nz-date-picker class="form-select custom-input" nzFormat="dd-MM-yyyy" formControlName="eta"
+            [nzDisabledDate]="disabledStartDate">
+          </nz-date-picker>
+          <div *ngIf="submitted && f.eta.errors" class="error-msg">
+            <div *ngIf="f.eta.errors.required">Eta {{ 'common.isRequired' | translate }}</div>
+          </div>
+        </div>
+        <div class="col-md-4 wrap-modal-datepicker">
+          <label class="form-label">{{
+            "smartagent.smartAgent.vesselvoyage.ETD" | translate
+            }}</label><span class="text-danger">*</span>
+          <nz-date-picker class="form-select custom-input" nzFormat="dd-MM-yyyy" formControlName="etd"
+            [nzDisabledDate]="disabledEndDate">
+          </nz-date-picker>
+          <div *ngIf="submitted && f.etd.errors" class="error-msg">
+            <div *ngIf="f.etd.errors.required">Etd {{ 'common.isRequired' | translate }}</div>
+          </div>
+        </div>
+        <div class="col-md-4 wrap-modal-datepicker">
+          <label class="form-label">{{
+            "smartagent.smartAgent.vesselvoyage.SI_Cutoff_Date" | translate
+            }}</label><span class="text-danger">*</span>
+          <nz-date-picker class="form-select custom-input" nzFormat="dd-MM-yyyy" formControlName="siCutOffDate"
+            [nzDisabledDate]="disabledSiCuttoff">
+          </nz-date-picker>
+          <div *ngIf="submitted && f.siCutOffDate.errors" class="error-msg">
+            <div *ngIf="f.siCutOffDate.errors.required">SI CutOff Date {{ 'common.isRequired' | translate }}</div>
+          </div>
+        </div>
+        <div class="col-md-4 wrap-modal-datepicker">
+          <label class="form-label">{{
+            "smartagent.smartAgent.vesselvoyage.ATA" | translate
+            }}</label>
+          <nz-date-picker [nzDisabledDate]="disabledStartDate1" class="form-select custom-input" nzFormat="dd-MM-yyyy"
+            formControlName="ata">
+          </nz-date-picker>
+        </div>
+        <div class="col-md-4 wrap-modal-datepicker">
+          <label class="form-label">ATD/SOB</label>
+          <nz-date-picker class="form-select custom-input" nzFormat="dd-MM-yyyy" formControlName="atd"
+            [nzDisabledDate]="disabledEndDate1">
+          </nz-date-picker>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">{{
+            "smartagent.smartAgent.vesselvoyage.PC_Number" | translate
+            }}</label>
+          <input formControlName="pc_number" type="number" class="form-control custom-input" placeholder="PC Number" />
+        </div>
+        <div class="col-md-4 wrap-modal-datepicker">
+          <label class="form-label">{{
+            "smartagent.smartAgent.vesselvoyage.PC_Date" | translate
+            }}</label>
+          <nz-date-picker class="form-select custom-input" nzFormat="dd-MM-yyyy" formControlName="pc_date">
+          </nz-date-picker>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Rotation</label>
+          <input formControlName="rotation" type="text" class="form-control custom-input"
+            [ngClass]="{'is-invalid': submitted && f.rotation.errors}" placeholder="Rotation">
+          <div *ngIf="submitted && f.rotation.errors" class="invalid-feedback">
+            <div *ngIf="f.rotation.errors.required">{{ 'smartagent.smartAgent.vesselvoyage.Port_VOYAGE_NUMBER' |
+              translate
+              }} {{ 'common.isRequired' | translate }}</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">VIA No</label>
+          <input formControlName="viaNo" type="text" class="form-control custom-input"
+            [ngClass]="{'is-invalid': submitted && f.viaNo.errors}" placeholder="VIA Number">
+          <div *ngIf="submitted && f.viaNo.errors" class="invalid-feedback">
+            <div *ngIf="f.viaNo.errors.required">{{ 'smartagent.smartAgent.vesselvoyage.Port_VOYAGE_NUMBER' |
+              translate
+              }} {{ 'common.isRequired' | translate }}</div>
+          </div>
+        </div>
+        <ng-container *ngIf="voyageType === 'import'">
+          <div class="col-md-4">
+            <label class="form-label">IGM No</label>
+            <input formControlName="igmNo" type="text" class="form-control custom-input"
+              [ngClass]="{'is-invalid': submitted && f.igmNo.errors}">
+            <div *ngIf="submitted && f.igmNo.errors" class="invalid-feedback">
+              <div *ngIf="f.igmNo.errors.required">{{ 'smartagent.smartAgent.vesselvoyage.Port_VOYAGE_NUMBER' |
+                translate
+                }} {{ 'common.isRequired' | translate }}</div>
+            </div>
+          </div>
+          <div class="col-md-4 wrap-modal-datepicker">
+            <label class="form-label">IGM Date</label>
+            <nz-date-picker class="form-select custom-input"  nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss"
+             formControlName="igmDate">
+            </nz-date-picker>
+            <div *ngIf="submitted && f.igmDate.errors" class="error-msg">
+              <div *ngIf="f.igmDate.errors.required">SI CutOff Date {{ 'common.isRequired' | translate }}</div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="voyageType === 'export'">
+          <div class="col-md-4">
+            <label class="form-label">EGM No</label>
+            <input formControlName="egmNo" type="text" class="form-control custom-input"
+              [ngClass]="{'is-invalid': submitted && f.egmNo.errors}" placeholder="EGM No">
+            <div *ngIf="submitted && f.egmNo.errors" class="invalid-feedback">
+              <div *ngIf="f.egmNo.errors.required">{{ 'smartagent.smartAgent.vesselvoyage.Port_VOYAGE_NUMBER' |
+                translate
+                }} {{ 'common.isRequired' | translate }}</div>
+            </div>
+          </div>
+          <div class="col-md-4 wrap-modal-datepicker">
+            <label class="form-label">EGM Date</label>
+            <nz-date-picker class="form-select custom-input"  nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss"
+            formControlName="egmDate">
+            </nz-date-picker>
+            <div *ngIf="submitted && f.egmDate.errors" class="error-msg">
+              <div *ngIf="f.egmDate.errors.required">SI CutOff Date {{ 'common.isRequired' | translate }}</div>
+            </div>
+          </div>
+
+        </ng-container>
+        <div class="col-md-4 mobile-view-input-alignment mt-5">
+          <div class="taggle form-check form-switch">
+            <label class="form-check-label mr-1" for="flexSwitchCheckDefault">{{
+              "smartagent.smartAgent.vesselvoyage.status" | translate
+              }}</label>
+            <input class="form-check-input" formControlName="status" type="checkbox" id="flexSwitchCheckDefault" />
+          </div>
+        </div>
+
+        <div  class="table-with-gheading">
+          <div class="wrap-table-area">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2">
+                  <div class="mt-2" *ngIf="this.isType !== 'show'">
+                    <a class="new-action btn btn-outline-primary" (click)="addVoyage()">{{
+                      "common.add" | translate
+                      }}</a>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12" *ngIf="voyage.controls.length > 0">
+                <div class="table-design example-container mat-elevation-z8">
+                  <table aria-describedby="mytable" class="table-bordered">
+                    <thead>
+                      <tr class="field-name">
+                        <th style="width: 25%" scope="col">
+                          {{
+                          "smartagent.smartAgent.vesselvoyage.Shipping_Line"
+                          | translate
+                          }}
+                        </th>
+                        <th style="width: 20%" scope="col">
+                          Line {{
+                          "smartagent.smartAgent.vesselvoyage.Shipping_Line_VOYAGE_NUMBER"
+                          | translate
+                          }}
+                        </th>
+
+                        <th style="width: 25%" scope="col">
+                          {{
+                          "smartagent.smartAgent.vesselvoyage.Currency"
+                          | translate
+                          }}
+                        </th>
+                        <th style="width: 20%" scope="col">
+                          {{
+                          "smartagent.smartAgent.vesselvoyage.Exchange_Rate"
+                          | translate
+                          }}
+                        </th>
+                        <th style="width: 10%" scope="col"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container formArrayName="voyage">
+                        <ng-container *ngFor="
+                            let voyageForm of voyage.controls;
+                            let i = index
+                          ">
+                          <tr [formGroup]="voyageForm">
+                            <td class="nz-select">
+                              <nz-select class="form-select " nzShowSearch nzAllowClear nzPlaceHolder="Shipping Line" formControlName="shipping_line">
+                                <nz-option *ngFor="let data of  shippinglineData"
+                                  [nzLabel]="data?.name" [nzValue]="data?.shippinglineId"></nz-option>
+                              </nz-select>
+
+                              <div *ngIf="submitted && voyageForm?.get('shipping_line')?.errors" class="invalid-feedback">
+                                <div *ngIf="voyageForm?.get('shipping_line')?.errors.required">Shipping Line is required</div>
+                              </div>
+
+                            </td>
+                            <td>
+                              <input formControlName="voyage_number" type="text" class="form-control custom-input" placeholder="Voyage Number"
+                                 />
+                                 <div *ngIf="submitted && voyageForm?.get('voyage_number')?.errors" class="invalid-feedback">
+                                  <div *ngIf="voyageForm?.get('voyage_number')?.errors.required">Voyage no. is required</div>
+                                </div>
+                            </td>
+                            <td class="nz-select">
+                              <nz-select (ngModelChange)="setExchange($event , i)" class="form-select " nzShowSearch
+                                nzAllowClear nzPlaceHolder="Currency" formControlName="currency">
+                                <nz-option *ngFor="let data of  currencyData"
+                                  [nzLabel]="data?.currencyShortName"
+                                  [nzValue]="data?.currencyId"></nz-option>
+                              </nz-select>
+                            </td>
+                            <td>
+                              <input formControlName="exchageRate" type="number" class="form-control custom-input" placeholder="Exchage Rate" />
+                            </td>
+
+                            <td class="action-field">
+                              <span *ngIf="voyage.controls?.length > 1" nz-tooltip nzTooltipTitle="{{
+                                  'common.delete' | translate
+                                }}" class="mtop"><a routerLink="" (click)="deleteVoyage(i)"><em
+                                  class="bi bi-trash color-pencil-red"></em></a>
+                              </span>
+                            </td>
+                          </tr>
+                        </ng-container>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <button class="btn1 btn-lg float-end" (click)="onClose()">
+            {{ "common.cancel" | translate }}
+          </button>
+          <button type="submit" (click)="saveVesselVoyage()" class="btn btn-outline-primary btn-lg float-end"
+            *ngIf="this.isType !== 'show'">
+            <ng-container *ngIf="!isData">
+              {{ "common.save" | translate }}
+            </ng-container>
+            <ng-container *ngIf="isData">
+              {{ "common.update" | translate }}
+            </ng-container>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,177 @@
+// @import '../../../../../assets/styles/mixins/global.scss';
+
+// .btn-style button{
+//   @include new-heading-12;
+//   padding: 4px 12px;
+//   border-radius: 50px;
+// }
+// .input-txt {
+//   font-size: 12px;
+//   color: var(--theme-black-300);
+//   border: 1px solid #d1d1d1;
+//   font-weight: 400;
+// }
+// .divider {
+//   border-left: 3px solid grey;
+//   height: 30px;
+//   opacity: .2;
+// }
+
+//   @media only screen and (max-width: 760px),
+//     (min-device-width: 768px) and (max-device-width: 1024px) {
+//     /*
+//     Label the data
+//     */
+//     td:nth-of-type(1):before {
+//       content: "SHIPEASY Ref. No.";
+//     }
+//     td:nth-of-type(2):before {
+//       content: "Quote No.";
+//     }
+//     td:nth-of-type(3):before {
+//       content: "Tank Type";
+//     }
+//     td:nth-of-type(4):before {
+//       content: "Location";
+//     }
+//     td:nth-of-type(5):before {
+//       content: "Shipper";
+//     }
+//     td:nth-of-type(6):before {
+//       content: "Consignee";
+//     }
+//     td:nth-of-type(7):before {
+//       content: "Product";
+//     }
+//     td:nth-of-type(8):before {
+//       content: "Move On";
+//     }
+//     td:nth-of-type(9):before {
+//       content: "Move Type";
+//     }
+//     td:nth-of-type(10):before {
+//       content: "Shipment Type";
+//     }
+//     td:nth-of-type(11):before {
+//       content: "Notify Party";
+//     }
+//     td:nth-of-type(12):before {
+//       content: "Invoice Party";
+//     }
+//     td:nth-of-type(13):before {
+//       content: "Shipping Line";
+//     }
+//     td:nth-of-type(14):before {
+//       content: "Status";
+//     }
+//     td:nth-of-type(15):before {
+//       content: "Action";
+//     }
+//   }
+//   .tableFixHead td:nth-child(2),
+// .tableFixHead th:nth-child(2) {
+//   position: sticky;
+//   left: 106px;
+//   z-index: 1;
+//   background-color: white;
+// }
+// .tableFixHead td:nth-child(3),
+// .tableFixHead th:nth-child(3){
+//   position: sticky;
+//   left: 230px;
+//   z-index: 1 !important;
+//   background-color: white;
+// }
+
+// .menuright {
+//   position: fixed;
+//   right: 0;
+//   top: 40%;
+//   width: 10px;
+//   margin: -2.5em 0 0 0;
+//   z-index: 5;
+//   background: var(--theme-white-background-color);
+//   color: var(--link-text-color);
+//   font-weight: bold;
+//   text-align: left;
+//   padding: 10px 30px 10px 0px;
+//   box-shadow: var(--theme-shadow);
+//   border-radius: 10px 0 0px 10px;
+//   li {
+//     width: 30px;
+//     border-bottom: 1px solid var(--theme-border-color-light);
+//     list-style: none;
+//     padding: 0px 0 0px 3px;
+//     &:last-child {
+//       border-bottom: 0;
+//     }
+//     i,em{
+//       font-size: 12px;
+//     }
+//   }
+// }
+
+// .tableFixHead td:nth-child(2),
+// .tableFixHead th:nth-child(2) {
+//   position: sticky;
+//   left: 100px;
+//   z-index: 3;
+//   background-color: white;
+// }
+
+// .tableFixHead td:nth-child(3),
+// .tableFixHead th:nth-child(3) {
+//   position: sticky;
+//   left: 239px;
+//   z-index: 3 !important;
+//   background-color: white;
+// }
+// .btn-outline-primary{
+//   padding: 7px 9px 4px 9px;
+// }
+// .accordion-body {
+// padding: 10px 0 !important;
+// }
+// .table-design { 
+//   min-height: calc(100vh - 300px);
+//   max-height: calc(100vh - 300px);
+// }
+
+// .draft-background {
+//   color: grey !important;
+// }
+
+// .enquiry-background {
+//  color: #007BFF !important;
+// }
+
+// .batch-background {
+//   color: green !important;
+// }
+// .em-icon.dots-color-change:hover {
+//   color: black !important; /* Change the icon color to black */
+//   border: 3px solid black !important;
+//   border-radius: 4px !important;
+// }
+
+// .font-13{
+//   font-size: 13px;
+//   font-weight: 500;
+// }
+// .mat-table .mat-row .mat-cell.air {
+// color: #a4880a !important; 
+// font-weight: 500;
+// }
+
+// .mat-table .mat-row .mat-cell.land {
+// color: #ad563b !important;
+// font-weight: 500;
+// }
+
+// .mat-table .mat-row .mat-cell.ocean {
+// color: #008080 !important; 
+// font-weight: 500;
+// }
+// .w-150{
+//   width: 150px;
+// }

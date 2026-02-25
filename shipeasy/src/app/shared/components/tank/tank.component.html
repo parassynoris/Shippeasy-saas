@@ -1,0 +1,179 @@
+<div class="wrap-table-area">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="float-clear-mobile-view d-flex flex-column flex-sm-row gap-3 float-start search-section">
+        <div class="input-group custom-input">
+          <input type="text" class="form-control" placeholder="Search" aria-label="Search">
+        </div>
+      </div>
+      <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2 ">
+        <div class="mt-2">
+          <a class="new-action" (click)="openGenerateDeliveryOrder()">{{ 'stolt.batch.container.generate_delivery_order' | translate }}</a>
+        </div>
+        <div class="mt-2">
+          <a class="new-action" data-bs-toggle="modal" data-bs-target="#containerModal">{{ 'stolt.batch.container.add_new_container' | translate }}</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="table-responsive without-space">
+        <table aria-describedby="mytable" class="gfg">
+          <thead>
+            <tr class="field-name">
+              <th scope="col"  class="freeze">{{ 'stolt.batch.container.container_no' | translate }}</th>
+              <th scope="col">{{ 'stolt.batch.container.product' | translate }}</th>
+              <th scope="col">{{ 'stolt.batch.container.container_type' | translate }}</th>
+              <th scope="col">{{ 'stolt.batch.container.imo_type' | translate }}</th>
+              <th scope="col">{{ 'stolt.batch.container.container_weight' | translate }}</th>
+              <th scope="col">{{ 'stolt.batch.container.haz_ref' | translate }}</th>
+              <th scope="col">{{ 'stolt.batch.container.corgo_type' | translate }}</th>
+              <th scope="col">{{ 'stolt.batch.container.egvm_no' | translate }}</th>
+              <th scope="col">{{ 'stolt.batch.container.bl_no' | translate }}</th>
+              <th scope="col">{{ 'stolt.batch.container.bl_no_date' | translate }}</th>
+              <th scope="col">{{ 'stolt.batch.container.shipping_bill' | translate }}</th>
+              <th scope="col">{{ 'stolt.batch.container.shipping_bill_date' | translate }}</th>
+              <th scope="col">{{ 'stolt.batch.container.do' | translate }}</th>
+              <th scope="col">{{ 'stolt.batch.container.do_date' | translate }}</th>
+              <th scope="col">{{ 'stolt.batch.container.sob' | translate }}</th>
+              <th scope="col">{{ 'stolt.batch.container.vessel' | translate }}</th><th scope="col"></th>
+              <th scope="col">{{ 'stolt.batch.container.voyage' | translate }}</th>             
+              <th scope="col">{{ 'stolt.batch.container.bond_no' | translate }}</th>
+              <th scope="col">{{ 'stolt.batch.container.igm_no' | translate }}</th>
+              <th scope="col">{{ 'stolt.batch.container.status' | translate }}</th>              
+              <th scope="col">{{ 'stolt.batch.container.depot_out' | translate }}</th>
+              <th scope="col">{{ 'stolt.batch.container.factory_in' | translate }}</th>
+              <th scope="col">{{ 'stolt.batch.container.factory_out' | translate }}</th>
+              <th scope="col">{{ 'stolt.batch.container.terminal_in' | translate }}</th>              
+              <th scope="col">{{ 'stolt.batch.container.reject' | translate }}</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+             <tr *ngIf="isNew" class="wrap-form-field">
+              <td> <input type="text" class="form-control custom-input" placeholder="" value=""></td>              
+              <td> <input type="text" class="form-control custom-input" placeholder="" value=""></td>
+              <td> <input type="text" class="form-control custom-input" placeholder="" value=""></td>              
+              <td> <input type="text" class="form-control custom-input" placeholder="" value=""></td>              
+              <td> <input type="text" class="form-control custom-input" placeholder="" value=""></td>              
+              <td> <input type="text" class="form-control custom-input" placeholder="" value=""></td>              
+              <td> <input type="text" class="form-control custom-input" placeholder="" value=""></td>              
+              <td> <input type="text" class="form-control custom-input" placeholder="" value=""></td>             
+              <td> <input type="text" class="form-control custom-input" placeholder="" value=""></td>             
+              <td> <input type="text" class="form-control custom-input" placeholder="" value=""></td>             
+              <td> <input type="text" class="form-control custom-input" placeholder="" value=""></td>
+              <td class="action-field">
+                <span class="mtop"><a (click)="onSavenew()"><em class="bi bi-check-square"></em></a>
+                </span>
+                <span class="mtop"><a (click)="onSavenew()"><em class="bi bi-trash color-pencil-red"></em></a>
+                </span>
+              </td>
+            </tr>
+            <ng-template ngFor let-container [ngForOf]="tankData">
+              <tr class="wrap-inner-table wrap-form-field ">
+                <td class="freezes">{{container.no}}</td>
+                <td>{{container.product}}                  
+                    <div>
+                      <input type="text" class="form-control custom-input" placeholder="Product" value="1234">
+                    </div>                  
+                </td>
+                <td>{{container.type}}</td>
+                <td >{{container.imo_type}}                  
+                   <input type="text" class="form-control custom-input" placeholder="IMO Type" value="1234">             
+                </td>
+                <td>{{container.weight}}</td>
+                <td>{{container.haz_ref}}
+                  <input type="text" class="form-control custom-input" placeholder="HAZ Ref" value="1234">
+                </td>
+                <td>{{container.corgo_type}}</td>
+                <td>{{container.egvm_no}}
+                  <input type="text" class="form-control custom-input" placeholder="EGVM No" value="1234">
+                </td>
+                <td>{{container.bl_no}}</td>
+                <td>{{container.bl_no_date}}                 
+                    <input type="date" class="form-control custom-input" id="date" />                  
+                </td>
+                <td>{{container.shipping_bil}}</td>
+                <td>{{container.shipping_bil_date}}
+                  <input type="date" class="form-control custom-input" id="date" /> 
+                </td>
+                <td>{{container.do}}</td>
+                <td>{{container.do_date}}
+                  <input type="date" class="form-control custom-input" id="date" /> 
+                </td>
+                <td>{{container.sob}}</td>
+                <td colspan="2">{{container.vessel}}
+                  <input type="text" class="form-control custom-input" placeholder="Vessel" value="KYOTO EXPRESS">
+                </td>
+                <td>{{container.voyage}}
+                <td>{{container.bond_no}}</td>                
+                <td class="px-2">{{container.igm_no}}
+                  <input type="text" class="form-control custom-input" placeholder="IGM No" value="754333">
+                </td>
+                <td>{{container.status}}</td>
+                <td>{{container.depot_out}}</td>
+                <td>{{container.factory_in}}</td>
+                <td>{{container.factory_out}}</td>
+                <td>{{container.terminal_in}}</td>                
+                <td>{{container.reject}}</td>
+                <td class="action-field">
+                  <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop"><a><em class="bi bi-pencil color-pencil-red"></em></a>
+                  </span>
+                  <span nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}" class="mtop"><a><em class="bi bi-trash color-pencil-red"></em></a>
+                  </span>
+                  <span nz-tooltip nzTooltipTitle="{{ 'common.checkbox' | translate }}" class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+                    <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                  </span>
+                </td>
+              </tr>
+             </ng-template>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="wrap-form-field">
+  <div class="form-group wrap-form-action">
+    <button class="btn1 btn-lg float-end" (click)="onClose()">
+      {{ 'common.cancel' | translate }}
+    </button>
+    <button class="btn btn-outline-primary btn-lg float-end" type="submit">
+      {{ 'common.ok' | translate }}
+    </button>
+  </div>
+</div>
+
+<div class="modal fade" id="containerModal" tabindex="-1" aria-labelledby="containerModalLabel" aria-hidden="true">
+  <app-container (SaveNew)="onSelectContainer($event)"></app-container>
+</div>
+
+<div class="modal fade" id="deliveryOrderModal" tabindex="-1" aria-labelledby="deliveryOrderModalLabel" aria-hidden="true">
+  <app-delivery-order [isForm]="true"></app-delivery-order>
+</div>
+
+<div class="modal fade" id="documentModal" tabindex="-1" aria-labelledby="documentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg custom-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="documentModalLabel">{{ 'stolt.batch.container.upload_document.upload_documents' | translate }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <app-document></app-document>
+      </div>
+      <div class="modal-footer">
+        <div class="wrap-form-field">
+          <div class="form-group wrap-form-action">
+            <button class="btn1 btn-lg float-end" data-bs-dismiss="modal" type="submit">
+              {{ 'common.cancel' | translate }}
+            </button>
+            <button class="btn btn-outline-primary btn-lg float-end" data-bs-dismiss="modal" type="submit">
+              {{ 'common.select' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

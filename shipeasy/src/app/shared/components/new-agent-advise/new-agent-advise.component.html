@@ -1,0 +1,1331 @@
+<form [formGroup]="newenquiryForm" class="mb-5">
+  <div class="text-end">
+    <button *ngIf="!callapseALL" (click)="callapseALL = !callapseALL" #expand class="btn expand-all px-0" type="button"
+      data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded="false"
+      [attr.aria-controls]="expandKeys">Expand All</button>
+ 
+    <button *ngIf="callapseALL" (click)="callapseALL = !callapseALL" class="btn expand-all px-0" type="button"
+      data-bs-toggle="collapse" data-bs-target="#demo" aria-expanded="true" aria-controls="demo">
+      Collapse All
+    </button>
+  </div>
+
+
+  <div class="accordion form-accordian mb-5" id="accordionPanelsStayOpenExample">
+    
+    <div class="accordion-item"> 
+      <h2 class="accordion-header" id="datails">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsDetails"
+          aria-expanded="true" aria-controls="panelsDetails">
+          {{ 'stolt.enquiry.new.basic_details' | translate }}
+        </button>
+      </h2>
+      <div id="panelsDetails" class=" multi-collapse accordion-collapse collapse show" aria-labelledby="datails"
+        data-bs-parent="#accordionPanelsStayOpenExample">
+        <div class="accordion-body">
+          <div class="wrap-form-field">
+            <div class="row align-items-center">
+              <div class="col-md-12">
+                <div class="row g-4">
+                  <div class="col-md-3" *ngIf="!isAddMode">
+                    <label class="form-label">Agent Advise No.<span
+                        class="text-danger">*</span></label>
+                    <input [attr.disabled]="isEditMode? 'disabled' : null" type="text" formControlName="agentNo"
+                      class="form-control custom-input"> 
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="form-label">Ref. No.<span
+                        class="text-danger">*</span></label>
+                    <input [attr.disabled]="isEditMode? 'disabled' : null" type="text" formControlName="uniqueRefNo"
+                      class="form-control custom-input">
+                    <div *ngIf="submitted && f.uniqueRefNo.errors" class="invalid-feedback">
+                      <div *ngIf="f.uniqueRefNo.errors.required">{{ 'stolt.enquiry.new.unique_ref' | translate }} is
+                        required</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="mb-0 p-0 form-label">{{ 'stolt.enquiry.new.agentAdvice'  | translate }}<span
+                      class="text-danger">*</span></label>
+                    <mat-form-field appearance="outline" class="custom-date-picker">
+                     <div class="d-flex align-items-center  w-100">
+                      <input matInput
+                      [matDatepicker]="pickerEta" formControlName="agentAdviceDate" class="h-0" [disabled]="isEditMode"/>
+                    <mat-datepicker-toggle matSuffix [for]="pickerEta"></mat-datepicker-toggle>
+                     </div>
+                      <mat-datepicker #pickerEta></mat-datepicker>
+                    </mat-form-field>
+                    <mat-error>
+                      <div *ngIf=" submitted && f?.agentAdviceDate?.errors?.required" class="set-error-msg">{{ 'stolt.enquiry.new.agentAdvice' 
+                      |
+                      translate }}
+                      is required
+                    </div>
+                  </mat-error>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="form-label">SHIPEASY Reference <span class="text-danger">*</span></label>
+                    <input [attr.disabled]="isEditMode? 'disabled' : null" formControlName="stcReference" type="text"
+                      class="form-control custom-input" [ngClass]="{'is-invalid': submitted && f.stcReference.errors}">
+                    <div *ngIf="submitted && f.stcReference.errors" class="invalid-feedback">
+                      <div *ngIf="f.stcReference.errors.required">{{ 'stolt.enquiry.new.stcQuatation' | translate }} is
+                        required</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Quote Number<span class="text-danger">*</span></label>
+                    <input [attr.disabled]="isEditMode? 'disabled' : null" formControlName="stcQutationNo" type="text"
+                      class="form-control custom-input" [ngClass]="{'is-invalid': submitted && f.stcQutationNo.errors}">
+                    <div *ngIf="submitted && f.stcQutationNo.errors" class="invalid-feedback">
+                      <div *ngIf="f.stcQutationNo.errors.required">{{ 'stolt.enquiry.new.stcQuatation' | translate }} is
+                        required</div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3" *ngIf="false">
+                    <label class="form-label">Move No<span class="text-danger">*</span></label>
+                    <input  formControlName="moveNo" type="text"
+                      class="form-control custom-input" [ngClass]="{'is-invalid': submitted && f.moveNo.errors}">
+                    <div *ngIf="submitted && f.moveNo.errors" class="invalid-feedback">
+                      <div *ngIf="f.moveNo.errors.required">Move No is
+                        required</div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="form-label">Version No<span class="text-danger">*</span></label>
+                    <input [attr.disabled]="isEditMode? 'disabled' : null" formControlName="versionNo" type="text"
+                      class="form-control custom-input" [ngClass]="{'is-invalid': submitted && f.versionNo.errors}">
+                    <div *ngIf="submitted && f.versionNo.errors" class="invalid-feedback">
+                      <div *ngIf="f.versionNo.errors.required">Version No is
+                        required</div>
+                    </div>
+                  </div>
+              <div class="col-md-3" *ngIf="this.ReferencesList?.length > 0">
+                    <label class="form-label">References</label>
+                    <div class="table-responsive">
+                      <table aria-describedby="mytable" class="gfg">
+                        <thead>
+                          <tr class="field-name">
+                            <th scope="col">Type</th>
+                            <th scope="col">Value</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr class="collapse-ui" *ngFor="let data of ReferencesList">
+                            <td>{{data?.ReferenceCode?._text}}</td>
+                            <td>{{data?.ReferenceVal?._text}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+
+                <div class="col-md-3">
+                    <label class="form-label">Payment Term<span class="text-danger">*</span></label>
+                    <nz-select  class="form-select" nzShowSearch nzAllowClear
+                      formControlName="paymentTerm" [ngClass]="{'is-invalid': submitted && f.paymentTerm.errors}">
+                      <nz-option *ngFor="let shipper of paymentTermList" [nzLabel]="shipper.typeName"
+                        [nzValue]="shipper.systemtypeId"></nz-option>
+                    </nz-select>
+                    <div *ngIf="submitted && f.paymentTerm.errors" class="invalid-feedback">
+                      <div *ngIf="f.paymentTerm.errors.required">Payment Term is required
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="form-label">NOA Move Type<span class="text-danger">*</span></label>
+                    <nz-select  class="form-select" nzShowSearch nzAllowClear
+                      formControlName="moveType" [ngClass]="{'is-invalid': submitted && f.moveType.errors}">
+                      <nz-option *ngFor="let move of tanktypeList" [nzLabel]="move.typeName"
+                        [nzValue]="move.systemtypeId"></nz-option>
+                    </nz-select>
+                    <div *ngIf="submitted && f.moveType.errors" class="invalid-feedback">
+                      <div *ngIf="f.moveType.errors.required">Move Type is required
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">{{ 'stolt.enquiry.new.noOfContainer' | translate }} </label>
+                    <input [attr.disabled]="isEditMode? 'disabled' : null" formControlName="noOfContainer" class="form-control custom-input">
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="form-label">Destination</label>
+                
+                    <!-- <input  formControlName="destination" type="text"
+                      class="form-control custom-input" [ngClass]="{'is-invalid': submitted && f.destination.errors}"> -->
+
+                      <nz-select   class="form-select" nzShowSearch nzAllowClear
+                      formControlName="destination" [ngClass]="{'is-invalid': submitted && f.destination.errors}">
+                      <nz-option *ngFor="let loadPlace of  locationList "
+                        [nzLabel]="loadPlace.locationName" [nzValue]="loadPlace.locationId"></nz-option>
+                    </nz-select>
+
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="form-label">Origin</label>
+                    <!-- <input  formControlName="origin" type="text"
+                      class="form-control custom-input" [ngClass]="{'is-invalid': submitted && f.origin.errors}"> -->
+
+                      <nz-select  class="form-select" nzShowSearch nzAllowClear
+                      formControlName="origin" [ngClass]="{'is-invalid': submitted && f.origin.errors}">
+                      <nz-option *ngFor="let loadPlace of locationList"
+                        [nzLabel]="loadPlace.locationName " [nzValue]="loadPlace.locationId"></nz-option>
+                    </nz-select>
+
+                    <div *ngIf="submitted && f.origin.errors" class="invalid-feedback">
+                      <div *ngIf="f.origin.errors.required">Destination UN is
+                        required</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">{{ 'stolt.enquiry.new.shippingTerm' | translate }} <span
+                        class="text-danger">*</span></label>
+                    <nz-select  class="form-select" nzShowSearch nzAllowClear
+                      formControlName="shippping_term" [ngClass]="{'is-invalid': submitted && f.shippping_term.errors}">
+                      <nz-option *ngFor="let shippingTerm of shippingtermList" [nzLabel]="shippingTerm.typeName"
+                        [nzValue]="shippingTerm.systemtypeId"></nz-option>
+                    </nz-select>
+                    <div *ngIf="submitted && f.shippping_term.errors" class="invalid-feedback">
+                      <div *ngIf="f.shippping_term.errors.required">{{ 'stolt.enquiry.new.shippingTerm' | translate }}
+                        is required</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Trade Route </label>
+                    <input  formControlName="tradeRoute" type="text"
+                      class="form-control custom-input" [ngClass]="{'is-invalid': submitted && f.tradeRoute.errors}">
+                    <div *ngIf="submitted && f.tradeRoute.errors" class="invalid-feedback">
+                      <div *ngIf="f.tradeRoute.errors.required">Trade Route is
+                        required</div>
+                    </div>
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="route">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsRoute"
+          aria-expanded="false" aria-controls="panelsRoute">
+          {{ 'stolt.enquiry.new.routeVoyageDetails' | translate }}
+        </button>
+      </h2>
+      <div id="panelsRoute" class=" multi-collapse accordion-collapse collapse " aria-labelledby="route"
+        data-bs-parent="#accordionPanelsStayOpenExample">
+        <div class="accordion-body">
+          <div class="wrap-form-field">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="row g-4">
+                  <div class="col-md-3">
+                    <label class="form-label">Exit Port<span class="text-danger">*</span></label>
+                    <nz-select  class="form-select" nzShowSearch nzAllowClear
+                      formControlName="exitPort" [ngClass]="{'is-invalid': submitted && f.exitPort.errors}">
+                      <nz-option *ngFor="let port of portList" [nzLabel]="port.portDetails?.portName"
+                        [nzValue]="port.portId"></nz-option>
+                    </nz-select>
+                    <div *ngIf="submitted && f.exitPort.errors" class="invalid-feedback">
+                      <div *ngIf="f.exitPort.errors.required">Exit Port is
+                        required</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Exit Port UN Code<span class="text-danger">*</span> </label>
+                    <input  formControlName="exitPortUN" type="text"
+                      class="form-control custom-input" [ngClass]="{'is-invalid': submitted && f.exitPortUN.errors}">
+                    <div *ngIf="submitted && f.exitPortUN.errors" class="invalid-feedback">
+                      <div *ngIf="f.exitPortUN.errors.required">Exit Port UN is
+                        required</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="mb-0 p-0 form-label">Exit Date</label>
+                    <mat-form-field appearance="outline" class="custom-date-picker">
+                     <div class="d-flex align-items-center  w-100">
+                      <input matInput
+                      [matDatepicker]="pickerEta1" formControlName="exitPortDateEA" class="h-0"/>
+                    <mat-datepicker-toggle matSuffix [for]="pickerEta1"></mat-datepicker-toggle>
+                     </div>
+                      <mat-datepicker #pickerEta1></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Entry Port<span class="text-danger">*</span></label>
+                    <nz-select  class="form-select" nzShowSearch nzAllowClear
+                      formControlName="entryPort" [ngClass]="{'is-invalid': submitted && f.entryPort.errors}">
+                      <nz-option *ngFor="let port of portList" [nzLabel]="port.portDetails?.portName"
+                        [nzValue]="port.portId"></nz-option>
+                    </nz-select>
+                    <div *ngIf="submitted && f.entryPort.errors" class="invalid-feedback">
+                      <div *ngIf="f.entryPort.errors.required">Entry Port is
+                        required</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Entry Port UN Code<span class="text-danger">*</span> </label>
+                    <input  formControlName="entryPortUN" type="text"
+                      class="form-control custom-input" [ngClass]="{'is-invalid': submitted && f.entryPortUN.errors}">
+                    <div *ngIf="submitted && f.entryPortUN.errors" class="invalid-feedback">
+                      <div *ngIf="f.entryPortUN.errors.required">Entry Port UN Code is
+                        required</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="mb-0 p-0 form-label">Entry Date<span
+                      class="text-danger">*</span></label>
+                    <mat-form-field appearance="outline" class="custom-date-picker">
+                     <div class="d-flex align-items-center  w-100">
+                      <input matInput
+                      [matDatepicker]="pickerEta2" formControlName="entryPortDate" class="h-0"/>
+                    <mat-datepicker-toggle matSuffix [for]="pickerEta2"></mat-datepicker-toggle>
+                     </div>
+                      <mat-datepicker #pickerEta2></mat-datepicker>
+                    </mat-form-field>
+                    <mat-error>
+                      <div *ngIf=" submitted && f?.entryPortDate?.errors?.required" class="set-error-msg">Entry Port Date is
+                        required
+                    </div>
+                  </mat-error>
+                  </div>
+                  
+                <div class="col-md-3">
+                    <label class="form-label">Delivery Place</label>
+
+                    <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="deliveryPlace"
+                      [ngClass]="{'is-invalid': submitted && f.deliveryPlace.errors}">
+                      <nz-option *ngFor="let loadPlace of locationList" [nzLabel]="loadPlace.locationName "
+                        [nzValue]="loadPlace.locationId"></nz-option>
+                    </nz-select>
+                  </div>
+              
+                  <div class="col-md-3">
+                    <label class="form-label"> {{ 'stolt.enquiry.new.shippingLine' | translate }} <span
+                        class="text-danger">*</span></label>
+
+                    <nz-select  class="form-select" nzShowSearch nzAllowClear
+                      formControlName="shipping_line" [ngClass]="{'is-invalid': submitted && f.shipping_line.errors}">
+                      <nz-option *ngFor="let shippingLine of shippingLineList" [nzLabel]="shippingLine.name"
+                        [nzValue]="shippingLine.shippinglineId"></nz-option>
+                    </nz-select>
+                    <div *ngIf="submitted && f.shipping_line.errors" class="invalid-feedback">
+                      <div *ngIf="f.shipping_line.errors.required">{{ 'stolt.enquiry.new.shippingLine' | translate }} is
+                        required</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">B/L<span class="text-danger">*</span> </label>
+                    <input  formControlName="bol" type="text" class="form-control custom-input"
+                      [ngClass]="{'is-invalid': submitted && f.bol.errors}">
+                    <div *ngIf="submitted && f.bol.errors" class="invalid-feedback">
+                      <div *ngIf="f.bol.errors.required">BOL is
+                        required</div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="form-label">Main Vessel </label>
+                    <!-- <input  formControlName="mainVessel" type="text"
+                      class="form-control custom-input" [ngClass]="{'is-invalid': submitted && f.mainVessel.errors}"> -->
+
+                      <nz-select class="form-select" nzShowSearch nzAllowClear
+                      formControlName="mainVessel"
+                      [ngClass]="{'is-invalid': submitted && f.mainVessel.errors}">
+                      <nz-option *ngFor="let mainVessel of vesselList"
+                          [nzLabel]="mainVessel.vesselName"
+                          [nzValue]="mainVessel.vesselId"></nz-option>
+                  </nz-select>
+
+
+                  <div *ngIf="submitted && f.mainVessel.errors" class="invalid-feedback">
+                      <div *ngIf="f.mainVessel.errors.required">Main Vessel is
+                        required</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Main Voyage </label>
+                    <input  formControlName="mainVoyage" type="text"
+                      class="form-control custom-input" [ngClass]="{'is-invalid': submitted && f.mainVoyage.errors}">
+                   <div *ngIf="submitted && f.mainVoyage.errors" class="invalid-feedback">
+                      <div *ngIf="f.mainVoyage.errors.required">Main Voyage is
+                        required</div>
+                    </div>
+                  </div>
+ </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="Product">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#panelsProduct" aria-expanded="false" aria-controls="panelsProduct">
+          {{ 'stolt.enquiry.new.product' | translate }}
+        </button>
+      </h2>
+      <div id="panelsProduct" class=" multi-collapse accordion-collapse collapse " aria-labelledby="Product"
+        data-bs-parent="#accordionPanelsStayOpenExample">
+        <div class="accordion-body">
+          <div class="wrap-form-field">
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="row g-4">
+
+                  <div class="col-md-3">
+                    <label class="form-label">{{ 'stolt.enquiry.new.productName' | translate }} <span
+                        class="text-danger">*</span></label>
+                    <nz-select  class="form-select" nzShowSearch nzAllowClear
+                      formControlName="productName" (ngModelChange)="productData()"
+                      [ngClass]="{'is-invalid': submitted && f.productName.errors}">
+                      <nz-option *ngFor="let product of productList" nzLabel="{{product.productName}}"
+                        [nzValue]="product.productId"></nz-option>
+                    </nz-select>
+                    <div *ngIf="submitted && f.productName.errors" class="invalid-feedback">
+                      <div *ngIf="f.productName.errors.required">{{ 'stolt.enquiry.new.productName' | translate }} is
+                        required</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">{{ 'stolt.enquiry.new.properShippingName' | translate }} <span
+                        class="text-danger">*</span></label>
+                    <input  formControlName="proper_shipping_name" type="text"
+                      class="form-control custom-input"
+                      [ngClass]="{'is-invalid': submitted && f.proper_shipping_name.errors}">
+                    <div *ngIf="submitted && f.proper_shipping_name.errors" class="invalid-feedback">
+                      <div *ngIf="f.proper_shipping_name.errors.required">{{ 'stolt.enquiry.new.properShippingName' |
+                        translate }} is required</div>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <label class="form-label">{{ 'stolt.enquiry.new.imcoClass' | translate }} <span
+                        class="text-danger">*</span></label>
+                    <input  formControlName="imco_class" type="text"
+                      class="form-control custom-input" [ngClass]="{'is-invalid': submitted && f.imco_class.errors}">
+                 <div *ngIf="submitted && f.imco_class.errors" class="invalid-feedback">
+                      <div *ngIf="f.imco_class.errors.required">{{ 'stolt.enquiry.new.imcoClass' | translate }} is
+                        required</div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-2">
+                    <label class="form-label">UN No <span class="text-danger">*</span></label>
+                    <input  formControlName="un_no" type="text" class="form-control custom-input"
+                      [ngClass]="{'is-invalid': submitted && f.un_no.errors}">
+                    <div *ngIf="submitted && f.un_no.errors" class="invalid-feedback">
+                      <div *ngIf="f.un_no.errors.required">{{ 'stolt.enquiry.new.unNo' | translate }} is required
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">{{ 'stolt.enquiry.new.marinePollution' | translate }} <span
+                        class="text-danger">*</span> </label>
+                 
+                    <nz-select  class="form-select" nzShowSearch nzAllowClear
+                      formControlName="marine_pollution"
+                      [ngClass]="{'is-invalid': submitted && f.marine_pollution.errors}">
+                      <nz-option nzLabel="Yes" nzValue="Yes"></nz-option>
+                      <nz-option nzLabel="No" nzValue="No"></nz-option>
+                    </nz-select>
+
+                    <div *ngIf="submitted && f.marine_pollution.errors" class="invalid-feedback">
+                      <div *ngIf="f.marine_pollution.errors.required">{{ 'stolt.enquiry.new.marinePollution' |
+                        translate }} is required</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Packing Group</label>
+                    <input  formControlName="packing_group" type="text"
+                      class="form-control custom-input" [ngClass]="{'is-invalid': submitted && f.packing_group.errors}">
+                    <div *ngIf="submitted && f.packing_group.errors" class="invalid-feedback">
+                      <div *ngIf="f.packing_group.errors.required">{{ 'stolt.enquiry.new.packingGroup' | translate }}
+                        is required</div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-2">
+                    <label class="form-label">EMS Code </label>
+                    <input  formControlName="EMSCode" type="text"
+                      class="form-control custom-input" [ngClass]="{'is-invalid': submitted && f.EMSCode.errors}">
+                    <div *ngIf="submitted && f.EMSCode.errors" class="invalid-feedback">
+                      <div *ngIf="f.EMSCode.errors.required">EMS Code is required
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <label class="form-label">Specific Gravity<span class="text-danger">*</span></label>
+                    <input  formControlName="gravity" type="text"
+                      class="form-control custom-input" [ngClass]="{'is-invalid': submitted && f.gravity.errors}">
+                    <div *ngIf="submitted && f.gravity.errors" class="invalid-feedback">
+                      <div *ngIf="f.gravity.errors.required">Specific Gravity is required
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Flash Point<span class="text-danger">*</span></label>
+                    <input  formControlName="flashPoint" type="text"
+                      class="form-control custom-input" [ngClass]="{'is-invalid': submitted && f.flashPoint.errors}">
+                    <div *ngIf="submitted && f.flashPoint.errors" class="invalid-feedback">
+                      <div *ngIf="f.flashPoint.errors.required">flashPoint
+                        is required</div>
+                    </div>
+                  </div>
+
+
+
+                  <div class="col-md-2">
+                    <div class="form-check form-check-inline">
+                      <input  class="form-check-input" formControlName="Haz" type="checkbox"
+                        id="Reference">
+                      <label class="form-check-label" for="Reference">Haz</label>
+                    </div>
+                  </div>
+                
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="Shipper">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#panelsShipper" aria-expanded="false" aria-controls="panelsShipper">
+          Entity Details
+        </button>
+      </h2>
+      <div id="panelsShipper" class=" multi-collapse accordion-collapse collapse " aria-labelledby="Shipper"
+        data-bs-parent="#accordionPanelsStayOpenExample">
+        <div class="accordion-body">
+          <div class="wrap-form-field">
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="mt-2 text-end" *ngIf="!show">
+                  <a class="new-action " *ngIf="isAddMode" (click)="onOpenParty(AddParty)">Add Entity</a>
+                </div>
+                <div class="row">
+                  <div class="col-md-3" *ngFor="let party of partyArray let i=index">
+                    <div class="card my-3">
+                      <div class="card-header">
+                        <span>
+                          <strong>{{party.partyType | uppercase}}</strong>
+                          <a *ngIf="isAddMode"  class="mt-2 text-end"><em class="bi bi-pencil color-pencil-red" (click)="editEntity(party,AddParty,i)"></em> </a>
+                          <a *ngIf="isAddMode"  class="mt-2 text-end"><em class="bi bi-trash color-pencil-red" (click)="deleteEntity(party,content1,i)"></em> </a>
+                        </span>
+                        </div>
+                      <div class="card-body">
+                        <div class="card-text"><strong>Name :</strong> {{party.customerName}} ( {{party.partyCode}} )<br>
+                          <strong> AddressLine 1 :</strong> {{party.addressLine1}} <br *ngIf="party.addressLine2">
+                          <strong *ngIf="party.addressLine2">AddressLine 2: </strong>{{party.addressLine2}} <br *ngIf="party.addressLine3">
+                          <strong *ngIf="party.addressLine3">AddressLine 3: </strong> {{party.addressLine3}} <br>
+                          <strong> Country :</strong> {{party.country}} <br>
+                          <strong> State :</strong> {{party.state}} <br>
+                          <strong> City :</strong> {{party.city}} <br>
+                          <strong>Postal Code :</strong> {{party.postalCode}}
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+
+                  <table *ngIf="false" aria-describedby="mytable" class="gfg">
+                    <thead>
+                      <tr class="field-name">
+                        <th scope="col">Party Type</th>
+                        <th scope="col">Customer Name</th>
+                        <th scope="col">Party Code</th>
+                        <th scope="col">Addressline 1</th>
+                        <th scope="col">Addressline 2</th>
+                        <th scope="col">Addressline 3</th>
+                        <th scope="col">City</th>
+                        <th scope="col">Postal Code</th>
+                        <th scope="col">State</th>
+                        <th scope="col">Country</th>
+
+                      </tr>
+                    </thead>
+                    <tbody>
+
+
+                      <tr class="collapse-ui" *ngFor="let party of partyArray let i=index">
+
+                        <td>{{party.partyType}}</td>
+                        <td>{{party.customerName}}
+                        </td>
+                        <td>{{party.partyCode}}
+                        </td>
+                        <td>{{party.addressLine1}}
+                        </td>
+                        <td>{{party.addressLine2}}
+                        </td>
+                        <td>{{party.addressLine3}}
+                        </td>
+                        <td>{{party.city}}
+                        </td>
+                        <td>{{party.postalCode}}
+                        </td>
+                        <td>{{party.state}}
+                        </td>
+                        <td>{{party.country}}
+                        </td>
+
+
+
+
+
+                      </tr>
+                    </tbody>
+                  </table>
+                
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="Container">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#panelsContainer" aria-expanded="false" aria-controls="panelsContainer">
+          Container Details
+        </button>
+      </h2>
+      <div id="panelsContainer" class=" multi-collapse accordion-collapse collapse " aria-labelledby="Container"
+        data-bs-parent="#accordionPanelsStayOpenExample">
+        <div class="accordion-body">
+          <div class="wrap-form-field">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="mt-2 text-end" *ngIf="!show">
+                  <a *ngIf="isAddMode" class="new-action" (click)="onAddContainer(addContainer)">Add Container</a>
+                </div>
+                <div class="col-md-12">
+                  <div class="table-responsive">
+                    <form [formGroup]="containerForm">
+                      <ng-container formArrayName="containerDetails">
+                        <table aria-describedby="mytable" class="gfg">
+                          <thead>
+                            <tr class="field-name">
+                              <th scope="col">Container No</th>
+                              <th scope="col">Seal No</th>
+                              <th scope="col">Net Weight</th>
+                              <th scope="col">Gross Weight</th>
+                              <th scope="col">Weight UOM</th>
+                              <th scope="col">Manufacture Date</th>
+                             
+                              <th scope="col">Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+
+
+                            <tr class="collapse-ui" *ngFor="let container of containerData();let i=index ">
+                              <ng-container [formGroupName]="i">
+                                <td><input  class="custom-input w-100" type="text" formControlName="containerNo"></td>
+                              
+                                <td><input    class="custom-input w-100"type="text" formControlName="sealNo">
+                                </td>
+                                <td><input  class="custom-input w-100" type="text" formControlName="netWeight">
+                                </td>
+                                <td><input   class="custom-input w-100"type="text" formControlName="grossWeight">
+                                </td>
+                                <td><input  class="custom-input w-100" type="text" formControlName="weightUOM">
+                                </td>
+                                <td><nz-date-picker  class="form-select custom-input" nzFormat="dd-MM-yyyy"
+                                    formControlName="manufactureDate">
+                                  </nz-date-picker>
+                                </td>
+                           
+                                <td class="action-field aligntd"> <span class="mtop"><a (click)="deleteContainer(i,container)"><em
+                                  class="bi bi-trash color-pencil-red"></em></a>
+                            </span></td>
+                              </ng-container>
+
+
+                            </tr>
+                          </tbody>
+                        </table>
+                      </ng-container>
+
+                    </form>
+
+                  </div>
+                  <div class="no-data-availble" *ngIf="containerData()?.length === 0">
+                    {{'common.no_data' | translate}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="detention">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#panelsdetention" aria-expanded="false" aria-controls="panelsdetention">
+          {{ 'stolt.enquiry.new.detentionDetails' | translate }}
+        </button>
+      </h2>
+      <div id="panelsdetention" class="multi-collapse accordion-collapse collapse " aria-labelledby="detention"
+        data-bs-parent="#accordionPanelsStayOpenExample">
+        <div class="accordion-body">
+          <div class="wrap-form-field">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="row g-4">
+                  <div class="col-md-3">
+                    <label class="form-label">Demurrage Free Days<span class="text-danger">*</span></label>
+                    <input formControlName="DemurrageFreeDays" type="text" class="form-control custom-input"
+                      oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^0-9]/g,'').replace(/ +/g, ' ')"
+                      [ngClass]="{'is-invalid': submitted && f.DemurrageFreeDays.errors}">
+                    <div *ngIf="submitted && f.DemurrageFreeDays.errors" class="invalid-feedback">
+                      <div *ngIf="f.DemurrageFreeDays.errors.required">Demurrage Free Days is required</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Destination Demurrage Currency<span class="text-danger">*</span></label>
+                    <nz-select  class="form-select" nzShowSearch nzAllowClear
+                      formControlName="DemurrageCurrency"
+                      [ngClass]="{'is-invalid': submitted && f.DemurrageCurrency.errors}">
+                      <nz-option *ngFor="let currency of currencyList" [nzLabel]="currency.currencyShortName"
+                        [nzValue]="currency.currencyId"></nz-option>
+                    </nz-select>
+
+                    <div *ngIf="submitted && f.DemurrageCurrency.errors" class="invalid-feedback">
+                      <div *ngIf="f.DemurrageCurrency.errors.required">Destination Demurrage Currency is required</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Destination Demurrage Price Per Day</label>
+                    <input  formControlName="DemurrageAmount" type="text"
+                      class="form-control custom-input"
+                      [ngClass]="{'is-invalid': submitted && f.DemurrageAmount.errors}">
+                    <div *ngIf="submitted && f.DemurrageAmount.errors" class="invalid-feedback">
+                      <div *ngIf="f.DemurrageAmount.errors.required">Demurrage Price is required</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-check form-check-inline">
+                      <input formControlName="DemurrageChanged" class="form-check-input" type="checkbox" id="Reference">
+                      <label class="form-check-label" for="Reference">Destination Demurrage changed</label>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Destination Demurrage Customer Name</label>
+                    <input  formControlName="DemurrageName" type="text"
+                      class="form-control custom-input" [ngClass]="{'is-invalid': submitted && f.DemurrageName.errors}">
+                    <div *ngIf="submitted && f.DemurrageName.errors" class="invalid-feedback">
+                      <div *ngIf="f.DemurrageName.errors.required">Demurrage Customer Name is required</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Destination Trucking Free Hours</label>
+                    <input formControlName="TruckingFreeHours" class="form-control custom-input" type="text"
+                      [ngClass]="{'is-invalid': submitted && f.TruckingFreeHours.errors}">
+                    <div *ngIf="submitted && f.TruckingFreeHours.errors" class="invalid-feedback">
+                      <div *ngIf="f.TruckingFreeHours.errors.required">Trucking Free Hours is required</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Destination Trucking Currency</label>
+
+                    <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="TruckingCurrency"
+                      [ngClass]="{'is-invalid': submitted && f.TruckingCurrency.errors}">
+                      <nz-option *ngFor="let currency of currencyList" [nzLabel]="currency.currencyShortName"
+                        [nzValue]="currency.currencyId"></nz-option>
+                    </nz-select>
+                    <div *ngIf="submitted && f.TruckingCurrency.errors" class="invalid-feedback">
+                      <div *ngIf="f.TruckingCurrency.errors.required">Trucking Currency is required</div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="form-label">Destination Trucking Price</label>
+                    <input formControlName="TruckingPrice" type="text" class="form-control custom-input"
+                      style="height: 34px;" [ngClass]="{'is-invalid': submitted && f.TruckingPrice.errors}">
+                    <div *ngIf="submitted && f.TruckingPrice.errors" class="invalid-feedback">
+                      <div *ngIf="f.TruckingPrice.errors.required">Trucking Price is required</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" formControlName="TruckingChanged" type="checkbox" id="Reference">
+                      <label class="form-check-label" for="Reference">Destination Trucking changed</label>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="form-label">Operator Name<span class="text-danger">*</span></label>
+                    <input  formControlName="operatorName" type="text"
+                      class="form-control custom-input" style="height: 34px;"
+                      [ngClass]="{'is-invalid': submitted && f.operatorName.errors}">
+                    <div *ngIf="submitted && f.operatorName.errors" class="invalid-feedback">
+                      <div *ngIf="f.operatorName.errors.required">Operator Name is required</div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="form-label">Phone No<span class="text-danger">*</span></label>
+                    <input  formControlName="operatorPhone" type="text"
+                      class="form-control custom-input"
+                      oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^0-9]/g,'').replace(/ +/g, ' ')"
+                      style="height: 34px;" [ngClass]="{'is-invalid': submitted && f.operatorPhone.errors}">
+                    <div *ngIf="submitted && f.operatorPhone.errors" class="invalid-feedback">
+                      <div *ngIf="f.operatorPhone.errors.required">Phone No is required</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Email<span class="text-danger">*</span></label>
+                    <input  formControlName="operatorMail" type="text"
+                      class="form-control custom-input" style="height: 34px;"
+                      [ngClass]="{'is-invalid': submitted && f.operatorMail.errors}">
+                    <div *ngIf="submitted && f.operatorMail.errors" class="invalid-feedback">
+                      <div *ngIf="f.operatorMail.errors.required">Email is required</div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item" *ngIf="false">
+      <h2 class="accordion-header" id="freightTerms">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#freightTerm"
+          aria-expanded="false" aria-controls="freightTerm">
+          Freight
+        </button>
+      </h2>
+      <div id="freightTerm" class="multi-collapse accordion-collapse collapse " aria-labelledby="freightTerms"
+        data-bs-parent="#accordionPanelsStayOpenExample">
+        <div class="accordion-body">
+          <div class="">
+            <div class="row">
+              <div class="row wrap-form-field">
+                <div class="col-md-3" *ngIf="false">
+                  <label class="form-label">Container Type </label>
+                
+                  <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="containerType"
+                    [ngClass]="{'is-invalid': submitted && f.containerType.errors}">
+                    <nz-option *ngFor="let data of containerTypeList" [nzLabel]="data?.typeName"
+                      [nzValue]="data?.typeName"></nz-option>
+                  </nz-select>
+                  <div *ngIf="submitted && f.containerType.errors" class="invalid-feedback">
+                    <div *ngIf="f.containerType.errors.required">Container Type is required</div>
+                  </div>
+                </div>
+                <div class="col-md-3" *ngIf="false">
+                  <label class="form-label">{{ "stolt.masters.ContainerMaster.ContainerSize" | translate }}</label>
+
+                  <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="containerSize"
+                    [ngClass]="{'is-invalid': submitted && f.containerSize.errors}">
+                    <nz-option *ngFor="let data of containerSizeList" [nzLabel]="data?.typeName"
+                      [nzValue]="data?.typeName"></nz-option>
+                  </nz-select>
+                  <div *ngIf="submitted && f.containerSize.errors" class="invalid-feedback">
+                    <div *ngIf="f.containerSize.errors.required">Container Size is required</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <app-freight-charges [isPage]="'agent-advise'" [isAddNewSection]="false" [show]="show"
+                  [isOnlyShow]="isshowDetails1" (onFreightChargedData)="onFreightChargedData($event)"
+                  (getFreightChargedData)="getFreightChargedData($event)"></app-freight-charges>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item" *ngIf="false">
+      <h2 class="accordion-header" id="charges">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#panelsCharges" aria-expanded="false" aria-controls="panelsCharges">
+          {{ 'stolt.enquiry.new.charges' | translate }}
+        </button>
+      </h2>
+      <div id="panelsCharges" class="multi-collapse accordion-collapse collapse " aria-labelledby="charges"
+        data-bs-parent="#accordionPanelsStayOpenExample">
+        <div class="accordion-body">
+          <div class="wrap-table-field">
+            <div class="row">
+              <div class="col-md-12">
+                <app-enquiry-charges [isPage]="'agent-advise'" (onSaveCharge)="onSaveCharge($event)"
+                  (getcostItemList)="getcostItemList($event)" [isAddNewSection]="false" [show]="show"
+                  [isOnlyShow]="isshowDetails"></app-enquiry-charges>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item" *ngIf="false">
+      <h2 class="accordion-header" id="Remarks">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#pannelRemarks" aria-expanded="false" aria-controls="pannelRemarks">
+          {{ 'stolt.batch.charges.action.remarks' | translate }}
+        </button>
+      </h2>
+      <div id="pannelRemarks" class="multi-collapse accordion-collapse collapse " aria-labelledby="Remarks"
+        data-bs-parent="#accordionPanelsStayOpenExample">
+        <div class="accordion-body">
+          <div class="wrap-table-field">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="col-md-12">
+                  <div class=" d-flex flex-column flex-sm-row gap-3">
+
+                    <div class="col-md-12">
+                      <div class="wrap-form-field  wrap-pagination  d-flex justify-content-end alignment">
+
+                        <div class="mt-2" *ngIf="!show">
+                          <a class="new-action" (click)="onOpen(AddClause)">{{
+                            'stolt.batch.charges.action.remarksAddition' | translate }}</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 mb-5">
+                  <div class="table-responsive">
+                    <table aria-describedby="mytable" class="gfg">
+                      <thead>
+                        <tr class="field-name">
+                          <th scope="col">{{ 'stolt.batch.charges.column.proceess_point' | translate }}</th>
+                          <th scope="col">{{ 'stolt.batch.charges.column.date' | translate }}</th>
+                          <th scope="col">{{ 'stolt.batch.charges.column.from_user' | translate }}</th>
+                          <th scope="col">{{ 'stolt.batch.charges.column.to_user' | translate }}</th>
+                          <th scope="col">{{ 'stolt.batch.charges.column.status' | translate }}</th>
+                          <th scope="col">{{ 'stolt.batch.charges.column.remarks' | translate }}</th>
+                          <th scope="col"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="collapse-ui" *ngFor="let remark of remarksArray; let i=index">
+                          <td>{{remark.processPointName}}</td>
+                          <td>{{remark.commentDate}}</td>
+                          <td>{{remark.instructionsFrom}}</td>
+                          <td>{{remark.instructionsTo}}</td>
+                          <td>{{remark.remarkStatusName}}</td>
+                          <td>{{remark.commentText}}</td>
+                          <td class="action-field" *ngIf="!show">
+                            <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}"
+                              (click)="editRow(remark,AddClause,i)" class="mtop"><a data-bs-toggle="modal"><em
+                                  class="bi bi-pencil color-pencil-red"></em> </a>
+                            </span>
+                            <span nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}"
+                              (click)="removeRow(remark,content1,i)" class="mtop"><a><em class="bi bi-trash color-pencil-red"></em></a>
+                            </span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="no-data-availble" *ngIf="remarksArray?.length === 0">
+                    {{'common.no_data' | translate}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="accordion-item display-none">
+      <h2 class="accordion-header" id="demo1">
+        <button type="button" data-bs-toggle="collapse" data-bs-target="#demo" aria-expanded="false"
+          aria-controls="demo">
+        </button>
+      </h2>
+      <div id="demo" aria-labelledby="demo1" data-bs-parent="#accordionPanelsStayOpenExample">
+        <div class="accordion-body">
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+  <div class="wrap-form-field btn-onscreen mb-3" *ngIf="!isshowDetails">
+    <div class="form-group wrap-form-action p-0">
+      <!-- <label *ngIf="!this.isAddMode" class="text-start mb-0"><a><em class="bi bi-person"></em></a> :
+        {{this.agentAdviceDetails?.createdBy}} <span>&#x2022;</span>
+        <a><em class="bi bi-calendar-date"></em></a> : {{this.agentAdviceDetails?.createdOn | date : 'dd-MM-yyyy,hh:mm'}}</label>
+
+
+      <label *ngIf="!this.isAddMode" class="text-start mb-0"><a><em class="bi bi-pencil color-pencil-red-square"></em></a> :
+        {{this.agentAdviceDetails?.updatedBy}} <span>&#x2022;</span>
+        <a><em class="bi bi-calendar-date"></em></a>: {{this.agentAdviceDetails?.updatedOn | date : 'dd-MM-yyyy,hh:mm'}}</label> -->
+
+      <button (click)="onSave($event)" class="btn btn-outline-primary float-end" type="submit">
+        <ng-container *ngIf="this.isAddMode">
+          {{ 'common.save' | translate }}
+        </ng-container>
+        <ng-container *ngIf="!this.isAddMode">
+          {{ 'common.update' | translate }}
+        </ng-container>
+      </button>
+      <button class="btn btn-outline-secondary btn-lg float-end" type="submit" (click)="print()"
+      >
+      Print
+    </button>
+      <button class="btn1 btn-lg float-end" type="submit" (click)="onCancel()"
+        style="margin-left: 20px">
+        {{ "common.cancel" | translate }}
+      </button>
+     
+    </div>
+  </div>
+</form>
+<ng-template #AddClause let-modal>
+  <form [formGroup]="remarksForm" class="nz-allSelect">
+    <div class=" modal-dialog modal-lg custom-modal">
+      <div class="modal-content wrap-form-field">
+        <div class="modal-header">
+          <h5 class="modal-title position-relative start-0">{{ 'stolt.enquiry.new.remarks' | translate }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="closePopup()"></button>
+        </div>
+        <div class="modal-body ">
+          <div class="row g-3 align-items-center">
+            <div class="col-md-3 nz-select">
+              <div class="form-field-section">
+                <label for="Principal" class="form-label ">{{ 'stolt.enquiry.new.processPoint' | translate }} </label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="processPoint">
+                  <nz-option *ngFor="let processPoint of processPointList" [nzLabel]="processPoint.typeName"
+                    [nzValue]="processPoint.systemtypeId"></nz-option>
+                </nz-select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-field-section">
+                <label class="mb-0 p-0 form-label">{{ 'stolt.enquiry.new.date' | translate }} </label>
+                <mat-form-field appearance="outline" class="custom-date-picker">
+                 <div class="d-flex align-items-center  w-100">
+                  <input matInput
+                  [matDatepicker]="pickerEtay" formControlName="date" class="h-0"/>
+                <mat-datepicker-toggle matSuffix [for]="pickerEtay"></mat-datepicker-toggle>
+                 </div>
+                  <mat-datepicker #pickerEtay></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-field-section">
+                <label class="form-label">{{ 'stolt.enquiry.new.from_user' | translate }}</label>
+                <input type="text" class="form-control custom-input rounded-0" formControlName="fromUser" placeholder=""
+                  disabled>
+              </div>
+            </div>
+            <div class="col-md-3 nz-select">
+              <div class="form-field-section">
+                <label class="form-label">{{ 'stolt.enquiry.new.to_user' | translate }}</label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="toUser">
+                  <nz-option *ngFor="let opsCordinator of userList" [nzLabel]="opsCordinator.name"
+                    [nzValue]="opsCordinator.userId"></nz-option>
+                </nz-select>
+              </div>
+            </div>
+            <div class="col-md-3 nz-select">
+              <div class="">
+                <label class="form-label">{{ 'stolt.batch.discussion.column.Department' | translate }}</label>
+                <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="department">
+                  <nz-option *ngFor="let data of departmentList" [nzLabel]="data?.deptName"
+                    [nzValue]="data?.departmentId"></nz-option>
+                </nz-select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-field-section">
+                <label class="form-label">{{ 'stolt.enquiry.new.status' | translate }}</label>
+                <select formControlName="status" class="form-select custom-input">
+                  <option *ngFor="let status of statusList" [value]="status.systemtypeId">
+                    {{status.typeName}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-field-section">
+                <label for="Principal" class="form-label ">{{ 'stolt.enquiry.new.remarks' | translate }}
+                </label>
+                <input type="text" class="form-control custom-input rounded-0" id="Principal" formControlName="remarks"
+                  placeholder="">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footers mt-4">
+          <div class="wrap-form-field">
+            <div class="form-group wrap-form-action">
+              <button (click)="closePopup()" class="btn1 btn-lg float-end" data-bs-dismiss="modal"
+                type="submit">
+                {{ 'common.cancel' | translate }}
+              </button>
+              <button (click)="addRemarks()" class="btn btn-outline-primary btn-lg float-end" type="button">
+                {{ 'common.save' | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+<ng-template #AddParty let-modal>
+  <form [formGroup]="entityForm" class="nz-allSelect">
+    <div class=" modal-dialog modal-lg custom-modal">
+      <div class="modal-content wrap-form-field">
+        <div class="modal-header">
+          <h5 class="modal-title position-relative start-0">Entity</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="closePopup()"></button>
+        </div>
+        <div class="modal-body ">
+          <div class="row g-3">
+
+            <div class="col-md-4">
+              <div class="form-field-section">
+                <label for="Principal" class="form-label ">Party Type </label>
+                <input  type="text" class="form-control custom-input " formControlName="partyType">
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-field-section">
+                <label for="Principal" class="form-label ">Customer Name </label>
+                <input  type="text" class="form-control custom-input " formControlName="customerName">
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-field-section">
+                <label for="Principal" class="form-label ">Party Code </label>
+                <input  type="text" class="form-control custom-input " formControlName="partyCode">
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-field-section">
+                <label for="Principal" class="form-label ">Address </label>
+                <input  type="text" class="form-control custom-input " formControlName="address">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-field-section">
+                <label for="Principal" class="form-label ">City </label>
+                <input  type="text" class="form-control custom-input " formControlName="city">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-field-section">
+                <label for="Principal" class="form-label ">Postal Code </label>
+                <input  type="text" class="form-control custom-input " formControlName="postalCode">
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-field-section">
+                <label for="Principal" class="form-label ">State </label>
+                <input  type="text" class="form-control custom-input " formControlName="state">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-field-section">
+                <label for="Principal" class="form-label ">Country </label>
+                <input  type="text" class="form-control custom-input " formControlName="country">
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footers mt-4">
+          <div class="wrap-form-field">
+            <div class="form-group wrap-form-action">
+              <button (click)="closePopup()" class="btn1 btn-lg float-end" data-bs-dismiss="modal"
+                type="submit">
+                {{ 'common.cancel' | translate }}
+              </button>
+              <button (click)="addEntiry()" class="btn btn-outline-primary btn-lg float-end" type="button">
+                {{ 'common.save' | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+<ng-template #addContainer let-modal>
+    <div class="modal-content wrap-form-field">
+      <div class="modal-header">
+        <h5 class="modal-title position-relative start-0">Containers</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="closePopup()"></button>
+      </div>
+      <div class="modal-body ">
+        <div class="row">
+          <div class="col">
+            <div class="form-field-section">
+              <label for="Principal" class="form-label ">Select Container Number </label>
+
+              <ng-multiselect-dropdown [settings]="settings" [data]="filterContainer"
+                [ngClass]="{ 'is-invalid': submitted && listOfTagOptions.length === 0 }"
+                [ngModelOptions]="{standalone: true}" [(ngModel)]="listOfTagOptions">
+              </ng-multiselect-dropdown>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footers my-4">
+        <div class="wrap-form-field">
+          <div class="wrap-form-action">
+            <button (click)="closePopup()" class="btn1 btn-lg float-end" data-bs-dismiss="modal"
+              type="submit">
+              {{ 'common.cancel' | translate }}
+            </button>
+            <button (click)="addListData()" class="btn btn-outline-primary btn-lg float-end" type="button">
+              {{ 'common.save' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+</ng-template>
+
+
+<ng-template #content1 let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+      </button>
+    </div>
+    <div class="modal-body mt-4">
+      <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2"> </em> <span
+        class=" text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary  btn-sm me-3" (click)="d('Cross click')">No</button>
+        <button type="button" class="btn btn-danger  btn-sm" (click)="c('yes')">Yes</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #importagentadvice let-modal>
+  <div class="custom-modal wrap-form-field">
+    <div class="modal-header">
+      <h5 class="modal-title" id="modal-basic-title">Agent Advice</h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        &times;
+      </button>
+    </div>
+    <div class="modal-body">
+      <form class="row g-3">
+        <div class="col-md-12">
+          <label class="form-label">Select Advice <span class="text-danger">*</span></label>
+          <select class="form-select custom-input">
+            <option selected>Select XML file for import</option>
+          </select>
+        </div>
+        <div class="col-md-12">
+          <input type="file" (change)="selectFile($event)" class="form-control custom-input">
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <div class="form-group wrap-form-action">
+        <button type="button" class="btn1 btn-lg float-end"
+          (click)="modal.close('Save click')">Cancel</button>
+        <button type="button" class="btn btn-outline-primary btn-lg float-end"
+          (click)="modal.close('Save click')">Import</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #agentAdviceError let-modal>
+  <div class="modal-header">
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      &times;
+    </button>
+  </div>
+  <div class="modal-content">
+
+    <div class="modal-body">
+      <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+
+
+        <div class="wrap-feild-wrapper card p-3">
+          <div class="wrap-form-field">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="row">
+                  <div class="col-md-12">
+                    <h5 style="color:#007BFF">File Name : </h5><b style="color:#000">{{fileNameAgentAdvice}}</b>
+
+                  </div>
+
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <hr>
+          <div class="wrap-form-field">
+            <div class="row">
+              <div class="col-sm-12">
+
+                <div class="row">
+                  <h6> <b>List of errors occurred in uploading file are as follows:</b> </h6>
+                  <div>
+                    <ul>
+                      <li *ngFor="let item of agentAdviceErrorList">{{item}}</li>
+                    </ul>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</ng-template>

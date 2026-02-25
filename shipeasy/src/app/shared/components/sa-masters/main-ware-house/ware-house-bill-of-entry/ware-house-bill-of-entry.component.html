@@ -1,0 +1,371 @@
+<div class="mat-table-with-gheading">
+  <div class="wrapper">
+    <form [formGroup]="billOfEntryForm" (keydown.enter)="$event.preventDefault()">
+      <!-- First Row -->
+      <div class="row mt-3">
+            <div class="col-md-3">
+              <label class="form-label">Assessable Value<span class="text-danger">*</span></label>
+              <input type="number" class="form-control custom-input" formControlName="assessableValue"
+                  [ngClass]="{ 'is-invalid': submitted && f.assessableValue.errors }" placeholder="Assessable Value" />
+              <div *ngIf="submitted && f.assessableValue.errors" class="invalid-feedback">
+                  <div *ngIf="f.assessableValue.errors.required">
+                      Assessable Value is required
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-3">
+              <label class="form-label">Duty Amount<span class="text-danger">*</span></label>
+              <input type="number" class="form-control custom-input" formControlName="dutyAmount"
+                  [ngClass]="{ 'is-invalid': submitted && f.dutyAmount.errors }" 
+                  placeholder="Duty Amount"
+                  (keydown)="preventInvalidInput($event)"
+                  (paste)="validateNumericPaste($event, 'dutyAmount')"
+                  min="0" />
+              <div *ngIf="submitted && f.dutyAmount.errors" class="invalid-feedback">
+                  <div *ngIf="f.dutyAmount.errors.required">
+                      Duty Amount is required
+                  </div>
+                  <div *ngIf="f.dutyAmount.errors.positiveNumber">
+                      Duty Amount must be a positive number
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-3">
+              <label class="form-label">WH BE No<span class="text-danger">*</span></label>
+              <input type="number" class="form-control custom-input" formControlName="whBeNo"
+                  [ngClass]="{ 'is-invalid': submitted && f.whBeNo.errors }" placeholder="WH BE No" />
+              <div *ngIf="submitted && f.whBeNo.errors" class="invalid-feedback">
+                  <div *ngIf="f.whBeNo.errors.required">
+                      WH BE No is required
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-3">
+              <label class="mb-0 p-0 form-label">Date<span class="text-danger">*</span></label>
+              <nz-date-picker
+                class="form-select custom-input"
+                nzShowTime
+                nzFormat="dd-MM-yyyy"
+                formControlName="date"
+                (keydown)="preventEnterSubmit($event)"
+                [ngClass]="{ 'is-invalid': submitted && f.date.errors }">
+              </nz-date-picker>
+              <div *ngIf="submitted && f.date.errors" class="invalid-feedback">
+                  <div *ngIf="f.date.errors.required">
+                      Date is required
+                  </div>
+              </div>
+            </div>
+      </div>
+
+      <!-- Second Row - New DO and Permission Fields -->
+      <div class="row mt-3">
+          <div class="col-md-3">
+              <label class="form-label">DO (Delivery Order)<span class="text-danger">*</span></label>
+              <input type="text" class="form-control custom-input" formControlName="deliveryOrder"
+                  [ngClass]="{ 'is-invalid': submitted && f.deliveryOrder.errors }" placeholder="DO Number" />
+              <div *ngIf="submitted && f.deliveryOrder.errors" class="invalid-feedback">
+                  <div *ngIf="f.deliveryOrder.errors.required">
+                      DO is required
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-3">
+              <label class="mb-0 p-0 form-label">Date of DO<span class="text-danger">*</span></label>
+              <nz-date-picker
+                class="form-select custom-input"
+                nzFormat="dd-MM-yyyy"
+                formControlName="dateOfDO"
+                (keydown)="preventEnterSubmit($event)"
+                [ngClass]="{ 'is-invalid': submitted && f.dateOfDO.errors }">
+              </nz-date-picker>
+              <div *ngIf="submitted && f.dateOfDO.errors" class="invalid-feedback">
+                  <div *ngIf="f.dateOfDO.errors.required">
+                      Date of DO is required
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-3">
+              <label class="form-label">Permission No<span class="text-danger">*</span></label>
+              <input type="text" class="form-control custom-input" formControlName="permissionNo"
+                  [ngClass]="{ 'is-invalid': submitted && f.permissionNo.errors }" placeholder="Permission No" />
+              <div *ngIf="submitted && f.permissionNo.errors" class="invalid-feedback">
+                  <div *ngIf="f.permissionNo.errors.required">
+                      Permission No is required
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-3">
+              <label class="form-label">Bond No<span class="text-danger">*</span></label>
+              <input type="text" class="form-control custom-input" formControlName="bondNo"
+                  [ngClass]="{ 'is-invalid': submitted && f.bondNo.errors }" placeholder="Bond No" />
+              <div *ngIf="submitted && f.bondNo.errors" class="invalid-feedback">
+                  <div *ngIf="f.bondNo.errors.required">
+                      Bond No is required
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <!-- Third Row - Bond Expiry and Warehousing Section -->
+      <div class="row mt-3">
+          <div class="col-md-3">
+              <label class="mb-0 p-0 form-label">Bond Expiry<span class="text-danger">*</span></label>
+              <nz-date-picker
+                class="form-select custom-input"
+                nzFormat="dd-MM-yyyy"
+                formControlName="bondExpiry"
+                (keydown)="preventEnterSubmit($event)"
+                [ngClass]="{ 'is-invalid': submitted && f.bondExpiry.errors }">
+              </nz-date-picker>
+              <div *ngIf="submitted && f.bondExpiry.errors" class="invalid-feedback">
+                  <div *ngIf="f.bondExpiry.errors.required">
+                      Bond Expiry is required
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-3">
+              <label class="form-label">Warehousing Section<span class="text-danger">*</span></label>
+              <input type="text" class="form-control custom-input" formControlName="warehousingSection"
+                  [ngClass]="{ 'is-invalid': submitted && f.warehousingSection.errors }" placeholder="Warehousing Section" />
+              <div *ngIf="submitted && f.warehousingSection.errors" class="invalid-feedback">
+                  <div *ngIf="f.warehousingSection.errors.required">
+                      Warehousing Section is required
+                  </div>
+              </div> 
+          </div>
+
+            <div class="col-md-2 pr-1">
+                <label class="form-label">Packages<span class="text-danger">*</span></label>
+                <input type="number" class="form-control custom-input" formControlName="packages"
+                  [ngClass]="{ 'is-invalid': submitted && f.packages.errors }" 
+                  placeholder="Packages"
+                  (keydown)="preventInvalidInput($event)"
+                  (paste)="validateNumericPaste($event, 'packages')"
+                  min="0" />
+                <div *ngIf="submitted && f.packages.errors" class="invalid-feedback">
+                  <div *ngIf="f.packages.errors.required">
+                    Packages is required
+                  </div>
+                  <div *ngIf="f.packages.errors.positiveNumber">
+                    Packages must be a positive number
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-1 pl-0">
+                <label class="form-label">Unit<span class="text-danger">*</span></label>
+                <div class="form-field-section">
+                  <nz-select class="nz-form-select nz-select-width"
+                    style="border-bottom: none !important; width: 100% !important;"
+                    formControlName="unit" nzShowSearch nzAllowClear
+                    [ngClass]="{'is-invalid': submitted && f.unit.errors?.required}">
+                    <nz-option *ngFor="let enquiryType of weighthData"
+                    [nzLabel]="enquiryType.uomShort"
+                    [nzValue]="enquiryType.uomId"></nz-option>
+                  </nz-select>
+                  <div *ngIf="submitted && f.unit.errors?.required" class="invalid-feedback">
+                    Unit is required
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Remarks</label>
+                <textarea class="form-control custom-input" formControlName="remarks"
+                  [ngClass]="{ 'is-invalid': submitted && f.remarks.errors }"
+                  placeholder="Remarks" rows="4">
+                </textarea>
+                <div *ngIf="submitted && f.remarks.errors" class="invalid-feedback">
+                  <div *ngIf="f.remarks.errors.required">
+                    Remarks is required
+                  </div>
+                </div>
+              </div>
+      </div>
+      <div class="row mt-3">
+          <div class="col-md-12">
+              <div class="wrap-form-field  wrap-pagination  d-flex justify-content-end alignment">
+                <div class="header-right">
+                  <a (click)="open('add', '', 'document')" class="max-con new-action btn btn-outline-primary btn-sm rounded-pill">
+                    Upload Document
+                  </a>
+                </div>
+                <div class="mb-2">
+                  <a class="max-con new-action  btn btn-outline-primary btn-sm rounded-pill" (click)="addContainerRow(addContainer)">
+                    <span class="f4">+</span> Add Container</a>
+                </div>
+              </div>
+          </div>
+      </div>
+      
+      <!-- Container Table -->
+      <div *ngIf="containerList?.length" class="">
+        <div class="table-charge table-design mb-5">
+          <table class="custom-row" aria-describedby="mytable">
+            <tr class="field-name">
+              <th>#</th>
+              <th>Container Type</th>
+              <th>Container No</th>
+              <th class="text-center border-right">Actions</th>
+            </tr>
+      
+            <tr *ngFor="let item of containerList; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ item?.containerTypeName }}</td>
+              <td>{{ item?.containerNo }}</td>
+              <td class="text-center border-right align-middle">
+                <div class="d-flex justify-content-center align-items-center">
+                  <div class="me-2" style="cursor: pointer;" (click)="editContainer(i, addContainer)">
+                    <em class="bi bi-pencil color-pencil-red"></em>
+                  </div>
+                  <div style="cursor: pointer;" (click)="deleteContainer(i, item)">
+                    <em class="bi bi-trash globally-change-icon-color"></em>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      
+      
+      <!-- Form Action Buttons -->
+      <div class="form-group wrap-form-action btn-onscreen">
+        <button class="btn1 btn-lg float-end" type="button" (click)="onCancel()">
+          Cancel
+        </button>
+        <button (click)="onSubmit()" class="btn btn-outline-primary btn-lg float-end" type="button">
+          Save
+        </button>
+        </div>
+    </form>
+  </div>
+</div>
+
+<!-- Container Modal Template -->
+<ng-template #addContainer let-modal>
+<div class="custom-modal wrap-form-field">
+  <div class="custom-modal wrap-form-field">
+    <div class="modal-header">
+      <h5 class="modal-title font-size" id="modal-basic-title">
+        <span>{{ editIndex !== null ? 'Edit Container' : 'Add Container' }}</span>
+      </h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="containerForm" (keydown.enter)="$event.preventDefault()">
+        <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+          <div class="row scroll align-items-center">
+            
+            <!-- Container Type -->
+            <div class="col-md-6">
+              <div class="form-field-section">
+                <label class="form-label">Container Type <span class="text-danger">*</span></label>
+                <ng-container>
+                  <nz-select 
+                    class="form-select" 
+                    nzShowSearch 
+                    nzAllowClear
+                    formControlName="containerType" 
+                    [ngClass]="{'is-invalid': submitted1 && f2.containerType.errors}">
+                    <nz-option 
+                      *ngFor="let data of containerTypeList"
+                      [nzLabel]="data?.typeName" 
+                      [nzValue]="data?.systemtypeId">
+                    </nz-option>
+                  </nz-select>
+                  <div *ngIf="submitted1 && f2.containerType.errors" class="invalid-feedback">
+                    <div *ngIf="f2.containerType.errors.required">Container Type is required</div>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+
+            <!-- Container No -->
+            <div class="col-md-6">
+              <div class="form-field-section">
+                <label class="form-label">Container No <span class="text-danger">*</span></label>
+                <input 
+                  formControlName="containerNo" 
+                  type="text" 
+                  placeholder="Must be 4 letters followed by 7 digits"
+                  class="form-control custom-input" 
+                  [ngClass]="{'is-invalid': submitted1 && f2.containerNo.errors}">
+                <div *ngIf="submitted1 && f2.containerNo.errors" class="invalid-feedback">
+                  <div *ngIf="f2.containerNo.errors.required">Container No is required</div>
+                  <div *ngIf="f2.containerNo.errors.pattern">Must be 4 letters followed by 7 digits (e.g., ABCD1234567)</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Packages - NOW MANDATORY with validation -->
+            <div class="col-md-6">
+              <div class="form-field-section">
+                <label class="form-label">Packages <span class="text-danger">*</span></label>
+                <input 
+                  type="number" 
+                  class="form-control custom-input" 
+                  formControlName="packages"
+                  placeholder="Enter packages" 
+                  min="0"
+                  (keydown)="preventInvalidInput($event)"
+                  (paste)="validateNumericPaste($event, 'containerPackages')"
+                  [ngClass]="{'is-invalid': submitted1 && f2.packages.errors}">
+                <div *ngIf="submitted1 && f2.packages.errors" class="invalid-feedback">
+                  <div *ngIf="f2.packages.errors.required">Packages is required</div>
+                  <div *ngIf="f2.packages.errors.positiveNumber">Packages must be a positive number</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Unit - NOW MANDATORY -->
+            <div class="col-md-6">
+              <div class="form-field-section">
+                <label class="form-label">Unit <span class="text-danger">*</span></label>
+                <nz-select 
+                  class="nz-form-select nz-select-width"
+                  style="border-bottom: none !important; width: 100% !important;"
+                  formControlName="unit" 
+                  nzShowSearch 
+                  nzAllowClear
+                  nzPlaceHolder="Select unit"
+                  [ngClass]="{'is-invalid': submitted1 && f2.unit.errors}">
+                  <nz-option 
+                    *ngFor="let enquiryType of weighthData"
+                    [nzLabel]="enquiryType.uomShort"
+                    [nzValue]="enquiryType.uomId">
+                  </nz-option>
+                </nz-select>
+                <div *ngIf="submitted1 && f2.unit.errors" class="invalid-feedback">
+                  <div *ngIf="f2.unit.errors.required">Unit is required</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="col-md-12 wrap-form-action pb-4 mt-4">
+              <div class="form-group wrap-form-action">
+                <button 
+                  class="btn1 btn-lg float-end" 
+                  (click)="closeModal()" 
+                  type="button">
+                  {{ "common.cancel" | translate }}
+                </button>
+                <button
+                  class="btn btn-outline-primary btn-lg float-end"
+                  style="padding: 4px 19px !important;" 
+                  (click)="ngOnSave()" 
+                  type="button">
+                  <ng-container>
+                    {{ editIndex !== null ? 'Update' : 'Save' }}
+                  </ng-container>
+                </button>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</ng-template>

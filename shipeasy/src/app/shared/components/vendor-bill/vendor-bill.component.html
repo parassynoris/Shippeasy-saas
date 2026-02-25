@@ -1,0 +1,369 @@
+<ng-container *ngIf="currentUrl === 'vendor-bill' || currentUrl === 'bills' || currentUrl === 'bill-posting'">
+  <!-- <div class="wrap-table-area">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="float-clear-mobile-view d-flex flex-column flex-sm-row gap-3 float-start search-section">
+          <div class="input-group custom-input">
+            <input type="text" class="form-control" placeholder="Search" aria-label="Search">
+          </div>
+        </div>
+        <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2 ">
+          <div class="mt-2">
+            <input type="text" class="form-control input-txt globle-search" id="" [(ngModel)]="globalSearch"
+              (keydown.enter)="searchGlobal()">
+          </div>
+          <div class="mt-2">
+            <button type="button" title="Search" class="bi bi-search btn btn-outline-primary btn-sm rounded-pill"
+              (click)="searchGlobal()"></button>
+          </div>
+          <div class="mt-2">
+            <button type="button" title="Clear"
+              class="bi bi-arrow-clockwise btn btn-outline-primary btn-sm rounded-pill"
+              (click)="clearGloble()"></button>
+          </div>
+          <div class="mt-2">
+            <span>
+              <h5>{{ fromSize }}-{{ count }} of {{ toalLength }}</h5>
+            </span>
+          </div>
+          <div class="mt-2">
+
+            <span class="prv" [class.disable-arrow-sign]="fromSize === 1" (click)="prev()"><em
+                class="typcn typcn-chevron-left"></em></span>
+            <span class="prv" [class.disable-arrow-sign]="count === toalLength" (click)="next()"><em
+                class="typcn typcn-chevron-right"></em></span>
+          </div>
+          <div class="mt-2">
+            <select class="form-select form-select-sm" (change)="filter($event)">
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+          <div class="mt-2" appAccessControl featureCode="['STFVB01','STFBP01']" accessType="print">
+            <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="exportAsExcelFile()">{{
+              'common.exportToExcel' | translate }}</a>
+          </div>
+          <div class="mt-2" appAccessControl featureCode="['STFVB01','STFBP01']" accessType="print">
+            <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="openPDF()">{{
+              'common.print' | translate }} {{
+              'common.list' | translate }}</a>
+          </div>
+          <div class="mt-2" appAccessControl featureCode="['STFVB01']" accessType="add" *ngIf="currentUrl !== 'bill-posting'">
+            <a class="new-action" (click)="()"><em class="bi bi-printer"></em>
+              {{'stolt.finance.bills.newvemdor_bill' | translate}}</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12 mb-5">
+        <div class="table-responsive" id="htmlData">
+          <table aria-describedby="mytable" class="gfg">
+            <thead>
+              <tr class="field-name">
+                <th *ngIf="currentUrl !== 'bill-posting'" scope="col" class="text-center">Action</th>
+                <th *ngIf="currentUrl === 'bill-posting'" scope="col" class="text-center">Sr No</th>
+                <th scope="col" class="text-start">{{'stolt.finance.bills.vendor' | translate}}</th>
+                <th scope="col" class="text-start">{{'stolt.finance.bills.bill_no' | translate}}</th>
+             
+                <th scope="col" class="text-start">{{'stolt.finance.bills.bill_date' | translate}}</th>
+                <th scope="col" class="text-start">{{'stolt.finance.bills.bill_duedate' | translate}}</th>
+                <th scope="col" class="text-end">{{'stolt.finance.bills.amount' | translate}}(INR)</th>
+                <th scope="col" class="text-end">{{'stolt.finance.bills.amount' | translate}}(USD)</th>
+                <th scope="col" class="text-start">{{'stolt.finance.bills.status' | translate}}</th>
+                <th scope="col" class="text-start"></th>
+                <th scope="col" class="text-start"></th>
+              </tr>
+              <tr>
+                <th scope="col"> </th>
+                <th scope="col">
+                  <input type="text" class="form-control" id="" [(ngModel)]="searchVendor" (keydown.enter)="search()" />
+                </th>
+                <th scope="col">
+                  <input type="text" class="form-control" id="" [(ngModel)]="searchBillNo" (keydown.enter)="search()" />
+                </th>
+              
+                <th scope="col">
+                  <input type="date" class="form-control" id="" [(ngModel)]="searchDate" (keydown.enter)="search()" />
+                </th>
+                <th scope="col">
+                  <input type="date" class="form-control" id="" [(ngModel)]="searchDeuDate"
+                    (keydown.enter)="search()" />
+                </th>
+                <th scope="col">
+                  <input type="text" class="form-control" id="" [(ngModel)]="searchAmount" (keydown.enter)="search()" />
+                </th>
+                <th scope="col">
+                  <input type="text" class="form-control" id="" [(ngModel)]="searchAmount" (keydown.enter)="search()" />
+                </th>
+                <th scope="col">
+                  <input type="text" class="form-control" id="" [(ngModel)]="searchStatus" (keydown.enter)="search()" />
+                </th>
+                <th scope="col" class="wrap-table-btn">
+                  <button type="button" class="bi bi-search btn btn-outline-primary btn-sm rounded-pill"
+                    (click)="search()">
+
+                  </button>
+                  <a class="bi bi-arrow-clockwise btn btn-outline-primary btn-sm rounded-pill" (click)="clear()">
+                  </a>
+                </th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let bill of billsList; let i=index">
+                <td class="action-field">
+                  <ng-container *ngIf="currentUrl !== 'bill-posting'">
+                    <span *ngIf="bill?.invoiceStatus === 'Completed'" nz-tooltip
+                      nzTooltipTitle="{{'common.edit' | translate}}" class="mtop"><a
+                        (click)="onOpenEdit(bill.invoiceId)"><em appAccessControl featureCode="['STFVB01']" accessType="view"  class="bi bi-eye globally-change-icon-color"></em></a>
+                    </span>
+                    <span  *ngIf="bill?.invoiceStatus !== 'Completed'" nz-tooltip
+                      nzTooltipTitle="{{'common.edit' | translate}}" class="mtop"><a
+                        (click)="onOpenEdit(bill.invoiceId)"><em appAccessControl featureCode="['STFVB01']" accessType="update" class="bi bi-pencil color-pencil-red"></em></a>
+                    </span>
+
+                    <span   nz-tooltip
+                      nzTooltipTitle="{{'common.email' | translate}}" class="mtop"
+                      (click)="mailST(bill)"><a><em appAccessControl featureCode="['STFVB01']" accessType="update" class="bi bi-envelope-fill"></em></a>
+                    </span>
+                    <span  nz-tooltip nzTooltipTitle="{{'common.delete' | translate}}" class="mtop"><a><em appAccessControl featureCode="['STFVB01']" accessType="delete"
+                          class="bi bi-trash color-pencil-red" (click)="delete(content1,bill?.invoiceId)"></em></a>
+                    </span>
+                  </ng-container>
+                  <ng-container *ngIf="currentUrl === 'bill-posting'">
+                    <span>{{i+1}}. </span>
+                    <span  nz-tooltip nzTooltipTitle="Posting" class="mtop"><a>(<em appAccessControl featureCode="['STFBP01']" accessType="update"
+                          class="bi bi-plus" (click)="posting(bill.invoiceId)"></em>)</a>
+                    </span>
+                  </ng-container>
+                </td>
+                <td>{{bill.invoiceFromName}}</td>
+                <td>{{bill.billNo}}</td>
+                <td>{{bill.invoiceDate | date : 'dd-MM-YYYY,hh:mm'}}</td>
+                <td>{{bill.invoiceDueDate | date : 'dd-MM-YYYY, hh:mm'}}</td>
+                <td class="text-end">{{bill.invoiceAmount | number : '1.2-2'}}</td>
+                <td class="text-end">{{bill.invoiceAmount | number : '1.2-2'}}</td>
+                <td>{{bill.invoiceStatus}}</td>
+
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="no-data-availble" *ngIf="billsList.length === 0">
+          {{'common.no_data' | translate}}
+        </div>
+      </div>
+      <div class="form-group wrap-form-action btn-onscreen" *ngIf="this.isparent === 'batch'">
+        <button class="btn btn-outline-secondary float-end " type="submit" (click)="onClose()">
+          {{ 'common.cancel' | translate }}
+        </button>
+      </div>
+    </div>
+  </div> --> 
+
+  <div class="table-header-area">
+    <div>
+      <table-filters [TDP]="[false, false, true, true]" (filterInput)="applyFilter($event)"
+        (onClickExport)="export()">
+      </table-filters>
+    </div>
+    <div class="header-right" *ngIf="currentUrl !== 'bill-posting'">
+
+      <a appAccessControl featureCode="['STFVB01']" accessType="add" title="{{'stolt.finance.bills.newvemdor_bill' | translate}}" class="max-con new-action  btn btn-outline-primary btn-sm rounded-pill"
+      (click)="onOpenNew()">  {{'stolt.finance.bills.newvemdor_bill' | translate}}</a>
+    </div>
+  </div>
+
+  <div class="table-card">
+  <div class="table-design example-container mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort class="" summary="agreement">
+    
+      <ng-container matColumnDef="#"  >
+        <th scope="col" mat-header-cell *matHeaderCellDef  >
+          # <em class="custom-tooltip" [attr.title]="'Toggle Filters'"  (click)="toggleFilters = !toggleFilters" class="bi bi-search"></em>
+        </th>
+        <td mat-cell *matCellDef="let element;let i = index">
+          {{ element?.id}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="paymentId"  >
+        <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+          Posting
+        </th>
+        <td mat-cell *matCellDef="let element" class=" text-center">
+          <span  nz-tooltip nzTooltipTitle="Posting" class="mtop"><a>(<em  
+            class="bi bi-plus" (click)="posting(element.invoiceId)"></em>)</a>
+      </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="invoiceNo"  >
+        <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+          Vendor No
+        </th>
+        <td class="text-end" mat-cell *matCellDef="let element">
+          <a (click)="navigateToNewTab(element)">{{ element?.invoiceNo }}</a>   
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="invoiceFromName"  >
+        <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+          Invoice From 
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element?.invoiceFromName }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="billNo"  >
+        <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+          Bill No.
+        </th>
+        <td class="text-end" mat-cell *matCellDef="let element">
+          {{ element?.billNo }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="invoiceDate"  >
+        <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+          Invoice Date
+        </th>
+        <td class="text-end" mat-cell *matCellDef="let element">
+          {{ element?.invoiceDate | date : 'dd-MM-YYYY' }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="invoiceDueDate"  >
+        <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+          Invoice Due Date
+        </th>
+        <td class="text-end" mat-cell *matCellDef="let element">
+          {{ element?.invoiceDueDate | date : 'dd-MM-YYYY'}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="invoiceAmount"  >
+        <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+          Invoice Amount
+        </th>
+        <td class="text-end" mat-cell *matCellDef="let element">
+          {{ element?.invoiceAmount  | number : '1.2-2' | customCurrency: currentAgent?.currency?.currencyCode}}
+        </td>
+      </ng-container>
+      
+      <ng-container matColumnDef="invoiceStatus"  >
+        <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+           Status
+        </th>
+        <td mat-cell *matCellDef="let element"> 
+          <span class="font-weight status-bar" [ngClass]="element?.invoiceStatus" >
+            {{element?.invoiceStatus}}
+          </span>
+          
+        </td>
+      </ng-container>
+      
+
+      <ng-container matColumnDef="action"  >
+        <th scope="col" id="action" class="charterersPdfHead" mat-header-cell   *matHeaderCellDef >
+          {{ 'Actions' }}
+        </th>
+        <td class="borderBottom" mat-cell *matCellDef="let element" > 
+              <em class="bi bi-three-dots dots-color-change cursor-pointer wrap-batch1  border px-1 em-icon">
+                <div class="wrap-open">
+                  <div class="wrap-2" *ngIf="this.currentUrl != 'bill-posting'">
+                  <div *ngIf="element?.invoiceStatus !== 'Completed'" class="wrap-inside" appAccessControl featureCode="['STFVB01']" accessType="update">
+                    <span   class="mtop">
+                      <a (click)="onOpenEdit(element.invoiceId)"><em class="bi bi-pencil color-pencil-red"></em> Edit</a>
+                    </span>
+                  </div>
+
+                  <div *ngIf="element?.invoiceStatus == 'Completed'"  class="wrap-inside" appAccessControl featureCode="['STFVB01']" accessType="view">
+                    <span  ><a (click)="onOpenEdit(element.invoiceId)"><em class="bi bi-eye globally-change-icon-color"></em> View</a></span>
+                  </div>
+
+                  <div *ngIf="element.invoiceStatus === 'Completed'" class="wrap-inside"appAccessControl featureCode="['STFVB01']" accessType="update">
+                    <span  ><a (click)="mailST(element)"><em class="bi bi-envelope-fill"></em> Email</a></span>
+                  </div>
+                  
+                  <div class="wrap-inside" appAccessControl featureCode="['STFVB01']" accessType="delete">
+                    <span  
+                    ><a (click)="delete(content1,element.invoiceId)" ><em
+                          class="bi bi-trash color-pencil-red"></em> Delete</a></span>
+                  </div>
+                   </div>
+
+                   <div class="wrap-2" *ngIf="this.currentUrl == 'bill-posting'">
+                    <div class="wrap-inside" appAccessControl featureCode="['STFR01']" accessType="update">
+                      <span  class="mtop">
+                        <a (click)="posting(element.invoiceId)"><em class="bi bi-plus color-pencil-red"></em>Bill Posting</a>
+                      </span>
+                    </div>
+                  </div>
+
+                </div>
+              </em> 
+        </td>
+      </ng-container>
+
+      <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index" [matColumnDef]="headersFilter">
+        <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+          <div  class="filters-container" [class.animate]="!toggleFilters"  > 
+            <!-- <em *ngIf="i == 0" class="custom-tooltip" [attr.title]="'Clear Filters'" (click)="clearFilters();toggleFilters = !toggleFilters" class="bi bi-x-circle"></em> -->
+            <div *ngIf="i > 0 && i < displayedColumns1.length - 1" appearance="outline">
+               
+
+              <input type="date" *ngIf="headersFilter === 'invoiceDate_'+i" class="form-control input-txt"  placeholder="Press 'Enter' to search" [(ngModel)]="filtersModel[i]" (change)="searchColumns()" >
+              <input type="date" *ngIf="headersFilter === 'invoiceDueDate_'+i" class="form-control input-txt"  placeholder="Press 'Enter' to search" [(ngModel)]="filtersModel[i]" (change)="searchColumns()" >
+
+              <input type="text" *ngIf="headersFilter !== 'invoiceDate_'+i && headersFilter !== 'invoiceDueDate_'+i" class="form-control input-txt"  placeholder="Press 'Enter' to search" [(ngModel)]="filtersModel[i]" (keyup.enter)="searchColumns()" >
+          
+            </div>
+            <em *ngIf="i === displayedColumns1.length - 1" class="custom-tooltip" [attr.title]="'Clear Filters'" (click)="clearFilters();toggleFilters = !toggleFilters" class="bi bi-x-circle"></em>
+          </div>
+        </th>
+      </ng-container>
+
+
+      <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-header-row class="no-default-height"  *matHeaderRowDef="displayedColumns1"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+          <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+          <span *ngIf="!loaderService?.isLoadingcircle && !dataSource?.data?.length">No data available</span>
+        </td>
+      </tr>
+    </table>
+   
+  </div>
+  <div [ngClass]="{'display-none' : dataSource.filteredData.length < 20}">
+    <mat-paginator [pageSizeOptions]="pagenation" showFirstLastButtons aria-label="Select page">
+    </mat-paginator>
+  </div>
+</div>
+
+</ng-container>
+<ng-container *ngIf="currentUrl === 'add' || currentUrl === 'edit'">
+  <app-new-vendor-bill [isType]="currentUrl" (BillSection)="onBillAction($event)"></app-new-vendor-bill>
+</ng-container>
+<ng-container *ngIf="currentUrl === 'posting'">
+  <app-posting [isType]="currentUrl" (BillSection)="onBillAction($event)"></app-posting>
+</ng-container>
+<ng-template #content1 let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close btn1 shadow-none" aria-label="Close" (click)="d('Cross click')">
+      </button>
+    </div>
+    <div class="modal-body mt-4">
+      <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2"> </em> <span
+        class=" text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary  btn-sm me-3" (click)="d('Cross click')">No</button>
+        <button type="button" class="btn btn-danger  btn-sm" (click)="c('yes')">Yes</button>
+      </div>
+    </div>
+  </div>
+</ng-template>

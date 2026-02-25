@@ -1,0 +1,19 @@
+<div mat-dialog-content class="pb-2 confirmMationText" >
+    
+    <ng-container *ngIf="this.data?.type === 'logout'">
+      <p>You were Logout. </p>
+      <p>To ensure the security of your account, please log in again.</p>
+    </ng-container>
+    <ng-container *ngIf="this.data?.type === 'dachange'">
+     {{ this.data?.message }} 
+    </ng-container>
+
+  
+  </div>
+  <div mat-dialog-actions class="center-alignment" align="center">
+    <button mat-button (click)="closeConfirmDialog()" class="btn btn-primary-outline">
+      Refresh
+    </button>
+    
+  </div>
+  

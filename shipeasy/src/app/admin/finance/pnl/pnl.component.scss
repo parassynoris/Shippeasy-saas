@@ -1,0 +1,125 @@
+@import '../../../../assets/styles/mixins/global.scss';
+
+.wrap-feild-wrapper{
+    border: 1px solid var(--theme-gobally-border-color);
+    padding: 10px 14px;
+    border-radius: 4px;
+    margin: 15px 0;
+   
+    select{
+      border: 0;
+      border-bottom: 1px solid var(--theme-gobally-border-color);
+      border-radius: 0;
+      color: var(--theme-light-text-color);
+    }
+    .wrap-icon-action{
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      i{
+        color: var(--link-text-color);
+        cursor: pointer;
+      }
+    }
+}
+.wrap-form-field.self-form{
+    border: 1px solid var(--theme-border-color);
+    padding: 14px;
+    border-radius: 4px;
+    .bd-highlight{
+      width: 145px;
+      @include new-heading-12;
+      text-align: center;
+    }
+    .wrap-field-btn{
+      margin-top: 16px;
+    }
+}
+.p-t-12{
+  padding-top: 12px;
+}
+@media only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px) {
+/*
+Label the data
+*/
+td:nth-of-type(1):before {
+  content: "Cost Group";
+}
+td:nth-of-type(2):before {
+  content: "Cost Item";
+}
+td:nth-of-type(3):before {
+  content: "Status";
+}
+td:nth-of-type(4):before {
+  content: "Estimate";
+}
+td:nth-of-type(5):before {
+  content: "Cost";
+}
+td:nth-of-type(6):before {
+  content: "Vendor Bill";
+}
+td:nth-of-type(7):before {
+  content: "Invoice";
+}
+td:nth-of-type(8):before {
+  content: "Pending";
+}
+}
+
+.form-bottom-alignment-mobile-devices {
+  @media screen and (max-width: 767px)  {
+    padding: 0 15px 20px 15px;
+  }
+}
+
+.justify-content-first-alignment {
+  @media screen and (max-width: 767px)  {
+    justify-content: center !important;
+  }
+}
+
+::ng-deep {
+  .ant-select-show-search.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+      cursor: text;
+      border-radius: 0px !important;
+  }
+}
+.ant-picker-range {
+  position: relative;
+  display: inline-flex;
+  height: 34px !important;
+}
+.font-14{
+  font-size: 14px !important;
+}
+
+.sticky-tr{
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1;
+}
+.pro-card{
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; 
+  padding: 22px 16px;
+  // min-width: 160px;
+  // max-width: 160px;
+  border-radius: 2px;
+  background-color: #fff;
+  // height: 45px;
+  display: flex;
+    flex-direction: column;
+}
+.echart {
+  width: 100%;
+  height: 400px;
+}
+tfoot {
+  position: sticky;
+  bottom: 0;
+  background-color: #f1f1f1; /* Adjust based on your design */
+  box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.1); /* Optional shadow for better visibility */
+}

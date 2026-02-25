@@ -1,0 +1,83 @@
+<div class="table-with-gheading">
+    <div class="wrap-content">
+
+        <div class="row">
+            <div class="horz-bar mb-3">
+                <span>Vessel : {{vesseldata}} || </span>
+                <span>Voyage : {{voyageData}}</span>
+
+            </div>
+            <div class="col-md-12 table-with-gheading">
+                <div class="horz-bar">Update TP </div>
+                <div class="table-responsive">
+                    <div class="wrap-table-area  wrap-table-design wrap-form-field" id="htmlData">
+                        <table aria-describedby="mytable">
+                            <thead>
+                                <tr class="field-name">
+                                    <th scope="col"></th>
+                                    <th scope="col">Master BL</th>
+                                    <th scope="col">FPOD</th>
+                                    <th scope="col">Dep Mode</th>
+                                    <th scope="col">TP No</th>
+                                    <th scope="col">TP Date</th>
+                                    <th scope="col">Rail Indent Date</th>
+                                    <th scope="col">Container</th>
+                                    <th scope="col">Concore Desc</th>
+                                </tr>
+                                <tr>
+                                    <th scope="col"> </th>
+                                    <th scope="col">
+                                        <input type="text" class="form-control" [(ngModel)]="blNo"
+                                            [ngModelOptions]="{standalone: true}" (keydown.enter)="search()">
+                                    </th>
+                                    <th scope="col"><input type="text" class="form-control" [(ngModel)]="fpodName"
+                                            [ngModelOptions]="{standalone: true}" (keydown.enter)="search()">
+                                    </th>
+                                    <th scope="col"><input type="text" class="form-control" [(ngModel)]="depMode"
+                                            [ngModelOptions]="{standalone: true}" (keydown.enter)="search()">
+                                    </th>
+                                    <th scope="col"><input disabled type="text" class="form-control"></th>
+                                    <th scope="col"><input disabled type="text" class="form-control"></th>
+                                    <th scope="col"><input disabled type="text" class="form-control"></th>
+                                    <th scope="col">
+                                        <input type="text" class="form-control" [(ngModel)]="containers"
+                                            [ngModelOptions]="{standalone: true}" (keydown.enter)="search()">
+                                    </th>
+                                    <th scope="col"><input disabled type="text" class="form-control"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let bl of houseBlList;let i =index">
+                                    <td>{{i+1}}</td>
+                                    <td>{{bl?.blNumber}}</td>
+                                    <td>{{bl?.importFpodName}}</td>
+                                    <td>{{bl?.depMode}}</td>
+                                    <td><input type="text" [(ngModel)]="bl.tpNo" class="form-control"></td>
+                                    <td><input type="date" [(ngModel)]="bl.tpDate" class="form-control"></td>
+                                    <td><input type="date" [(ngModel)]="bl.railIndentDate" class="form-control"></td>
+                                    <td><span *ngFor="let ctr of bl?.containers">{{ctr?.containerNumber}},<br>
+                                        </span></td>
+                                    <td><input type="text" [(ngModel)]="bl.concoreDesc" class="form-control"></td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="no-data-availble mt-0" *ngIf="houseBlList.length === 0">
+                    {{'common.no_data' | translate}}
+                </div>
+            </div>
+        </div>
+        <div class="btn-onscreen my-3">
+            <div class="form-group wrap-form-action">
+                <button class="btn btn-outline-primary  float-end " (click)="updateBl()">
+                    Update TP
+                </button>
+                <button class="btn btn-outline-primary  float-end " (click)="back()">
+                    Back
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

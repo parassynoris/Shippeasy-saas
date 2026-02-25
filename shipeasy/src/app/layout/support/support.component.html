@@ -1,0 +1,200 @@
+
+<div class="mat-table-with-gheading">
+    <div class="wrapper">
+        <div class=" container-fluid">
+            <div class="wrap-mat-table-area">
+                <div class="wrap-content">
+                    <div class="row">
+                        <div class="page-title-box">
+                            <ol class="breadcrumb ">
+                                <li class="breadcrumb-item">SHIPEASY
+                                </li>
+                                <li class="breadcrumb-item active color-red">Support</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-header-area pt-3">
+                    <div>
+                        <table-filters [TDP]="[false, false, true, true]" (filterInput)="applyFilter($event)"
+                            (onClickExport)="exportAsExcelFile()">
+                        </table-filters>
+                    </div>
+                </div>
+            <div class="">
+                <div class="wrap-mat-table-area">
+                    <div class="table-card">
+                        <div class="table-design example-container mat-elevation-z8">
+                            <table mat-table [dataSource]="dataSource" matSort class="" summary="agreement">
+
+                                <ng-container matColumnDef="#">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef>
+                                        # <em class="custom-tooltip" [attr.title]="'Toggle Filters'"
+                                            (click)="toggleFilters = !toggleFilters" class="bi bi-search"></em>
+                                    </th>
+                                    <td mat-cell *matCellDef="let element;let i = index">
+                                        {{ i+1 }}
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="contactUsType">
+                                    <th class="text-start" scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        Type
+                                    </th>
+                                    <td class="text-start" mat-cell *matCellDef="let element">
+                                        {{ element?.contactUsType }}
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="customerName">
+                                    <th class="text-start" scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        Name
+                                    </th>
+                                    <td class="text-start" mat-cell *matCellDef="let element">
+                                        {{ element?.customerName }}
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="customerEmail">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        Email Address
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{ element?.customerEmail }}
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="message">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        User Comments
+                                    </th>
+                                    <td class="text-start" mat-cell *matCellDef="let element">
+                                        {{ element?.message }}
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="attachment">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        Attachment
+                                    </th>
+                                    <td class="text-start" mat-cell *matCellDef="let element">
+                                        {{ element?.attachment }}
+                                        <em *ngIf="element?.attachment" class="bi bi-download color--secondary cursor-pointer"
+                                    (click)="downloadFile(element)"></em>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="reply">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        Admin Comments
+                                    </th>
+                                    <td class="text-start" mat-cell *matCellDef="let element">
+                                        {{ element?.reply }}
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="createdOn">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        Date Recevied
+                                    </th>
+                                    <td class="text-start" mat-cell *matCellDef="let element">
+                                        {{ element?.createdOn | date : 'dd-MM-yyyy'}}
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="StatusUpdate">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header >
+                                        Status
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <span [ngClass]="{
+                                            'Yellow': element?.status === 'Pending',
+                                            'green': element?.status === 'Sent'
+                                        }">
+                                            {{ element?.status }}
+                                        </span>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="action">
+                                    <th scope="col" id="action" class="charterersPdfHead" mat-header-cell  
+                                        *matHeaderCellDef>
+                                        {{ 'Actions' }}
+                                    </th>
+                                    <td class="borderBottom" mat-cell *matCellDef="let element">
+                                        <div class="d-flex justify-content-center" *ngIf="element?.status === 'Pending'">
+                                            <span nz-tooltip nzTooltipTitle="Comments"
+                                                class="mtop boot-icon">
+                                                <a (click)="adminComments(AddChat,element)"><i class="bi bi-chat-right-text"></i></a>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index"
+                                    [matColumnDef]="headersFilter">
+                                    <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+                                        <div class="filters-container" [class.animate]="!toggleFilters">
+                                            <div *ngIf="i > 0 && i < displayedColumns1.length - 1" appearance="outline">
+                                                <input class="form-control input-txt"
+                                                    placeholder="Press 'Enter' to search" [(ngModel)]="filtersModel[i]"
+                                                    (keyup.enter)="searchColumns()">
+                                            </div>
+                                            <em *ngIf="i == displayedColumns1.length - 1" class="custom-tooltip"
+                                                [attr.title]="'Clear Filters'"
+                                                (click)="clearFilters();toggleFilters = !toggleFilters"
+                                                class="bi bi-x-circle"></em>
+                                        </div>
+                                    </th>
+                                </ng-container>
+
+
+                                <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-header-row class="no-default-height" *matHeaderRowDef="displayedColumns1"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                                <tr class="mat-row" *matNoDataRow>
+                                    <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+                                        <span *ngIf="loaderService?.isLoadingcircle">Loading...Please Wait</span>
+                                        <span *ngIf="!loaderService?.isLoadingcircle && !dataSource?.data?.length">No data available</span>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+                        <div [ngClass]="{'display-none' : dataSource.filteredData.length < 10}" class="mb-5">
+                            <mat-paginator [pageSizeOptions]="pagenation" showFirstLastButtons aria-label="Select page">
+                            </mat-paginator>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #AddChat let-modal>
+    <div class="modal-content nz-allSelect">
+        <div class="modal-headers mt-2">
+            <h4 class="modal-title">
+              <span class="capitalize">Admin Comments</span>
+            </h4>
+        </div>
+        <div class="modal-body">
+            <div class="wrap-form-field padding-space">
+              <form [formGroup]="ChatForm" >
+                  <div class="col-md-12 mb-3">
+                    <label class="form-label">Reply</label>
+                    <textarea id="reply" name="reply" rows="10" cols="50" formControlName="reply"
+                      class="form-control custom-input rounded-0" style="height: 65px;"
+                      [ngClass]="{'is-invalid': submitted && f.reply.errors}"></textarea>
+                    <div *ngIf="submitted && f.reply.errors" class="invalid-feedback">
+                      <div *ngIf="f.reply.errors.required">Admin Comments is required
+                      </div>
+                    </div>
+                  </div>
+                </form>
+                <div class="form-group wrap-form-action mt-4">
+                  <button class="btn1 btn-lg float-end" (click)="Cancel()" >Close</button>
+                  <button (click)="AddSave()" class="btn btn-outline-primary btn-lg float-end">Send
+                  </button>
+              </div>
+         
+               
+            </div>
+        </div>
+    </div>
+  </ng-template>

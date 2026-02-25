@@ -1,0 +1,107 @@
+<div class="wrap-form-field">
+  <h1 class="main-h">New Vendor Bill</h1>
+  <div class="row">
+    <div class="col-md-12">
+      <form class="row g-4">
+        <div class="col-md-4">
+          <label class="form-label">Select Vendor <span class="text-danger">*</span></label>
+          <select class="form-select custom-input">
+            <option selected>Erika Services</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Currency </label>
+          <select class="form-select custom-input">
+            <option selected>USD</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Bill Amount</label>
+          <input type="text" class="form-control custom-input" placeholder="Bill Amount" value="1244">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Bill Date</label>
+          <div class="input-group date" id="datepicker">
+            <input type="date" class="form-control custom-input" id="date" />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Bill Due Date</label>
+          <div class="input-group date" id="datepicker">
+            <input type="date" class="form-control custom-input" id="date" />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Upload Document </label>
+          <input class="form-control custom-input" type="file" id="formFileMultiple" multiple>
+        </div>
+        <div class="col-md-8">
+          <label class="form-label">Additional Comments</label>
+          <input type="text" class="form-control custom-input" placeholder="Additional Comments" value="Type Text">
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="wrap-table-area">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2 ">
+          <div class="mt-2">
+            <a class="new-action">Add Bill</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="table-responsive">
+          <table aria-describedby="mytable" class="gfg">
+            <thead>
+              <tr class="field-name">
+                <th scope="col">Job No</th>
+                <th scope="col">Cost Group</th>
+                <th scope="col">Cost Items</th>
+                <th scope="col">Service Date</th>
+                <th scope="col">Remark</th>
+                <th scope="col">Container No</th>
+                <th scope="col">Cost Amount</th>
+                <th scope="col">Bill Amount</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let bill of allBillsData">
+                <td>{{bill.batch_no}}</td>
+                <td>{{bill.cost_group}}</td>
+                <td>{{bill.cost_itme}}</td>
+                <td>{{bill.services_date}}</td>
+                <td>{{bill.remark}}</td>
+                <td>{{bill.container_no}}</td>
+                <td>{{bill.cost_amount}}</td>
+                <td>{{bill.bill_amount}}</td>
+                <td class="action-field">
+                  <span class="mtop"><a><em class="bi bi-pencil color-pencil-red"></em></a>
+                  </span>
+                  <span class="mtop"><a><em class="bi bi-trash color-pencil-red"></em></a>
+                  </span>
+                </td>
+              </tr>
+              <tr class="footer-ui">
+                <th scope="col" colspan="7" class="footer-heading">Total Amount</th>
+                <td colspan="2">3450000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group wrap-form-action">
+    <button (click)="onCloseBill($event)" class="btn1 btn-lg float-end" type="submit">
+      Cancel
+    </button>
+    <button (click)="onCloseBill($event)" class="btn btn-outline-primary btn-lg float-end" type="submit">
+      Save
+    </button>
+  </div>
+</div>

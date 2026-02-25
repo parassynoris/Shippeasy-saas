@@ -1,0 +1,52 @@
+.table-with-gheading .wrap-table-area .form-select.custom-input {
+    border: 0;
+    outline: 0;
+    border-bottom: 1px solid var(--theme-border-bottom-color);
+    color: var(--theme-light-text-color);
+    font-size: 12px;
+    font-weight: normal;
+    padding: 6px 5px;
+    border-radius: 0;
+}
+.input-group-text {
+    display: flex;
+    align-items: center;
+     padding: 0; 
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--link-text-color);
+    text-align: center;
+    white-space: nowrap;
+   background-color: transparent; 
+    border: 1px solid var(--theme-border-color-light);
+    border-top:0;
+    border-right: 0;
+   border-radius: 0;
+   cursor: pointer;
+}
+@media only screen and (max-width: 760px),
+    (min-device-width: 768px) and (max-device-width: 1024px) {
+    /*
+    Label the data
+    */
+    td:nth-of-type(1):before {
+      content: "Branch";
+    }
+    td:nth-of-type(2):before {
+      content: "Country";
+    }
+    td:nth-of-type(3):before {
+      content: "Port";
+    }
+    td:nth-of-type(4):before {
+      content: "Services";
+    }
+    td:nth-of-type(5):before {
+      content: "Cargo Type";
+    }
+    
+    td:nth-of-type(6):before {
+      content: "Action";
+    }
+  }

@@ -1,0 +1,588 @@
+<div class="row mt-4 dashboard-card">
+  <div class="col-12">
+    <div class="card">
+      <div class="card__left mt-2">
+        <div class="row h-100">
+          <div class=" flex-column justify-content-between h-100">
+            <div>
+              <div class="d-flex flex-row justify-content-between">
+                <div class="col p-0 col-lg-12 d-flex flex-column">
+                  <div class="col text-end" *ngIf="Data?.basicDetails?.enquiryTypeName">
+                    <div>
+                      <span class="font-12 my-1 right"
+                            [ngClass]="{
+                              'status-bar3': Data?.basicDetails?.enquiryTypeName === 'Import',
+                              'status-bar2': Data?.basicDetails?.enquiryTypeName === 'Export'
+                            }">
+                        {{Data?.basicDetails?.enquiryTypeName}}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div class="col text-end" *ngIf="Data?.enquiryDetails?.basicDetails?.enquiryTypeName">
+                    <div>
+                      <span class="font-12 my-1 right"
+                            [ngClass]="{
+                              'status-bar3': Data?.enquiryDetails?.basicDetails?.enquiryTypeName === 'Import',
+                              'status-bar2': Data?.enquiryDetails?.basicDetails?.enquiryTypeName === 'Export'
+                            }">
+                        {{Data?.enquiryDetails?.basicDetails?.enquiryTypeName}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="d-flex">
+                    <img *ngIf="type === 'quotation' || type === 'enquiry'"
+                      src="../../../assets/img/icons/quote-navbar.svg" alt="image" />
+                    <img *ngIf="type === 'invoice'" src="../../../assets/img/icons/invoice-card-icon.svg" alt="image" />
+
+
+                    <img *ngIf="type === 'booking'" src="../../../assets/img/icons/booking-card-icon.svg" alt="image" />
+
+                    <span class="semibold--smalltitle new-text-color-style mulish font-10 capitlize">&nbsp; {{ type ===
+                      "invoice"
+                      ? "Invoice for Booking" : type ===
+                      "quotation"
+                      ? "Inquiry" : type }}
+                    </span>
+                  </div>
+
+
+                  <span class="heading--h5-roboto new-text-color-style font-10">{{
+                    type === "quotation"
+                    ? Data?.enquiryNo
+                    : type === "booking"
+                    ? Data?.batchNo
+                    : type === 'invoice'
+                    ? Data?.invoiceNo
+                    : ''
+                    }}</span>
+                </div>
+                <div class="d-flex sm-show col justify-content-end">
+                  <div>
+                    <span class="text-status   new-text-color-style default status-bar1 {{type === 'quotation'
+                    ? Data?.enquiryStatusCustomer
+                    : type === 'booking'
+                    ? Data?.statusOfBatch
+                    : type === 'invoice'
+                    ? Data?.paymentStatus
+                    : 'default'}}">{{ type === "quotation"
+                      ? Data?.enquiryStatusCustomer
+                      : type === "booking"
+                      ? Data?.statusOfBatch
+                      : type === 'invoice'
+                      ? (Data?.paymentStatus || 'Pending')
+                      : 'Pending'}}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex flex-column mt-2" *ngIf="!commonFunctions.getUserType()">
+                <span class="semibold--smalltitle new-text-color-style mulish font-10 capitlize">Customer Name
+                </span>
+                <span class="heading--h5-roboto new-text-color-style font-10">
+                  {{ Data?.createdBy }}
+                </span>
+              </div>
+
+
+              <div class="row d-none d-lg-inline-flex">
+                <div class="col-lg-12 col-sm-6">
+                  <div *ngIf="type !== 'booking'">
+                    <span class="text--smalltitle new-text-color-style opacity-light mulish font-10 capitlize new-text-color-style">
+                      Created
+                    </span>
+                    <span class="heading--smalltitle px-1 font-10 new-text-color-style">
+                      {{ Data?.createdOn | date: 'dd-MM-yyyy' }}
+                    </span>
+                  </div>
+                </div>
+                <!-- <div class="col-lg-12 col-sm-6">
+                  <div>
+                    <span class="heading--smalltitle px-1 font-10 new-text-color-style new-text-color-style margin"> </span>
+                    <span class="heading--smalltitle px-1 font-10 new-text-color-style new-text-color-style marginn"> {{Data?.enquiryDetails?.basicDetails?.enquiryTypeName}}</span>
+                  </div>
+                </div> -->
+              </div>
+
+              <div class="row d-none d-lg-inline-flex" *ngIf="type == 'invoice'">
+                <div class="col-lg-12 col-sm-6">
+                  <div>
+                    <span
+                      class="text--smalltitle new-text-color-style opacity-light mulish font-10 capitlize new-text-color-style">Invoice Due Date</span>
+                    <span class="heading--smalltitle px-1 font-10 new-text-color-style new-text-color-style">{{
+                      Data?.invoiceDueDate | date : 'dd-MM-yyyy'  }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row d-none d-lg-inline-flex" *ngIf="type == 'booking'">
+                <div class="col-lg-12 col-sm-6">
+                  <div>
+                    <span
+                      class="text--smalltitle new-text-color-style opacity-light mulish font-10 capitlize new-text-color-style">Booking Date</span>
+                    <span class="heading--smalltitle px-1 font-10 new-text-color-style new-text-color-style">{{
+                      Data?.batchDate | date : "dd-MM-yyyy" }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row d-none d-lg-inline-flex" *ngIf="type != 'quotation'">
+              <div class="col-lg-12 col-sm-6">
+                <span class="text--smalltitle new-text-color-style opacity-light mulish font-10 capitlize new-text-color-style">  {{ type === "booking" ? 'Enquiry No.' : 'Booking No.'}}</span>
+              <span class="heading--smalltitle px-1 font-10 new-text-color-style new-text-color-style">
+                {{ type === "quotation"
+                ? Data?.enquiryNo
+                : type === "booking"
+                ? Data?.enquiryDetails?.agentadviceNo ? Data?.enquiryDetails?.agentadviceNo :
+                Data?.enquiryDetails?.enquiryNo
+                : type === 'invoice'
+                ? Data?.batchNo
+                : '' }}
+              </span>
+            </div>
+            </div>
+
+            <!-- <div class="row d-none d-lg-inline-flex" *ngIf="Data?.enquiryDetails?.basicDetails?.loadType">
+                <div class="col-lg-12 col-sm-6">
+                  <div>
+                    <span
+                      class="text--smalltitle new-text-color-style opacity-light mulish font-10 capitlize new-text-color-style">Load type.</span>
+                    <span class="heading--smalltitle px-1 font-10 new-text-color-style new-text-color-style"> {{ Data?.enquiryDetails?.basicDetails?.loadType }}</span>
+                  </div>
+                </div>
+              </div> -->
+
+            <!-- <div class="col-lg-12 col-sm-6 d-none d-lg-inline-flex white-icon-color gap-1 pl-0">
+              <em class="bi fs-5 bi-person-circle"></em>
+              <em class="bi fs-5 bi-person-circle"></em>
+              <em class="bi fs-5 bi-person-circle"></em>
+            </div> -->
+          </div>
+        </div>
+      </div>
+
+      <div class="card__right">
+        <div class="card__right-upper">
+          <div *ngIf="type == 'invoice'"></div>
+          <div class="mt-3" *ngIf="type !== 'invoice'">
+            <!-- <div class="text-start text-capitalize display">
+            <span class="heading--subtitle2 font-10 text-uppercase black-text-colors-style">{{
+              type === "quotation"
+              ? Data?.basicDetails?.enquiryTypeName
+              : type === "booking"
+              ? Data?.enquiryDetails?.basicDetails?.enquiryTypeName
+              : type === 'invoice'
+              ? ''
+              : ''
+              }}</span>
+              </div> -->
+             
+            <app-progress-bar [Data]="progress"></app-progress-bar>
+            <div class="d-flex justify-content-between mt-2 new-text-color-style">
+              <div class="text-start text-capitalize">
+                <!-- <span class="heading--button font600 new-text-color-style font-10">
+                  {{ type === "quotation"
+                  ? Data?.routeDetails?.loadPlaceName
+                  : type === "booking"
+                  ? Data?.enquiryDetails?.routeDetails?.loadPlaceName
+                  : type === 'invoice'
+                  ? Data?.invoiceFromName
+                  : '' }}
+                </span>
+                <br /> -->
+                <span class="heading--subtitle2 font-10 text-uppercase new-text-color-style">{{ type === "quotation"
+                  ? Data?.routeDetails?.loadPortName
+                  : type === "booking"
+                  ? Data?.enquiryDetails?.routeDetails?.loadPortName
+                  : type === 'invoice'
+                  ? ''
+                  : '' }}</span>
+              </div>
+
+              <div class="text-start text-capitalize">
+                <span class="heading--subtitle2 font-10 text-uppercase black-text-colors-style">{{
+                  type === "quotation"
+                  ? Data?.basicDetails?.ShipmentTypeName
+                  : type === "booking"
+                  ? Data?.enquiryDetails?.basicDetails?.ShipmentTypeName
+                  : type === 'invoice'
+                  ? ''
+                  : ''
+                  }}</span>
+                <span class="heading--subtitle2 font-10 text-uppercase black-text-colors-style">{{' '}}{{
+                  type === "quotation"
+                  ? Data?.basicDetails?.loadType
+                  : type === "booking"
+                  ? Data?.enquiryDetails?.basicDetails?.loadType
+                  : type === 'invoice'
+                  ? ''
+                  : ''
+                  }}</span><br>
+
+
+              </div>
+              <div class="text-end text-capitalize">
+                <!-- <span class="heading--button font600 new-text-color-style font-10">{{ type === "quotation"
+                  ? Data?.routeDetails?.locationName
+                  : type === "booking"
+                  ? Data?.enquiryDetails?.routeDetails?.locationName
+                  : type === 'invoice'
+                  ? Data?.billTo
+                  : '' }}</span>
+                <br /> -->
+                <span class="heading--subtitle2 font-10 text-uppercase new-text-color-style">{{ type === "quotation"
+                  ? Data?.routeDetails?.destPortName
+                  : type === "booking"
+                  ? Data?.enquiryDetails?.routeDetails?.destPortName
+                  : type === 'invoice'
+                  ? ''
+                  : '' }}</span>
+              </div>
+            </div>
+
+            <div class="row mt-2 d-flex d-lg-none">
+              <div class="col-6 px-0">
+                <div *ngFor="let d of Data?.dates">
+                  <span class="text--smalltitle new-text-color-style font-10 text-capitalize font-issue">{{ d.type
+                    }}</span>
+                  <span class="heading--smalltitle px-1 font-10 new-text-color-style">{{
+                    d.value | date : "dd/MM/yyyy"
+                    }}</span>
+                </div>
+              </div>
+              <!-- <div class="col-6 d-flex justify-content-end align-items-center">
+                <em class="bi fs-5 bi-person-circle"></em>
+                <em class="bi fs-5 bi-person-circle"></em>
+                <em class="bi fs-5 bi-person-circle"></em>
+              </div> -->
+            </div>
+          </div>
+
+          <div>
+            <div class="col text-end" *ngIf="Data?.etd">
+              <span class="heading--subtitle2 new-text-color-style font-10">ETD {{ Data?.etd | date : "dd MMM yyyy" }}
+              </span>
+
+            </div>
+
+            <div class="col text-end" *ngIf="Data?.eta">
+              <span class="heading--subtitle2 new-text-color-style font-10">ETA {{ Data?.eta | date : "dd MMM yyyy"}}
+              </span>
+            </div>
+
+            <!-- <ng-template #status> -->
+            <div class="col text-end">
+              <div>
+                <span class="font-12 my-1 status-bar1 {{type === 'quotation'
+                ? Data?.enquiryStatusCustomer
+                : type === 'booking'
+                ? Data?.statusOfBatch
+                : type === 'invoice'
+                ? (Data?.paymentStatus ||'Pending')
+                : 'default'}}">
+                  {{ type === "quotation"
+                  ? Data?.enquiryStatusCustomer
+                  : type === "booking"
+                  ? Data?.statusOfBatch
+                  : type === 'invoice'
+                  ? (Data?.paymentStatus || 'Pending')
+                  : '' }}
+                </span>
+              </div>
+
+            </div>
+
+            <!-- </ng-template> -->
+          </div>
+        </div>
+        <div class="card__right-middle">
+          <div class="">
+            <div class="d-flex align-item-center" *ngIf="type !== 'invoice'">
+              <div class="heading--labelbold new-text-color-style font500 short-content">
+                <span class="font-10" style="list-style: none">
+                  <img  *ngIf="type === 'quotation'
+                  ? Data?.basicDetails?.ShipmentTypeName === 'Ocean'
+                  : type === 'booking'
+                  ? Data?.enquiryDetails?.basicDetails?.ShipmentTypeName  === 'Ocean'
+                   : false" class="me-1" src="../../../assets/img/icons/Union.svg" alt="image" />
+                  <img *ngIf="type === 'quotation'
+                  ? Data?.basicDetails?.ShipmentTypeName === 'Air'
+                  : type === 'booking'
+                  ? Data?.enquiryDetails?.basicDetails?.ShipmentTypeName  === 'Air'
+                   : false" style="height: 18px;"
+                  src="../../../assets/img/icons/icons8-flight-50.png"
+                  alt="image" /> 
+                  <img *ngIf="type === 'quotation'
+                  ? Data?.basicDetails?.ShipmentTypeName === 'Land'
+                  : type === 'booking'
+                  ? Data?.enquiryDetails?.basicDetails?.ShipmentTypeName  === 'Land'
+                   : false" style="height: 18px;"
+                  src="../../../assets/img/icons/delivery-truck.png"
+                  alt="image" /> 
+                  <!-- {{
+                  Data?.quoteService?.ocean?.type === "Import" ||
+                  Data?.quoteService?.ocean?.type === "Export"
+                  ? "Ocean"
+                  : null
+                  }} -->
+                  {{ type === "quotation" ? Data?.routeDetails?.shippingLineName : type === "booking" ?
+                  Data?.enquiryDetails?.routeDetails?.shippingLineName : '' }}
+                </span> 
+                <span class="font-10" *ngIf="
+                Data?.enquiryDetails?.customDetails?.customDestination ||
+                Data?.enquiryDetails?.customDetails?.customOrigin
+              ">
+                  <em class="bi bi-dot fs-6"></em>
+
+                  Customs Clearance
+                </span>
+
+                <span class="font-10" *ngIf="
+                    Data?.customDetails?.customDestination ||
+                    Data?.customDetails?.customOrigin
+                  ">
+                  <em class="bi bi-dot fs-6"></em>
+
+                  Customs Clearance
+                </span>
+
+                <span class="font-10" *ngIf="
+                    Data?.customDetails?.transportDestination ||
+                    Data?.customDetails?.transportOrigin  
+                  ">
+                  <em class="bi bi-dot fs-6"></em>
+                  <span class="">CFS/ICD </span>
+                </span>
+                <span class="font-10" *ngIf="
+                Data?.enquiryDetails?.customDetails?.transportDestination ||
+                Data?.enquiryDetails?.customDetails?.transportOrigin  
+              ">
+                  <em class="bi bi-dot fs-6"></em>
+                  <span class="">CFS/ICD </span>
+                </span>
+                <div class="flex-row flex-lg-column flex-xxl-row justify-content-between"
+                *ngIf="Data?.quotationDetails?.vesselName">
+                <span class="me-2 text--subtext new-text-color-style font-10">Vessel Name</span>
+                <span class="text--subtext font-800 new-text-color-style font-10">
+                  {{ Data?.quotationDetails?.vesselName }}  
+                </span>
+              </div>
+
+              </div>
+            </div>
+
+            <div class="mt-2">
+              <span class="text--subtext new-text-color-style" *ngIf="Data?.ShipmentTypeName == 'Ocean FCL' || Data?.enquiryDetails?.ShipmentTypeName == 'Ocean FCL'">Container
+                Count</span>
+              <span class="mx-2 text--subtext font-800 new-text-color-style font-10" *ngIf="Data?.ShipmentTypeName == 'Ocean FCL' || Data?.enquiryDetails?.ShipmentTypeName == 'Ocean FCL'">{{
+                0
+                }}</span>
+
+              <span class="text--subtext new-text-color-style" *ngIf="Data?.ShipmentTypeName == 'Ocean LCL' || Data?.enquiryDetails?.ShipmentTypeName == 'Ocean LCL'">Pallet Count</span>
+              <span class="mx-2 text--subtext font-800 new-text-color-style font-10" *ngIf="Data?.ShipmentTypeName == 'Ocean LCL' || Data?.enquiryDetails?.ShipmentTypeName == 'Ocean LCL'">{{
+                0
+                }}</span>
+
+              <!-- <div class="col-6 px-0" *ngIf="type != 'quotation'">
+                <span class="text--subtext new-text-color-style mx-10 font-10">  {{ type === "booking" ? 'Enquiry No.' : 'Booking No.'}}</span>
+
+                <span class="mx-2 text--subtext font-800 new-text-color-style font-10">
+                  {{ type === "quotation"
+                  ? Data?.enquiryNo
+                  : type === "booking"
+                  ? Data?.enquiryDetails?.agentadviceNo ? Data?.enquiryDetails?.agentadviceNo :
+                  Data?.enquiryDetails?.enquiryNo
+                  : type === 'invoice'
+                  ? Data?.batchNo
+                  : '' }}
+                </span>
+              </div> -->
+
+              <div class="col-6 px-0">
+                <span class="text--subtext new-text-color-style font-10" *ngIf="doNumber">Shipping Line Booking No</span>
+                <span class="mx-2 text--subtext font-800 new-text-color-style font-10" *ngIf="doNumber">{{
+                  doNumber
+                  }}</span>
+              </div>
+
+            </div>
+
+            <div class="" *ngIf="type === 'booking'">
+              <div class="cus-flex-contnet-alignment">
+                <div class="heading--smalltitle mt-2 me-2 color--secondary font-10" *ngFor="let container of Data?.containers">
+                  #{{ container }}
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="d-block d-lg-none">
+            <hr />
+          </div>
+          <div
+            class="col d-flex flex-lg-column flex-row align-items-center align-items-lg-end align-content-end justify-content-between text-end">
+            <ng-container
+              *ngIf="Data?.basicDetails?.ShipmentTypeName === 'Land' ? Data?.enquiryStatusCustomer !== 'Requested' : true ">
+              <div class="text-lg-end text-start" *ngIf="type == 'quotation' ">
+
+                <span
+                  *ngIf="!(Data?.enquiryStatusCustomer == 'Requested' && Data?.basicDetails?.enquiryTypeName === 'Import') &&(Data?.enquiryStatusCustomer !== 'Accepted' &&   Data?.enquiryStatusCustomer !=='Requoted'&& !Data?.looseCargoDetails?.cargos?.length && (Data?.basicDetails?.loadType === 'ULD Container'|| Data?.basicDetails?.loadType === 'FCL'))"
+                  class="my-2 heading--h4 new-text-color-style font-10">
+                  {{( Data?.estimate?.cost ? Data?.estimate?.cost : (Data?.estimate?.quoteAmount||0) )| number :
+                  '1.2-2' | customCurrency :
+                  commonFunctions?.customerCurrency()}}
+                </span>
+                
+                <span
+                  *ngIf="Data?.enquiryStatusCustomer !== 'Accepted' && Data?.enquiryStatusCustomer !== 'Requoted' && Data?.looseCargoDetails?.cargos?.length  && Data?.basicDetails?.loadType === 'LCL'
+                  && (Data?.estimate?.maxPrice > 0)"
+                  class="my-2 heading--h4 new-text-color-style font-10">
+                  {{ (Data?.estimate?.maxPrice?Data?.estimate?.maxPrice : (Data?.estimate?.quoteAmount || 0)) | number :
+                  '1.2-2' | customCurrency : commonFunctions?.customerCurrency() }} -
+                  {{ (Data?.estimate?.minPrice?Data?.estimate?.minPrice : (Data?.estimate?.quoteAmount || 0)) | number :
+                  '1.2-2' | customCurrency : commonFunctions?.customerCurrency() }}
+                </span>
+
+                <span
+                *ngIf="Data?.enquiryStatusCustomer !== 'Accepted' && Data?.enquiryStatusCustomer !== 'Requoted' && Data?.looseCargoDetails?.cargos?.length  && Data?.basicDetails?.loadType === 'Loose'
+                && (Data?.estimate?.maxPrice > 0)"
+                class="my-2 heading--h4 new-text-color-style font-10">
+                {{ (Data?.estimate?.maxPrice?Data?.estimate?.maxPrice : (Data?.estimate?.quoteAmount || 0)) | number :
+                '1.2-2' | customCurrency : commonFunctions?.customerCurrency() }} -
+                {{ (Data?.estimate?.minPrice?Data?.estimate?.minPrice : (Data?.estimate?.quoteAmount || 0)) | number :
+                '1.2-2' | customCurrency : commonFunctions?.customerCurrency() }}
+              </span>
+
+                <ng-container *ngIf="commonFunctions?.customerCurrency() !== commonFunctions?.getAgentCur()">
+                  <br>
+
+                  <span
+                    *ngIf="Data?.enquiryStatusCustomer !== 'Accepted' && Data?.enquiryStatusCustomer != 'Requested' &&  Data?.enquiryStatusCustomer !=='Requoted'&& !Data?.looseCargoDetails?.cargos?.length "
+                    class="my-2 heading--h3 new-text-color-style font-10">
+                    {{( Data?.estimate?.maxPrice ? Data?.estimate?.maxPrice : (Data?.estimate?.quoteAmount||0) )| number
+                    : '1.2-2' | customCurrency :
+                    commonFunctions?.getAgentCur()}}
+                  </span>
+                  <span
+                    *ngIf="!(Data?.enquiryStatusCustomer == 'Requested' && Data?.basicDetails?.enquiryTypeName === 'Import') && ((Data?.enquiryStatusCustomer !== 'Accepted' && Data?.enquiryStatusCustomer !== 'Requoted' && Data?.enquiryStatusCustomer === 'Requested' || (Data?.looseCargoDetails?.cargos?.length > 0)) && Data?.basicDetails?.loadType === 'FCL')"
+                    class="my-2 heading--h4 new-text-color-style font-10">
+                    {{ (Data?.estimate?.cost ? Data?.estimate?.cost : (Data?.estimate?.quoteAmount || 0)) | number :
+                    '1.2-2' | customCurrency : commonFunctions?.getAgentCur() }}
+                  </span>
+                  <span
+                    *ngIf="!(Data?.enquiryStatusCustomer == 'Requested' && Data?.basicDetails?.enquiryTypeName === 'Import') && ((Data?.enquiryStatusCustomer !== 'Accepted' && Data?.enquiryStatusCustomer !== 'Requoted' && Data?.enquiryStatusCustomer === 'Requested' || (Data?.looseCargoDetails?.cargos?.length > 0)) && Data?.basicDetails?.loadType === 'ULD Container')"
+                    class="my-2 heading--h4 new-text-color-style font-10">
+                    {{ (Data?.estimate?.cost ? Data?.estimate?.cost : (Data?.estimate?.quoteAmount || 0)) | number :
+                    '1.2-2' | customCurrency : commonFunctions?.getAgentCur() }}
+                  </span>
+                  <span *ngIf="((Data?.enquiryStatusCustomer !== 'Accepted' && Data?.enquiryStatusCustomer !== 'Requoted' && Data?.enquiryStatusCustomer === 'Requested') 
+                    || ((Data?.looseCargoDetails?.cargos?.length > 0) && Data?.basicDetails?.loadType === 'Loose')) 
+                    && (Data?.estimate?.maxPrice > 0)" class="my-2 heading--h4 new-text-color-style font-10">
+                    {{ (Data?.estimate?.maxPrice ? Data?.estimate?.maxPrice : (Data?.estimate?.quoteAmount || 0)) |
+                    number : '1.2-2' | customCurrency : commonFunctions?.getAgentCur() }} -
+                    {{ (Data?.estimate?.minPrice ? Data?.estimate?.minPrice : (Data?.estimate?.quoteAmount || 0)) |
+                    number : '1.2-2' | customCurrency : commonFunctions?.getAgentCur() }}
+                  </span>
+                </ng-container>
+
+                <span *ngIf="!(Data?.enquiryStatusCustomer == 'Requested' && Data?.basicDetails?.enquiryTypeName === 'Import')&&
+                (Data?.enquiryStatusCustomer == 'Accepted' || Data?.enquiryStatusCustomer =='Requoted')"
+                  class="my-2 heading--h4 new-text-color-style font-10 ">
+                  {{ (Data?.estimate?.finalPrice ? Data?.estimate?.finalPrice : (Data?.estimate?.quoteAmount||0)) |
+                  number : '1.2-2' | customCurrency :
+                  commonFunctions?.customerCurrency()}}
+                </span>
+                <ng-container *ngIf="commonFunctions?.customerCurrency() !== commonFunctions?.getAgentCur()">
+                  <br>
+                  <span *ngIf="Data?.enquiryStatusCustomer == 'Accepted' || Data?.enquiryStatusCustomer =='Requoted'"
+                    class="my-2 heading--h3 new-text-color-style font-10">
+                    {{ (Data?.estimate?.finalPrice ? Data?.estimate?.finalPrice : (Data?.estimate?.quoteAmount||0)) |
+                    number : '1.2-2' | customCurrency :
+                    commonFunctions?.getAgentCur()}}
+                  </span>
+                </ng-container>
+                <div 
+                *ngIf="(Data?.isExport !== false && Data?.enquiryStatusCustomer === 'Requested') || (Data?.isExport === false && !Data?.enquiryStatusCustomer)"
+                class="text--subtext new-text-color-style my-2 font-10">
+                Estimated Price Only
+              </div>
+              </div>
+            </ng-container>
+            <div *ngIf="type === 'booking'">
+              <span class="my-2 heading--h4 new-text-color-style font-10 ">
+                {{ (Data?.amount ||0) | number : '1.2-2' | customCurrency :
+                commonFunctions?.customerCurrency()}}
+              </span>
+              <ng-container *ngIf="commonFunctions?.customerCurrency() !== commonFunctions?.getAgentCur()">
+                <br>
+                <span class="my-2 heading--h3 new-text-color-style font-10">
+                  {{ (Data?.amount ||0) | number : '1.2-2' | customCurrency :
+                  commonFunctions?.getAgentCur()}}
+                </span>
+              </ng-container>
+
+            </div>
+            <div *ngIf="type === 'invoice'">
+              <span class="my-2 heading--h4 new-text-color-style font-10 ">
+                {{ (Data?.invoiceAmount ||0) | number : '1.2-2' | customCurrency :
+                commonFunctions?.customerCurrency()}}
+              </span>
+              <ng-container *ngIf="commonFunctions?.customerCurrency() !== commonFunctions?.getAgentCur()">
+                <br>
+                <span class="my-2 heading--h3 new-text-color-style font-10">
+                  {{ (Data?.invoiceAmount ||0) | number : '1.2-2' | customCurrency :
+                  commonFunctions?.getAgentCur()}}
+                </span>
+              </ng-container>
+              <!-- <div *ngIf="Data?.paymentStatus != 'Paid'" class="text--subtext new-text-color-style my-2 font-10">
+                <button
+              class="btn btn-outline-primary" 
+              (click)="onPay(Data)"
+            >
+              Pay Now
+            </button>
+              </div> -->
+
+
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf=" type === 'booking'">
+          <!-- <div class="col-lg-12 d-flex my-3 align-item-center justify-content-center">
+            <div class="line my-auto"></div>
+          </div> -->
+          <div class="card__right-bottom align-item-center">
+            <div class="col d-flex flex-column flex-lg-row justify-content-between new-text-color-style">
+              <!-- <div class="d-flex flex-row flex-lg-column flex-xxl-row justify-content-between"
+                *ngIf="Data?.enquiryDetails?.basicDetails?.loadType">
+                <span class="me-2 text--subtext new-text-color-style font-10">Load type</span>
+                <span class="text--subtext font-800 new-text-color-style font-10">
+                  {{ Data?.enquiryDetails?.basicDetails?.loadType }}
+                </span>
+              </div> -->
+              <!-- <div class="d-flex flex-row flex-lg-column flex-xxl-row justify-content-between"
+                *ngIf="Data?.quotationDetails?.vesselName">
+                <span class="me-2 text--subtext new-text-color-style font-10">Vessel Name</span>
+                <span class="text--subtext font-800 new-text-color-style font-10">
+                  {{ Data?.quotationDetails?.vesselName }}  
+                </span>
+              </div> -->
+
+              <!-- <div class="  d-flex flex-row flex-lg-column flex-xxl-row justify-content-between">
+                <span class="me-2 text--subtext new-text-color-style">Sailing Date</span>
+                <span class="text--subtext font-800 new-text-color-style">
+               {{ Data?.shipmentDate | date : "dd/MM/yyyy"  }} 
+                </span>
+
+                <span class="text--subtext font-800 new-text-color-style">
+                {{ Data?.sailingDate  | date : "dd/MM/yyyy" }} 
+                </span>
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

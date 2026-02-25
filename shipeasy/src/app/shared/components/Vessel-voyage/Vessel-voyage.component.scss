@@ -1,0 +1,100 @@
+// @media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px) {
+  
+//     td:nth-of-type(1):before {
+//         content: "Department Name";
+//    }
+//     td:nth-of-type(2):before {
+//         content: "Manager";
+//    }
+//     td:nth-of-type(3):before {
+//         content: "Email ";
+//    }
+//     td:nth-of-type(4):before {
+//         content: "Status";
+//    }
+//    td:nth-of-type(5):before {
+//     content: "Action";
+// }
+// }
+  
+  .tableFixHead td:nth-child(2),
+  .tableFixHead th:nth-child(2) {
+    position: sticky;
+    left: 87px;
+    z-index: 1;
+    background-color: white;
+  }
+  .tableFixHead td:nth-child(3),
+  .tableFixHead th:nth-child(3){
+    position: sticky;
+    left: 200px;
+    z-index: 1;
+    background-color: white;
+  }
+
+  .wrap2{
+    white-space:wrap;
+    width:250px;
+  }
+  
+  .wrap4{
+    white-space:wrap;
+    width:220px;
+  }
+
+
+.action-field {
+  width: 150px; 
+}
+
+.wrap1, .wrap3, .wrap5, .wrap6, .wrap7 {
+  white-space: wrap; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.capitlize{
+  text-transform: capitalize;
+}
+
+.table-design td:nth-child(2) {
+  position: sticky;
+  left: 44px;
+  background: white;
+  width: 95px;
+}
+
+.table-design td:nth-child(3),
+.table-design td:nth-child(4),
+.table-design td:nth-child(5),
+.table-design td:nth-child(6),
+.table-design td:nth-child(7) {
+  position: unset;
+  left: unset;
+  z-index: unset;
+}
+
+.table-design th:first-child{
+  position: sticky;
+  left: 0;
+  z-index: 99;
+  background: white;
+  width: 43px;
+}
+
+.table-design th:nth-child(2) {
+  position: sticky;
+  left: 44px;
+  z-index: 99;
+  background: white;
+  width: 95px;
+}
+
+.table-design th:nth-child(3),
+.table-design th:nth-child(4),
+.table-design th:nth-child(5),
+.table-design th:nth-child(6),
+.table-design th:nth-child(7) {
+  position: unset;
+  left: unset;
+  z-index: unset;
+}

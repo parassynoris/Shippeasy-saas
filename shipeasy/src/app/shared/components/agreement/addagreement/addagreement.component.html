@@ -1,0 +1,519 @@
+<div class="table-with-gheading">
+  <div class="row align-items-center">
+    <div class="col-md-12">
+      <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+        <div class="row align-items-center">
+          <div class="col float-start">
+            <h1 *ngIf="currentUrl === 'addagreement'">
+              {{ "smartagent.principal.agreement.addnewAgreement" | translate }}
+            </h1>
+            <h1 *ngIf="currentUrl === 'editagreement'">
+              {{ "smartagent.principal.agreement.editAgreement" | translate }}
+            </h1>
+          </div>
+          <div class="col">
+            <a class="new-action float-end" (click)="backbtn()">Back</a>
+          </div>
+        </div>
+        <form [formGroup]="newPrincipal" class="row g-3 mt-3 align-items-center">
+          <div class="col-md-3">
+            <label for="AgreementTitle" class="form-label">{{
+              "smartagent.smartAgent.AllformAddedit.agreementTitle"
+              | translate
+              }}<span class="text-danger">*</span></label>
+            <input type="text" class="form-control custom-input shadow-none" id="AgreementTitle " placeholder=""
+              value="Agreement 1"
+              oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^ A-Za-z]/g,'').replace(/ +/g, ' ')"
+              formControlName="AgreementTitle" [ngClass]="{ 'is-invalid': submitted && f.AgreementTitle.errors }" />
+            <div *ngIf="submitted && f.AgreementTitle.errors" class="invalid-feedback">
+              <div *ngIf="f.AgreementTitle.errors.required">
+                {{
+                "smartagent.smartAgent.AllformAddedit.agreementTitleisrequired"
+                | translate
+                }}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label for="Country" class="form-label">{{ "smartagent.smartAgent.AllformAddedit.country" | translate
+              }}<span class="text-danger">*</span></label>
+            <select id="Country" class="form-select shadow-none" formControlName="Country"
+              [ngClass]="{ 'is-invalid': submitted && f.Country.errors }">
+              <option *ngFor="let country of countryData" [value]="country?._source?.countryISOCode">
+                {{ country?._source?.countryName }}
+              </option>
+            </select>
+            <div *ngIf="submitted && f.Country.errors" class="invalid-feedback">
+              <div *ngIf="f.Country.errors.required">
+                {{
+                "smartagent.smartAgent.AllformAddedit.countryisrequired"
+                | translate
+                }}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label for="Porttoinclude" class="form-label">{{
+              "smartagent.smartAgent.AllformAddedit.selectPorttoinclude"
+              | translate
+              }}<span class="text-danger">*</span></label>
+            <select id="Porttoinclude" class="form-select shadow-none" formControlName="SelectPortInclude" [ngClass]="{
+                'is-invalid': submitted && f.SelectPortInclude.errors
+              }">
+              <option *ngFor="let port of portData" [value]="port?._source?.portId">
+                {{ port?._source?.portDetails?.portName }}
+              </option>
+            </select>
+            <div *ngIf="submitted && f.SelectPortInclude.errors" class="invalid-feedback">
+              <div *ngIf="f.SelectPortInclude.errors.required">
+                {{
+                "smartagent.smartAgent.AllformAddedit.selectPorttoincludeisrequired"
+                | translate
+                }}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="row">
+              <div class="col-sm-6">
+                <label class="mb-0 p-0 form-label">{{
+                  "smartagent.smartAgent.AllformAddedit.startDate"
+                  | translate
+                  }}<span class="text-danger">*</span></label>
+                  <mat-form-field appearance="outline" class="custom-date-picker">
+                   <div class="d-flex align-items-center  w-100">
+                    <input matInput
+                    [matDatepicker]="pickerEtay" formControlName="StartDate" class="h-0" [min]="minDate"/>
+                  <mat-datepicker-toggle matSuffix [for]="pickerEtay"></mat-datepicker-toggle>
+                   </div>
+                    <mat-datepicker #pickerEtay></mat-datepicker>
+                  </mat-form-field>
+                  <mat-error>
+                    <div  *ngIf=" submitted && f?.StartDate?.errors?.required" class="set-error-msg">
+                      {{
+                      "smartagent.smartAgent.AllformAddedit.startDateisrequired"
+                      | translate
+                      }}
+                  </div>
+                </mat-error>
+              </div>
+              <div class="col-sm-6">
+                <label class="mb-0 p-0 form-label">{{
+                  "smartagent.smartAgent.AllformAddedit.endDate" | translate
+                  }}<span class="text-danger">*</span></label>
+                <mat-form-field appearance="outline" class="custom-date-picker">
+                 <div class="d-flex align-items-center  w-100">
+                  <input matInput
+                  [matDatepicker]="pickerEtas" formControlName="EndDate" class="h-0" [min]="minDate"/>
+                <mat-datepicker-toggle matSuffix [for]="pickerEtas"></mat-datepicker-toggle>
+                 </div>
+                  <mat-datepicker #pickerEtas></mat-datepicker>
+                </mat-form-field>
+                <mat-error>
+                  <div  *ngIf=" submitted && f?.EndDate?.errors?.required" class="set-error-msg">
+                    {{
+                    "smartagent.smartAgent.AllformAddedit.endDateisrequired"
+                    | translate
+                    }}
+                </div>
+              </mat-error>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label for="Vesselcategory" class="form-label">{{
+              "smartagent.smartAgent.AllformAddedit.vesselCategory" | translate
+              }}</label>
+            <select id="Vesselcategory" class="form-select shadow-none" formControlName="vesselCategory">
+              <option *ngFor="let vessel of vesselData" [value]="vessel?._source?.category">
+                {{ vessel?._source?.category }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label for="VesselSubtype" class="form-label">{{
+              "smartagent.smartAgent.AllformAddedit.vesselSubtype" | translate
+              }}</label>
+            <select id="VesselSubtype" class="form-select shadow-none" formControlName="vesselSubtype">
+              <option *ngFor="let vessel of vesselData" [value]="vessel?._source?.subtype">
+                {{ vessel?._source?.subtype }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label for="DWTRange" class="form-label">{{
+              "smartagent.smartAgent.AllformAddedit.DWTRange" | translate
+              }}</label>
+            <select id="DWTRange" class="form-select shadow-none" formControlName="dwtRange">
+              <option>2000-2000</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <div class="row align-items-center">
+              <div class="col-sm">
+                <label for="DefineDWT" class="form-label">{{
+                  "smartagent.smartAgent.AllformAddedit.defineDWTRange"
+                  | translate
+                  }}</label>
+                <input type="number" class="form-control custom-input" id="DefineDWT " placeholder="Tons"
+                  formControlName="defineDWT" />
+              </div>
+              <div class="col-sm">
+                <label for="DefineDWT1" class="form-label">&nbsp;</label>
+                <input type="number" class="form-control custom-input" id="DefineDWT1 " placeholder="Tons" value=""
+                  formControlName="defineDWT1" (keypress)="setValidation()"
+                  [ngClass]="{ 'is-invalid': submitted && f.defineDWT1.errors }" />
+                <div *ngIf="submitted && f.defineDWT1.errors" class="invalid-feedback">
+                  <div *ngIf="f.defineDWT1.errors.min">
+                    Enter greter value
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label for="Cargo" class="form-label">{{
+              "smartagent.smartAgent.AllformAddedit.cargo" | translate
+              }}</label>
+            <select id="Cargo" class="form-select shadow-none" formControlName="cargo">
+              <option *ngFor="let cargo of cargoData" [value]="cargo?._source?.cargoName">
+                {{ cargo?._source?.cargoName }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label for="Cargocategory" class="form-label">{{
+              "smartagent.smartAgent.AllformAddedit.cargoCategory" | translate
+              }}</label>
+            <select id="Cargocategory" class="form-select shadow-none" formControlName="cargocategory">
+              <option>Concord Maritime</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label for="Principalname" class="form-label">{{
+              "smartagent.smartAgent.AllformAddedit.principalName" | translate
+              }}</label>
+            <select id="Principalname" class="form-select shadow-none" formControlName="principalName">
+              <option *ngFor="let principal of principalData" [value]="principal?._source?.principalName">{{principal?._source?.principalName}}</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label for="Remark" class="form-label">{{
+              "smartagent.smartAgent.AllformAddedit.remark" | translate
+              }}</label>
+            <input type="text" class="form-control custom-input" id="Remark " placeholder=""
+              value="Please send with care.This address does..." formControlName="remark" />
+          </div>
+          <div class="col-md-12 mt-3">
+            <h5>
+              {{
+              "smartagent.smartAgent.AllformAddedit.uploadDocument"
+              | translate
+              }}
+            </h5>
+            <div class="row justify-content-start align-items-center">
+              <div class="col-md-4">
+              
+                <input type="file" class="form-control custom-input mb-2" formControlName="fileupload"
+                  (change)="uploadDoc($event)" multiple accept=".pdf,.doc,.docx,.xlsx,.xls">
+                <span class="my-1" *ngFor="let doc of agreementDetails?.documents">
+                  <span class="docTab"><span>{{doc?.documentName}}</span><a (click)="deleteFile(doc)"><em
+                        class="bi bi-x-lg ml-4"></em></a></span>
+                </span>
+              </div>
+
+            </div>
+          </div>
+          <div class="col-md-12 mt-4">
+            <div class="row align-items-center">
+              <div class="col float-start">
+                <h5 style="color: #007BFF">
+                  {{
+                  "smartagent.smartAgent.AllformAddedit.costIteams"
+                  | translate
+                  }}
+                </h5>
+              </div>
+              <div class="col">
+                <a routerLink="" class="addnew float-end" (click)="openCost(AddCost)">{{ "common.add" | translate }}</a>
+              </div>
+            </div>
+
+            <div class="table-responsive mt-3">
+              <table aria-describedby="mytable">
+                <thead>
+                  <tr class="field-name">
+                    <th scope="col">
+                      {{
+                      "smartagent.smartAgent.AllformAddedit.costIteams"
+                      | translate
+                      }}
+                    </th>
+                  
+                    <th scope="col">
+                      {{
+                      "smartagent.smartAgent.AllformAddedit.cost" | translate
+                      }}
+                    </th>
+                    <th scope="col">
+                      {{
+                      "smartagent.smartAgent.AllformAddedit.price" | translate
+                      }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let costitem of agreementCostItems">
+                    <td>{{ costitem.costitemName }}</td>
+                    <td>{{ costitem.charge }}</td>
+                    <td>{{ costitem.price }}</td>
+                    <td class="action-field">
+                      <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop"><a routerLink=""
+                          (click)="openCost(AddCost, costitem)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                      </span>
+                      <span nz-tooltip (click)="delete(deleteCostHeadMap,costitem,'costitem')"
+                        nzTooltipTitle="{{ 'common.delete' | translate }}" class="mtop"><a routerLink=""><em
+                            class="typcn typcn-trash"></em></a>
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="no-data-availble" *ngIf="agreementCostItems?.length === 0">
+              {{'common.no_data' | translate}}
+            </div>
+          </div>
+          <div class="col-md-12 mt-4">
+            <h5 style="color: #007BFF">
+              {{ "smartagent.smartAgent.AllformAddedit.clauses" | translate }}
+            </h5>
+            <div class="d-flex justify-content-end">
+              <a routerLink="" class="addnew" (click)="openClause(AddClause)">{{
+                "common.add" | translate
+                }}</a>
+            </div>
+            <div class="table-responsive mb-5" *ngIf="agreementClauses">
+              <table aria-describedby="mytable1">
+                <thead>
+                  <tr class="field-name">
+                    <th scope="col">
+                      {{
+                      "smartagent.smartAgent.AllformAddedit.clauseName"
+                      | translate
+                      }}
+                    </th>
+                    <th scope="col">
+                      {{
+                      "smartagent.smartAgent.AllformAddedit.remark"
+                      | translate
+                      }}
+                    </th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let clause of agreementClauses">
+                    <td>{{ clause.clauseName }}</td>
+                    <td>{{ clause.remarks }}</td>
+                    <td class="action-field">
+                      <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop"><a routerLink=""
+                        (click)="openClause(AddClause, clause)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                    </span>
+                      <span nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}" class="mtop"><a routerLink=""
+                          (click)="delete(deleteCostHeadMap,clause,'clause')"><em class="typcn typcn-trash"></em></a>
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="no-data-availble" *ngIf="agreementClauses?.length === 0">
+              {{'common.no_data' | translate}}
+            </div>
+          </div>
+          <div class="btn-onscreen wrap-form-action">
+            <button class="btn1 btn-lg float-end" type="submit" style="margin-left: 20px"
+              (click)="backbtn()">
+              {{ "common.cancel" | translate }}
+            </button>
+            <button *ngIf="!editMode" (click)="onSave()" class="btn btn-outline-primary btn-lg float-end" type="submit">
+              {{ "common.save" | translate }}
+            </button>
+            <button *ngIf="editMode" (click)="onSave()" class="btn btn-outline-primary btn-lg float-end" type="submit">
+              {{ "common.update" | translate }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- <ul class="menuright">
+    <li>
+      <a href=""><em class="mdi mdi-folder-upload"></em></a>
+    </li>
+    <li>
+      <a href=""><em class="bi bi-pencil color-pencil-red"></em></a>
+    </li>
+    <li>
+      <a href=""><em class="mdi mdi-comment-text"></em></a>
+    </li>
+  </ul> -->
+</div>
+
+<ng-template #AddClause let-modal>
+  <div class="modal-content">
+    <div class="modal-headers mt-2">
+      <h4 class="modal-title" *ngIf="!this.costItemIdToUpdate">
+        {{ "smartagent.principal.clauses.addClause" | translate }}
+      </h4>
+      <h4 class="modal-title" *ngIf="this.costItemIdToUpdate">
+        {{ "common.edit" | translate }}
+        {{ "smartagent.principal.clauses.heading" | translate }}
+      </h4>
+      <button type="button" class="btn-close shadow-none float-end" (click)="onClauseSave()"
+        aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+        <form class="row g-3 align-items-center" [formGroup]="clauseForm">
+          <div class="col-md-4 cost-items-bottom-alignment">
+            <label class="form-label">
+              {{ "stolt.masters.CLAUSE_MASTER.CLAUSES_NAME" | translate }}</label><span class="text-danger">*</span>
+            <select id="clause" class="form-select shadow-none" formControlName="clause"
+              [ngClass]="{ 'is-invalid': submitted && f2.clause.errors }" (change)="setRemark()">
+              <option *ngFor="let clause of clauseList" [value]="clause?._source?.clauseId">
+                {{ clause?._source?.clauseName }}
+              </option>
+            </select>
+            <div *ngIf="submitted && f2.clause.errors" class="invalid-feedback">
+              <div *ngIf="f2.clause.errors.required">
+                {{ "stolt.masters.CLAUSE_MASTER.CLAUSES_NAME" | translate }}
+                {{ "common.isRequired" | translate }}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 cost-items-bottom-alignment">
+            <label class="form-label">
+              Remarks</label>
+            <input type="text" class="form-control custom-input" formControlName="remarks" />
+
+          </div>
+          <div class="form-group wrap-form-action mt-4">
+            <button class="btn1 btn-lg float-end" (click)="onClauseSave()" type="submit">
+              {{ "common.cancel" | translate }}
+            </button>
+            <button (click)="clausesMasters()" class="btn btn-outline-primary btn-lg float-end" type="submit"
+              *ngIf="!this.costItemIdToUpdate">
+              {{ "common.save" | translate }}
+            </button>
+            <button (click)="clausesMasters()" class="btn btn-outline-primary btn-lg float-end" type="submit"
+              *ngIf="this.costItemIdToUpdate">
+              {{ "common.update" | translate }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #AddCost let-modal>
+  <div class="modal-content">
+    <div class="modal-headers mt-2">
+      <h4 class="modal-title" *ngIf="!this.costItemIdToUpdate">
+        {{ "common.add" | translate }}
+        {{ "stolt.masters.costitems.charge" | translate }}
+      </h4>
+      <h4 class="modal-title" *ngIf="this.costItemIdToUpdate">
+        {{ "common.edit" | translate }}
+        {{ "stolt.masters.costitems.charge" | translate }}
+      </h4>
+      <button type="button" class="btn-close shadow-none float-end" (click)="onCostSave()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+        <form class="row g-3" [formGroup]="costItemForm">
+          <div class="col-md-4 cost-items-bottom-alignment">
+            <label class="form-label">
+              {{ "stolt.masters.costitems.item_name" | translate }}</label><span class="text-danger">*</span>
+            <select id="costitem" class="form-select shadow-none" formControlName="costitem"
+              [ngClass]="{ 'is-invalid': submitted && f1.costitem.errors }">
+              <option *ngFor="let costItem of costitemList" [value]="costItem?._source?.costitemId">
+                {{ costItem?._source?.costitemName }}
+              </option>
+            </select>
+            <div *ngIf="submitted && f1.costitem.errors" class="invalid-feedback">
+              <div *ngIf="f1.costitem.errors.required">
+                {{ "stolt.masters.costitems.item_name" | translate }}
+                {{ "common.isRequired" | translate }}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 cost-items-bottom-alignment">
+            <label class="form-label">{{
+              "stolt.masters.costitems.charge" | translate
+              }}</label><span class="text-danger">*</span>
+            <input type="number" class="form-control custom-input" formControlName="charge"
+              oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^ 0-9]/g,'').replace(/ +/g, ' ')"
+              [ngClass]="{ 'is-invalid': submitted && f1.charge.errors }" />
+            <div *ngIf="submitted && f1.charge.errors" class="invalid-feedback">
+              <div *ngIf="f1.charge.errors.required">
+                {{ "stolt.masters.costitems.charge" | translate }}
+                {{ "common.isRequired" | translate }}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 cost-items-bottom-alignment">
+            <label class="form-label">{{ "price" | translate }}</label><span class="text-danger">*</span>
+            <input type="number" class="form-control custom-input" formControlName="price"
+              oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^ 0-9]/g,'').replace(/ +/g, ' ')"
+              [ngClass]="{ 'is-invalid': submitted && f1.price.errors }" />
+            <div *ngIf="submitted && f1.price.errors" class="invalid-feedback">
+              <div *ngIf="f1.price.errors.required">
+                {{ "price" | translate }} {{ "common.isRequired" | translate }}
+              </div>
+            </div>
+          </div>
+          <div class="form-group wrap-form-action mt-4">
+            <button class="btn1 btn-lg float-end" (click)="onCostSave()" type="submit">
+              {{ "common.cancel" | translate }}
+            </button>
+            <button (click)="costItemsMasters()" class="btn btn-outline-primary btn-lg float-end" type="submit"
+              *ngIf="!this.costItemIdToUpdate">
+              {{ "common.save" | translate }}
+            </button>
+            <button (click)="costItemsMasters()" class="btn btn-outline-primary btn-lg float-end" type="submit"
+              *ngIf="this.costItemIdToUpdate">
+              {{ "common.update" | translate }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #deleteCostHeadMap let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body mt-4">
+      <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2">
+      </em>
+      <span class="text-dark fs-6">{{ "error.msg_delete" | translate }}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+          {{ "common.no" | translate }}
+        </button>
+        <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+          {{ "common.yes" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>

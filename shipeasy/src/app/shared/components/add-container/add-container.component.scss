@@ -1,0 +1,27 @@
+ 
+
+::ng-deep {
+
+  .cdk-overlay-container,
+  .cdk-overlay-pane {
+    z-index: 2000 !important;
+  }
+ 
+
+}
+
+.modal-scrollbar {
+  max-height: calc(100vh - 60px);
+  overflow: auto;
+}
+
+.hint {
+  color: gray;
+  font-size: 10px;
+  display: block;
+}
+
+small {
+  color: red;
+  font-size: 10px;
+}

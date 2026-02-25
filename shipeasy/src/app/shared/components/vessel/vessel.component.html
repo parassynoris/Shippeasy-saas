@@ -1,0 +1,230 @@
+<ng-container *ngIf="currentUrl === 'vessel'">
+  <div class="table-with-gheading">
+    <div class="wrap-table-area">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="float-clear-mobile-view d-flex flex-column flex-sm-row gap-3 float-start search-section">
+            <div class="input-group custom-input">
+              <input type="text" class="form-control" placeholder="Search" aria-label="Search" />
+            </div>
+          </div>
+          <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2">
+            <div class="mt-2">
+              <span>
+                <h5>{{ fromSize }}-{{ count }} of {{ toalLength }}</h5>
+              </span>
+            </div>
+            <div class="mt-2">
+              <span class="prv" [class.disable-arrow-sign]="fromSize === 1" (click)="prev()"><em
+                  class="typcn typcn-chevron-left"></em></span>
+              <span class="prv" [class.disable-arrow-sign]="count === toalLength" (click)="next()"><em
+                  class="typcn typcn-chevron-right"></em></span>
+            </div>
+            <div class="mt-2">
+              <select class="form-select form-select-sm" (change)="filter($event)">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+              </select>
+            </div>
+            <div class="mt-2">
+              <a class="new-action" (click)="onOpenVessel()">{{'common.add'|translate}} {{
+                'stolt.masters.vessel-Master.vessel' | translate }} </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="table-responsive">
+            <table aria-describedby="mytable" class="">
+              <thead>
+                <tr class="field-name">
+                  <th scope="col" class="width15">
+                    {{'stolt.masters.vessel-Master.vessel_name' | translate }} <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col" class="width10">
+                    {{'stolt.masters.vessel-Master.vessel_type' | translate }} <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col" class="width15">
+                    {{'stolt.masters.vessel-Master.vessel_flag' | translate }}  <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col" class="width15">
+                    {{'stolt.masters.vessel-Master.vessel_category' | translate }} <em
+                      class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col" class="width15">
+                    {{'stolt.masters.vessel-Master.status' | translate }} <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col" class="width15">
+                    {{'stolt.masters.vessel-Master.vessel_sub_type' | translate }}<em
+                      class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                  </th>
+                  <th scope="col" class="width15"></th>
+                </tr>
+                <tr>
+                  <th scope="col">
+                    <input type="text" class="form-control" id="" [(ngModel)]="vessel_name" />
+                  </th>
+                  <th scope="col">
+                    <input type="text" class="form-control" id="" [(ngModel)]="vessel_type" />
+                  </th>
+                  <th scope="col">
+                    <input type="text" class="form-control" id="" [(ngModel)]="vessel_flag" />
+                  </th>
+                  <th scope="col">
+                    <input type="text" class="form-control" id="" [(ngModel)]="vessel_category" />
+                  </th>
+                  <th scope="col">
+                    <input type="text" class="form-control" id="" [(ngModel)]="status" />
+                  </th>
+                  <th scope="col">
+                    <input type="text" class="form-control" id="" [(ngModel)]="vessel_sub_type" />
+                  </th>
+                  <th scope="col" class="wrap-table-btn">
+                    <button type="button" class="btn btn-outline-primary" (click)="search()">
+                      Search
+                    </button>
+                    <a routerLink="#" class="clearbtn" (click)="clear()">Clear</a>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let vessel of vesselData; let i = index">
+                  <td>{{ vessel?._source?.vesselName }}</td>
+                  <td>{{ vessel?._source?.vesselType }}</td>
+                  <td>{{ vessel?._source?.vesselFlag }}</td>
+                  <td>{{ vessel?._source?.generalDetails?.category }}</td>
+                  <td>{{ vessel?._source?.status }}</td>
+                  <td>{{ vessel?._source?.vesselSubType?.vesselSubTypeName }}</td>
+                  <td class="action-field">
+                    <span class="mtop boot-icon"><a (click)="onEdit(vessel._source?.vesselId)"><em
+                          class="bi bi-pencil color-pencil-red"></em></a>
+                    </span>
+                    <span class="mtop"><a (click)="delete(deletevessel, vessel)"><em class="typcn typcn-trash"></em></a>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="no-data-availble" *ngIf="vesselData.length === 0">
+            {{'common.no_data' | translate}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<ng-container *ngIf="currentUrl === 'add' || currentUrl === 'edit'">
+  <app-addvessel (VesselSection)="onCloseNew()"></app-addvessel>
+</ng-container>
+
+<ng-template #AddClause let-modal>
+  <div class="modal-content">
+    <div class="modal-headers mt-2">
+      <h4 class="modal-title"></h4>
+      <button type="button" class="btn-close shadow-none btn1 float-end" (click)="onSave()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body gap-3">
+      <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+        <form class="row" [formGroup]="vesselForm">
+          <div class="col-md-4">
+            <label class="form-label"> {{'stolt.masters.vessel-Master.vessel_name' | translate }}<span
+                class="text-danger">*</span></label>
+            <input type="text" class="form-control custom-input" placeholder="Item Name" formControlName="vesselName"
+              [ngClass]="{ 'is-invalid': submitted && f.vesselName.errors }" />
+            <div *ngIf="submitted && f.vesselName.errors" class="invalid-feedback">
+              <div *ngIf="f.vesselName.errors.required">
+                {{'stolt.masters.vessel-Master.vessel_name' | translate }} {{'common.isRequired' | translate }}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">{{'stolt.masters.vessel-Master.vessel_type' | translate }}<span
+                class="text-danger">*</span></label>
+            <input type="text" class="form-control custom-input" placeholder="Item Name" formControlName="type"
+              [ngClass]="{ 'is-invalid': submitted && f.type.errors }" />
+            <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
+              <div *ngIf="f.type.errors.required">{{'stolt.masters.vessel-Master.vessel_type' | translate }}
+                {{'common.isRequired' | translate }}</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label"> {{'stolt.masters.vessel-Master.vessel_flag' | translate }}<span
+                class="text-danger">*</span></label>
+            <input type="text" class="form-control custom-input" placeholder="Item Name" formControlName="vesselFlag"
+              [ngClass]="{ 'is-invalid': submitted && f.vesselFlag.errors }" />
+            <div *ngIf="submitted && f.vesselFlag.errors" class="invalid-feedback">
+              <div *ngIf="f.vesselFlag.errors.required">
+                {{'stolt.masters.vessel-Master.vessel_flag' | translate }} {{'common.isRequired' | translate }}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label"> {{'stolt.masters.vessel-Master.vessel_category' | translate }}<span
+                class="text-danger">*</span></label>
+            <input type="text" class="form-control custom-input" placeholder="Item Name" formControlName="category"
+              [ngClass]="{ 'is-invalid': submitted && f.category.errors }" />
+            <div *ngIf="submitted && f.category.errors" class="invalid-feedback">
+              <div *ngIf="f.category.errors.required">
+                {{'stolt.masters.vessel-Master.vessel_category' | translate }} {{'common.isRequired' | translate }}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label"> {{'stolt.masters.vessel-Master.status' | translate }}<span
+                class="text-danger">*</span></label>
+            <input type="checkbox" placeholder="Item Name" formControlName="isActive"
+              [ngClass]="{ 'is-invalid': submitted && f.isActive.errors }" />
+            <div *ngIf="submitted && f.isActive.errors" class="invalid-feedback">
+              <div *ngIf="f.isActive.errors.required">
+                {{'stolt.masters.vessel-Master.select_option' | translate }}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label"> {{'stolt.masters.vessel-Master.vessel_sub_type' | translate }}<span
+                class="text-danger">*</span></label>
+            <input type="text" class="form-control custom-input" placeholder="Item Name" formControlName="subtype"
+              [ngClass]="{ 'is-invalid': submitted && f.subtype.errors }" />
+            <div *ngIf="submitted && f.subtype.errors" class="invalid-feedback">
+              <div *ngIf="f.subtype.errors.required">
+                {{'stolt.masters.vessel-Master.vessel_sub_type' | translate }} {{'common.isRequired' | translate }}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group wrap-form-action mt-4">
+            <button class="btn1 btn-lg float-end" (click)="onSave()" type="submit">
+              {{ "common.cancel" | translate }}
+            </button>
+            <button (click)="vesselMasters()" class="btn btn-outline-primary btn-lg float-end" type="submit">
+              {{ "common.save" | translate }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #deletevessel let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close btn1 shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body mt-4">
+      <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2">
+      </em>
+      <span class="text-dark fs-6">{{"error.msg_delete" | translate}}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+          {{"common.no" | translate}}
+        </button>
+        <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+          {{"common.yes" | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,27 @@
+.mat-table-with-gheading .table-design table tbody tr td:first-child {
+    position: sticky;
+    left: 0;
+    width: 83px !important;
+}
+.new-action{
+    background: #e9e6e6;
+    border-radius: 2px;
+    padding: 6px;
+    margin-top: 17px;
+    .wrap-text, .wrap-btn{
+     width: 49%;
+     display: inline-block;
+     vertical-align: middle;
+    }
+    .wrap-btn{
+      text-align: right; 
+    }
+  }
+  .form-accordian .accordion-button::after {
+    filter: none !important;
+  }
+  .wrap-add-btn.wrap-size {
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 1385px;
+  }

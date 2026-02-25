@@ -1,0 +1,116 @@
+<div class="table-with-gheading">
+  <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+    <div class="row">
+      <div class="col-md-12 mb-5">
+        <form [formGroup]="customerGSTForm" class="row g-3 mt-3">
+      
+          <div class="col-md-4" >
+            <label class="form-label">Customer Name</label>
+
+            <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="gstCustomerName"
+              [ngClass]="{'is-invalid': submitted && f.gstCustomerName.errors}">
+              <nz-option *ngFor="let data of partyMasterNameList" [nzLabel]="data._source.name"
+                [nzValue]="data._source.partymasterId"></nz-option>
+            </nz-select>
+            <div *ngIf="submitted && f.gstCustomerName.errors" class="invalid-feedback">
+              <div *ngIf="f.gstCustomerName.errors.required">
+                Customer Name{{"common.isRequired" | translate}}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">PAN No<span class="text-danger">*</span>
+            </label>
+            <input type="text" class="form-control custom-input" value=""
+            formControlName="panNo"
+             [ngClass]="{ 'is-invalid': submitted && f.panNo.errors }" />
+            <div *ngIf="submitted && f.panNo.errors" class="invalid-feedback">
+              <div *ngIf="f.panNo.errors.required">
+                {{ "stolt.masters.product.addproduct.product_name" | translate
+                }} {{"common.isRequired" | translate}}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <input type="checkbox" class="custom-input chk" name="groupCustomer"
+               
+               formControlName="groupCustomer">
+            <label class="form-label">NRI/NP/Group Customer</label>
+         </div>
+         <div class="col-md-4">
+          <label class="form-label">GST No<span class="text-danger">*</span>
+          </label>
+          <input type="text" class="form-control custom-input" value=""
+          formControlName="gstNo"
+           [ngClass]="{ 'is-invalid': submitted && f.gstNo.errors }" />
+          <div *ngIf="submitted && f.gstNo.errors" class="invalid-feedback">
+            <div *ngIf="f.gstNo.errors.required">
+              {{ "stolt.masters.product.addproduct.product_name" | translate
+              }} {{"common.isRequired" | translate}}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 nz-select">
+          <label for="State" class="form-label">{{
+              'smartagent.smartAgent.AllformAddedit.state' | translate }}<span
+                  class="text-danger">*</span></label>
+
+          <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear
+              formControlName="state"
+              [ngClass]="{'is-invalid': submitted && f.state.errors}">
+              <nz-option *ngFor="let state of stateList"
+                  [nzLabel]="state?._source?.typeDescription"
+                  [nzValue]="state?._source?.stateId"></nz-option>
+          </nz-select>
+          <div *ngIf="submitted && f.state.errors" class="invalid-feedback">
+              <div *ngIf="f.state.errors.required">{{
+                  'smartagent.smartAgent.AllformAddedit.stateisrequired' | translate
+                  }}</div>
+          </div>
+      </div>
+      <div class="col-md-4">
+        <label for="Pincode" class="form-label">{{ 'stolt.party-master.pincode' |
+            translate
+            }}<span class="text-danger">*</span></label>
+        <input type="number" maxlength="6"
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+            class="form-control custom-input" formControlName="pinCode" id="Pincode "
+            placeholder="" value=""
+            [ngClass]="{ 'is-invalid': submitted && f.pinCode.errors }">
+        <div *ngIf="submitted && f.pinCode.errors" class="invalid-feedback">
+            <div *ngIf="f.pinCode.errors.required">{{ 'stolt.party-master.pincode' |
+                translate }} {{'common.isRequired'| translate}}</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Plant Name
+      </label>
+      <input type="text" class="form-control custom-input" value=""
+      formControlName="plantName"
+       [ngClass]="{ 'is-invalid': submitted && f.plantName.errors }" />
+      <div *ngIf="submitted && f.plantName.errors" class="invalid-feedback">
+        <div *ngIf="f.plantName.errors.required">
+          {{ "stolt.masters.product.addproduct.product_name" | translate
+          }} {{"common.isRequired" | translate}}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <input type="checkbox" class="custom-input chk" name="isSez"
+         formControlName="isSez">
+      <label class="form-label">Is Sez</label>
+   </div>
+          <div class="form-group wrap-form-action btn-onscreen ">
+            <button class="btn1 float-end" (click)="onClose($event)" type="submit">
+              {{ "common.cancel" | translate }}
+            </button>
+            <button (click)="productMasters()" class="btn btn-outline-primary float-end" type="submit">
+              {{ "common.save" | translate }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

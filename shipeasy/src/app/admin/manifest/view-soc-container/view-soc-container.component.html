@@ -1,0 +1,57 @@
+
+<div class="table-with-gheading">
+    <div class="wrap-content">
+       
+        <div class="row">
+            <div class="col-md-12 table-with-gheading">
+                <div class="horz-bar">List of Container Cell Position </div>
+                <div class="table-responsive">
+                    <div class="wrap-table-area  wrap-table-design wrap-form-field"
+                        id="htmlData">
+                        <table aria-describedby="mytable">
+                            <thead>
+                                <tr class="field-name">
+                                    <th scope="col">SR No.</th>
+                                    <th scope="col">BL No.</th>
+                                    <th scope="col">Container No.</th>
+                                    <th scope="col">Weight</th>
+                                    <th scope="col">POL</th>
+                                    <th scope="col">POD</th>
+                                    <th scope="col">FPOD</th>
+                                    <th scope="col">Consignee</th>   
+                                    <th scope="col">Notify Party</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let enquiry of houseBlList">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="no-data-availble mt-0" *ngIf="houseBlList.length === 0">
+                    {{'common.no_data' | translate}}
+                </div>
+            </div>
+        </div>
+        <div class="btn-onscreen  my-3" >
+            <div class="form-group wrap-form-action ">
+                <button class="btn btn-outline-primary float-end" (click)="back()"> 
+                    Back </button>
+                <button class="btn btn-outline-primary float-end" (click)="print()"> 
+                    Print </button>
+                <button class="btn btn-outline-primary float-end" (click)="excel()"> 
+                    Excel </button>
+            </div>
+          </div>
+    </div>
+</div>

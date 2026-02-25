@@ -1,0 +1,12 @@
+.confirmationBtn{
+    background: var(--diabosBlue) !important;
+    color: var(--white) !important;
+    height: 30px;
+    line-height: 0;
+}
+.confirmMationText{
+    color: var(--black);
+}
+.center-alignment {
+    text-align: center;
+}

@@ -1,0 +1,1103 @@
+<div class="container-fluid">
+  <div class="wrap-content">
+    <div class="row">
+      <div class="page-title-box">
+        <ol class="breadcrumb ">
+          <li class="breadcrumb-item">SHIPEASY
+          </li>
+          <li class="breadcrumb-item active color-red">WareHouse</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <div class="tab-design-change">
+    <div class="wrap-bar">
+      <div class="custome-tab">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item">
+
+            <button class="nav-link button1" [ngClass]="{'active': activeButton === 1}" type="button"
+              (click)="saveListing()">Warehouse
+            </button>
+          </li>
+        <li class="nav-item" *ngIf="!currentLogin && !isWarehouse">
+          <button class="nav-link button1" [ngClass]="{'active': activeButton === 2}" type="button" (click)="editListing()">
+            Inventory
+          </button>
+        </li>
+
+          <li class="nav-item" *ngIf="isWarehouse">
+            <button class="nav-link button1" [ngClass]="{'active': activeButton === 3}" (click)="showMainWarehouse()" type="button">Booking
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="activeButton === 3">
+  <app-main-ware-house  ></app-main-ware-house>
+</div>
+<div *ngIf="activeButton === 1" class="table-header-area">
+  <div class="mat-table-with-gheading">
+    <div class="wrapper">
+      <div class="container-fluid">
+        <div class=" pt-2">
+          <div class="wrap-mat-table-area">
+            <div class="table-header-area pt-2">
+              <div>
+                <table-filters [TDP]="[false, false, false, true]" (filterInput)="applyFilter($event)">
+                </table-filters>
+              </div>
+              <div class="header-right">
+                <div class="mt-2">
+                  <a class="btn btn-outline-primary btn-sm rounded-pill" appAccessControl featureCode="['STM0126']"
+                    accessType="add" (click)="open(AddClause)">{{ "common.add" | translate }} Warehouse</a>
+                </div>
+              </div>
+            </div>
+            <div class="table-card">
+              <div class="table-design example-container mat-elevation-z8">
+                <table mat-table [dataSource]="dataSource" matSort class="full-width-table" summary="agreement">
+                  <ng-container matColumnDef="#">
+                    <th scope="col" mat-header-cell *matHeaderCellDef style="width: 3%">
+                      #
+                      <em class="custom-tooltip" [attr.title]="'Toggle Filters'"
+                        (click)="toggleFilters = !toggleFilters" class="bi bi-search"></em>
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i = index">
+                      {{ element?.id}}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="action">
+                    <th scope="col" id="action" class="charterersPdfHead" mat-header-cell *matHeaderCellDef
+                      style="width: 6%">
+                      {{ "Actions" }}
+                    </th>
+                    <td class="borderBottom" mat-cell *matCellDef="let element; let i = index">
+                      <div class="d-flex">
+                        <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop mx-1">
+                          <a (click)="open(AddClause, element)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                        </span>
+                        <a class="mx-1" (click)="onDelete(deletedata, element)" appAccessControl accessType="delete"><i
+                            class="bi bi-trash color-pencil-red"></i></a>
+                        <span class="mx-1"></span>
+                        <span class="form-check form-switch mx1">
+                          <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                            (change)="changeStatus(element, i)" [checked]="element?.status" />
+                          <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                        </span>
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="wareHouseName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%">
+                      Warehouse Name
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.wareHouseName }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="wareHouseType">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%">
+                      Warehouse Type
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.wareHouseType }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="location">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%">
+                      Location
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.location }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="address">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%">
+                      Address
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      <div class="white-space-br">
+                        {{ element?.address }}
+                      </div>
+                    </td>
+                  </ng-container>
+                  <!-- <ng-container matColumnDef="estimatedRate">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%">
+                      City
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.city }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="estimatedRate">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%">
+                      State / Province
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.state }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="estimatedRate">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%">
+                      Country
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.country }}
+                    </td>
+                  </ng-container> -->
+                  <ng-container matColumnDef="zip">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%">
+                      Postal Code
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.zip }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container *ngFor="
+                      let headersFilter of displayedColumns1;
+                      let i = index
+                    " [matColumnDef]="headersFilter">
+                    <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+                      <div class="filters-container" [class.animate]="!toggleFilters">
+                        <em *ngIf="i > 0 && i < displayedColumns1.length - 5" class="custom-tooltip"
+                          [attr.title]="'Clear Filters'" (click)="
+                            clearFilters(); toggleFilters = !toggleFilters
+                          " class="bi bi-x-circle"></em>
+                        <div *ngIf="i > 1 && i < displayedColumns1.length - 0" appearance="outline">
+                          <input class="form-control input-txt" placeholder="Press 'Enter' to search"
+                            [(ngModel)]="filtersModel[i]" (keyup.enter)="searchColumns()" />
+                        </div>
+                      </div>
+                    </th>
+                  </ng-container>
+
+                  <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-header-row class="no-default-height" *matHeaderRowDef="displayedColumns1"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                  <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+                      <span>No data available</span>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <mat-paginator class="mb-5 mat-paginator" [pageSizeOptions]="[10, 20, 50, 100]"
+                showFirstLastButtons></mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #AddClause let-modal>
+    <div class="modal-content nz-allSelect">
+      <div class="modal-headers mt-2">
+        <h4 class="modal-title" *ngIf="!isEdit">Add Warehouse</h4>
+        <h4 class="modal-title" *ngIf="isEdit">Edit Warehouse</h4>
+        <button type="button" class="btn-close shadow-none" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+          <form class="row g-3" [formGroup]="addwareHouse">
+            <div class="d-flex justify-content-end">
+              <button *ngIf="!allPanelsOpen" (click)="toggleAllPanels(true)" class="btn btn-outline-primary p-1"
+                type="button">Expand All</button>
+              <button *ngIf="allPanelsOpen" (click)="toggleAllPanels(false)" class="btn btn-outline-primary p-1"
+                type="button">Collapse All</button>
+            </div>
+            <div class="accordion form-accordian" id="accordionPanelsStayOpenExample">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="datails">
+                  <button class="accordion-button" type="button" [class.collapsed]="!isBasicPanelOpen"
+                    (click)="toggleButton('Basic')" aria-expanded="isBasicPanelOpen" aria-controls="panelsDetails">
+                    Basic Details
+                  </button>
+                </h2>
+                <div id="panelsDetails" [class.show]="isBasicPanelOpen" class="accordion-collapse collapse show"
+                  aria-labelledby="datails" data-bs-parent="#accordionPanelsStayOpenExample">
+                  <div class="accordion-body">
+                    <div class="wrap-form-field">
+                      <div class="row g-3 align-items-center">
+                        <div class="col-md-4 nz-select">
+                          <label class="form-label">Warehouse Name<span class="text-danger">*</span></label>
+                          <input class="form-control custom-input" formControlName="wareHouseName"
+                            placeholder="WareHouse Name" value="" [ngClass]="{
+                              'is-invalid': submitted && f.wareHouseName.errors
+                            }" appCapitalizeFirst />
+                          <div *ngIf="submitted && f.wareHouseName.errors" class="invalid-feedback">
+                            <div *ngIf="f.wareHouseName.errors.required">
+                              wareHouse Name is required
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4 nz-select">
+                          <label class="form-label">Warehouse Type<span class="text-danger">*</span></label>
+                          <input class="form-control custom-input" formControlName="wareHouseType"
+                            placeholder="Warehouse Type" value="" [ngClass]="{
+                              'is-invalid': submitted && f.wareHouseType.errors
+                            }" appCapitalizeFirst />
+                          <div *ngIf="submitted && f.wareHouseType.errors" class="invalid-feedback">
+                            <div *ngIf="f.wareHouseType.errors.required">
+                              WareHouse type is required
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4 nz-select">
+                          <label class="form-label">Location<span class="text-danger">*</span></label>
+                          <input class="form-control custom-input" formControlName="location" placeholder="Location"
+                            value="" [ngClass]="{
+                              'is-invalid': submitted && f.location.errors
+                            }" appCapitalizeFirst />
+                          <div *ngIf="submitted && f.location.errors" class="invalid-feedback">
+                            <div *ngIf="f.location.errors.required">
+                              Location is required
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4 nz-select">
+                          <label class="form-label">Address<span class="text-danger">*</span></label>
+                          <textarea class="form-control" formControlName="address" placeholder="Address"
+                            [ngClass]="{'is-invalid': submitted && f.address.errors}" rows="3" cols="50">
+                        </textarea>
+                          <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
+                            <div *ngIf="f.address.errors.required">
+                              Address is required
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4 nz-select">
+                          <label class="form-label">Country<span class="text-danger">*</span></label>
+
+                          <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear
+                            nzPlaceHolder="Country" formControlName="country" [ngClass]="{
+                              'is-invalid': submitted && f.country.errors
+                            }" (ngModelChange)="getStateList()">
+                            <nz-option *ngFor="let country of countryList" [nzLabel]="country?.countryName"
+                              [nzValue]="country?.countryId"></nz-option>
+                          </nz-select>
+                          <div *ngIf="submitted && f.country.errors" class="invalid-feedback">
+                            <div *ngIf="f.country.errors.required">
+                              Country Name is required
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4 nz-select">
+                          <label class="form-label">State<span class="text-danger">*</span></label>
+                          <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear
+                            nzPlaceHolder="State" formControlName="state" [ngClass]="{
+                              'is-invalid': submitted && f.state.errors
+                            }" (ngModelChange)="getCityList()">
+                            <nz-option *ngFor="let state of stateList" [nzLabel]="state?.typeDescription"
+                              [nzValue]="state?.stateId"></nz-option>
+                          </nz-select>
+                          <div *ngIf="submitted && f.state.errors" class="invalid-feedback">
+                            <div *ngIf="f.state.errors.required">
+                              State is required
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col-md-4 nz-select">
+                          <label class="form-label">City<span class="text-danger">*</span></label>
+                          <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear
+                            nzPlaceHolder="City" formControlName="city" [ngClass]="{
+                              'is-invalid': submitted && f.city.errors
+                            }">
+                            <nz-option *ngFor="let city of cityList" [nzLabel]="city?.cityName"
+                              [nzValue]="city?.cityId"></nz-option>
+                          </nz-select>
+                          <div *ngIf="submitted && f?.city?.errors" class="invalid-feedback">
+                            <div *ngIf="f.city?.errors?.required">
+                              City is required
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4 nz-select">
+                          <label class="form-label">ZIP / Postal Code</label>
+                          <input class="form-control custom-input" formControlName="zip" placeholder="Postal Code"
+                            value="" [ngClass]="{
+                              'is-invalid': submitted && f.zip.errors
+                            }" />
+                          <div *ngIf="submitted && f.zip.errors" class="invalid-feedback">
+                            <div *ngIf="f.zip.errors.required">
+                              ZIP / Postal Code is required
+                            </div>
+                          </div>
+                        </div>
+                         <div class="col-md-4 nz-select">
+                          <label class="form-label">Bond Code</label>
+                          <input class="form-control custom-input" formControlName="bondCode" placeholder="Bonded Code"
+                            value="" [ngClass]="{
+                              'is-invalid': submitted && f.bondCode.errors
+                            }" />
+                        </div>
+                        <div class="col-md-4 nz-select">
+                          <label class="form-label">Licence No</label>
+                          <input class="form-control custom-input" formControlName="licenceNo" placeholder="Licence No"
+                            value="" [ngClass]="{
+                              'is-invalid': submitted && f.licenceNo.errors
+                            }" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="datails4">
+                  <button class="accordion-button" type="button" [class.collapsed]="!isContactsPanelOpen"
+                    (click)="toggleButton('Contacts')" aria-expanded="isContactsPanelOpen"
+                    aria-controls="panelsDetails4">
+                    Contact Information
+                  </button>
+                </h2>
+                <div id="panelsDetails4" class="accordion-collapse collapse"
+                  data-bs-parent="#accordionPanelsStayOpenExample" aria-labelledby="datails4"
+                  [class.show]="isContactsPanelOpen">
+                  <div class="accordion-body">
+                    <div class="wrap-form-field">
+                      <div class="row g-3 align-items-center">
+                        <div class="col-md-4 nz-select">
+                          <label class="form-label">Contact Person Name<span class="text-danger">*</span></label>
+                          <input class="form-control custom-input" formControlName="contactName"
+                            placeholder="Person Name" value="" [ngClass]="{
+                                        'is-invalid': submitted && f.contactName.errors
+                                      }" appCapitalizeFirst />
+                          <div *ngIf="submitted && f.contactName.errors" class="invalid-feedback">
+                            <div *ngIf="f.contactName.errors.required">
+                              Contact Person Name is required
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4 nz-select">
+                          <label class="form-label">Phone No.<span class="text-danger">*</span></label>
+                          <input class="form-control custom-input" formControlName="contactPhone" placeholder="Phone No"
+                            value="" [ngClass]="{
+                                        'is-invalid': submitted && f.contactPhone.errors
+                                      }" />
+                          <div *ngIf="submitted && f.contactPhone.errors" class="invalid-feedback">
+                            <div *ngIf="f.contactPhone.errors.required">
+                              Phone Number is required
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4 nz-select">
+                          <label class="form-label">Email<span class="text-danger">*</span></label>
+                          <input class="form-control custom-input" formControlName="contactEmail" placeholder="Email"
+                            value="" [ngClass]="{
+                                        'is-invalid': submitted && f.contactEmail.errors
+                                      }" />
+                          <div *ngIf="submitted && f.contactEmail.errors" class="invalid-feedback">
+                            <div *ngIf="f.contactEmail.errors.required">
+                              Email is required
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="KYC">
+                  <button class="accordion-button" type="button" [class.collapsed]="!isOperationalPanelOpen"
+                    (click)="toggleButton('Operational')" aria-expanded="isOperationalPanelOpen"
+                    aria-controls="panelsKYC">
+                    Operational Details
+                  </button>
+                </h2>
+                <div id="panelsKYC" class="accordion-collapse collapse" [class.show]="isOperationalPanelOpen"
+                  data-bs-parent="#accordionPanelsStayOpenExample" aria-labelledby="COORDINATOR">
+                  <div class="accordion-body">
+                    <div class="wrap-form-field">
+                      <div class="row g-3 align-items-center">
+                        <div class="col-md-4 nz-select">
+                          <label class="form-label">Total Capacity (in square feet)<span
+                              class="text-danger">*</span></label>
+                          <input type="Number" class="form-control custom-input" formControlName="totalCapacity"
+                            placeholder="Total Capacity" value="" [ngClass]="{
+                                        'is-invalid': submitted && f.totalCapacity.errors
+                                      }" />
+                          <div *ngIf="submitted && f.totalCapacity.errors" class="invalid-feedback">
+                            <div *ngIf="f.totalCapacity.errors.required">
+                              Total Capacity is required
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4 nz-select">
+                          <label class="form-label">Availability Capacity (in square feet)<span
+                              class="text-danger">*</span></label>
+                          <input type="Number" class="form-control custom-input" formControlName="availableCapacity"
+                            placeholder="Availability Capacity" value="" [ngClass]="{
+                                        'is-invalid': submitted && f.availableCapacity.errors
+                                      }" />
+                          <div *ngIf="submitted && f.availableCapacity.errors" class="invalid-feedback">
+                            <div *ngIf="f.availableCapacity.errors.required">
+                              Availability Capacity is required
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4 nz-select">
+                          <label class="form-label">Dock Doors<span class="text-danger">*</span></label>
+                          <input type="Number" class="form-control custom-input" formControlName="noOfDockDoors"
+                            placeholder="Dock Doors" value=""
+                            [ngClass]="{'is-invalid': submitted && f.noOfDockDoors.errors}" />
+                          <div *ngIf="submitted && f.noOfDockDoors.errors" class="invalid-feedback">
+                            <div *ngIf="f.noOfDockDoors.errors.required">Dock Doors is required</div>
+                          </div>
+                        </div>
+                        <div class="col-md-4 nz-select">
+                          <label class="form-label">Storage Type<span class="text-danger">*</span></label>
+                          <input class="form-control custom-input" formControlName="storageType"
+                            placeholder="Storage Type" value=""
+                            [ngClass]="{'is-invalid': submitted && f.storageType.errors}" />
+                          <div *ngIf="submitted && f.storageType.errors" class="invalid-feedback">
+                            <div *ngIf="f.storageType.errors.required">Storage Type is required</div>
+                          </div>
+                        </div>
+                        <div class="col-md-4 nz-select">
+                          <label class="form-label">Security Features<span class="text-danger">*</span></label>
+                          <input class="form-control custom-input" formControlName="securityFeatures"
+                            placeholder="Security Features" value=""
+                            [ngClass]="{'is-invalid': submitted && f.securityFeatures.errors}" />
+                          <div *ngIf="submitted && f.securityFeatures.errors" class="invalid-feedback">
+                            <div *ngIf="f.securityFeatures.errors.required">Security Feature is required</div>
+                          </div>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center">
+                          <div class=" form-check form-switch">
+                            <input class="form-check-input" formControlName="temperatureControl" type="checkbox"
+                              role="switch" id="flexSwitchCheckChecked" />
+                            <label class="form-check-label" for="flexSwitchCheckChecked">Temprature Control</label>
+                          </div>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center">
+                          <div class=" form-check form-switch">
+                            <input class="form-check-input" formControlName="operations24x7" type="checkbox"
+                              role="switch" id="flexSwitchCheckChecked" />
+                            <label class="form-check-label" for="flexSwitchCheckChecked">24/7 Operations</label>
+                          </div>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center">
+                          <div class=" form-check form-switch">
+                            <input class="form-check-input" formControlName="hazardousMaterialHandling" type="checkbox"
+                              role="switch" id="flexSwitchCheckChecked" />
+                            <label class="form-check-label" for="flexSwitchCheckChecked">Hazardous Material
+                              Handling</label>
+                          </div>
+                        </div>
+                        <div class="basicdetails">
+                          <div class="row">
+                            <div class="col-6">
+                              <h6 class="basic mb-4">Add Bin</h6>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-12">
+                              <!-- <form [formGroup]="userTable">
+                                        <div class="row">
+                                          <div class="col-6">
+                                            <table class="table table-border">
+                                              <thead class="text-nowrap">
+                                                <th class="col-1"></th>
+                                                <th class="col-2">Bin Number</th>
+                                                <th class="col-3">Description</th>
+                                              </thead>
+                                              <tbody>
+                                                <ng-container formArrayName="tableRows"
+                                                  *ngFor="let group of getFormControls.controls; let i = index">
+                                                  <tr [formGroupName]="i">
+                                                    <td class="col-1">
+                                                      <input type="checkbox" formControlName="checkboxs" />
+                                                    </td>
+                                                    <td class="col-2">
+                                                      <input class="form-control custom-input" formControlName="binNumber"/>
+                                                    </td>
+                                                    <td class="col-3">
+                                                      <input type="text" class="form-control custom-input" formControlName="binDescription"/>
+                                                    </td>
+                                                  </tr>
+                                                </ng-container>
+                                              </tbody>
+                                            </table>
+                                          </div>
+                                        </div>
+                                      </form>
+                                      <div class="row">
+                                        <div class="col-md-3 mb-1 d-flex">
+                                          <button (click)="addRow()" class="btn btn-outline-primary mr-2">Add Row</button>
+                                          <button (click)="deleteRows()"
+                                            class="btn btn-outline-primary">
+                                            Delete Row
+                                          </button>
+                                        </div>
+                                      </div> -->
+                              <form [formGroup]="userTable">
+                                <div class="row">
+                                  <div class="col-12">
+                                    <table class="table table-border">
+                                      <thead class="text-nowrap">
+                                        <tr>
+                                          <th class="col-1">#</th>
+                                          <th class="col-2">Bin Number</th>
+                                          <th class="col-3">Description</th>
+                                          <th class="col-1">Action</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <ng-container formArrayName="tableRows">
+                                          <tr *ngFor="let group of getFormControls.controls; let i = index"
+                                            [formGroupName]="i">
+                                            <td class="col-1  alignproper">{{i + 1}}</td>
+                                            <td class="col-2">
+                                              <input class="form-control custom-input" formControlName="binNumber" />
+                                            </td>
+                                            <td class="col-3">
+                                              <input type="text" class="form-control custom-input"
+                                                formControlName="binDescription" />
+                                            </td>
+                                            <td class="col-1 alignproper">
+                                              <span nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}"
+                                                class="mtop">
+                                                <a (click)="deleteRow(i)" appAccessControl featureCode="['STM0116']"
+                                                  accessType="delete"><i class="bi bi-trash color-pencil-red"></i></a>
+                                              </span>
+                                            </td>
+                                          </tr>
+                                        </ng-container>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class=" mb-1 d-flex">
+                                    <button type="button" (click)="addRow()"
+                                      class="btn btn-outline-primary mr-2 b-size">Add Row</button>
+                                  </div>
+                                </div>
+                              </form>
+
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="sale">
+                  <button class="accordion-button" type="button" [class.collapsed]="!isServicesPanelOpen"
+                    (click)="toggleButton('Services')" aria-expanded="isServicesPanelOpen" aria-controls="panelssale">
+                    Services Offered
+                  </button>
+                </h2>
+                <div id="panelssale" class="accordion-collapse collapse" [class.show]="isServicesPanelOpen"
+                  data-bs-parent="#accordionPanelsStayOpenExample" aria-labelledby="sale">
+                  <div class="accordion-body">
+                    <div class="wrap-form-field">
+                      <div class="row g-3 align-items-center">
+                        <div class="col-md-3 d-flex align-items-center">
+                          <div class=" form-check form-switch">
+                            <input class="form-check-input" formControlName="packagingService" type="checkbox"
+                              role="switch" id="flexSwitchCheckChecked" />
+                            <label class="form-check-label" for="flexSwitchCheckChecked">Packaging Services</label>
+                          </div>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-center">
+                          <div class=" form-check form-switch">
+                            <input class="form-check-input" formControlName="labelingService" type="checkbox"
+                              role="switch" id="flexSwitchCheckChecked" />
+                            <label class="form-check-label" for="flexSwitchCheckChecked">Labeling Services</label>
+                          </div>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-center">
+                          <div class=" form-check form-switch">
+                            <input class="form-check-input" formControlName="crossDocking" type="checkbox" role="switch"
+                              id="flexSwitchCheckChecked" />
+                            <label class="form-check-label" for="flexSwitchCheckChecked">Cross-Docking</label>
+                          </div>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-center">
+                          <div class=" form-check form-switch">
+                            <input class="form-check-input" formControlName="freightConsolidation" type="checkbox"
+                              role="switch" id="flexSwitchCheckChecked" />
+                            <label class="form-check-label" for="flexSwitchCheckChecked">Freight Consolidation</label>
+                          </div>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-center">
+                          <div class=" form-check form-switch">
+                            <input class="form-check-input" formControlName="customsClearance" type="checkbox"
+                              role="switch" id="flexSwitchCheckChecked" />
+                            <label class="form-check-label" for="flexSwitchCheckChecked">Customs Clearance</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="datails4">
+                  <button class="accordion-button" type="button" [class.collapsed]="!isCompliancePanelOpen"
+                    (click)="toggleButton('Compliance')" aria-expanded="isCompliancePanelOpen"
+                    aria-controls="panelsCOORDINATOR">
+                    Compliance and Certifications
+                  </button>
+                </h2>
+                <div id="panelsCOORDINATOR" class="accordion-collapse collapse" [class.show]="isCompliancePanelOpen"
+                  data-bs-parent="#accordionPanelsStayOpenExample" aria-labelledby="COORDINATOR">
+                  <div class="accordion-body">
+                    <div class="wrap-form-field">
+                      <div class="row g-3 align-items-center">
+                        <div class="col-md-4">
+                          <label class="form-label">ISO Certification</label>
+                          <input class="form-control custom-input" formControlName="ISOCertification"
+                            placeholder="ISO Certification" value=""
+                            [ngClass]="{'is-invalid': submitted && f.ISOCertification.errors}" />
+                          <div *ngIf="submitted && f.ISOCertification.errors" class="invalid-feedback">
+                            <div *ngIf="f.ISOCertification.errors.required">ISO Certification is required</div>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <label class="form-label">Other Certifications</label>
+                          <input class="form-control custom-input" formControlName="otherCertification"
+                            placeholder="Other Certification" value=""
+                            [ngClass]="{'is-invalid': submitted && f.otherCertification.errors}" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="datails0">
+                  <button class="accordion-button" type="button" [class.collapsed]="!isTechnologyPanelOpen"
+                    (click)="toggleButton('Technology')" aria-expanded="isTechnologyPanelOpen"
+                    aria-controls="panelsDetails0">
+                    Technology and Systems
+                  </button>
+                </h2>
+                <div id="panelsDetails0" class="accordion-collapse collapse" [class.show]="isTechnologyPanelOpen"
+                  data-bs-parent="#accordionPanelsStayOpenExample" aria-labelledby="datails0">
+                  <div class="accordion-body">
+                    <div class="wrap-form-field">
+                      <div class="row g-3 align-items-center">
+                        <div class="col-md-4">
+                          <label class="form-label">Warehouse Management System (WMS)</label>
+                          <input class="form-control custom-input" formControlName="wms"
+                            placeholder=" Management System" value="" [ngClass]="{
+                                        'is-invalid': submitted && f.wms.errors
+                                      }" />
+                          <div *ngIf="submitted && f.wms.errors" class="invalid-feedback">
+                            <div *ngIf="f.wms.errors.required">
+                              Warehouse Management System (WMS) is required
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <label class="form-label">Inventory Tracking System</label>
+                          <input class="form-control custom-input" formControlName="its" placeholder="Tracking System"
+                            value="" [ngClass]="{
+                                        'is-invalid': submitted && f.its.errors
+                                      }" />
+                          <div *ngIf="submitted && f.its.errors" class="invalid-feedback">
+                            <div *ngIf="f.its.errors.required">
+                              Inventory Tracking System is required
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center">
+                          <div class=" form-check form-switch">
+                            <input class="form-check-input" formControlName="barcodeScanning" type="checkbox"
+                              role="switch" id="flexSwitchCheckChecked" />
+                            <label class="form-check-label" for="flexSwitchCheckChecked">Barcode Scanning</label>
+                          </div>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center">
+                          <div class=" form-check form-switch">
+                            <input class="form-check-input" formControlName="rfidEnabled" type="checkbox" role="switch"
+                              id="flexSwitchCheckChecked" />
+                            <label class="form-check-label" for="flexSwitchCheckChecked">RFID Enabled</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="sale1">
+                  <button class="accordion-button" type="button" [class.collapsed]="!isMiscellaneousPanelOpen"
+                    (click)="toggleButton('Miscellaneous')" aria-expanded="isMiscellaneousPanelOpen"
+                    aria-controls="panelssale1">
+                    Miscellaneous
+                  </button>
+                </h2>
+                <div id="panelssale1" class="accordion-collapse collapse" [class.show]="isMiscellaneousPanelOpen"
+                  data-bs-parent="#accordionPanelsStayOpenExample" aria-labelledby="sale1">
+                  <div class="accordion-body">
+                    <div class="wrap-form-field">
+                      <div class="row g-3 align-items-center">
+                        <div class="col-md-4 nz-select">
+                          <label class="form-label">Year Established</label>
+                          <input type="number" class="form-control custom-input" formControlName="yearOfEstablished"
+                            placeholder="Year Established" value="" [ngClass]="{
+                                        'is-invalid': submitted && f.yearOfEstablished.errors
+                                      }" />
+                          <div *ngIf="submitted && f.yearOfEstablished.errors" class="invalid-feedback">
+                            <div *ngIf="f.yearOfEstablished.errors.required">
+                              Year Established is required
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4 nz-select">
+                          <label class="form-label">Operating Hours</label>
+                          <input class="form-control custom-input" formControlName="operatingHours"
+                            placeholder="Operating Hours" value="" [ngClass]="{
+                                        'is-invalid': submitted && f.operatingHours.errors
+                                      }" />
+                          <div *ngIf="submitted && f.operatingHours.errors" class="invalid-feedback">
+                            <div *ngIf="f.operatingHours.errors.required">
+                              Operating Hours is required
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4 nz-select">
+                          <label class="form-label">Notes</label>
+                          <input class="form-control custom-input" formControlName="notes" placeholder="Notes" value=""
+                            [ngClass]="{
+                                        'is-invalid': submitted && f.notes.errors
+                                      }" />
+                          <div *ngIf="submitted && f.notes.errors" class="invalid-feedback">
+                            <div *ngIf="f.notes.errors.required">
+                              Notes is required
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="datails01">
+                  <button class="accordion-button" type="button" [class.collapsed]="!isRelationshipsPanelOpen"
+                    (click)="toggleButton('Relationships')" aria-expanded="isRelationshipsPanelOpen"
+                    aria-controls="panelsDetails01">
+                    Relationships
+                  </button>
+                </h2>
+                <div id="panelsDetails01" class="accordion-collapse collapse" [class.show]="isRelationshipsPanelOpen"
+                  data-bs-parent="#accordionPanelsStayOpenExample" aria-labelledby="datails01">
+                  <div class="accordion-body">
+                    <div class="wrap-form-field">
+                      <div class="row g-3 align-items-center">
+                        <div class="col-md-4 nz-select">
+                          <label class="form-label">Parent Company ID</label>
+                          <input class="form-control custom-input" formControlName="parentCompanyId"
+                            placeholder="Parent Company ID" value="" [ngClass]="{
+                                        'is-invalid': submitted && f.parentCompanyId.errors
+                                      }" />
+                          <div *ngIf="submitted && f.parentCompanyId.errors" class="invalid-feedback">
+                            <div *ngIf="f.parentCompanyId.errors.required">
+                              Parent Company ID is required
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4 nz-select">
+                          <label class="form-label">Associated Freight Forwarder ID</label>
+                          <input class="form-control custom-input" formControlName="freightForwarderId"
+                            placeholder="Forwarder ID" value="" [ngClass]="{
+                                        'is-invalid': submitted && f.freightForwarderId.errors
+                                      }" />
+                          <div *ngIf="submitted && f.freightForwarderId.errors" class="invalid-feedback">
+                            <div *ngIf="f.freightForwarderId.errors.required">
+                              Associated Freight Forwarder ID is required
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="datails1">
+                  <button class="accordion-button" type="button" [class.collapsed]="!isUpdatesPanelOpen"
+                    (click)="toggleButton('Updates')" aria-expanded="isUpdatesPanelOpen" aria-controls="panelsDetails1">
+                    Maintenance and Updates
+                  </button>
+                </h2>
+                <div id="panelsDetails1" class="accordion-collapse collapse" [class.show]="isUpdatesPanelOpen"
+                  data-bs-parent="#accordionPanelsStayOpenExample" aria-labelledby="datails1">
+                  <div class="accordion-body">
+                    <div class="wrap-form-field">
+                      <div class="row g-3 align-items-center">
+                        <div class="col-md-4">
+                          <div class="form-field-section">
+                            <label class="mb-0 p-0 form-label">Last Maintenance Date</label>
+                            <mat-form-field appearance="outline" class="custom-date-picker">
+                              <div class="d-flex align-items-center  w-100">
+                                <input matInput [matDatepicker]="pickerEtan1" formControlName="lastMaintenance"
+                                  class="h-0" placeholder="Last Date" />
+                                <mat-datepicker-toggle matSuffix [for]="pickerEtan1"></mat-datepicker-toggle>
+                              </div>
+                              <mat-datepicker #pickerEtan1></mat-datepicker>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-field-section">
+                            <label class="mb-0 p-0 form-label">Next Maintenance Date</label>
+                            <mat-form-field appearance="outline" class="custom-date-picker">
+                              <div class="d-flex align-items-center  w-100">
+                                <input matInput [matDatepicker]="pickerEtan" formControlName="nextMaintenance"
+                                  class="h-0" placeholder="Next Date" />
+                                <mat-datepicker-toggle matSuffix [for]="pickerEtan"></mat-datepicker-toggle>
+                              </div>
+                              <mat-datepicker #pickerEtan></mat-datepicker>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group wrap-form-action mt-4">
+              <button class="btn1 btn-lg float-end" (click)="closeModal()" type="submit">
+                {{ "common.cancel" | translate }}
+              </button>
+              <button (click)="onSave()" class="btn btn-outline-primary btn-lg float-end" type="submit">
+                {{ "common.save" | translate }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>
+<div  *ngIf="activeButton === 2" class="container-fluid">
+  <div  class="wrap-form-field padding-space  modal-bottom-alignment-for-mobile-view">
+    <div class="row my-4 align-items-center">
+      <div class="col-md-12">
+        <form class="row g-4 align-items-center">
+          <div class="col-md-3">
+            <label class="mb-0 p-0 form-label">WareHouse Name</label>
+            <nz-select nzPlaceHolder="Select Warehouse Name" class="form-select" nzShowSearch nzAllowClear
+              [(ngModel)]="warehouseIdModel" [ngModelOptions]="{standalone: true}" (ngModelChange)="getBinData()">
+              <nz-option *ngFor="let warehouse of warehouseList" [nzLabel]="warehouse.wareHouseName"
+                [nzValue]="warehouse.warehouseId"></nz-option>
+            </nz-select>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="mat-table-with-gheading">
+      <div class="wrapper">
+        <div class="container-fluid">
+          <div class=" pt-2">
+            <div class="wrap-mat-table-area">
+              <div class="table-header-area pt-2">
+                <div>
+                  <table-filters [TDP]="[false, false, false, true]" (filterInput)="applyFilter1($event)">
+                  </table-filters>
+                </div>
+              </div>
+              <div class="table-card">
+                <div class="table-design example-container mat-elevation-z8">
+                  <table mat-table [dataSource]="dataSource1" matSort class="full-width-table" summary="agreement">
+                    <ng-container matColumnDef="#">
+                      <th scope="col" mat-header-cell *matHeaderCellDef style="width: 3%">
+                        #
+                        <em class="custom-tooltip" [attr.title]="'Toggle Filters'"
+                          (click)="toggleFilters = !toggleFilters" class="bi bi-search"></em>
+                      </th>
+                      <td mat-cell *matCellDef="let element; let i = index">
+                        {{ i + 1 }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="binNumber">
+                      <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%">
+                        Bin Number
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element?.binSelection }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="packageDimension">
+                      <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%">
+                        Package Dimension (l*b*h)
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element?.height }} x {{ element?.width }} x {{ element?.length }} {{element?.unit}}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="jobNo">
+                      <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%">
+                        Job No.
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element?.batchNo }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="frightType">
+                      <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                        Freight Type
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element?.frightType }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="updatedOn">
+                      <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%">
+                        Updated On
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element?.updatedOn | date: 'dd-MM-yyyy'}}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="shipperName">
+                      <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%">
+                        Shipper Name
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element?.shipperName }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="consigneeName">
+                      <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%">
+                        Consignee Name
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element?.consigneeName }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="portOfLoading">
+                      <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%">
+                        Port of Loading
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element?.loadPortName }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="portOfDischarge">
+                      <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%">
+                        Port of Discharge
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element?.dischargePortName }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="uniqueRefNo">
+                      <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%">
+                        Unique Ref No
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element?.uniqueRefNo }}
+                      </td>
+                    </ng-container>
+
+                    <ng-container *ngFor="
+                      let headersFilter of displayedColumns2;
+                      let i = index
+                    " [matColumnDef]="headersFilter">
+                      <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+                        <div class="filters-container" [class.animate]="!toggleFilters">
+                          <em *ngIf="i > 0 && i < displayedColumns2.length - 7" class="custom-tooltip"
+                            [attr.title]="'Clear Filters'" (click)="
+                            clearFilters(); toggleFilters = !toggleFilters
+                          " class="bi bi-x-circle"></em>
+                          <div *ngIf="i > 1 && i < displayedColumns2.length - 0" appearance="outline">
+                            <input class="form-control input-txt" placeholder="Press 'Enter' to search"
+                              [(ngModel)]="filtersModel[i]" (keyup.enter)="searchColumns()" />
+                          </div>
+                        </div>
+                      </th>
+                    </ng-container>
+
+                    <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumnsInventory"></tr>
+                    <tr mat-header-row class="no-default-height" *matHeaderRowDef="displayedColumns2"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsInventory"></tr>
+                    <tr class="mat-row" *matNoDataRow>
+                      <td class="mat-cell" [attr.colspan]="displayedColumnsInventory.length" class="text-center">
+                        <span>No data available</span>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <mat-paginator class="mat-paginator" [pageSizeOptions]="[10, 20, 50, 100]"
+                  showFirstLastButtons></mat-paginator>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #deletedata let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body mt-4 d-flex align-items-center">
+      <em class="bi bi-question-circle text-danger fs-2 text-center float-start me-2"> </em> <span
+        class=" text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+          {{ "common.no" | translate }}
+        </button>
+        <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+          {{ "common.yes" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #addBin let-c="close" let-d="dismiss">
+  <form class="row g-3" [formGroup]="addbinpoup">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+      </div>
+      <div class="modal-body mt-4 d-flex align-items-center">
+        <div class="col-md-4">
+          <label class="form-label">Bin Number<span class="text-danger">*</span></label>
+          <input class="form-control custom-input" formControlName="binNumber" placeholder="" value="" [ngClass]="{
+              'is-invalid': submitted && f?.binNumber?.errors
+            }" />
+        </div>
+        <div class="col-md-8">
+          <label class="form-label">Description<span class="text-danger">*</span></label>
+          <input class="form-control custom-input" formControlName="binDescription" placeholder="" value="" [ngClass]="{
+              'is-invalid': submitted && f?.binDescription?.errors
+            }" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="text-center">
+          <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+            Cancel
+          </button>
+          <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+            Add
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</ng-template>

@@ -1,0 +1,283 @@
+<div class="mat-table-with-gheading">
+    <div class="wrapper">
+        <div class="container-fluid">
+            <div class="wrap-content">
+                <div class="row">
+                    <div class="page-title-box">
+                        <ol class="breadcrumb ">
+                            <!-- <li class="breadcrumb-item">{{ 'stolt.heading' | translate }}</li> -->
+                            <li class="breadcrumb-item active">Smart Documents</li>
+                            <li class="breadcrumb-item active color-red">Smart Documents {{ 'common.list' | translate
+                                }}</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="wrap-mat-table-area">
+                    <div class="table-header-area">
+                        <div>
+                            <table-filters [TDP]="[false, false, true, true]" (filterInput)="applyFilter($event)"
+                                (onClickExport)="export()">
+                            </table-filters>
+                        </div>
+                        <div class="d-flex justify-content-end align-items-center">
+                            <div class="header-right">
+                                <button appAccessControl featureCode="['STSD01']" accessType="add" mat-button
+                                    [matMenuTriggerFor]="beforeMenu"  
+                                    class="max-con new-action  btn btn-outline-primary btn-sm rounded-pill">Create New</button>
+                                <mat-menu #beforeMenu="matMenu" xPosition="before">
+                                    <button (click)="navToAdd('Quotation')" mat-menu-item>Quotation</button>
+                                    <button (click)="navToAdd('Proforma')" mat-menu-item>Proforma Invoice</button>
+                                    <button (click)="navToAdd('Commercial')" mat-menu-item>Commercial Invoice</button>
+                                    <button (click)="navToAdd('Packing')" mat-menu-item>Packing List</button>
+                                    <button (click)="navToAdd('BL')" mat-menu-item>Bill of Lading</button>
+                                    <button (click)="navToAdd('Purchase')" mat-menu-item>Purchase Order</button>
+                                    <button (click)="navToAdd('VGM')" mat-menu-item>Verified Gross Mass Declaration</button>
+                                    <button (click)="navToAdd('Certificate')" mat-menu-item>Certificate of Origin</button>
+                                    <button (click)="navToAdd('HBL')" mat-menu-item>House Bill of Lading</button>
+                                </mat-menu>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-card">
+                        <div class="table-design example-container mat-elevation-z8">
+                            <table mat-table [dataSource]="dataSource" matSort class="" summary="agreement">
+
+                                <ng-container matColumnDef="#">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef>
+                                        # <em class="custom-tooltip" [attr.title]="'Toggle Filters'"
+                                            (click)="toggleFilters = !toggleFilters" class="bi bi-search"></em>
+                                    </th>
+                                    <td mat-cell *matCellDef="let element;let i = index">
+                                        {{ i +1}}
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="documentName">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        Name
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{ element?.documentName }}
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="documentType">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        Document Type
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{ element?.documentType}}
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="fromName">
+                                <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Associated with
+                                </th>
+                                <td mat-cell *matCellDef="let element">
+                                    {{ element?.fromName}}
+                                </td>
+                            </ng-container>
+
+                                <ng-container matColumnDef="date">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                         Date
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{element?.date | date:'dd-MM-yyyy'}}
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="updatedBy">
+                                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        Uploader
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{element?.updatedBy  }}
+                                    </td>
+                                </ng-container>
+
+                               
+
+                                <ng-container matColumnDef="action">
+                                    <th scope="col" id="action" class="charterersPdfHead" mat-header-cell
+                                        *matHeaderCellDef>
+                                        {{ 'Actions' }}
+                                    </th>
+                                    <td class="borderBottom" mat-cell *matCellDef="let element">
+                                        <em class="bi bi-three-dots dots-color-change cursor-pointer wrap-batch1 border px-1 em-icon"
+                                            [matMenuTriggerFor]="menu" #menuTrigger="matMenuTrigger"
+                                            [class]=" menuTrigger.menuOpen ? 'clicked' : ''">
+                                        </em>
+                                        <mat-menu #menu="matMenu" class="wrap-open">
+                                            <ng-container >
+                                                <button mat-menu-item class="wrap-inside" appAccessControl
+                                                    featureCode="['STEQ01']" accessType="update" (click)="navToEdit(element)">
+                                                    <a class="text-dark"><em
+                                                            class="bi bi-pencil color-pencil-red"></em> Edit</a>
+                                                </button>
+                                                <button mat-menu-item class="wrap-inside mtop" *ngIf="element?.documentType === 'Proforma Invoice'" (click)="sendQuotation(sendQuote, element)">
+                                                    <a > <em class="bi bi-envelope-fill"></em>
+                                                       Send Proforma Invoice to Email
+                                                      </a>
+                                                </button>
+                                                <button mat-menu-item class="wrap-inside mtop"  *ngIf="element?.documentType === 'Quotation' " (click)="sendQuotation(sendQuote, element)">
+                                                      <a >
+                                                        <em class="bi bi-envelope-fill"></em>
+                                                                 Send Quotation to Email </a>
+                                                      
+                                                  </button>
+                                            </ng-container>
+ 
+                                        </mat-menu>
+
+                                    </td>
+                                </ng-container>
+
+                                <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index"
+                                    [matColumnDef]="headersFilter">
+                                    <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+                                        <div class="filters-container" [class.animate]="!toggleFilters">
+                                            <!-- <em *ngIf="i == 0" class="custom-tooltip" [attr.title]="'Clear Filters'" (click)="clearFilters();toggleFilters = !toggleFilters" class="bi bi-x-circle"></em> -->
+                                            <div *ngIf="i > 0 && i < displayedColumns1.length - 1" appearance="outline">
+
+                                                <nz-select *ngIf="headersFilter == 'agentAdviseStatus_'+i"
+                                                    class="form-select w-150" nzShowSearch nzAllowClear
+                                                    [(ngModel)]="filtersModel[i]" (ngModelChange)="searchColumns()"
+                                                    nzPlaceholder="Select">
+                                                    <nz-option nzLabel="Inquiry Received"
+                                                        nzValue="Inquiry Received"></nz-option>
+                                                    <nz-option nzLabel="Inquiry Created"
+                                                        nzValue="Inquiry Created"></nz-option>
+                                                    <nz-option nzLabel="Job Created" nzValue="Job Created"></nz-option>
+                                                    <nz-option nzLabel="Inquiry Accepted"
+                                                        nzValue="Inquiry Accepted"></nz-option>
+                                                    <nz-option nzLabel="Inquiry Expired"
+                                                        nzValue="Inquiry Expired"></nz-option>
+                                                    <nz-option nzLabel="Draft" nzValue="Draft"></nz-option>
+                                                    <nz-option nzLabel="Inquiry Rejected"
+                                                        nzValue="Inquiry Rejected"></nz-option>
+                                                </nz-select>
+                                                <nz-select *ngIf="headersFilter == 'basicDetails.ShipmentTypeName_'+i"
+                                                    class="form-select" nzShowSearch nzAllowClear
+                                                    [(ngModel)]="filtersModel[i]" (ngModelChange)="searchColumns()"
+                                                    nzPlaceholder="Select">
+                                                    <nz-option nzLabel="Air" nzValue="Air"></nz-option>
+                                                    <nz-option nzLabel="Ocean" nzValue="Ocean"></nz-option>
+                                                </nz-select>
+
+                                                <nz-select *ngIf="headersFilter == 'basicDetails.loadType_'+i"
+                                                    class="form-select" nzShowSearch nzAllowClear
+                                                    [(ngModel)]="filtersModel[i]" (ngModelChange)="searchColumns()"
+                                                    nzPlaceholder="Select">
+                                                    <nz-option nzLabel="FCL" nzValue="FCL"></nz-option>
+                                                    <nz-option nzLabel="LCL" nzValue="LCL"></nz-option>
+                                                    <nz-option nzLabel="ULD Container"
+                                                        nzValue="ULD Container"></nz-option>
+                                                    <nz-option nzLabel="Loose" nzValue="Loose"></nz-option>
+                                                </nz-select>
+
+                                                <input type="date"
+                                                    *ngIf="headersFilter !== 'basicDetails.loadType_'+i && headersFilter == 'createdOn_'+i && headersFilter !== 'agentAdviseStatus_'+i && headersFilter !== 'basicDetails.ShipmentTypeName_'+i"
+                                                    class="form-control input-txt" placeholder="Press 'Enter' to search"
+                                                    [(ngModel)]="filtersModel[i]" (change)="searchColumns()">
+
+                                                <input
+                                                    *ngIf="headersFilter !== 'basicDetails.loadType_'+i && headersFilter !== 'createdOn_'+i &&headersFilter !== 'basicDetails.ShipmentTypeName_'+i && headersFilter !== 'agentAdviseStatus_'+i"
+                                                    class="form-control input-txt" placeholder="Press 'Enter' to search"
+                                                    [(ngModel)]="filtersModel[i]" (keyup.enter)="searchColumns()">
+                                            </div>
+                                            <em *ngIf="i == displayedColumns1.length - 1" class="custom-tooltip"
+                                                [attr.title]="'Clear Filters'"
+                                                (click)="clearFilters();toggleFilters = !toggleFilters"
+                                                class="bi bi-x-circle"></em>
+                                        </div>
+                                    </th>
+                                </ng-container>
+
+
+                                <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-header-row class="no-default-height" *matHeaderRowDef="displayedColumns1"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                                <tr class="mat-row" *matNoDataRow>
+                                    <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+                                        <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+                                        <span *ngIf="!loaderService?.isLoadingcircle && !dataSource?.data?.length">No
+                                            data available</span>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+                        <div [ngClass]="{'display-none' : dataSource.filteredData.length < 20}">
+                            <mat-paginator [pageSizeOptions]="pagenation" showFirstLastButtons aria-label="Select page">
+                            </mat-paginator>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #deleteagentAdvice let-c="close" let-d="dismiss">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+        </div>
+        <div class="modal-body mt-4 d-flex align-items-center">
+            <em class="bi bi-question-circle text-danger fs-2 text-center float-start me-2"> </em> <span
+                class=" text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+        </div>
+        <div class="modal-footer">
+            <div class="text-center">
+                <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+                    {{ "common.no" | translate }}
+                </button>
+                <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+                    {{ "common.yes" | translate }}
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #sendQuote let-c="close" let-d="dismiss">
+    <div class="modal-content">
+      <div class="modal-header">
+        {{ 
+            sendMailDeatils?.documentType === 'Quotation' 
+              ? 'Send Quotation' 
+              : sendMailDeatils?.documentType === 'Proforma Invoice' 
+                ? 'Send Proforma Invoice' 
+                : '' 
+          }}
+          
+        <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+        </button>
+      </div>
+      <div class="modal-body ">
+        <form [formGroup]="emailForm">
+          <div class="row  mb-3">
+            <div class="col-md-8">
+              <label class="form-label">Send to Mail</label>
+              <div class="d-flex">
+                <input id="email" formControlName="email" name="email" class="form-control custom-input" type="email">
+                <button type="submit" class="btn btn-outline-primary" aria-label="Close"
+                  (click)="submitForm()">Send</button>
+              </div>
+              <div *ngIf="emailForm.controls.email.touched && emailForm.controls.email.invalid" class="text-danger">
+                <div *ngIf="emailForm.controls.email.errors.required">Email is required</div>
+                <div *ngIf="emailForm.controls.email.errors.email">Invalid email format</div>
+              </div>
+            </div>
+  
+  
+          </div>
+        </form>
+        <div style="border: 1px solid #e0e0e0;">
+          <iframe id="pdfViewer" width="100%" height="500px"></iframe>
+        </div>
+      </div>
+    </div>
+  </ng-template>

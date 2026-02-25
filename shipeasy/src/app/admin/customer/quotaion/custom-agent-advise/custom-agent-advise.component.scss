@@ -1,0 +1,107 @@
+.qoutation-from-card{
+    // background-color: white !important;
+    // padding: 30px;
+    // border-radius: 10px;
+    // box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+.qoutation-from-grid {
+    display: grid;
+    grid-template-columns: 31% 31% 2% 31%;
+    grid-column-gap: 10px;
+    column-gap: 15px;
+    align-items: center;
+    text-align: center;
+
+    // @include tablet {
+    //     grid-template-columns: 100%;
+    // }
+}
+}
+.wrap-qform{
+  background-color: white !important;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+.invalid-error{
+    color: var(--change-theme);
+    font-size: 12px;
+    position: absolute;
+  }
+.btn-swap {
+    border: 0;
+    background-color: transparent;
+    padding: 0;
+
+    em {
+        font-size: 16px;
+    }
+}
+
+.dropdown {
+    z-index: 9;
+    text-align: start;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.input-field {
+    text-align: start !important;
+}
+.card-upload{
+    border: 1px dashed #C8C7D6 !important;
+    box-sizing: border-box;
+    border-radius: 8px;    
+    cursor: pointer !important;
+    width: 100% !important;
+    background-color: transparent;
+    padding: 20px 0;
+    &:hover {
+        border: 1px dashed var(--change-theme) !important;
+      }
+    .button1{
+        border: none;
+        background-color: transparent;
+        text-decoration: underline;
+    }
+  }
+  .card-upload-content-alignment {
+    .text-center-box {
+      width: 100% !important;
+      text-align: center !important;
+    }
+  }
+  .ids-border-card{
+    border: 1px dashed #C8C7D6 !important;
+    box-sizing: border-box;
+    border-radius: 8px;     
+    width: 100% !important; 
+    padding: 20px 0;
+    &:hover {
+        border: 1px dashed var(--change-theme) !important;
+      }
+    .button2{
+        border: none;
+        background-color: transparent;
+    }
+  }
+    ::ng-deep .wrap-input input {
+      font-size: 14px;
+      box-sizing: border-box;
+      border: 1px solid #d9d9d9 !important;
+      box-shadow: none;
+      outline: none;
+      background-color: #fff;
+      color: #000000de;
+      width: 100%;
+      padding: 0 15px;
+      line-height: 40px;
+      height: 32px !important;
+      border: 1px solid #ccc; 
+      border-radius: 4px; 
+  }

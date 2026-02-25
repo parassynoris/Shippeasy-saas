@@ -1,0 +1,422 @@
+@import '../../../assets/styles/common/common.scss';
+@import '../../../assets/styles/mixins/global.scss';
+
+.container, .container-lg, .container-md, .container-sm, .container-xl {
+   border-radius: 10px;
+}
+.text-danger {
+    font-size: 12px;
+}
+
+.input-group {
+    border-bottom: 1px solid #eaeaea;
+
+    select {
+        outline: none;
+        border: none;
+        padding: 0px;
+        color: getColor(text80);
+        background: none;
+        // border-bottom: 1px solid #eaeaea;
+    }
+
+    .line {
+        height: 25px;
+        width: 2px;
+        background-color: getColor(bordercolor);
+        border-radius: 99px;
+    }
+
+    .form-control {
+        border: none;
+        outline: none;
+        // @include getStyle("text", "input");
+        color: getColor(text80);
+    }
+
+}
+
+.mr-lf-0 {
+    margin-left: -20% !important;
+}
+
+.b-bottom {
+    border-bottom: 1px solid getColor(borderbottom);
+}
+
+.list {
+    list-style-type: disc;
+}
+
+.mobile {
+    display: none;
+}
+
+.modal-fullscreen-sm-down {
+    top: 50%;
+}
+
+.modal-content {
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.circles {
+    height: 5px;
+    width: 5px;
+
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.active {
+    border-color: getColor(label) !important;
+    opacity: 1 !important;
+}
+
+// .circle-desc-active{
+// font-weight: bold;
+// }
+
+.bar {
+    width: 100%;
+    border: 1px solid #3b579d ;
+    background: #3b579d ;
+    vertical-align: middle;
+    opacity: 0.5;
+    border-radius: 8px;
+    margin-top: 2px;
+    display: inline-flex;
+
+}
+
+.bar-horizontal {
+    height: 10%;
+    position: absolute;
+    border: 1px solid #3b579d ;
+    background: #3b579d ;
+    opacity: 0.5;
+    border-radius: 8px;
+
+
+}
+
+.ship {
+    margin-left: -0.5em;
+}
+
+.circle-desc {
+    // @include getStyle("heading", "formlabel");
+
+    color: getColor(text80);
+    margin-top: 1.25em;
+}
+
+.custom-checkbox {
+    padding: 0;
+    padding-right: 11px;
+
+    .hidden {
+        position: absolute;
+        visibility: hidden;
+        opacity: 0;
+    }
+
+    input[type=checkbox]+label {
+        background: linear-gradient(0deg, rgba(60, 38, 191, 0.04), rgba(60, 38, 191, 0.04)), #FFFFFF;
+        border: 1px solid #052439;
+        border-radius: 40px;
+        color: #052439;
+        padding: 6px 6px;
+        text-align: center;
+        width: 100%;
+        cursor: pointer;
+    }
+
+    input[type=checkbox]:checked+label,
+    input[type=checkbox]+label:hover { 
+        color: #3b579d ;
+        border: 1px solid #3b579d ;
+    }
+}
+
+.wrap-popup-area {
+    background: #80808094;
+}
+
+.font-s-10 {
+    font-size: 12px;
+}
+
+.my-card {
+    background-color: #fff;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(58,112,191,0.1);
+    border-radius: 10px;
+    border: 1px solid transparent;
+
+    &:hover {
+        border: 1px solid #3b579d ;
+    }
+}
+
+.need-help {
+    border-bottom: 1px solid #3b579d ;
+    // font-weight: 500;
+    text-decoration: none;
+    padding-bottom: 2px;
+}
+
+@media screen and (max-width:768px) {
+    .btn-full {
+        width: 100% !important;
+    }
+
+    .desktop {
+        display: none;
+    }
+
+    .mobile {
+        display: block;
+    }
+
+
+
+}
+
+::ng-deep .igx-input-group__bundle {
+    padding-top: 0 !important;
+}
+
+.topcard{
+    background-color: white !important; 
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+.qoutation-from-grid {
+    display: grid;
+    grid-template-columns: 23% 23% 4% 23% 23%;
+    grid-column-gap: 10px;
+    column-gap: 15px;
+    align-items: center;
+    text-align: center;
+  
+    // @include tablet {
+    //     grid-template-columns: 100%;
+    // }
+}
+.qoutation-from-grid1 {
+    display: grid;
+    grid-template-columns: 23% 55% 20%;
+    grid-column-gap: 10px;
+    column-gap: 15px;
+    align-items: center;
+    text-align: center;
+  
+    // @include tablet {
+    //     grid-template-columns: 100%;
+    // }
+}
+.bg-whites{
+    background-color: white !important; 
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; 
+}
+.btn-swap {
+    border: 0;
+    background-color: transparent;
+    padding: 0;
+    em {
+        font-size: 16px;
+    }
+    // @include tablet {
+    //     transform: rotate(90deg);
+    // }
+}
+
+.igx-input-group__bundle {
+    box-shadow: none !important;
+    height: 100%;
+}
+
+igx-input-group {
+    .igx-input-group__bundle {
+        border-bottom: 0 !important;
+    }
+}
+
+.wrap-ngx-sets {
+    .wrap-select {
+        padding-right: 10px;
+    }
+}
+
+igx-date-picker {
+    &.igx-custome-picker {
+        border: 0 !important;
+    }
+}
+
+.input-field {
+    &.input-field-inline {
+        select,input {
+            padding-left: 0 !important;
+        }
+    }
+}
+
+.break-line {
+    white-space: pre-line
+}
+.wrap-qform{
+.input-field input:focus, .input-field textarea, .input-field input:valid, .input-field input, .input-field select, .input-field .ng-autocomplete input{
+    // color: #353D5C !important;
+    font-size: 12px;
+    font-family: 'Jost', sans-serif;
+    font-weight: 400;
+}
+}
+// ::ng-deep{
+//     .igx-custome-picker.ui{
+//         .igx-date-picker__input-date.igx-input-group__input{
+//         //  color: #353D5C !important;
+//          font-size: 16px;
+//             font-family: 'Jost', sans-serif;
+//             font-weight: 400;
+//     }
+//     }  
+// }
+.back-btn{
+    font-family: 'Jost', sans-serif !important;
+    opacity: 0.7;
+}
+
+.input-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }
+  
+  .dropdown {
+    z-index: 9;
+    text-align: start;
+    position: absolute;
+    top: 100%; 
+    right: 0;
+    width: 100% !important;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .input-field {
+    text-align: start !important;
+}
+  mat-button-toggle {
+    background-color: #fff; /* Green */
+    border: none;
+    color: #444;
+    padding: 0;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 0px 2px;
+    // transition-duration: 0.2s;
+    cursor: pointer;
+    height: 34px;
+  }
+  
+  /* Hover effect */
+  mat-button-toggle:hover {
+    background-color: var(--change-theme);
+    color: #fff;
+  }
+  
+  /* Active state */
+  mat-button-toggle.mat-button-toggle-checked {
+    background-color: var(--change-theme);
+    color: #fff;
+  }
+  ::ng-deep {
+  .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+    line-height: 34px !important;
+}
+  }
+  .grid-1{
+    display: grid;
+    grid-template-columns: 120px auto 15px;
+    grid-column-gap: 20px;
+    margin-bottom: 15px;
+  }
+  .invalid-error{
+    color: var(--change-theme);
+    font-size: 12px;
+    position: absolute;
+  }
+  .font-10 {
+    font-size: 12px !important;
+    font-family: 'Roboto';
+  }
+  .font-12{
+    font-size: 12px !important;
+    font-family: 'Roboto';
+  }
+  .font-16{
+  font-size: 16px !important;
+    font-family: 'Roboto';
+  }
+  .w-0{
+    width: unset !important;
+    height: unset !important;
+  }
+  .btn-secondary-yellow{
+    cursor: context-menu !important;
+  }
+  .dropdowns{
+    width: 730px !important;
+  }
+
+  .size1{
+    width: 160px !important;
+  }
+.btn.backbutton {
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 500;
+    border: 1px solid #007BFF; 
+    color: #007BFF; 
+    background-color: transparent; 
+}
+
+.btn.backbutton:hover {
+    background-color: #007BFF; 
+    color: white;
+}
+.cancel-btn {
+    font-weight: 500;
+}
+::ng-deep {
+	.cdk-overlay-container,
+	.cdk-overlay-pane {
+	  z-index: 2000 !important;
+	}
+
+  }
+
+  /* Apply styles to the ng-autocomplete input */
+  ::ng-deep .wrap-input input {
+    font-size: 14px;
+    box-sizing: border-box;
+    border: 1px solid #d9d9d9 !important;
+    box-shadow: none;
+    outline: none;
+    background-color: #fff;
+    color: #000000de;
+    width: 100%;
+    padding: 0 15px;
+    line-height: 40px;
+    height: 32px !important;
+    border: 1px solid #ccc; 
+    border-radius: 4px; 
+}

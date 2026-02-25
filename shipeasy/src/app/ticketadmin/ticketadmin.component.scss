@@ -1,0 +1,159 @@
+::ng-deep {
+    .wrap-modal-autosearch {
+        nz-select {
+ 
+            input,
+            select {
+                padding: 0 0px !important;
+                border: 1px solid rgb(207 202 202) !important;
+            }
+        }
+ 
+        .nz-form-select.wrap-inline-select nz-select-top-control {
+            height: 32px !important;
+        }
+    }
+ 
+    .cdk-overlay-container,
+    .cdk-overlay-pane {
+        z-index: 2000 !important;
+    }
+}
+.upload-btn-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    width: 100%;
+  }
+   
+  .btns {
+    border: 2px dashed #c2bcbc;
+    color: var(--theme-gray-800); 
+    background-color: var(--theme-light-bg);
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+  }
+   
+  .upload-btn-wrapper input[type=file] {
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+  }
+  .form-field-section{
+    .form-label{
+        font-size: 12px;
+        color: var(--theme-light-gray-color);
+        margin-bottom: 0px;
+    }
+    // .custom-input{
+    //     border: 0;
+    //     outline: 0;
+    //     border-bottom: 1px solid var(--theme-border-bottom-color);
+    //     color: var(--theme-light-text-color);
+    //     @include new-heading-12;
+    //     font-weight: normal;
+    //     padding: 6px 0;
+    // }
+}
+.form-select:focus{ box-shadow: none;
+    border-color: var(--link-text-color);}
+    .query-log-content {
+        padding: 10px 30px;
+        // background: rgb(0 0 0 / 4%);
+        margin-top: 10px;
+        margin-bottom: 10px;
+     
+        .query-log {
+            text-align: end;
+            padding: 10px;
+            color: rgba(0, 0, 0, 0.87);
+        }
+     
+        .log-content {
+            padding: 10px;
+            background: rgb(0 0 0 / 4%);
+            min-height: 65px;
+            word-wrap: break-word;
+            border: 2px solid #c7bebe;
+            max-height: 160px;
+            overflow-y: auto;
+        }
+     
+        .query-log-view {
+            text-align: end;
+            padding: 10px;
+            color: #4078c7;
+        }
+    }
+    .query-log-text-style {
+        span {
+            color: var(--theme-500-black-color);
+            line-height: 22px;
+            font-weight: 500;
+            display: block;
+            text-align: right;
+            opacity: .7;
+        }
+    }
+    .justify-space{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .log-content {
+        padding: 10px;
+        background: rgb(0 0 0 / 4%);
+        min-height: 65px;
+        word-wrap: break-word;
+        border: 2px solid #c7bebe;
+        max-height: 160px;
+        overflow-y: auto;
+    }
+    ::ng-deep {
+        .cdk-overlay-container,
+        .cdk-overlay-pane {
+          z-index: 2000 !important;
+        }
+    
+      }
+    
+    
+    .globally-chnage-mobile-view{
+        margin-bottom: 10px;
+    }
+    
+    .upload-btn-wrapper {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+        width: 100%;
+      }
+      .btns {
+        border: 2px dashed #c2bcbc;
+        color: var(--theme-gray-800); 
+        background-color: var(--theme-light-bg);
+        padding: 8px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: bold;
+        text-align: center;
+      }
+    
+      .upload-btn-wrapper input[type=file] {
+        font-size: 100px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+      }
+    
+      .icons-file{
+        em{
+          margin-right: 10px;
+        }
+       }

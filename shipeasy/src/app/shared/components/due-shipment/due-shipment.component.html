@@ -1,0 +1,370 @@
+<div class="table-with-gheading">
+    <div class="wrapper">
+        <div class="container-fluid">
+            <div class="wrap-content">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="page-title-box">
+                            <div class="btn-group mt-2">
+                                <ol class="breadcrumb hide-phone p-0 m-0">
+                                    <!-- <li class="breadcrumb-item">{{ 'stolt.heading' | translate }}</li> -->
+                                    <li class="breadcrumb-item active">Dashboard</li>
+                                    <li class="breadcrumb-item active">Due-Shipment</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ng-container *ngIf="showListData">
+
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form [formGroup]="searchForm" class="row g-2">
+                                <div class=" col-md-3 custom-form-control">
+                                    <label class="form-label">Mother Vessel
+                                    </label>
+                                   
+                                    <nz-select class="form-select" nzShowSearch nzAllowClear
+                                        formControlName="motherVessel" (ngModelChange)="vesselChange($event)">
+                                        <nz-option *ngFor="let vessel of vesseldata"
+                                            [nzLabel]="vessel.vesselName"
+                                            [nzValue]="vessel.vesselId"></nz-option>
+                                    </nz-select>
+                                </div>
+                                <div class=" col-md-3 custom-form-control">
+                                    <label class="form-label">Mother Voyage
+                                    </label>
+                                   
+                                    <nz-select class="form-select" nzShowSearch nzAllowClear
+                                        formControlName="motherVoyage">
+                                        <nz-option *ngFor="let voyage of voyageList"
+                                            [nzLabel]="voyage.voyageNumber"
+                                            [nzValue]="voyage.voyageId"></nz-option>
+                                    </nz-select>
+                                </div>
+                                <div class=" col-md-3 custom-form-control">
+                                    <label class="form-label">BL/Job No.</label>
+
+                                    <nz-select style="width: 90%;" class="form-select" nzMode="multiple" nzShowSearch
+                                        nzAllowClear formControlName="blBatchNo" (ngModelChange)="setPendingBatch()"
+                                        [ngClass]="{'is-invalid': submitted && f.blBatchNo.errors}">
+                                        <nz-option *ngFor="let data of batchList" [nzLabel]="data.batchNo"
+                                            [nzValue]="data?.batchNo"></nz-option>
+                                    </nz-select>
+
+                                    <button #insideVendor class="findButton" (click)="showTem = !showTem">...</button>
+                                    <div #insideVendor1>
+                                        <div class=" select-table" *ngIf="showTem">
+                                          
+                                            <div class="mb-2">
+                                                <span class="d-flex">
+                                                    <input type="text" class="form-control custom-input"
+                                                        [(ngModel)]="searchText" [ngModelOptions]="{standalone: true}"
+                                                        placeholder="Search here..">
+                                                    <button (click)="showTem = !showTem">
+                                                        Submit
+                                                    </button>
+                                                    <button (click)="showTem = false">
+                                                        Close
+                                                    </button>
+                                                </span>
+
+                                            </div>
+                                            <div class="overLay">
+                                                <table aria-describedby="mytable" class="gfg">
+                                                    <thead>
+                                                        <tr class="field-name">
+                                                            <th scope="col">
+                                                            </th>
+                                                            <th scope="col">Sr No.</th>
+                                                            <th scope="col">Bl No.</th>
+                                                            <th scope="col">Job No.</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr
+                                                            *ngFor="let item of batchList | searchfilter : searchText; let i=index">
+                                                            <td>
+                                                                <input type="checkbox"
+                                                                    [(ngModel)]="item.isSelected"
+                                                                    [ngModelOptions]="{standalone: true}"
+                                                                    (click)="setBatchValue($event,item)">
+                                                            </td>
+                                                            <td>{{i+1}}</td>
+                                                            <td></td>
+                                                            <td>{{item?.batchNo}}</td>
+
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="no-data-availble" *ngIf="partyMasterList?.length === 0">
+                                                {{'common.no_data' | translate}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class=" col-md-3 custom-form-control">
+                                    <label class="form-label">Container No
+                                    </label>
+                                    <input class="form-control custom-input" formControlName="containerNo"
+                                        type="text" />
+                                </div>
+                                <div class=" col-md-3 custom-form-control">
+                                    <label class="form-label">Consignee
+                                    </label>
+                                    <input class="form-control custom-input" formControlName="consignee" type="text" />
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 table-with-gheading">
+                            <div class="horz-bar mt-3">PENDING FOR FINAL VESSEL APPROVAL </div>
+                            <div class="table-responsive">
+                                <div class="wrap-table-area  wrap-table-design wrap-form-field" id="htmlData">
+                                    <table aria-describedby="mytable">
+                                        <thead>
+                                            <tr class="field-name">
+                                                <th scope="col">Job No.</th>
+                                                <th scope="col">SHIPEASY Move No.</th>
+                                                <th scope="col">Container No.</th>
+                                                <th scope="col">SHIPEASY BL No.</th>
+                                                <th scope="col">Consignee</th>
+                                                <th scope="col">POR</th>
+                                                <th scope="col">Pre Carriage</th>
+                                                <th scope="col">Port of Exit</th>
+                                                <th scope="col">Mother Vessel Name</th>
+                                                <th scope="col">Mother Voyage No.</th>
+                                                <th scope="col">ATD</th>
+                                                <th scope="col">ETA</th>
+                                                <th scope="col">Final Vessel</th>
+                                                <th scope="col">Final Voyage</th>
+                                                <th scope="col">ETD</th>
+                                                <th scope="col">Port of Entry</th>
+                                                <th scope="col">On Carriage</th>
+                                                <th scope="col">Delivery Place</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let batch of batchListFilter">
+                                                <td>{{batch?.batchNo}}</td>
+                                                <td>{{batch?.moveNo}}</td>
+                                                <td>
+                                                    {{batch?.container}}
+                                                </td>
+                                                <td></td>
+                                                <td>{{batch?.consigneeName}}</td>
+                                                <td></td>
+                                                <td>
+
+                                                </td>
+                                                <td>
+
+                                                </td>
+                                                <td>
+
+                                                </td>
+                                                <td>
+
+                                                </td>
+                                                <td>
+
+                                                </td>
+                                                <td>
+                                                    {{batch?.eta}}
+                                                </td>
+                                                <td>
+                                                    {{batch?.routeDetails?.finalVesselName}}
+                                                </td>
+                                                <td>
+                                                    {{batch?.routeDetails?.finalVoyageId}}
+                                                </td>
+                                                <td>
+
+                                                </td>
+                                                <td>
+
+                                                </td>
+                                                <td>
+
+                                                    {{batch?.routeDetails?.onCarriageName}}
+                                                </td>
+                                                <td>
+
+                                                    {{batch?.routeDetails?.onCarriageName}}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="no-data-availble mt-0" *ngIf="batchListFilter.length === 0">
+                                {{'common.no_data' | translate}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-onscreen  my-3">
+                        <div class="form-group wrap-form-action ">
+                            <button class="btn btn-outline-primary float-end" (click)="back()">
+                                Back </button>
+
+                            <button class="btn btn-outline-primary float-end">
+                                View
+                            </button>
+                            <button class="btn btn-outline-primary float-end" (click)="modifyData()">
+                                Modify
+                            </button>
+                            <button class="btn btn-outline-primary float-end">
+                                Approve
+                            </button>
+                        </div>
+                    </div>
+
+                </ng-container>
+
+                <ng-container *ngIf="!showListData">
+                    <div class="row">
+                        <div class="col-md-12 table-with-gheading">
+                            <div class="horz-bar">PENDING FOR FINAL VESSEL APPROVAL </div>
+                            <div class="table-responsive mb-5">
+                                <div class="wrap-table-area  wrap-table-design wrap-form-field" id="htmlData">
+                                    <form [formGroup]="batchForm">
+                                        <table aria-describedby="mytable">
+                                            <thead>
+                                                <tr class="field-name">
+                                                    <th scope="col">Sr. No.</th>
+                                                    <th scope="col">Job No.</th>
+                                                    <th scope="col">SHIPEASY Move No.</th>
+                                                    <th scope="col">Container No.</th>
+                                                    <th scope="col">Product ID</th>
+                                                    <th scope="col">IMCO No.</th>
+                                                    <th scope="col">UN No.</th>
+                                                    <th scope="col">Move Type</th>
+                                                    <th scope="col">SHIPEASY BL No.</th>
+                                                    <th scope="col">Master BL No.</th>
+                                                    <th scope="col">Shipper</th>
+                                                    <th scope="col">Consignee</th>
+                                                    <th scope="col">POR</th>
+                                                    <th scope="col">Pre Carriage</th>
+                                                    <th scope="col">Port of Exit</th>
+                                                    <th scope="col">Mother Vessel Name</th>
+                                                    <th scope="col">Mother Voyage No.</th>
+                                                    <th scope="col">MV ATD</th>
+                                                    <th scope="col">MV ETA</th>
+                                                    <th scope="col">Shipping Line Agent</th>
+                                                    <th scope="col">Final Vessel</th>
+                                                    <th scope="col">Final Voyage</th>
+
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <ng-container formArrayName="batchData">
+                                                    <ng-container *ngFor="let batch of getControls(); let i = index"
+                                                        [formGroupName]="i">
+                                                        <tr>
+                                                            <td>{{i+1}}</td>
+                                                            <td>{{batch?.controls?.batchNo?.value}}</td>
+                                                            <td>{{batch?.controls?.moveNo?.value}}</td>
+                                                            <td>
+                                                                {{batch?.controls?.container?.value}}
+                                                            </td>
+                                                            <td>{{batch?.controls?.productName?.value}}</td>
+                                                            <td>{{batch?.controls?.imcoNo?.value}}</td>
+                                                            <td>{{batch?.controls?.unNo?.value}}</td>
+                                                            <td>{{batch?.controls?.moveTypeName?.value}}</td>
+                                                            <td>{{batch?.controls?.stcBlNo?.value}}</td>
+                                                            <td>{{batch?.controls?.masterBlNo?.value}}</td>
+                                                            <td>{{batch?.controls?.shipperName?.value}}</td>
+                                                            <td>{{batch?.controls?.consigneeName?.value}}</td>
+
+                                                            <td>{{batch?.controls?.por?.value}}</td>
+
+                                                            <td>{{batch?.controls?.preCarriage?.value}}</td>
+                                                            <td>{{batch?.controls?.portofExit?.value}}</td>
+                                                            <td>{{batch?.controls?.motherVesselName?.value}}</td>
+                                                            <td>{{batch?.controls?.motherVoyageNo?.value}}</td>
+
+                                                            <td>{{batch?.controls?.atd?.value}}</td>
+
+                                                            <td>
+                                                                <input type="date" formControlName="eta">
+                                                            </td>
+                                                            <td>{{batch?.controls?.shippingAgentName?.value}}</td>
+                                                            <td>
+                                                                <span>
+                                                                    <nz-select class="w-100" nzShowSearch
+                                                                        nzAllowClear formControlName="finalVesselId">
+                                                                        <nz-option *ngFor="let vessel of vesseldata"
+                                                                            [nzLabel]="vessel.vesselName"
+                                                                            [nzValue]="vessel.vesselId"></nz-option>
+                                                                    </nz-select>
+                                                                </span>
+
+                                                            </td>
+                                                            <td>
+                                                                <nz-select class="w-100" nzShowSearch nzAllowClear
+                                                                    formControlName="finalVoyageId">
+                                                                    <nz-option *ngFor="let voyage of voyageList"
+                                                                        [nzLabel]="voyage.voyageNumber"
+                                                                        [nzValue]="voyage.voyageNumber"></nz-option>
+                                                                </nz-select>
+                                                            </td>
+
+
+                                                        </tr>
+                                                       
+                                                    </ng-container>
+                                                    <tr *ngIf="getControls().length !== 0">
+                                                        <td colspan="20" class="border-0"></td>
+                                                        <td> <nz-select class="w-100 border-0" nzShowSearch [(ngModel)]="vesselName" [ngModelOptions]="{standalone: true}"
+                                                                nzAllowClear>
+                                                                <nz-option *ngFor="let vessel of vesseldata"
+                                                                    [nzLabel]="vessel.vesselName"
+                                                                    [nzValue]="vessel.vesselId"></nz-option>
+                                                            </nz-select></td>
+                                                        <td><nz-select class="w-100 border-0" nzShowSearch [(ngModel)]="voyageName" [ngModelOptions]="{standalone: true}"
+                                                                nzAllowClear>
+                                                                <nz-option *ngFor="let voyage of voyageList"
+                                                                    [nzLabel]="voyage.voyageNumber"
+                                                                    [nzValue]="voyage.voyageNumber"></nz-option>
+                                                            </nz-select></td>
+                                                        <td class="border-0" (click)="applyAll()"><button class="btn btn-outline-primary">Apply All</button></td>
+                                                    </tr>
+                                                </ng-container>
+
+                                            </tbody>
+                                        </table>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="no-data-availble mt-0" *ngIf="getControls().length === 0">
+                                {{'common.no_data' | translate}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-onscreen  my-3">
+                        <div class="form-group wrap-form-action ">
+                            <button class="btn btn-outline-primary float-end" (click)="back2()">
+                                Back </button>
+                            <button class="btn btn-outline-primary float-end" (click)="updateBatchDetails()">
+                                Update
+                            </button>
+                            <button class="btn btn-outline-primary float-end">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+
+                </ng-container>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,77 @@
+@forward "./breakpoint.scss";
+@forward './columns.scss';
+@forward  './typography.scss';
+
+@import 'typography.scss';
+
+
+$desktop-width: 1200px;
+$tablet-width: 992px;
+$mobile-width: 768px;
+$sm-mobile-width: 577px;
+
+@mixin desktop {
+    @media only screen and (max-width: #{$desktop-width - 1px}) {
+      @content;
+    }
+}
+@mixin tablet {
+    @media only screen and (max-width: #{$tablet-width - 1px}) {
+      @content;
+    }
+}
+@mixin mobile {
+    @media only screen and (max-width: #{$mobile-width - 1px}) {
+      @content;
+    }
+}
+@mixin sm-mobile {
+    @media only screen and (max-width: #{$sm-mobile-width - 1px}) {
+      @content;
+    }
+}
+
+
+/* your-component.component.css */
+
+/* Adjust padding */
+.mat-calendar {
+  padding: 20px !important;
+}
+
+/* Adjust font-size */
+.mat-calendar {
+  font-size: 16px !important;
+}
+
+
+/* styles.css */
+
+/* Adjust padding */
+.mat-calendar {
+  padding: 20px !important;
+}
+
+/* Adjust font-size */
+.mat-calendar {
+  font-size: 14px !important;
+}
+
+.mat-calendar {
+  font-size: 14px !important; /* or any other size you prefer */
+}
+
+/* Adjust padding */
+.mat-calendar {
+  padding: 5px !important;
+}
+
+/* Adjust margin */
+.mat-calendar {
+  margin: 0 !important;
+}
+
+::ng-deep .ant-picker {
+  padding: 0px 11px !important;
+  border: 1px solid #e0e0e0 !important;
+}

@@ -1,0 +1,143 @@
+<div class="table-with-gheading">
+  <div class="wrap-table-area">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2 ">
+          <div class="mt-2">
+            <span>
+              <h5>{{ fromSize }}-{{ count }} of {{ toalLength }}</h5>
+            </span>
+          </div>
+          <div class="mt-2">
+
+            <ng-container>
+              <span class="prv" (click)="prev()"><em class="typcn typcn-chevron-left"></em></span>
+            </ng-container>
+            <ng-container>
+              <span class="prv" (click)="next()"><em class="typcn typcn-chevron-right"></em></span>
+            </ng-container>
+          </div>
+          <div class="mt-2">
+            <select class="form-select form-select-sm" (change)="filter($event)">
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+          <div class="mt-2">
+            <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="exportAsExcelFile()">{{
+              'common.exportToExcel' | translate }}</a>
+          </div>
+          <div class="mt-2">
+            <a class="btn btn-outline-primary btn-sm rounded-pill" (click)="openPDF()">{{
+              'common.print' | translate }} {{
+                'common.list' | translate }}</a>
+          </div>
+          <div class="mt-2">
+            <a class="new-action" (click)="open()">Add Activity</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="table-responsive" id="htmlData">
+          <table aria-describedby="mytable" class="gfg">
+            <thead>
+              <tr class="field-name">
+                <th scope="col"class="text-center">Action</th>
+                <th scope="col" [appSort]="name" data-order="desc" data-name="containerStatusCode">Container Status Code<em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                </th>
+                <th scope="col" [appSort]="type" data-order="desc" data-name="containerDesignastion">Container Status Designation<em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                </th>
+                <th scope="col" [appSort]="impact" data-order="desc" data-name="description">Description<em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                </th>
+                <th scope="col" [appSort]="laden_apllicable" data-order="desc" data-name="activityType">Activity Type Id<em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                </th>
+                <th scope="col" [appSort]="status" data-order="desc" data-name="status">Status <em class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                <th scope="col" class="text-center"></th>
+              </tr>
+              <tr>
+                <th scope="col">
+                </th>
+                <th scope="col">
+                  <input type="text" class="form-control" [(ngModel)]="name" (keydown.enter)="search()" />
+                </th>
+                <th scope="col">
+                  <input type="text" class="form-control" [(ngModel)]="type" (keydown.enter)="search()" />
+                </th>
+                <th scope="col">
+                  <input type="text" class="form-control" [(ngModel)]="impact" (keydown.enter)="search()" />
+
+                </th>
+                <th scope="col">
+                  <input type="text" class="form-control" [(ngModel)]="laden_apllicable" (keydown.enter)="search()" />
+                  
+                </th>
+                <th scope="col">
+                  <select class="form-control" [(ngModel)]="status" (change)="search()">
+                    <option value="true">Active</option>
+                    <option value="false">In Active</option>
+                  </select>
+                </th>
+                <th scope="col" class="wrap-table-btn text-center">
+                  <button type="button" class="bi bi-search btn btn-outline-primary btn-sm rounded-pill"
+                    (click)="search()">
+                  </button>
+                  <a class="bi bi-arrow-clockwise btn btn-outline-primary btn-sm rounded-pill" (click)="clear()"></a>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let activity of activityList">
+                <td class="action-field">
+                  <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop"><a
+                      (click)="open('edit', activity)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                  </span>
+                  <span nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}"><a
+                    (click)="open('show', activity)"><em
+                        class="bi bi-eye globally-change-icon-color"></em></a></span>
+                <span class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"  (change)="changeStatus(activity)" [checked]="activity?._source?.status" />
+                    <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                  </span>
+                </td>
+                <td>{{activity._source.containerStatusCode}}</td>
+                <td>{{activity._source.containerDesignastion}}</td>
+                <td>{{activity._source.description }}</td>
+                <td>{{activity._source.activityType}}</td>
+                <td>{{activity._source.status ? "Active" : "In Active"}}</td>
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="no-data-availble" *ngIf="activityList.length === 0">
+          {{'common.no_data' | translate}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #deleteactivity let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body mt-4">
+      <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2">
+      </em>
+      <span class="text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+          {{ "common.no" | translate }}
+        </button>
+        <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+          {{ "common.yes" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>

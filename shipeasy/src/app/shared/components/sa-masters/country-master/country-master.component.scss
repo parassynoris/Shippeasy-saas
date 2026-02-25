@@ -1,0 +1,57 @@
+/* css start  */
+
+.toggleOverride{
+  margin-left: 3.5em !important;
+  display: flex;
+    align-items: center;
+}
+
+.radiobtn-margin-left{
+  margin-left: 4%;
+}
+
+.globally-chnage-mobile-view {
+	margin-bottom: 10px;
+}
+
+.action-field{
+  white-space: wrap;
+  width: 200px;
+}
+
+.wrap{
+  white-space:wrap;
+  width:320px;
+}
+
+.wrap1{
+  white-space:wrap;
+  width:270px;
+}
+
+/* .wrap2{
+  white-space:wrap;
+  width:315px;
+} */
+
+::ng-deep {
+  .wrap-modal-autosearch {
+      nz-select {
+
+          input,
+          select {
+              padding: 0 0px !important;
+              border: 1px solid rgb(207 202 202) !important;
+          }
+      }
+
+      .nz-form-select.wrap-inline-select nz-select-top-control {
+          height: 32px !important;
+      }
+  }
+
+  .cdk-overlay-container,
+  .cdk-overlay-pane {
+      z-index: 2000 !important;
+  }
+}

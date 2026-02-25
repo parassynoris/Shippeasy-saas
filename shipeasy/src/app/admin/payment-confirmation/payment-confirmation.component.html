@@ -1,0 +1,579 @@
+<div *ngIf="!isPyamentSubmitted">
+  <div class="py-5 text-center wrap-top-image">
+    <h1 class="heading--h1 color--text80 my-1 pt-5 text-capitalize">
+      Booking pending payment
+    </h1>
+    <div class="text--same20 my-1 color--text80 mt-3" *ngIf="_cognito.isIndianCustomer()">
+      Please pay "INR {{ paymentAmount | customcurrency }}/-" in the
+      below mentioned bank account for booking confirmation.
+    </div>
+
+    <div class="text--same20 my-1 color--text80 mt-3" *ngIf="!_cognito.isIndianCustomer()">
+      Please pay "USD {{ paymentAmount | customcurrency:"USD" }}/-" in the
+      below mentioned bank account for booking confirmation.
+    </div>
+   
+  </div>
+  <div class="bg-class">
+    <div class="container">
+      <div class="wrap-card-section">
+        <div class="row px-5 g-2">
+          <div class="col-lg-7 payment mb-5 me-2">
+            <div class="p-3 p-lg-4">
+              <h3 class="heading--h3 color--text80 mb-2">Payment Details</h3>
+              
+              <form [formGroup]="bank">
+                <div class="pt-4">
+                  <div
+                    class="d-flex my-2 justify-content-between align-items-center"
+                  >
+                    <span
+                      class="heading--button color--text80"
+                      style="white-space: pre"
+                      >Account Details</span
+                    >
+                    <div class="line ms-3"></div>
+                  </div>
+                  <div class="row">
+                  
+
+                    <div class="col-lg-6 col-md-6 col-12">
+                      <div class="input-field float-label">
+                        <input
+                          type="text"
+                          for="bname"
+                          formControlName="bname"
+                          [ngClass]="{
+                            'is-invalid':
+                              bank.get('bname').touched &&
+                              bank.get('bname').invalid
+                          }"
+                          required
+                        />
+                        <label id="bname"
+                          >Name of Bank:
+                          <span class="text-danger">*</span></label
+                        >
+                        <span
+                          *ngIf="
+                            bank.get('bname').hasError('required') &&
+                            bank.get('bname').touched
+                          "
+                          class="invalid-feedback text-danger"
+                          >Please Enter Name of Bank</span
+                        >
+                      </div>
+                    </div>
+
+                  
+
+                    <div class="col-lg-6 col-md-6 col-12">
+                      <div class="input-field float-label">
+                        <input
+                          type="text"
+                          for="account"
+                          formControlName="account"
+                          [ngClass]="{
+                            'is-invalid':
+                              bank.get('account').touched &&
+                              bank.get('account').invalid
+                          }"
+                          required
+                        />
+                        <label id="account"
+                          >Payment Reference No:
+                          <span class="text-danger">*</span></label
+                        >
+                        <span
+                          *ngIf="
+                            bank.get('account').hasError('required') &&
+                            bank.get('account').touched
+                          "
+                          class="invalid-feedback text-danger"
+                          >Please Enter Payment Ref. No.</span
+                        >
+                      </div>
+                    </div>
+
+                    
+
+                    <div class="col-lg-6 col-md-6">
+                      <div
+                        class="input-field float-label input-icon dropdown-icon"
+                      >
+                        <select
+                          type="text"
+                          id="currency"
+                          formControlName="currency"
+                          [ngClass]="{
+                            'is-invalid':
+                              bank.controls['currency'].touched &&
+                              bank.controls['currency'].invalid
+                          }"
+                          required
+                        >
+                          <option
+                            [value]="i.typeName"
+                            [id]="i.typeId"
+                            *ngFor="let i of currencyList"
+                          >
+                            {{ i.typeDescription }}
+                          </option>
+                        </select>
+                        <label for="currency" class="small-info"
+                          >Select Currency</label
+                        >
+                        <div
+                          class="color--error text--subtext px-0"
+                          *ngIf="
+                            bank.controls.currency.errors?.required &&
+                            bank.controls.currency.touched
+                          "
+                        >
+                          Please select Currency.
+                        </div>
+                      </div>
+                    </div>
+
+                   
+
+                    <div class="col-lg-6 col-md-6 col-12">
+                      <div class="input-field float-label">
+                        <input
+                          type="number"
+                          onwheel="return false;"
+                          for="amount"
+                          step="0.01"
+                          formControlName="amount"
+                          [ngClass]="{
+                            'is-invalid':
+                              bank.get('amount').touched &&
+                              bank.get('amount').invalid
+                          }"
+                          required
+                          placeholder="000"
+                        />
+                        <label id="amount"
+                          >Amount: <span class="text-danger">*</span></label
+                        >
+                        <span
+                          *ngIf="
+                            bank.get('amount').hasError('required') &&
+                            bank.get('amount').touched
+                          "
+                          class="invalid-feedback text-danger"
+                          >Please Enter Amount</span
+                        >
+                      </div>
+                    </div>
+
+                  
+
+                    <div class="col-lg-6 col-md-6">
+                      <div
+                        class="input-field float-label input-icon dropdown-icon"
+                      >
+                        <select
+                          type="text"
+                          id="pmode"
+                          formControlName="pmode"
+                          [ngClass]="{
+                            'is-invalid':
+                              bank.controls['pmode'].touched &&
+                              bank.controls['pmode'].invalid
+                          }"
+                          required
+                        >
+                          <option
+                            [value]="i.typeName"
+                            [id]="i.typeId"
+                            *ngFor="let i of pTypes"
+                          >
+                            {{ i.typeDescription }}
+                          </option>
+                        </select>
+                        <label for="pmode" class="small-info"
+                          >Mode of Payment</label
+                        >
+                        <span
+                          class="color--error text--subtext px-0"
+                          *ngIf="
+                            bank.controls.pmode.errors?.required &&
+                            bank.controls.pmode.touched
+                          "
+                        >
+                          Please select Payment mode.
+                        </span>
+                      </div>
+                    </div>
+
+                 
+
+                    <div class="col-lg-6 col-md-6">
+                      <div
+                        class="input-field float-label input-icon dropdown-icon"
+                      >
+                        <select
+                          type="text"
+                          id="ptype"
+                          formControlName="ptype"
+                          [ngClass]="{
+                            'is-invalid':
+                              bank.controls['ptype'].touched &&
+                              bank.controls['ptype'].invalid
+                          }"
+                          required
+                        >
+                         
+                          <option
+                            [value]="i.typeName"
+                            [id]="i.typeId"
+                            *ngFor="let i of pModes"
+                          >
+                            {{ i.typeDescription }}
+                          </option>
+                        </select>
+                        <label for="ptype" class="small-info"
+                          >Type of Payment</label
+                        >
+                        <div
+                          class="color--error text--subtext px-0"
+                          *ngIf="
+                            bank.controls.ptype.errors?.required &&
+                            bank.controls.ptype.touched
+                          "
+                        >
+                          Please select Payment Type.
+                        </div>
+                      </div>
+                    </div>
+
+                  
+
+                    <div class="col-lg-6 col-md-6">
+                      <div
+                        class="input-field float-label-custom input-icon dropdown-icon"
+                        [class.auto-label-shift]="
+                          bank.controls['pdate'].value !== ''
+                        "
+                      >
+                        <!-- <igx-date-picker
+                          displayFormat="dd/MM/yyyy"
+                          placeholder="dd/mm/yyyy"
+                          [minValue]="todayDate"
+                          inputFormat="dd/MM/yyyy"
+                          formControlName="pdate"
+                          class="igx-custome-picker"
+                        ></igx-date-picker> -->
+                       
+                        <label id="basic-addon1" class="bg-hide"
+                          >Payment Date
+                          <span class="text-danger">*</span></label
+                        >
+                        <span
+                          *ngIf="
+                            bank.controls['pdate'].hasError('required') &&
+                            bank.controls['pdate'].touched
+                          "
+                          class="invalid-feedback text-danger my-0"
+                          >Please select payment date.</span
+                        >
+                      </div>
+                    </div>
+
+             
+
+                    <div class="col-lg-6 col-md-6">
+                      <div
+                        class="input-field float-label input-icon dropdown-icon"
+                      >
+                        <select
+                          type="text"
+                          id="cname"
+                          formControlName="cname"
+                          placeholder="Enter Country name"
+                          [ngClass]="{
+                            'is-invalid':
+                              bank.controls['cname'].touched &&
+                              bank.controls['cname'].invalid
+                          }"
+                          required
+                        >
+                          <option
+                            [value]="i.typeDescription"
+                            [id]="i.typeId"
+                            *ngFor="let i of  countryList"
+                          >
+                            {{ i.typeDescription }}
+                          </option>
+                        </select>
+                        <label for="cname" class="small-info">Country</label>
+                        <div
+                          class="color--error text--subtext px-0"
+                          *ngIf="
+                            bank.controls.cname.errors?.required &&
+                            bank.controls.cname.touched
+                          "
+                        >
+                          Please select Country.
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-lg-12 col-md-12">
+                      <span
+                        class="text-start heading--smalltitle color--secondary"
+                        for="remarks"
+                        >Your Remarks</span
+                      >
+                      <div class="input-field m-0">
+                        <input
+                          type="text"
+                          id="remarks"
+                          formControlName="remarks"
+                          aria-label="Text input with dropdown button"
+                          placeholder="Add additional information about your cargo"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mt-5">
+                    <div class="col">
+                      <button
+                        class="btn btn-primary"
+                        [disabled]="!bank.valid"
+                        (click)="onSendPayment()"
+                      >
+                        Submit Payment Details
+                      </button>
+                    </div>
+                  </div>
+
+                 
+                </div>
+              </form>
+
+            </div>
+            
+          </div>
+          <div class="col-lg-4">
+            <div class="wrap-itmes bank-info mb-3 p-4">
+              <div class="accordion-item m-t-16">
+                <h2 class="accordion-header">
+                  <button
+                    class="accordion-button collapsed heading--labelbold"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#cargo"
+                    aria-expanded="false"
+                    aria-controls="collapseTwo"
+                  >
+                    Bank Details
+                  </button>
+                </h2>
+                <div id="cargo">
+                  <div class="accordion-body">
+                    <div *ngIf="isIndian">
+                      <div class="heading--labelbold color--text80 mulish mt-3">
+                        Currency <strong>"INR"</strong>
+                      </div>
+                      <div class="input-info mt-3">
+                        <div class="row my-2">
+                          <label class="semibold--label"
+                            >Standard Chartered Bank</label
+                          >
+                          <div class="my-1">
+                            <span class="semibold--label text-capitalize"
+                              >Accout No.:-
+                            </span>
+                            <span class="semibold--label mx-2"
+                              ><strong>53005111905</strong></span
+                            >
+                          </div>
+                          <div class="my-1">
+                            <span class="semibold--label">IEFC Code:- </span>
+                            <span class="semibold--label"
+                              ><strong>SCBL0036024</strong></span
+                            >
+                          </div>
+                          <div class="my-1">
+                            <span class="semibold--label">Branch:-</span>
+                            <span class="semibold--label"
+                              >Sector-18 Noida, 201301</span
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div *ngIf="!isIndian">
+                      <div class="heading--labelbold color--text80 mulish mt-3">
+                        Currency <strong>"USD"</strong>
+                      </div>
+                      <div class="input-info mt-3">
+                        <div class="row my-2">
+                          <label class="semibold--label"
+                            >Standard Chartered Bank</label
+                          >
+                          <div class="my-1">
+                            <span class="semibold--label text-capitalize"
+                              >Accout No.:-
+                            </span>
+                            <span class="semibold--label mx-2"
+                              ><strong>53005112006</strong></span
+                            >
+                          </div>
+                          <div class="my-1">
+                            <span class="semibold--label">IEFC Code:- </span>
+                            <span class="semibold--label"
+                              ><strong>SCBL0036024</strong></span
+                            >
+                          </div>
+                          <div class="my-1">
+                            <span class="semibold--label">Swift Code:-</span>
+                            <span class="semibold--label"
+                              ><strong>SCBLINBBDEL</strong></span
+                            >
+                          </div>
+                          <div class="my-1">
+                            <span class="semibold--label">AD Code:-</span>
+                            <span class="semibold--label"
+                              ><strong>6470009 2900009</strong></span
+                            >
+                          </div>
+                          <div class="my-1">
+                            <span class="semibold--label">BSR Code:-</span>
+                            <span class="semibold--label"><strong>6470031</strong></span>
+                          </div>
+                          <div class="my-1">
+                            <span class="semibold--label">Branch:-</span>
+                            <span class="semibold--label"
+                              >Sector-18 Noida, 201301</span
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="wrap-itmes">
+              <app-needhelp [isShowClose]="false"></app-needhelp>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="isPyamentSubmitted">
+  <div class="py-5 text-center wrap-top-image">
+    <h1 class="heading--h1 color--text80 my-1 pt-5">Booking Confirmed</h1>
+    <div class="text--same20 my-1 color--text80 mt-3">
+      Thank you for the payment!
+    </div>
+    <div class="text--same20 my-1 color--text80">
+      Your invoices have been settled successfully. You can view their details
+      from your Dashboard.
+    </div>
+  </div>
+  <div class="bg-class">
+    <div class="container">
+      <div class="wrap-card-section">
+        <div class="row px-5 g-2">
+          <div class="col-lg-7 payment mb-5 me-2">
+            <div class="p-3 p-lg-4">
+              <div class="heading--h3 color--text80 mb-2">Payment Details</div>
+              <div
+                class="text--smalltext color--text80 mb-2"
+                *ngIf="bookingData"
+              >
+                Booking Reference no. #{{ bookingData?.bookingName }}
+              </div>
+              <div
+                class="text--smalltext color--text80 mb-2"
+                *ngIf="!bookingData"
+              >
+                Booking Reference no.
+                <span *ngFor="let i of bookingDataList">
+                  #{{ i?.bookingName }}</span
+                >
+              </div>
+              <div class="pt-4">
+                <div class="d-flex justify-content-between align-items-center">
+                  <span
+                    class="heading--button color--text80"
+                    style="white-space: pre"
+                    >INVOICE PENDING</span
+                  >
+                  <div class="line ms-3"></div>
+                </div>
+                <div class="row py-3">
+                  <div
+                    class="col-6 mb-3"
+                    *ngFor="let invoice of invoiceData; let i = index"
+                  >
+                    <div
+                      class="heading--label color--text80 d-flex align-items-center"
+                    >
+                      {{ invoice?.invoiceType?.name }} #{{
+                        invoice?.invoiceNumber
+                      }}
+                    </div>
+                    <div class="text--label color--text60 py-2">
+                      {{ invoice?.invoiceAmount | customcurrency }}
+                    </div>
+                    <div>
+                      <button
+                        class="btn btn-link px-0"
+                        (click)="onGoToInvoice(invoice)"
+                      >
+                        View Detail
+                      </button>
+                      <button
+                        class="btn btn-link mx-5 px-0"
+                        (click)="onDonwloadInvoice(invoice, i)"
+                      >
+                        Download
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pt-4">
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="heading--button color--text80">PAYMENT</span>
+                  <div class="line ms-3"></div>
+                </div>
+                <div
+                  class="heading--label color--text80 d-flex align-items-center py-3"
+                >
+                  Total : {{ paymentAmount | currency: "INR" }}
+                </div>
+              </div>
+            </div>
+            <div class="line"></div>
+            <div class="p-lg-5">
+              <button class="btn btn-primary" (click)="onGoToBooking(false)">
+                Go to Booking
+              </button>
+              <button
+                class="btn btn-primary-border mx-4"
+                (click)="onGoToBooking(true)"
+              >
+                View & Download Booking Details
+              </button>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="wrap-itmes">
+              <app-needhelp [isShowClose]="false"></app-needhelp>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

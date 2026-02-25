@@ -1,0 +1,402 @@
+<nav class="navbar navbar-expand-lg fixed-top navbar-light matHeader" id="app-logo-header">
+  <div class="wrap-bar" [ngClass]="{
+    'mat-toolbar--hidden': isHeaderHidden,
+    'mat-toolbar': customerUser && isHeaderHidden
+  }">
+    <div class="wrap-left">
+      <a class="logo-text-contnet-alignment" (click)="reload()">
+
+        <img src="assets/img/shippeasy-new-logo.png" alt="logo" class="d-inline-block align-text-top header-resize" />
+        <!-- <span class="pl-3 da"> <img src="assets/img/stolt-header.png" alt="logo"
+            class="d-inline-block align-text-top sub-header-resize"></span> -->
+      </a>
+      <button class="navbar-toggler menu-btn" type="button" data-bs-toggle="collapse"
+        data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false"
+        aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+    <div class="wrap-right">
+      <div class="right-menu">
+        <ul class="navbar-nav me-auto mb-lg-0">
+
+          <li class="nav-item " *ngIf="(!customerUser) && isTrial">
+            <div class="text-color ">
+              <span>{{countOfTrial == 1 ? 'Trial will expire today' : 'Trial will expire in ' + countOfTrial + '
+                Days'}}</span>
+            </div>
+          </li>
+
+          <li class="nav-item search-section" *ngIf="(!customerUser) && currentLogin !== 'transporter'">
+            <div class="custom-input custom-input-design custom">
+              <input type="text" #searchBox (keyup.enter)="searchItem(searchBox.value)"
+                placeholder="{{ 'header.searchPlaceholder' | translate }}" aria-label="Search">
+              <!-- <span (click)="searchItem(searchBox.value)" class="input-group-text"><em class="bi bi-search"></em></span> -->
+              <div (click)="searchItem(searchBox.value)" class="search-icon-align">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                  style="max-width:15px;">
+                  <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M10.5 18C14.6421 18 18 14.6421 18 10.5C18 6.35786 14.6421 3 10.5 3C6.35786 3 3 6.35786 3 10.5C3 14.6421 6.35786 18 10.5 18Z"
+                    stroke="#848484" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M21 21L15.8 15.8" stroke="#848484" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+
+              </div>
+            </div>
+          </li>
+
+          <li class="nav-item search-section wdt80 header-component">
+            <div class="dropdown width1 h-40">
+              <mat-form-field class="w-100 pb-0">
+                <mat-select class="border-0" [(value)]="selectedLanguage" (selectionChange)="getLanguage($event.value)"
+                  panelClass="ss_select">
+                  <mat-option *ngFor="let option of lang" [value]="option.value">
+                    {{ option.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </li>
+
+
+
+          <!-- <li class="nav-item mr-0">
+            <div class="dropdown width1">
+              <a class="dropdown-toggle" href="#" role="button" id="dropdownThemeLink" data-bs-toggle="dropdown"
+                aria-expanded="false" (click)="onTogglee('theme')">
+                <img height="18" width="18" src="../../../assets/img/color (2).svg" alt="">
+              </a>
+              <ul class="dropdown-menu" style="width: 120px;" [ngClass]="isToggleTheme ? 'show' : 'hide'"
+                aria-labelledby="dropdownThemeLink">
+                <li><a class="dropdown-itemm" (click)="isToggleTheme = false; changeTheme('theme1')">
+                    Red<span class="theme-circle"
+                      style="background-color: #007BFF; display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 8px;"></span>
+                  </a></li>
+                <li><a class="dropdown-itemm" (click)="isToggleTheme = false; changeTheme('theme2')">
+                    Blue<span class="theme-circle"
+                      style="background-color: #0d2130; display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 8px;"></span>
+                  </a></li>
+              </ul>
+            </div>
+          </li> -->
+          <!-- <li class="nav-item mr-0">
+            <div matTooltip="Change theme" (click)="toggleDarkTheme()" class="icons">
+              <span *ngIf="!isDarkTheme">
+                <i class="bi bi-brightness-high mt-1"></i>
+              </span>
+              <span *ngIf="isDarkTheme">
+                <i class="bi bi-moon-fill mt-1"></i>
+              </span>
+            </div>
+          </li> -->
+
+          <li class="nav-item " *ngIf="!customerUser && currentLogin !== 'transporter' && currentLogin !== 'superAdmin' && currentLogin !== 'warehouse'" >
+            <div class="form-field-section"  >
+              <select [(ngModel)]="selectTYPE" class="form-select custom-input" (change)="ngOnChangeType()">
+                <option value="Export"  *ngIf="userlogintype === 'freigthForwarders'|| userlogintype === 'all' "  appAccessControl featureCode="['STEX01']" accessType="view">Export</option>
+                <option value="Import"  *ngIf="userlogintype === 'freigthForwarders' || userlogintype === 'all'"  appAccessControl featureCode="['STIM01']" accessType="view">Import</option>
+                <option value="Transport" *ngIf="userlogintype === 'transport'|| userlogintype === 'all' " appAccessControl featureCode="['STTR01']" accessType="view">Transport</option>
+                <option value="Warehouse" *ngIf="userlogintype === 'warehouse' || userlogintype === 'all' " appAccessControl  accessType="view">Warehouse</option>
+
+              </select>
+              <!-- <nz-select class="form-select" (ngModelChange)="ngOnChangeType()" [(ngModel)]="selectTYPE">
+                <nz-option nzLabel="Export" nzValue="Export"></nz-option>
+                <nz-option nzLabel="Import" nzValue="Import"></nz-option>
+                <nz-option nzLabel="Transport" nzValue="Transport"></nz-option>
+              </nz-select>  -->
+            </div>
+          </li>
+          <!-- <li class="nav-item mr-0" *ngIf="commonFunctions?.isAdmin()">
+            <div class="switches-container">
+              <input type="radio" id="Export" name="toggle" value="Export" [(ngModel)]="selectTYPE" (change)="ngOnChangeType()" />
+              <input type="radio" id="Import" name="toggle" value="Import" [(ngModel)]="selectTYPE" (change)="ngOnChangeType()" />
+              <label for="Export" [class.active]="selectTYPE === 'Export'">Export</label>
+              <label for="Import" [class.active]="selectTYPE === 'Import'">Import</label>
+              <div class="switch-wrapper">
+                <div class="switch">
+                  <div>Export</div>
+                  <div>Import</div>
+                </div>
+              </div>
+            </div>
+            </li> -->
+
+          <li class="nav-item " *ngIf="customerUser">
+            <button class="max-con new-action  btn btn-outline-primary btn-sm rounded-pill" (click)="newInquiry()">New
+              Inquiry</button>
+          </li>
+          <li class="nav-item ml-0" *ngIf="customerUser">
+            <button class="max-con new-action  btn btn-outline-primary btn-sm rounded-pill"
+              (click)="newAgentAdvise()">New Agent Advice</button>
+          </li>
+
+          <li class="nav-item position-relative note-icon">
+            <div class="dropdown header-dropdown">
+
+              <div class="notification-container" (click)="notificationBlink = false">
+                <a class="dropdown-toggle" role="button" id="dropdownMenuLink1" aria-expanded="false">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M21.5303 14.4697L19.5 12.4395V9.75C19.4977 7.89138 18.8063 6.09964 17.5595 4.72124C16.3127 3.34284 14.5991 2.4757 12.75 2.2875V0.75H11.25V2.2875C9.40093 2.4757 7.68732 3.34284 6.44053 4.72124C5.19373 6.09964 4.50233 7.89138 4.5 9.75V12.4395L2.46975 14.4697C2.32909 14.6104 2.25004 14.8011 2.25 15V17.25C2.25 17.4489 2.32902 17.6397 2.46967 17.7803C2.61032 17.921 2.80109 18 3 18H8.25V18.5828C8.23369 19.5342 8.56905 20.4583 9.19184 21.1778C9.81462 21.8973 10.681 22.3617 11.625 22.482C12.1464 22.5337 12.6728 22.4757 13.1704 22.3117C13.6681 22.1478 14.1259 21.8815 14.5144 21.53C14.9029 21.1785 15.2136 20.7495 15.4264 20.2707C15.6392 19.792 15.7494 19.2739 15.75 18.75V18H21C21.1989 18 21.3897 17.921 21.5303 17.7803C21.671 17.6397 21.75 17.4489 21.75 17.25V15C21.75 14.8011 21.6709 14.6104 21.5303 14.4697ZM14.25 18.75C14.25 19.3467 14.0129 19.919 13.591 20.341C13.169 20.7629 12.5967 21 12 21C11.4033 21 10.831 20.7629 10.409 20.341C9.98705 19.919 9.75 19.3467 9.75 18.75V18H14.25V18.75ZM20.25 16.5H3.75V15.3105L5.78025 13.2803C5.92091 13.1396 5.99996 12.9489 6 12.75V9.75C6 8.1587 6.63214 6.63258 7.75736 5.50736C8.88258 4.38214 10.4087 3.75 12 3.75C13.5913 3.75 15.1174 4.38214 16.2426 5.50736C17.3679 6.63258 18 8.1587 18 9.75V12.75C18 12.9489 18.0791 13.1396 18.2197 13.2803L20.25 15.3105V16.5Z"
+                      fill="var(--change-theme)" />
+                  </svg>
+                  <span
+                    class="position-absolute top-alignment start-100 translate-middle badge rounded-pill bg-primary">
+                    {{totalCount}}
+                  </span>
+                </a>
+              </div>
+
+              <div class="dropdown-menu dropdown-menu-right dropdown-arrow dropdown-menu-lg border-0">
+                <div class="nofification-heading-text-alignment">
+                  <h5>{{ 'header.notification.title' | translate }} ({{notificationList.length}})</h5>
+                </div>
+                <div class="dropdown-details-content-alignment">
+                  <ng-container *ngIf="notificationList.length > 0; else noNotifications">
+                    <a *ngFor="let noti of notificationList; let i = index" routerLink="/notification">
+                      <div *ngIf="i <= 4" class="dropdown-item notify-item">
+                        <p class="notify-details"><strong>{{noti.notificationName}}</strong><small class="text-muted">
+                            {{ formatDescription(noti.description) }} </small></p>
+                      </div>
+                    </a>
+                  </ng-container>
+                  <ng-template #noNotifications>
+                    <div class="dropdown-item notify-item" style="text-align: center;">
+                      <p class="notify-details"><strong>{{ 'header.notification.noNotifications' | translate }}</strong>
+                      </p>
+                    </div>
+                  </ng-template>
+                </div>
+                <div class="view-all-notification-text-center-alignment">
+                  <a routerLink="/notification" class="dropdown-item notify-item border-top">{{
+                    'header.notification.btn' | translate }}</a>
+                </div>
+              </div>
+            </div>
+          </li>
+
+
+
+
+          <li class="nav-item mr-0">
+            <div class="dropdown">
+              <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                aria-expanded="false" (click)="onToggle('profile')">
+                <img [src]="imageURL" class="avtar-img">
+              </a>
+              <ul class="dropdown-menu" style="width: 240px;" [ngClass]="isToggleProfile ? 'show' : 'hide'"
+                aria-labelledby="dropdownMenuLink">
+                <li><a class="dropdown-item" (click)="isToggleProfile = false"
+                    routerLink="/profile">{{'header.menuOptions.menu1' | translate }}</a></li>
+                <li><a class="dropdown-item" (click)="isToggleProfile = false"
+                    routerLink="/changepass">{{'header.menuOptions.menu2' | translate }}</a></li>
+                <li *ngIf="currentLogin !== 'customer'">
+                  <a class="dropdown-item" (click)="isToggleProfile = false"
+                    routerLink="/usermanual">{{'header.menuOptions.menu5' | translate }}</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" (click)="isToggleProfile = false"
+                    routerLink="/whatsnew">{{'header.menuOptions.menu6' | translate }}</a>
+                </li>
+                <li><a class="dropdown-item"
+                    *ngIf="commonFunctions?.isAdmin() && profileData && !allSectionsCompleted()"
+                    (click)="onUserGuide()"> <i class="fa-solid setcomments fa-pen-to-square"></i> User Guide</a></li>
+                <!-- For Future use -->
+                <!-- <li><a class="dropdown-item" (click)="isToggleProfile = false" routerLink="/FAQs">{{'header.menuOptions.menu3' | translate }}</a></li> -->
+                <li><a class="dropdown-item" (click)="logout()">{{'header.menuOptions.menu4' | translate }}</a></li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="nav-item ml-0">
+            <div class="">
+              <a role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"
+                (click)="onToggle('profile')">
+                <span class="username" style="color: var(--change-theme); font-weight: 700;">
+                  {{userName}}
+                </span>
+              </a>
+              <!-- <br>
+              <br> -->
+              <!-- <span style="font-size: 12px;">
+                {{userRole}}
+              </span> -->
+            </div>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Replace your existing menu navigation section with this fixed version -->
+
+  <!-- COMPLETE HTML NAVIGATION FIX - Replace your navigation section with this -->
+
+  <div class="collapse navbar-collapse wrap-menu wrap-menu-alignment" id="navbarTogglerDemo01" *ngIf="!customerUser">
+    <ul id="nav" class=" center-alignment-header-wrap nav nav-pills mobile-view-show-tab">
+      <ng-container>
+        <li class="nav-item" *ngFor="let menus of menuData" (click)="onMenu(menus,false)">
+
+          <!-- Transporter user navigation -->
+          <ng-container *ngIf="currentLogin === 'transporter'">
+            <ng-container *ngIf="menus?.menuName?.toLowerCase() !== 'masters'">
+              <a class="nav-link" [class.active]="highlight === returnUrl(menus?.menuUrl)"
+                *ngIf="menus?.subMenus?.length === 0 && !isDarkTheme">
+                <img class="header-icons mb-1" height="16" width="16"
+                  src="assets/img/icons/{{getImageName(menus?.menuName)}}" alt="" />
+                <span>{{menus?.menuName1 ? menus?.menuName1 : menus?.menuName}}</span>
+              </a>
+
+              <a class="nav-link" [class.active]="highlight === returnUrl(menus?.menuUrl)"
+                *ngIf="menus?.subMenus?.length === 0 && isDarkTheme">
+                <img class="header-icons mb-1" height="16" width="16"
+                  src="assets/img/iconss/{{getImageName(menus?.menuName)}}" alt="" />
+                <span>{{menus?.menuName1 ? menus?.menuName1 : menus?.menuName}}</span>
+              </a>
+            </ng-container>
+          </ng-container>
+
+          <!-- All other user types navigation (including warehouse) -->
+          <ng-container *ngIf="currentLogin !== 'transporter'">
+
+            <!-- Export menus -->
+            <ng-container *ngIf="selectTYPE === 'Export'">
+              <ng-container *ngIf="menus?.menuName?.toLowerCase() !== 'masters'">
+                <a class="nav-link" [class.active]="highlight === returnUrl(menus?.menuUrl)"
+                  *ngIf="menus?.subMenus?.length === 0 && menus?.export && !isDarkTheme">
+                  <img class="header-icons" height="16" width="16"
+                    src="assets/img/icons/{{getImageName(menus?.menuName)}}" alt="" />
+                  {{menus?.menuName == 'Enquiry' ? 'Inquiry' : menus?.menuName1 ? menus?.menuName1 : menus?.menuName}}
+                </a>
+
+                <a class="nav-link" [class.active]="highlight === returnUrl(menus?.menuUrl)"
+                  *ngIf="menus?.subMenus?.length === 0 && menus?.export && isDarkTheme">
+                  <img class="header-icons" height="16" width="16"
+                    src="assets/img/iconss/{{getImageName(menus?.menuName)}}" alt="" />
+                  {{menus?.menuName == 'Enquiry' ? 'Inquiry' : menus?.menuName1 ? menus?.menuName1 : menus?.menuName}}
+                </a>
+              </ng-container>
+
+            </ng-container>
+
+
+            <!-- Import menus -->
+            <ng-container *ngIf="selectTYPE === 'Import'">
+              <ng-container *ngIf="menus?.menuName?.toLowerCase() !== 'masters'">
+                <a class="nav-link" [class.active]="highlight === returnUrl(menus?.menuUrl)"
+                  *ngIf="menus?.subMenus?.length === 0 && menus?.import && !isDarkTheme">
+                  <img class="header-icons mb-1" height="16" width="16"
+                    src="assets/img/icons/{{getImageName(menus?.menuName)}}" alt="" />
+                  <span>{{menus?.menuName1 ? menus?.menuName1 : menus?.menuName}}</span>
+                </a>
+
+                <a class="nav-link" [class.active]="highlight === returnUrl(menus?.menuUrl)"
+                  *ngIf="menus?.subMenus?.length === 0 && menus?.import && isDarkTheme">
+                  <img class="header-icons mb-1" height="16" width="16"
+                    src="assets/img/iconss/{{getImageName(menus?.menuName)}}" alt="" />
+                  <span>{{menus?.menuName1 ? menus?.menuName1 : menus?.menuName}}</span>
+                </a>
+              </ng-container>
+            </ng-container>
+
+            <!-- Transport menus -->
+            <ng-container *ngIf="selectTYPE === 'Transport'">
+              <ng-container *ngIf="menus?.menuName?.toLowerCase() !== 'masters'">
+                <a class="nav-link" [class.active]="highlight === returnUrl(menus?.menuUrl)"
+                  *ngIf="menus?.subMenus?.length === 0 && menus?.isTransport && !isDarkTheme">
+                  <img class="header-icons mb-1" height="16" width="16"
+                    src="assets/img/icons/{{getImageName(menus?.menuName)}}" alt="" />
+                  <span>{{menus?.menuName1 ? menus?.menuName1 : menus?.menuName}}</span>
+                </a>
+
+                <a class="nav-link" [class.active]="highlight === returnUrl(menus?.menuUrl)"
+                  *ngIf="menus?.subMenus?.length === 0 && menus?.isTransport && isDarkTheme">
+                  <img class="header-icons mb-1" height="16" width="16"
+                    src="assets/img/iconss/{{getImageName(menus?.menuName)}}" alt="" />
+                  <span>{{menus?.menuName1 ? menus?.menuName1 : menus?.menuName}}</span>
+                </a>
+              </ng-container>
+            </ng-container>
+
+            <!-- Warehouse menus -->
+            <ng-container *ngIf="selectTYPE === 'Warehouse'">
+              <ng-container *ngIf="menus?.menuName?.toLowerCase() !== 'masters'">
+                <a class="nav-link" [class.active]="highlight === returnUrl(menus?.menuUrl)"
+                  *ngIf="menus?.subMenus?.length === 0 && !isDarkTheme">
+                  <img class="header-icons mb-1" height="16" width="16"
+                    src="assets/img/icons/{{getImageName(menus?.menuName)}}" alt="" />
+                  <span>{{menus?.menuName1 ? menus?.menuName1 : menus?.menuName}}</span>
+                </a>
+
+                <a class="nav-link" [class.active]="highlight === returnUrl(menus?.menuUrl)"
+                  *ngIf="menus?.subMenus?.length === 0 && isDarkTheme">
+                  <img class="header-icons mb-1" height="16" width="16"
+                    src="assets/img/iconss/{{getImageName(menus?.menuName)}}" alt="" />
+                  <span>{{menus?.menuName1 ? menus?.menuName1 : menus?.menuName}}</span>
+                </a>
+              </ng-container>
+            </ng-container>
+
+          </ng-container>
+        </li>
+
+        <!-- Masters menu - Handled separately to prevent duplication -->
+        <li class="master-hover-effect" *ngIf="isMaster">
+          <a [class.active]="highlight === 'master'" *ngIf="!isDarkTheme">
+            <img class="header-icons" height="16" width="16" src="../../../assets/img/icons/masters.svg" alt="" />
+            <span class="mx-1" style="padding-left: 2px;">{{ 'menu.masters' | translate }}</span>
+          </a>
+
+          <a [class.active]="highlight === 'master'" *ngIf="isDarkTheme">
+            <img class="header-icons" height="16" width="16" src="../../../assets/img/iconss/masters.svg" alt="" />
+            <span class="mx-1" style="padding-left: 2px;">{{ 'menu.masters' | translate }}</span>
+          </a>
+
+          <div class="cus-dropodown-design" *ngIf="IsmasterActive">
+            <div class="spacer-alignment row justify-content-end">
+              <div class="col-grid col-md-11" style="padding-left: 35px;">
+                <div class="col-grid-items" *ngFor="let subTab of subTabMasters">
+                  <h2>{{subTab.name}}</h2>
+                  <div *ngFor="let tab of subTab.menus">
+                    <!-- Show masters based on selectTYPE and tab properties for all users -->
+                    <a *ngIf="selectTYPE === 'Export' && tab.export">
+                      <div><span (click)="onTab(tab)">{{tab.menuName1 ? tab.menuName1 : tab.menuName}}</span></div>
+                    </a>
+                    <a *ngIf="selectTYPE === 'Import' && tab.import">
+                      <div><span (click)="onTab(tab)">{{tab.menuName1 ? tab.menuName1 : tab.menuName}}</span></div>
+                    </a>
+                    <a *ngIf="selectTYPE === 'Transport' && tab.isTransport">
+                      <div><span (click)="onTab(tab)">{{tab.menuName1 ? tab.menuName1 : tab.menuName}}</span></div>
+                    </a>
+                    <!-- Updated Warehouse condition - shows all warehouse relevant items -->
+                    <a *ngIf="selectTYPE === 'Warehouse' && (tab.warehouse === true || tab.warehouse === undefined)">
+                      <div><span (click)="onTab(tab)">{{tab.menuName1 ? tab.menuName1 : tab.menuName}}</span></div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ng-container>
+    </ul>
+  </div>
+
+  <div class="collapse navbar-collapse wrap-customer-menu" id="navbarTogglerDemo01"
+    *ngIf="commonFunctions.getUserType()">
+    <!-- *ngIf="!isProfileTabOpen"  -->
+    <div class="wrap-menu">
+      <ul id="nav" class=" center-alignment-header-wrap nav nav-pills mobile-view-show-tab">
+        <li class="nav-item" *ngFor="let menus of customerMenu" (click)="onMenu1(menus);">
+          <a class="nav-link" [class.active]="highlight1 == returnUrl(menus?.menuUrl)">
+            <img class="header-icons" height="20" width="20" src="assets/img/icons/{{getImageName(menus?.name)}} "
+              alt="" /> {{menus?.name == 'Quotation' ? "Inquiry" : menus?.name}} </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+</nav>

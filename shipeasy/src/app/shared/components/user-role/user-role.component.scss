@@ -1,0 +1,44 @@
+
+// .width30{
+//     width: 30%;
+// }
+// .width20{
+//     width: 20%;
+// }
+// .width15{
+//     width: 15%;
+// }
+// .width10{
+//     width: 10%;
+// }
+@media only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px)  {
+
+   
+	/*
+	Label the data
+	*/
+    .responsive-ui{
+	td:nth-of-type(1):before { content: "Role Name"; }
+	td:nth-of-type(2):before { content: "Role Description"; }
+	td:nth-of-type(3):before { content: "Role Status"; }
+    td:nth-of-type(4):before { content: "Role Level"; }
+	td:nth-of-type(5):before { content: "Action"; }
+    }
+}
+
+// ::ng-deep .cdk-overlay-pane {
+// 	float: left;
+// 	width: 1000px;
+// 	overflow-y: auto;
+// 	height: 100%;
+//   }
+
+//   form{
+// 	margin-bottom: 33px;
+//   }
+
+//   .globally-chnage-mobile-view {
+// 	margin-bottom: 10px;
+//   }
+

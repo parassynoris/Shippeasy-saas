@@ -1,0 +1,1509 @@
+<div class="mat-table-with-gheading">
+  <div class="wrapper">
+    <div class="container-fluid">
+      <div class="wrap-content">
+        <div class="row">
+          <div class="page-title-box">
+            <ol class="breadcrumb ">
+              <!-- <li class="breadcrumb-item">{{ 'stolt.heading' | translate }}</li> -->
+              <li class="breadcrumb-item active">{{ 'stolt.batch.heading' | translate }}</li>
+              <li class="breadcrumb-item active color-red">{{ 'stolt.batch.heading' | translate }} {{ 'common.list' |
+                translate }}</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="wrap-mat-table-area">
+          <div class="table-header-area-filter">
+            <div class="row disply gx-2 gy-2">
+              <table-filters class="d-none" [TDP]="[false, false, false, false,false]" (filterInput)="applyFilter($event)"
+                (onClickExport)="export()" (clickMappedExport)="exportList(true)">
+              </table-filters>
+              <div class="col-12 col-md-6 col-lg-4"> 
+                <input class="form-control custom-input search-input" type="text"  placeholder="Press 'Enter' to Search..."  (keyup.enter)="onCustomFilterInputChange($event)"  autocomplete="off">
+                  
+              </div>
+              <div class="col-12 col-md-6 col-lg-4">
+                <nz-select
+                  class="form-select"
+                  nzMode="multiple"
+                  nzShowSearch
+                  nzAllowClear
+                  nzPlaceHolder="Select Company"
+                  [(ngModel)]="selectedConsignee"
+                  (ngModelChange)="getBatchList()"
+                >
+                  <nz-option
+                    *ngFor="let shipper of consigneeList"
+                    [nzLabel]="shipper?.partyShortcode ? shipper.partyShortcode + '-' + shipper.name : shipper.name"
+                    [nzValue]="shipper.partymasterId"
+                  ></nz-option>
+                </nz-select>
+              </div>
+            </div>
+           
+            <div class="row align-items-center gx-2 gy-2">
+              <div class="col-12 col-sm-6 col-md-3">
+                <!-- <label for="vehicleType" class="form-label"><span class="text-danger">*</span>
+                </label> -->
+                <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Job Filter"
+                  [(ngModel)]="selectedMilestone" (ngModelChange)="getBatchList()">
+                  <nz-option ng *ngFor="let test of milestoneType" [nzLabel]="test?.mileStoneName"
+                    [nzValue]="test.mileStoneName"></nz-option>
+                </nz-select>
+
+              </div>
+              <div class="col-12 col-sm-6 col-md-3">
+                <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Select MBL/HBL Status"
+                  [(ngModel)]="selectedStatus" (ngModelChange)="onStatusChange()">
+                  <nz-option *ngFor="let status of ['MBL Telex Pending', 'HBL Telex Pending']" [nzLabel]="status" [nzValue]="status"></nz-option>
+                </nz-select>
+              </div>        
+              
+              <div class="col-12 col-sm-6 col-md-3">
+                <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Select IGM/CFS/NOC Pending Status"
+                  [(ngModel)]="selectedNOC" (ngModelChange)="onStatusChange()">
+                  <nz-option *ngFor="let status of ['NOC Pending', 'CFS Pending','IGM Pending']" [nzLabel]="status" [nzValue]="status"></nz-option>
+                </nz-select>
+              </div>   
+
+              <div class="col-12 col-sm-6 col-md-3">
+                <!-- <label for="vehicleType" class="form-label"><span class="text-danger">*</span>
+                </label> -->
+                <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="SortBy"
+                  [(ngModel)]="selectedDate" (ngModelChange)="onSortingChange($event)">
+                  <nz-option ng *ngFor="let test of ['ATA','ATD','ETA','ETD']" [nzLabel]="test" [nzValue]="test"></nz-option>
+                </nz-select>
+
+              </div>
+                <div class="header-right" *ngIf="isImport || isExport">
+                  <a appAccessControl featureCode="['STBT01']" accessType="add" title="Add New Job"
+                    class="max-con new-action  btn btn-outline-primary btn-sm rounded-pill" routerLink="add">{{ 'stolt.batch.addNewJob' | translate }}</a>
+                </div> 
+            </div> 
+          </div>
+          <div>
+            <div class="row align-items-center gx-2 gy-2 mb-3 justify-content-between">
+              <!-- Export List Button -->
+                <div class="col-12 col-md-6 col-lg-4">
+                  <div class="drawerIcon max-con new-action btn btn-outline-primary btn-sm rounded-pill hover"
+                    matTooltip="Export List" 
+                    (click)="export()">
+                    Export List
+                    <em class="custom-tooltip bi bi-download color-pencil-red" title="Export to excel"></em>
+                  </div>
+
+                  <!-- Export Full List Button -->
+                  <div class="drawerIcon mappedExportIcon max-con new-action btn btn-outline-primary btn-sm rounded-pill hover" 
+                    matTooltip="Export Full List" 
+                    (click)="exportList(true)">
+                    Export Full List
+                    <em class="bi bi-download color-pencil-red"></em>
+                  </div>
+                </div>
+            <div class="boxes col-12 col-md-6 col-lg-8 taggle form-check form-switch d-block d-md-flex align-items-center justify-content-end px-2" *ngIf="!this.isTransport">
+
+              <div class="d-flex align-items-center">
+                <input *ngIf="isImport || isExport" type="checkbox" id="Ocean"
+                (change)="onCheckboxChange($event, 'Ocean')" />
+                <label *ngIf="isImport || isExport" for="Ocean" class="pl-1 mb-0 pr-4 font-13">Ocean</label><br>
+              </div>
+
+              <div class="d-flex align-items-center">
+                <input *ngIf="isImport || isExport" type="checkbox" id="Air"
+                (change)="onCheckboxChange($event, 'Air')" />
+                <label *ngIf="isImport || isExport" for="Air" class="pl-1 mb-0 pr-4 font-13">Air</label><br>
+              </div>
+
+              <div class="d-flex align-items-center">
+                <input type="checkbox" id="cancelledJob" [(ngModel)]="cancelledJob"
+                (ngModelChange)="oncancelledJobChange($event)" />
+                <label for="cancelledJob" class="pl-1 mb-0 pr-4 font-13">Cancelled Jobs </label><br>
+              </div>
+              
+            <div class="d-flex align-items-center">
+              <input type="checkbox" id="closedJobs" [(ngModel)]="closedJobs" (ngModelChange)="onClosedJobsChange($event)" />
+              <label for="closedJobs" class="pl-1 mb-0 pr-1 font-13">Closed Jobs </label><br>
+            </div>
+
+              
+              </div>
+            </div>
+          </div>
+
+          <div class="table-card">
+            <div class="table-design example-container mat-elevation-z8" (scroll)="onScroll($event)">
+              <table mat-table [dataSource]="dataSource" matSort class="" summary="agreement">
+
+                <ng-container matColumnDef="#">
+                  <th scope="col" mat-header-cell *matHeaderCellDef>
+                    # <em class="custom-tooltip" [attr.title]="'Toggle Filters'"
+                      (click)="toggleFilters = !toggleFilters" class="bi bi-search"></em>
+                  </th>
+                  <td mat-cell *matCellDef="let element;let i = index">
+                    {{ i+1}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="transportinquiryNo">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.inquiryNo' | translate }}
+                  </th>
+                  <th scope="col" mat-header-cell *matHeaderCellDef>
+                    <input>
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <a class="font-weight" (click)="navigateToNewTab(element)">{{ element?.transportinquiryNo }}
+                    </a>&nbsp;<i class="bi bi-box-arrow-up-right" (click)="navigateToNewTab1(element)"></i>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="batchNo">
+                  <th scope="col" class="th-width-173" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.jobNo' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="th-width-173">
+                    <div class="cell-content fixed-width-cell">
+                      <span class="filter-container">
+                        <!-- Default White Box with Popover -->
+                        <button nz-button nz-popover [nzPopoverContent]="colorPicker" nzPopoverTrigger="click"
+                          class="default-color-box">
+                          <div class="default-color-preview"
+                            [ngStyle]="{ 'background-color': element?.shipmentColorCode || '#FFFFFF' }"></div>
+                        </button>
+
+                        <!-- Popover Content -->
+                        <ng-template #colorPicker>
+                          <div class="color-grid">
+                            <div *ngFor="let color of colors" class="color-cell"
+                              [ngStyle]="{ 'background-color': color }" (click)="selectColor(color,element)">
+                              <i *ngIf="selectedColor === color" nz-icon nzType="check" class="color-check-icon"></i>
+                            </div>
+                          </div>
+                        </ng-template>
+                      </span>
+
+                      <span *ngIf="currentLogin === 'transporter'" class="batch-col">
+                        {{ element?.batchNo }}
+                      </span>
+                      <span *ngIf="currentLogin !== 'transporter'" class="batch-col">
+                        <a class="font-weight" (click)="navigateToNewTab(element)">
+                          {{ element?.batchNo }}
+                        </a>
+                        &nbsp;
+                        <i class="bi bi-box-arrow-up-right" (click)="navigateToNewTab1(element)"></i>
+                      </span>
+                    </div>
+                  </td>
+
+                </ng-container>
+
+
+                <!-- <ng-container matColumnDef="email">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Booking Request
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="text-align">
+                    <span nz-tooltip nzTooltipTitle="{{ 'common.email' | translate }}" class="mtop"><a
+                      (click)="sendBookingRequest(element,'bookingRequest')"><em
+                        class="bi bi-envelope-fill"></em></a>
+                  </span>
+                  </td>
+                </ng-container> -->
+                <!-- <ng-container matColumnDef="moveNo">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Move No.
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.moveNo }}
+                  </td>
+                </ng-container> -->
+
+                <ng-container matColumnDef="enquiryDetails.enquiryNo">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.inquiryNo' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element"
+                    style="color: var(--change-theme) !important; cursor: pointer;">
+                    <a class="font-weight" (click)="navigateToNewTab2(element)">{{ element?.enquiryDetails?.enquiryNo
+                      }}</a>&nbsp;<i class="bi bi-box-arrow-up-right" (click)="navigateToNewTab2(element)"
+                      *ngIf="currentLogin !== 'transporter' && element?.enquiryDetails?.enquiryNo"></i>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="statusOfBatch">
+                  <th scope="col" class="th-width-143" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.status' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="th-width-143">
+                    <!-- <span class="font-weight" [ngClass]="element?.statusOfBatch 
+                    ? (element?.statusOfBatch === 'Job Created' 
+                      ? 'green' 
+                      : (element?.statusOfBatch === 'Job Closed' 
+                        ? 'red' 
+                        : (element?.statusOfBatch === 'Job Cancelled' ? 'grey': (element?.statusOfBatch === 'Booking Confirmed' 
+                          ? 'blues' : (element?.statusOfBatch === 'Requotation Requested' 
+                          ? 'Yellow': (element?.statusOfBatch === 'SI Reminder Sent To Customer'
+                          ? 'green' : (element?.statusOfBatch === 'Cargo Picked Up'
+                          ? 'green'
+                          : 'blue'))))))) 
+                    : (element?.status 
+                      ? 'green' 
+                      : 'red')">
+                    {{ element?.statusOfBatch ? element?.statusOfBatch : (element?.status ? 'Job Created' : 'Job Closed') }}
+                  </span> -->
+                  <div class="status-width" > 
+                    <span class="font-weight" [style.color]="getColor(element?.statusOfBatch)">
+                      {{ element?.statusOfBatch ? element?.statusOfBatch :
+                       (element?.status ? 'Job Created' : 'Job Closed') }}
+                    </span>
+                    <i class="bi" *ngIf="element?.statusOfBatch === 'Job Cancelled'" 
+                    [ngClass]="{'bi-info-circle':true}" [matTooltip]="element?.rejectRemarks" matTooltipClass="custom-tooltip"
+                      style="padding-left: 4px; margin-bottom: 2px;">
+                    </i>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <!-- <ng-container matColumnDef="createdOn">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Booking Date
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                  {{ element?.createdOn | date: 'dd-MM-yyyy ' }}
+                  </td>
+                </ng-container>  -->
+
+                <ng-container matColumnDef="enquiryDetails.basicDetails.ShipmentTypeName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.freightType' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element" [ngClass]="{
+                    'air': element?.enquiryDetails?.basicDetails?.ShipmentTypeName === 'Air',
+                    'land': element?.enquiryDetails?.basicDetails?.ShipmentTypeName === 'Land',
+                    'ocean': element?.enquiryDetails?.basicDetails?.ShipmentTypeName === 'Ocean'
+                  }">
+                    <i *ngIf="element?.enquiryDetails?.basicDetails?.ShipmentTypeName  === 'Ocean'"
+                      class="fa-solid fa-ship me-1" [ngClass]="{
+                    'ocean': element?.enquiryDetails.basicDetails.ShipmentTypeName === 'Ocean'
+                  }"></i>
+                    <i *ngIf="element?.enquiryDetails?.basicDetails?.ShipmentTypeName === 'Land'"
+                      class="fa-solid fa-truck me-1" [ngClass]="{
+                    'land': element?.enquiryDetails?.basicDetails?.ShipmentTypeName === 'Land'
+                  }"></i>
+                    <i *ngIf=" element?.enquiryDetails?.basicDetails?.ShipmentTypeName === 'Air'"
+                      class="fa-solid fa-plane-departure me-1" [ngClass]="{
+                      'air': element?.enquiryDetails?.basicDetails?.ShipmentTypeName === 'Air'
+                    }"></i>
+                    {{element?.enquiryDetails?.basicDetails?.ShipmentTypeName}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="enquiryDetails.basicDetails.loadType">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    load
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="loadType">
+                      {{ element?.enquiryDetails?.basicDetails?.loadType}}<span *ngIf="element?.isCustomsOnly">/Customs</span>
+                    </div>
+                   
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="enquiryDetails.routeDetails.loadPortName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header class="w-70">
+                    Port of Loading
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="pod"> {{ element?.quotationDetails?.loadPortName }}</div>
+                   
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="quotationDetails.dischargePortName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header class="w-70">
+                    Port of Discharge
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="pod">  {{ element?.quotationDetails?.dischargePortName }}</div>
+                  
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="enquiryDetails.basicDetails.importShipmentTypeName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.shipmentType' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.enquiryDetails?.basicDetails?.importShipmentTypeName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="origin">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.origin' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.enquiryDetails?.routeDetails?.loadPortName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="enquiryDetails.routeDetails.destPortName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header class="w-70">
+                    Port of Discharge
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="w-70">
+                    <div class="pod">{{ element?.enquiryDetails?.routeDetails?.destPortName }}</div>
+                    
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="enquiryDetails.routeDetails.locationName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header class="w-70">
+                    Place of Delivery
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="pod"> {{ element?.enquiryDetails?.routeDetails?.locationName }}</div>
+                   
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="quotationDetails.loadPortName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.portLoading' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.quotationDetails?.origin }}
+                  </td>
+                </ng-container>
+
+                
+                <ng-container matColumnDef="quotationDetails.etd">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.etdAtd' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.quotationDetails?.etd | date: 'dd-MM-yyyy' }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="quotationDetails.eta">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.eta' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.quotationDetails?.eta | date: 'dd-MM-yyyy' }}
+                  </td>
+                </ng-container>
+
+
+
+                <ng-container matColumnDef="uniqueRefNo">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.uniqueRefNo' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.uniqueRefNo }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="quotationDetails.agentadviceNo">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.inquiryNo' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element" style="color: #007BFF !important; cursor: pointer;">
+                    <a class="font-weight" (click)="navigateToNewTab4(element)">{{
+                      element?.quotationDetails?.agentadviceNo }}</a>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="container">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.container' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <ng-template ngFor let-con [ngForOf]="element?.container">
+                      {{ con }},
+                    </ng-template>
+                  </td>
+                </ng-container>
+
+               
+
+                <ng-container matColumnDef="enquiryDetails.basicDetails.bookingRef">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Booking Ref No.
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="white-space-br">
+                    {{element?.enquiryDetails?.basicDetails?.bookingRef || '-'}}
+                  </td>
+                </ng-container>
+
+          
+
+                <ng-container matColumnDef="enquiryDetails.basicDetails.agentShortName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Agent
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{element?.enquiryDetails?.basicDetails?.agentShortName || ''}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="enquiryDetails.basicDetails.billingPartyName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.customer' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.enquiryDetails?.basicDetails?.billingPartyName ||
+                    element?.enquiryDetails?.basicDetails?.agentName }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="podName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.pod' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.podName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="enquiryData.onCarriageName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.onCarriage' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.enquiryData?.onCarriageName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="fpodName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.fpod' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.fpodName }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="quotationDetails.carrierName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+
+                    <span *ngIf="!this.isTransport">Carrier</span>
+                    <span *ngIf="this.isTransport">Transporter</span>
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <span nz-tooltip nzTooltipTitle="{{element?.quotationDetails?.carrierName}}">{{
+                      element?.quotationDetails?.carrierShortName || element?.quotationDetails?.carrierName }}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="routeDetails.portInDate">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Port In Date
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.routeDetails?.portInDate | date: 'dd-MM-yyyy ' }}
+                  </td>
+                </ng-container>
+               
+                <ng-container matColumnDef="routeDetails.etd">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'ETD' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{   element?.routeDetails?.etd | date: 'dd-MM-yyyy ' }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="routeDetails.atd">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'ATD' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.routeDetails?.atd   | date: 'dd-MM-yyyy ' }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="routeDetails.eta">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    ETA 
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{   element?.routeDetails?.eta| date: 'dd-MM-yyyy ' }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="routeDetails.ata">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                     ATA
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.routeDetails?.ata   | date: 'dd-MM-yyyy ' }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="routeDetails.railETD">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.railOut' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.routeDetails?.railETD | date: 'dd-MM-yyyy ' }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="ata">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.ata' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.ata | date: 'dd-MM-yyyy ' }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="nocDate">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.nocDoc' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.nocDate ? (element?.nocDate | date : 'dd-MM-yyyy'): 'Pending' }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="igmNo">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                  {{isExport ?'EGM No.': 'IGM No.'}}  
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.igmNo }}
+                  </td>
+                </ng-container>
+
+                
+
+                <ng-container matColumnDef="cfsRequestDate">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    CFS Request
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.isCfsRequired ?  element?.cfsRequestDate ? (element?.cfsRequestDate | date : 'dd-MM-yyyy') : 'Pending' : 'N/A'}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="igmRequestDate">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header> 
+                    {{isExport ?'EGM Request': 'IGM Request'}}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.igmRequestDate ? (element?.igmRequestDate | date :'dd-MM-yyyy') : 'Pending'   }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="lineNo">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Line No./Subline No.
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.lineNo   }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="itemNo">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.item' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.itemNo }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="cfsLocationName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.cfsLocation' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.cfsLocationName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="igmFillingStatus">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.igmFillingStatus' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.igmFillingStatus }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="quotationNo">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.quotationNo' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.quotationNo }}
+                  </td>
+                </ng-container>
+                <!-- <ng-container matColumnDef="createdOn">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    CreatedOn
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.createdOn | date: 'dd-MM-yyyy ' }}
+                  </td>
+                </ng-container> -->
+
+                <ng-container matColumnDef="milestoneEstiDate">
+                  <th scope="col " mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Est Date
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.milestoneEstiDate | date: 'dd-MM-yyyy ' }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="updatedOn">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.updatedOn' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.updatedOn | date: 'dd-MM-yyyy' }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="moveTypeName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.moveType' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.moveTypeName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="tankTypeName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.tankType' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.tankTypeName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="enquiryDetails.routeDetails.loadPlaceName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Place of Receipt
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.enquiryDetails?.routeDetails?.loadPlaceName }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="batchStatus">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.jobStatus' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.batchStatus }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="enquiryDetails.routeDetails.vesselName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.vessel' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.enquiryDetails?.routeDetails?.vesselName }}&nbsp; <i
+                      *ngIf="element?.enquiryDetails?.routeDetails?.vesselName" class="bi bi-broadcast-pin"
+                      data-toggle="modal" data-target="#myModal2" (click)="onenMap(vesselTrack,element)"></i>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="enquiryDetails.routeDetails.voyageNumber">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.voyage' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.enquiryDetails?.routeDetails?.voyageNumber }}
+                  </td>
+                </ng-container>
+
+
+                <ng-container matColumnDef="enquiryDetails.basicDetails.shipperName">
+                  <th scope="col" class="th-width-221" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.shipper' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element"   class="th-width-221">
+                    <div class="multi-shipper" > 
+                      <span class="link-text" *ngFor="let shipperData of returnShipper(element); let last = last" (click)="openShipper(shipper, shipperData?.partymasterId)" >
+                        {{ shipperData?.name }} <span *ngIf="!last">, </span>
+                      </span>
+                    </div>
+                   
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="enquiryDetails.basicDetails.consigneeName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Consignee
+                  </th>
+                  <td mat-cell *matCellDef="let element"  >
+                    <div class="multi-shipper" > 
+                    <span class="link-text" *ngFor="let shipperData of returnConsignee(element); let last = last" (click)="openShipper(shipper, shipperData?.partymasterId)">
+                      {{ shipperData?.name }} <span *ngIf="!last">, </span>
+                    </span>
+                    </div>
+                  </td>
+                </ng-container>
+
+
+                <ng-container matColumnDef="enquiryDetails.basicDetails.agentName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.agent' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="link-text">
+                    <span nz-tooltip nzTooltipTitle="{{element?.enquiryDetails?.basicDetails?.agentName}}"> {{
+                      element?.enquiryDetails?.basicDetails?.agentShortName
+                      ||element?.enquiryDetails?.basicDetails?.agentName}}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="quotationDetails.carrierShortName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.carrier' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="link-text">
+                    <span nz-tooltip
+                      nzTooltipTitle="{{element?.enquiryDetails?.routeDetails?.shippinglineName }}">{{element?.enquiryDetails?.routeDetails?.shippingLineShortName
+                      || element?.enquiryDetails?.routeDetails?.shippinglineName }}</span>
+                  </td>
+                </ng-container>
+
+
+
+                <ng-container matColumnDef="quotationDetails.vesselName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.vesselName' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <span nz-tooltip nzTooltipTitle="{{element?.quotationDetails?.vesselName}}"> {{
+                      element?.quotationDetails?.vesselShortName ||element?.quotationDetails?.vesselName }}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="enquiryDetails.basicDetails.multiShipper.name">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Multiple Shipper
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="multi-shipper">
+                    {{addCommaseperatedValue(element?.enquiryDetails?.basicDetails?.multiShipper) || "-"}} 
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="enquiryDetails.basicDetails.multiConsignee.name">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Multiple Consignee
+                  </th>
+                  <td mat-cell *matCellDef="let element"  class="multi-shipper">
+                    {{addCommaseperatedValue(element?.enquiryDetails?.basicDetails?.multiConsignee) || "-"}}  
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="containersName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.containersType' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.containersName }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="mblNumber">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.mblNoBkgNo' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="white-space-br">
+                      <span *ngFor="let mbl of filterMBL(element?.blData); let last = last">
+                        <span
+                          [ngClass]="{ 'blHeighlights': mbl.isBlConsolidated }"
+                          nz-tooltip
+                          [nzTooltipTitle]="showCon(element, mbl)"
+                        >
+                          {{ mbl?.blNumber || '-' }}
+                        </span>
+                        <span *ngIf="!last">,</span>
+                      </span>
+                    </div>
+                  </td>
+                </ng-container>
+
+              
+
+                <ng-container matColumnDef="MBLStatus">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    MBL Status
+                  </th>
+                  <td mat-cell *matCellDef="let element" style="font-weight: bold;">
+                    <ng-container *ngFor="let bl of getMBLBlData(element.blData); let last = last">
+                      <span [matTooltip]="'BL No: ' + bl.blNumber"
+                      [ngClass]="getRowClass(bl.blStatus)"
+                      >
+                        {{ bl.blStatus | titlecase }}
+                      </span>
+                      <span *ngIf="!last">, </span>
+                    </ng-container>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="hblNumbers">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.hblNo' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="white-space-br">
+                      <span *ngFor="let hbl of filterHBL(element?.blData); let last = last">
+                        <span
+                          [ngClass]="{ 'blHeighlights': hbl.isBlConsolidated }"
+                        >
+                          {{ hbl?.blNumber || '-' }}
+                        </span>
+                        <span *ngIf="!last">,</span>
+                      </span>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <!-- <ng-container matColumnDef="hblType">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    BL Type
+                  </t
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.hblType }}
+                  </td>
+                </ng-container> -->
+
+                <!-- <ng-container matColumnDef="HBLStatus">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.hblStatus' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element" [ngClass]="getRowClass(element?.HBLStatus)"
+                    style="font-weight: bold;">
+                    {{ element?.HBLStatus | titlecase }}
+                  </td>
+                </ng-container> -->
+                <ng-container matColumnDef="HBLStatus">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    HBL Status
+                  </th>
+                  <td mat-cell *matCellDef="let element" style="font-weight: bold;">
+                    <ng-container *ngFor="let bl of getHBLBlData(element.blData); let last = last">
+                      <span [matTooltip]="'BL No: ' + bl.blNumber"
+                      [ngClass]="getRowClass(bl.blStatus)"
+                      >
+                        {{ bl.blStatus | titlecase }}
+                      </span>
+                      <span *ngIf="!last">, </span>
+                    </ng-container>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="containerNos">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.containerNo' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="white-space-br">
+                    <ng-container *ngIf="element?.containerNosDataWithTooltip?.length; else noData">
+                      <ng-container *ngFor="let container of element.containerNosDataWithTooltip; let last = last">
+                        <span
+                          [ngStyle]="{ color: container.isDetentionTaken ? 'red' : 'inherit' }"
+                          [matTooltip]="
+                            container.isDetentionTaken
+                              ? 'This container has taken detention period on ' +
+                                (container.detentionTakenDate | date: 'dd-MM-yyyy HH:mm') +
+                                ' till ' +
+                                (container.validTill | date: 'dd-MM-yyyy HH:mm')
+                              : null
+                          "
+                        >
+                          {{ container.containerNumber }}
+                        </span>{{ !last ? ', ' : '' }}
+                      </ng-container>
+                    </ng-container>
+                    <ng-template #noData>-</ng-template>
+                  </td>
+                </ng-container>
+                
+
+                <ng-container matColumnDef="updatedBy">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Last Updated By
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.updatedBy }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="enquiryDetails.basicDetails.forwarderName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.forwarder' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.enquiryDetails?.basicDetails?.forwarderName }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="enquiryDetails.basicDetails.invoicingPartyName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.invoicingParty' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.enquiryDetails?.basicDetails?.invoicingPartyName }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="enquiryDetails.basicDetails.notifyPartyName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.notifyParty' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.enquiryDetails?.basicDetails?.notifyPartyName }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="remarks">
+                  <th scope="col" class="white-space-br" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.remarks' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="white-space-br">
+                    {{ element?.remarks }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="enquiryDetails.cargoDetail.productName">
+                  <th scope="col" mat-header-cell *matHeaderCellDef>
+                    {{ 'stolt.batch.product' | translate }}
+
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <span *ngFor="let prod of element?.enquiryDetails?.cargoDetail;let i=index">
+                      {{ prod?.productName }}<span *ngIf="element?.enquiryDetails?.cargoDetail?.length != (i+1)">,
+                      </span></span>
+
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="cargoType">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'stolt.batch.cargoType' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.cargoType }}
+                  </td>
+                </ng-container>
+
+
+
+                <ng-container matColumnDef="action">
+                  <th scope="col" id="action" class="charterersPdfHead" mat-header-cell *matHeaderCellDef>
+                    {{ 'Actions' }}
+                  </th>
+                  <td class="borderBottom" mat-cell *matCellDef="let element">
+                    <em class="bi bi-three-dots dots-color-change cursor-pointer wrap-batch1 border px-1 em-icon"
+                      [matMenuTriggerFor]="menu" #menuTrigger="matMenuTrigger"
+                      [class]=" menuTrigger.menuOpen ? 'clicked' : ''">
+                    </em>
+
+                    <mat-menu #menu="matMenu" class="wrap-open">
+                      <!-- Edit Batch -->
+                      <ng-container
+                        *ngIf="element?.statusOfBatch !== 'Job Closed' && element?.statusOfBatch != 'Job Cancelled'">
+                        <button mat-menu-item class="wrap-inside" appAccessControl featureCode="['STBT01']"
+                          accessType="update" (click)="navigateToNewTab(element)">
+                          <a class="text-dark"><em class="bi bi-pencil color-pencil-red"></em> Edit</a>
+                        </button>
+                      </ng-container>
+
+                      <!-- View Batch -->
+                      <button routerLink="show/{{element.batchId}}/details" mat-menu-item class="wrap-inside"
+                        appAccessControl featureCode="['STBT01']" accessType="view" [queryParams]="{ isshow: 'true' }">
+                        <a class="text-dark" [queryParams]="{ isshow: 'true' }"><em
+                            class="bi bi-eye globally-change-icon-color"></em>
+                          View</a>
+                      </button>
+
+                      <ng-container>
+                        <button mat-menu-item class="wrap-inside" appAccessControl featureCode="['STBT01']"
+                          accessType="update" (click)="openJobHistoryDialog(changeLogHistory,element)">
+                          <a class="text-dark"><em class="bi bi-eye globally-change-icon-color"></em> Change History</a>
+                        </button>
+                      </ng-container>
+
+
+
+                      <!-- Cancel Job -->
+                      <!-- <ng-container *ngIf="element?.statusOfBatch !== 'Job Cancelled' && element?.statusOfBatch !== 'Job Closed'">
+                        <button mat-menu-item class="wrap-inside" appAccessControl featureCode="['STBT01']" accessType="update" (click)="batchCancel(element)">
+                          <a class="text-dark" ><em
+                            class="bi bi-x-circle"></em> Job Cancel</a>
+                        </button>
+                      </ng-container> -->
+                      <ng-container *ngIf="element?.statusOfBatch !== 'Job Cancelled' && element?.statusOfBatch !== 'Job Closed'">
+                        <button mat-menu-item class="wrap-inside" appAccessControl featureCode="['STBT01']"
+                          accessType="update" (click)="bookingConfirmation(element.batchId)">
+                          <a class="text-dark"><em class="fa fa-paper-plane mr-1"></em>Send Booking</a>
+                        </button>
+                      </ng-container> 
+                      <ng-container *ngIf="element?.statusOfBatch !== 'Job Cancelled' && element?.statusOfBatch !== 'Job Closed'">
+                        <button mat-menu-item class="wrap-inside" appAccessControl featureCode="['STBT01']"
+                          accessType="update" (click)="onOpenEdit(element, 'cloneJob')">
+                          <a class="text-dark"><em class="fa fa-clone mr-1"></em>Job Clone</a>
+                        </button>
+                      </ng-container> 
+                      <ng-container
+                        *ngIf="element?.statusOfBatch !== 'Job Cancelled' && element?.statusOfBatch !== 'Job Closed'">
+                        <button mat-menu-item class="wrap-inside" appAccessControl featureCode="['STBT01']"
+                          accessType="update" (click)="openJobCloseDialog(element)">
+                          <a class="text-dark"><em class="bi bi-x-circle"></em> Job Cancel</a>
+                        </button>
+                      </ng-container>  
+                      <ng-template #jobCloseTemplate let-dialogRef>
+                        <h1 mat-dialog-title style="color: #007BFF;">Job Cancel</h1>
+                        <div class="col-md-12 custom-padding">
+                          <label class="form-label">Remark</label>
+                          <textarea id="remarks" name="Remarks" rows="2" cols="100" [(ngModel)]="remark"
+                            class="form-control custom-input rounded-2"></textarea>
+                        </div>
+                        <div>
+                          <div>
+                            <button mat-button class="cancel-btn btn-lg float-end" (click)="cancelJobClose(dialogRef)">
+                              Cancel
+                            </button>
+                            <button mat-button class="submit-btn btn-lg float-end" (click)="submitJobClose(dialogRef)">
+                              Submit
+                            </button>
+                          </div>
+                        </div>
+                      </ng-template>
+
+
+                      <!-- <button (click)="navigateLogs(element)" mat-menu-item class="wrap-inside" appAccessControl featureCode="['STBT01']" accessType="view">
+                        <a class="text-dark"><em class="bi bi-clock-history globally-change-icon-color"></em>Audit Logs</a>
+                      </button> -->
+
+                    </mat-menu>
+
+                  </td>
+                </ng-container>
+
+                <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index"
+                  [matColumnDef]="headersFilter">
+                  <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+                    <div class="filters-container" [class.animate]="!toggleFilters">
+                      <!-- <em *ngIf="i == 0" class="custom-tooltip" [attr.title]="'Clear Filters'" (click)="clearFilters();toggleFilters = !toggleFilters" class="bi bi-x-circle"></em> -->
+                      <div *ngIf="i > 0 && i < displayedColumns1.length - 1" appearance="outline">
+
+                        <nz-select *ngIf="headersFilter == 'statusOfBatch_'+i" class="form-select w-150" nzShowSearch
+                          nzAllowClear [(ngModel)]="filtersModel[i]" (ngModelChange)="searchColumns()"
+                          nzPlaceholder="Select">
+                          <nz-option nzLabel="Cargo Handover" nzValue="Cargo Handover"></nz-option>
+                          <nz-option nzLabel="Job Cancelled" nzValue="Job Cancelled"></nz-option>
+                          <nz-option nzLabel="Job Created" nzValue="Job Created"></nz-option>
+                          <nz-option nzLabel="Booking Confirmed" nzValue="Booking Confirmed"></nz-option>
+                          <nz-option nzLabel="SI Received From Customer"
+                            nzValue="SI Received From Customer"></nz-option>
+                          <nz-option nzLabel="Job Closed" nzValue="Job Closed"></nz-option>
+                          <nz-option nzLabel="Factory Stuffing" nzValue="Factory Stuffing"></nz-option>
+                          <!-- <nz-option  nzLabel="Rejected" nzValue="Rejected"></nz-option> 
+                        <nz-option  nzLabel="Rejected" nzValue="Rejected"></nz-option> 
+                        <nz-option  nzLabel="Rejected" nzValue="Rejected"></nz-option> 
+                        <nz-option  nzLabel="Rejected" nzValue="Rejected"></nz-option> 
+                        <nz-option  nzLabel="Rejected" nzValue="Rejected"></nz-option>  -->
+                        </nz-select>
+                        <nz-select *ngIf="headersFilter == 'enquiryDetails.basicDetails.ShipmentTypeName_'+i"
+                          class="form-select" nzShowSearch nzAllowClear [(ngModel)]="filtersModel[i]"
+                          (ngModelChange)="searchColumns()" nzPlaceholder="Select">
+                          <nz-option *ngIf="!isTransport" nzLabel="Air" nzValue="Air"></nz-option>
+                          <nz-option *ngIf="!isTransport" nzLabel="Ocean" nzValue="Ocean"></nz-option>
+                          <nz-option *ngIf="isTransport" nzLabel="Land" nzValue="Land"></nz-option>
+                        </nz-select>
+
+                        <nz-select *ngIf="headersFilter == 'enquiryDetails.basicDetails.loadType_'+i"
+                          class="form-select" nzShowSearch nzAllowClear [(ngModel)]="filtersModel[i]"
+                          (ngModelChange)="searchColumns()" nzPlaceholder="Select">
+                          <nz-option *ngIf="!isTransport" nzLabel="FCL" nzValue="FCL"></nz-option>
+                          <nz-option *ngIf="!isTransport" nzLabel="LCL" nzValue="LCL"></nz-option>
+                          <nz-option *ngIf="!isTransport" nzLabel="ULD Container" nzValue="ULD Container"></nz-option>
+                          <nz-option *ngIf="!isTransport" nzLabel="Loose" nzValue="Loose"></nz-option>
+                          <nz-option *ngIf="isTransport" nzLabel="FTL" nzValue="FTL"></nz-option>
+                          <nz-option *ngIf="isTransport" nzLabel="LTL" nzValue="LTL"></nz-option>
+                          <nz-option *ngIf="isTransport" nzLabel="PTL" nzValue="PTL"></nz-option>
+                        </nz-select>
+
+                        <input type="date"
+                          *ngIf=" headersFilter == 'milestoneEstiDate_'+i || headersFilter == 'routeDetails.railETD_'+i || headersFilter == 'nocDate_'+i|| headersFilter == 'cfsRequestDate_'+i  || headersFilter == 'igmRequestDate_'+i  || headersFilter == 'routeDetails.eta_'+i || headersFilter == 'routeDetails.etd_'+i || headersFilter == 'updatedOn_'+i || headersFilter == 'routeDetails.ata_'+i || headersFilter == 'routeDetails.atd_'+i"
+                          class="form-control input-txt" placeholder="Press 'Enter' to search"
+                          [(ngModel)]="filtersModel[i]" (change)="searchColumns()">
+                        <input type="text"
+                          *ngIf="headersFilter !== 'enquiryDetails.basicDetails.loadType_'+i&& headersFilter != 'milestoneEstiDate_'+i && headersFilter != 'routeDetails.railETD_'+i  && headersFilter != 'nocDate_'+i  && headersFilter != 'cfsRequestDate_'+i&& headersFilter != 'igmRequestDate_'+i  && headersFilter != 'routeDetails.eta_'+i && headersFilter != 'routeDetails.etd_'+i && headersFilter != 'updatedOn_'+i && headersFilter !== 'statusOfBatch_'+i && headersFilter !== 'enquiryDetails.basicDetails.ShipmentTypeName_'+i && headersFilter != 'routeDetails.ata_'+i && headersFilter != 'routeDetails.atd_'+i"
+                          class="form-control input-txt" placeholder="Press 'Enter' to search"
+                          [(ngModel)]="filtersModel[i]" (keyup.enter)="searchColumns()">
+
+                      </div>
+                      <em *ngIf="i == displayedColumns1.length - 1" class="custom-tooltip"
+                        [attr.title]="'Clear Filters'" (click)="clearFilters();toggleFilters = !toggleFilters"
+                        class="bi bi-x-circle"></em>
+                    </div>
+                  </th>
+                </ng-container>
+
+
+                <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-header-row class="no-default-height" *matHeaderRowDef="displayedColumns1"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"
+                  [ngClass]="getRowClassHighLight(row?.shipmentColorCode)"></tr>
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+                    <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+                    <span *ngIf="!loaderService?.isLoadingcircle && !dataSource?.data?.length">No data available</span>
+                  </td>
+                </tr>
+              </table>
+
+            </div>
+            <!-- <div [ngClass]="{'display-none' : toalLength < 20}">
+              <mat-paginator [length]="toalLength" [pageSize]="pageSize" [pageIndex]="pageNumber-1"
+                (page)="onPageChange($event)"  [pageSizeOptions]="_gc.PAGINATOR_OPTIONS" showFirstLastButtons></mat-paginator>
+            </div> -->
+          </div>
+          <div class="d-flex justify-content-center" *ngIf="this.batchList?.length > 0">
+            <p class="mt-3 text-mute">Showing 1 - {{this.batchList?.length}} of {{ this.toalLength}} entries</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #content1 let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+      </button>
+    </div>
+    <div class="modal-body mt-4 d-flex align-items-center">
+      <em class="bi bi-question-circle text-danger fs-2 text-center float-start me-2"> </em> <span
+        class=" text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="text-center">
+        <button type="button" class="btn btn-secondary  btn-sm me-3" (click)="d('Cross click')">No</button>
+        <button type="button" class="btn btn-danger  btn-sm" (click)="c('yes')">Yes</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #shipper let-c="close" let-d="dismiss">
+  <div class="modal-content p-0">
+    <div class="modal-header">
+      <span>Party Details</span>
+      <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')">
+      </button>
+    </div>
+    <div class="modal-body mt-4 modal-grid">
+      <div class="d-grid">
+        <div class="d-grid-2">
+          <span class="header">{{ 'stolt.batch.shipperDetails.shipper' | translate }} :</span>
+          <span class="text"> {{shipperList?.name}} </span>
+        </div>
+        <div class="d-grid-2">
+          <span class="header">{{ 'stolt.batch.shipperDetails.address' | translate }} :</span>
+          <span class="text"> {{shipperList?.addressInfo?.address}} </span>
+        </div>
+        <div class="d-grid-2">
+          <span class="header">{{ 'stolt.batch.shipperDetails.city' | translate }} :</span>
+          <span class="text"> {{shipperList?.addressInfo?.cityName}} </span>
+        </div>
+        <div class="d-grid-2">
+          <span class="header">{{ 'stolt.batch.shipperDetails.state' | translate }} :</span>
+          <span class="text"> {{shipperList?.addressInfo?.stateName}} </span>
+        </div>
+        <div class="d-grid-2">
+          <span class="header">{{ 'stolt.batch.shipperDetails.country' | translate }} :</span>
+          <span class="text"> {{shipperList?.addressInfo?.countryName}} </span>
+        </div>
+
+        <div class="d-grid-2">
+          <span class="header">{{ 'stolt.batch.shipperDetails.mailId' | translate }} :</span>
+          <span class="text"> {{shipperList?.primaryMailId}} </span>
+        </div>
+        <!-- <div class="d-grid-2">
+          <span class="header">Contact No. :</span>
+          <span class="text"> +{{shipperList?.primaryNo.primaryCountryCode}} {{shipperList?.primaryNo.primaryNo}}</span>
+        </div> -->
+        <div class="d-grid-2">
+          <span class="header">{{ 'stolt.batch.shipperDetails.panNo' | translate }} :</span>
+          <span class="text"> {{shipperList?.panNo}} </span>
+        </div>
+      </div>
+      <div class="branch-card" *ngFor="let branch of shipperList.branch">
+        <div class="d-grid">
+          <div class="d-grid-2">
+            <span class="header">{{ 'stolt.batch.shipperDetails.branch' | translate }} :</span>
+            <span class="text"> {{branch?.branch_name}} </span>
+          </div>
+          <div class="d-grid-2">
+            <span class="header">{{ 'stolt.batch.shipperDetails.address' | translate }} :</span>
+            <span class="text"> {{branch?.branch_address}} </span>
+          </div>
+          <div class="d-grid-2">
+            <span class="header">{{ 'stolt.batch.shipperDetails.city' | translate }} :</span>
+            <span class="text"> {{branch?.branch_city}} </span>
+          </div>
+          <div class="d-grid-2">
+            <span class="header">{{ 'stolt.batch.shipperDetails.state' | translate }} :</span>
+            <span class="text"> {{branch?.branch_stateName}} </span>
+          </div>
+          <div class="d-grid-2">
+            <span class="header">{{ 'stolt.batch.shipperDetails.pic' | translate }} :</span>
+            <span class="text"> {{branch?.pic}} </span>
+          </div>
+          <div class="d-grid-2">
+            <span class="header">{{ 'stolt.batch.shipperDetails.picNo' | translate }} :</span>
+            <span class="text"> {{branch?.pic_phone}} </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #vesselTrack let-modal>
+  <app-vessel-map [mmsiNo]="mmsiNo" [vesselName]="vesselName"></app-vessel-map>
+</ng-template>
+
+ 
+
+
+<ng-template #changeLogHistory let-modal>
+  <div *ngIf="showHistory" class="modal-content nz-allSelect vessel-master-component open-box">
+    <div class="modal-headers mt-2 pb-0">
+      <h4 class="modal-title">
+        Change History
+      </h4>
+      <button type="button" class="btn-close shadow-none float-end" (click)="cancelHistory()"
+        aria-label="Close"></button>
+
+    </div>
+
+    <div class="modal-body">
+      <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view pb-0">
+
+        <div class="col-md-12 p-0">
+
+          <div class="wrap-mat-table-area">
+            <div class="table-card">
+
+              <div class="table-design example-container mat-elevation-z8 table-overlay" >
+                <table mat-table [dataSource]="jobdataSource" matSort class="full-width-table" summary="agreement">
+                  <ng-container matColumnDef="#">
+                    <th scope="col" mat-header-cell *matHeaderCellDef>
+                      #
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i = index">
+                      {{ i+1}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="action">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Action
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.action }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="resource">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Collection
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.resource == 'batch' ? 'Job' : element?.resource }}
+                    </td>
+                  </ng-container>
+
+
+
+
+                  <ng-container matColumnDef="updatedOn">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Updated On
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.updatedOn | date: 'dd-MM-yyyy ' }}
+                    </td>
+                  </ng-container>
+
+                  
+
+                  <ng-container matColumnDef="updatedBy">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Last Updated By
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.updatedBy }}
+                    </td>
+                  </ng-container>
+
+
+                  <ng-container matColumnDef="details">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Details
+                    </th>
+                    <td mat-cell *matCellDef="let element;let i=index">
+                      <button class="btn btn-outline-primary btn-lg  "
+                        (click)="showDetails(element,i)">Details</button>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumnsChangeLogs">
+                  </tr>
+
+                  <tr mat-row *matRowDef="let row; columns: displayedColumnsChangeLogs">
+                  </tr>
+
+
+                  <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" [attr.colspan]="displayedColumnsChangeLogs.length" class="text-center">
+                      <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+                      <span *ngIf="!loaderService?.isLoadingcircle && !jobdataSource?.data?.length">No data
+                        available</span>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <!-- <div [ngClass]="{'display-none' : toalLengthChangeLog < 10}">
+                <mat-paginator [length]="toalLengthChangeLog" [pageSize]="pageSize" [pageIndex]="pageNumber-1"
+                  (page)="onPageChange1($event)" [pageSizeOptions]="_gc.PAGINATOR_OPTIONS"
+                  showFirstLastButtons></mat-paginator>
+              </div> -->
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group wrap-form-action mt-4">
+          <button class="btn1 btn-lg float-end" (click)="cancelHistory()">
+            {{ "common.cancel" | translate }}
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!showHistory" class="modal-content nz-allSelect vessel-master-component open-box">
+    <div class="modal-headers mt-2 pb-0">
+      <h4 class="modal-title">
+        Change History
+      </h4>
+      <button type="button" class="btn-close shadow-none float-end" (click)="cancel()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view pb-0">
+
+        <div class="col-md-12 p-0">
+          <div class="wrap-mat-table-area">
+            <div class="table-header-area">
+              <div class="row">
+                <div class="col-md-4 mb-1">
+                  <table-filters [TDP]="[false, false, false, true,false]" (filterInput)="applyFilter1($event)">
+                  </table-filters>
+                </div>
+              </div>
+            </div>
+
+            <div class="meta-info">
+              <div>Job No : <strong> {{openHistoryBatchData?.batchNo}}</strong></div>
+              <div>Updated By : <strong> {{ jobdataSource1?.filteredData[0]?.updatedBy }}</strong></div>
+              <div>Date Modified : <strong> {{ jobdataSource1?.filteredData[0]?.updatedOn | date: 'dd-MM-yyyy hh:mm:ss a' }}</strong></div>
+            </div>
+          
+            <div class="log-section" *ngFor="let item of jobdataSource1?.filteredData">
+              <div class="log-title">
+                {{ item?.keyName | prettyLabel}}
+                <span class="badge">CHANGED</span>
+              </div>
+          
+              <div class="diff-block" *ngIf="item?.newValue || item?.previousValue">
+                <div class="line removed">- "<span class="dark-red">{{ item?.previousValue }}</span>"</div>
+                <div class="line added">+ "<span class="dark-green">{{ item?.newValue }}</span>"</div>
+              </div>
+          
+              <div *ngIf="!item?.newValue  && !item?.previousValue " class="no-changes">File without changes</div>
+            </div>
+
+            <div class="table-card " *ngIf="false">
+              <div class="table-design example-container mat-elevation-z8 table-overlay">
+                <table mat-table [dataSource]="jobdataSource1" matSort class="full-width-table" summary="agreement">
+                  <ng-container matColumnDef="#">
+                    <th scope="col" mat-header-cell *matHeaderCellDef style="width:5%">
+                      #
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i = index" class="text-center">
+                      {{ i+1}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="keyName">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Key Name
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.keyName }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="previousValue">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Previous Value
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.previousValue}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="newValue">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      New Value
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.newValue}}
+                    </td>
+                  </ng-container>
+
+
+
+                  <ng-container matColumnDef="updatedOn">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Updated On
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.updatedOn | date: 'dd-MM-yyyy ' }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="updatedBy">
+                    <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Last Updated By
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.updatedBy }}
+                    </td>
+                  </ng-container>
+
+
+
+
+                  <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumns2">
+                  </tr>
+
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns2">
+                  </tr>
+                  <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" [attr.colspan]="displayedColumns2.length" class="text-center">
+                      <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+                      <span *ngIf="!loaderService?.isLoadingcircle && !jobdataSource1?.data?.length">No data
+                        available</span>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+
+            </div>
+
+
+          </div>
+        </div>
+
+        <div class="form-group wrap-form-action mt-4">
+          <button class="btn1 btn-lg float-end" (click)="cancel()">
+            {{ "common.cancel" | translate }}
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</ng-template>

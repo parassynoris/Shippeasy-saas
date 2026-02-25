@@ -1,0 +1,101 @@
+.file-upload {
+    background-color: transparent;
+    .image-upload-wrap {
+      border: 2px dashed #ccc;
+      position: relative;
+      border-radius: 7px;
+      padding: 22px 26px;
+      cursor: pointer;
+    .wrap-custom-file{
+      align-items: center;
+      justify-content: center;
+      img{
+        width: 20px;
+      }
+      .wrap-leftsection{
+        // position: relative;
+        // padding-left: 30px; 
+        .counter{
+          position: absolute;
+          top: 0px;
+          left: 0px;
+          border-radius: 50%;
+          background: linear-gradient(0deg, rgba(60, 38, 191, 0.04), rgba(60, 38, 191, 0.04)), #FFFFFF;
+          height: 15px;
+          width: 15px;
+          font-size: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+     h3{
+      font-weight: 700;
+     }
+     span{
+      color: rgba(9, 20, 62, 0.6);
+     }
+     i{
+      font-size: 16px;
+     }
+    }
+    .file-upload-input {
+      position: absolute;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      outline: none;
+      opacity: 0;
+      cursor: pointer;
+    }
+  }
+  }
+
+  .file-upload1 {
+    background: linear-gradient(0deg, rgba(60, 38, 191, 0.04), rgba(60, 38, 191, 0.04)), #FFFFFF;
+    border-radius: 10px;
+    .image-upload-wrap {
+      
+      cursor: pointer !important;
+        height: 90px;
+      border: 1px solid #EBEBF7;
+      position: relative;
+      border-radius: 10px;
+      padding: 15px 15px;
+    .wrap-custom-file{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .icon-select{
+        position: absolute;
+    top: 40%;
+    }
+      .wrap-leftsection{
+        // position: relative;
+        display: flex;
+        flex-direction: column;
+        // padding-left: 30px; 
+      
+  
+        .counter{
+          position: absolute;
+          top: 0px;
+          left: 0px;
+          border-radius: 50%;
+          background: linear-gradient(0deg, rgba(60, 38, 191, 0.04), rgba(60, 38, 191, 0.04)), #FFFFFF;
+          height: 15px;
+          width: 15px;
+          font-size: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+    }
+    .file-upload-input {
+      opacity: 0;
+      // cursor: pointer;
+    }
+  }
+  }

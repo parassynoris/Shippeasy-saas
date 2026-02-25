@@ -1,0 +1,112 @@
+@import '../../../../assets/styles/mixins/global.scss';
+.table-with-gheading .wrap-bar {
+    border-bottom: 0;
+  }
+  
+  .form-accordian h2 button {
+    padding: 7px 15px !important;
+    width: 100% !important;
+    box-shadow: none !important;
+    font-size: 14px !important;
+    color: var(--theme-black-320) !important;
+    background-color: var(--theme-light-bg) !important;
+  }
+  
+  .form-accordian .accordion-button::after {
+    filter: none !important;
+  }
+  .expand-all{
+    font-size: 12px;
+      border-color: var(--link-text-color);
+      color: var(--link-text-color);
+      border-radius: 20px;
+      margin: 0 5px;
+      background-color: white;
+      border: 0;
+  }
+  .form-accordian .accordion-item {
+    margin-bottom: 25px;
+    border: 0;
+  
+  
+    .form-label {
+      font-size: 12px;
+      color: var(--theme-black-400);
+    }
+  }
+  
+  .form-accordian .accordion-item:last-child {
+    margin-bottom: 0px;
+  }
+  
+  .form-group.wrap-form-action {
+    padding: 0 20px 60px 0;
+  }
+  
+  .form-control::placeholder {
+    color: rgb(204, 199, 199);
+  }
+  
+  .ng-invalid~.invalid-feedback {
+    display: block;
+  }
+  
+  
+ 
+    .display-none{
+      display: none;
+    }
+    ::ng-deep {
+  
+      .cdk-overlay-container,
+      .cdk-overlay-pane {
+        z-index: 2000 !important;
+      }
+    
+        }
+        .menuright {
+          position: fixed;
+          right: 0;
+          top: 40%;
+          width: 10px;
+          margin: -2.5em 0 0 0;
+          z-index: 5;
+          background: var(--theme-white-background-color);
+          color: var(--link-text-color);
+          font-weight: bold;
+          text-align: left;
+          padding: 10px 30px 10px 0px;
+          box-shadow: var(--theme-shadow);
+          border-radius: 10px 0 0px 10px;
+          li {
+            width: 30px;
+            border-bottom: 1px solid var(--theme-border-color-light);
+            list-style: none;
+            padding: 0px 0 0px 3px;
+            &:last-child {
+              border-bottom: 0;
+            }
+            i,em{
+              font-size: 12px;
+            }
+          }
+        }
+        .new-action {
+          font-size: 12px;
+          color: var(--link-text-color);
+          cursor: pointer;
+          text-decoration: none;
+          font-family: "Roboto", sans-serif;
+          font-weight: 500;
+  
+        }
+        .card-header{
+          color: var(--theme-black-320) !important;
+          background-color: var(--theme-light-bg) !important;
+          padding: 6px 15px;
+          font-size: 12px;
+        }
+  
+        .accordion-body {
+          padding: 10px 0 !important;
+          }

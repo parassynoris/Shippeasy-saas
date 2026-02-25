@@ -1,0 +1,355 @@
+<div class="table-header-area">
+    <div class="mat-table-with-gheading">
+      <div class="wrapper">
+        <div class="container-fluid">
+          <div class="pt-2">
+            <div class="wrap-mat-table-area">
+              <div class="table-header-area pt-2">
+                <div>
+                  <table-filters [TDP]="[false, false, true, true]" (filterInput)="applyFilter($event)"
+                    >
+                  </table-filters>
+                </div>
+                <div class="header-right">
+                  <div class="mt-2">
+                  <a class="new-action btn btn-outline-primary btn-sm rounded-pill" appAccessControl featureCode="['STM0126']" accessType="add" 
+              (click)="open(AddClause)">{{ 'common.add' | translate }} Ticket</a>
+                </div>
+              </div>
+              </div>
+            </div>
+            <div class="table-card">
+              <div class="table-design example-container mat-elevation-z8">
+                <table mat-table [dataSource]="dataSource" matSort class="full-width-table" summary="agreement">
+                  <ng-container matColumnDef="#">
+                      <th style="width: 1%;" scope="col" mat-header-cell *matHeaderCellDef >
+                          # <em class="custom-tooltip" [attr.title]="'Toggle Filters'"
+                              (click)="toggleFilters = !toggleFilters" class="bi bi-search"></em>
+                      </th>
+                      <td mat-cell *matCellDef="let element; let i = index" >
+                        {{ element?.id}}
+                      </td>
+                  </ng-container>
+                  <ng-container matColumnDef="action">
+                      <th style="width: 3%;" scope="col-md-2" id="action" class="charterersPdfHead" mat-header-cell
+                            *matHeaderCellDef >
+                          {{ 'Actions' }}
+                      </th>
+                        <td class="borderBottom" mat-cell *matCellDef="let element; let i = index">
+                          <div class="d-flex"  style="align-items: center;">
+                            <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop mx-1">
+                              <a appAccessControl featureCode="['STM0110']" accessType="update"
+                                (click)="open(AddClause, element)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                            </span>
+                            <span nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}" class="mx-1">
+                              <a appAccessControl featureCode="['STM0110']" accessType="view"
+                              (click)="open(AddClause, element,true)"><em
+                                  class="bi bi-eye globally-change-icon-color"></em></a></span>
+                                  <span nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}" class="mx-1">
+                                  <a
+                                  class="mx-1"
+                                  (click)="onDelete(deletedata, element)"
+                                  appAccessControl
+                                  accessType="delete"
+                                  >
+                                  <!-- <i class="bi bi-trash color-pencil-red"></i> -->
+                                </a>
+                              </span>
+                            </div>
+                          </td> 
+                      
+                  </ng-container>
+                  <ng-container matColumnDef="ticketDate">
+                      <th style="width: 10%;" scope="col-md-2" mat-header-cell *matHeaderCellDef mat-sort-header>
+                        Ticket Date
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                          {{ element?.createdOn | custom_date}}
+                      </td>
+                  </ng-container>
+                  <ng-container matColumnDef="priority">
+                      <th style="width: 10%;" scope="col-md-2" mat-header-cell *matHeaderCellDef mat-sort-header>
+                        Priority
+                      </th>
+                      <td  mat-cell *matCellDef="let element"><span class="font-weight status-bar" [ngClass]="element?.priority">
+                        {{ element?.priority}}
+                      </span>
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="ticketNo">
+                      <th style="width: 10%;" scope="col-md-2" mat-header-cell *matHeaderCellDef mat-sort-header>
+                        Ticket No.
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                          {{ element?.ticketNo }}
+                      </td>
+                  </ng-container>
+                  <ng-container matColumnDef="title">
+                      <th scope="col" style="width: 20%;" mat-header-cell *matHeaderCellDef mat-sort-header>
+                        Title
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                          {{ element?.title
+                          }}
+                      </td>
+                  </ng-container>
+                  <ng-container matColumnDef="status">
+                    <th  style="width: 10%;" scope="col-md-4" mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Status
+                    </th>
+                    <td  mat-cell *matCellDef="let element"><span class="font-weight status-bar" [ngClass]="element?.ticketStatus">
+                        {{ element?.ticketStatus
+                        }}
+                      </span>
+                    </td>
+                </ng-container>
+              <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index"
+                        [matColumnDef]="headersFilter">
+                        <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+                            <div class="filters-container" [class.animate]="!toggleFilters">
+                                <em *ngIf="i > 0 && i < displayedColumns1.length - 5" class="custom-tooltip"
+                                [attr.title]="'Clear Filters'"
+                                (click)="clearFilters();toggleFilters = !toggleFilters"
+                                class="bi bi-x-circle"></em>
+                                <div *ngIf="i > 1 && i < displayedColumns1.length - 0"
+                                    appearance="outline">
+                                    <input class="form-control input-txt"
+                                        placeholder="Press 'Enter' to search"
+                                        [(ngModel)]="filtersModel[i]" (keyup.enter)="searchColumns()">
+                                </div>
+                               
+                            </div>
+                        </th>
+                    </ng-container>
+                  <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumns">
+                  </tr>
+                  <tr mat-header-row class="no-default-height" *matHeaderRowDef="displayedColumns1"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns">
+                  </tr>
+                  <tr class="mat-row" *matNoDataRow>
+                      <td class="mat-cell" [attr.colspan]="displayedColumns.length"
+                          class="text-center">
+                          <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+                          <span *ngIf="!loaderService?.isLoadingcircle && !dataSource?.data?.length">No data available</span>
+                      </td>
+                  </tr>
+              </table>
+
+                              </div>
+              <div [ngClass]="{'display-none' : toalLength < 10}">
+                <mat-paginator [length]="toalLength" [pageSize]="pageSize" [pageIndex]="pageNumber-1"
+                  (page)="onPageChange($event)"  [pageSizeOptions]="_gc.PAGINATOR_OPTIONS" showFirstLastButtons></mat-paginator>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <ng-template #AddClause let-modal>
+        <div class="modal-content nz-allSelect">
+          <div class="modal-headers mt-2">
+            <h4 class="modal-title" *ngIf="!this.ticketId">{{'common.add' | translate}} Ticket</h4>
+            <h4 class="modal-title" *ngIf="this.ticketId && !this.show">{{'common.edit' | translate}} Ticket</h4>
+            <h4 class="modal-title" *ngIf="this.show">View Ticket</h4>
+            <button type="button" class="btn-close shadow-none float-end" (click)="closeModal()" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+              <form class="row g-3" [formGroup]="addTicketForm">
+                <div class="col-md-6 location-input-bottom-alignment">
+                  
+                  <label class="form-label">Ticket Title</label><span class="text-danger">*</span>
+                  <input [readOnly]="ticketId" type="text" class="form-control custom-input" id=" " placeholder="Title"
+                    formControlName="title" [ngClass]="{ 'is-invalid': submitted && f.title.errors }" />
+                  <div *ngIf="submitted && f.title.errors" class="invalid-feedback">
+                    <div *ngIf="f.title.errors.required">
+                      Title {{"common.isRequired" | translate}}
+                    </div>
+                  </div>
+                </div>
+                
+                
+                <div class="col-md-3" *ngIf="ticketId">
+                  <label class="form-label">Status</label>
+                  
+                  <nz-select nz class="form-select" nzShowSearch nzAllowClear formControlName="ticketStatus"
+                  [ngClass]="{'is-invalid': submitted1 && f1.priority.errors}">
+                  <nz-option
+                  *ngFor="let value of ticketList" 
+                  [nzLabel]="value" [nzValue]="value"></nz-option>
+                </nz-select>
+              </div>
+              <div class="col-md-3" *ngIf="ticketId"></div>
+              <div class="col-md-3">
+                <label class="form-label">Pipeline<span
+                        class="text-danger">*</span></label>
+                <nz-select [nzDisabled]="!!ticketId" class="form-select" nzShowSearch
+                    nzAllowClear formControlName="pipeline"
+                    [ngClass]="{'is-invalid': submitted && f.pipeline.errors}">
+                    <nz-option *ngFor="let pipeline of pipelineList "
+                        [nzLabel]="pipeline?.typeName"
+                        [nzValue]="pipeline?.systemtypeId"></nz-option>
+                </nz-select>
+
+                <div *ngIf="submitted && f.pipeline.errors" class="invalid-feedback">
+                    <div *ngIf="f.pipeline.errors.required">Pipeline is required</div>
+                </div>
+            </div>
+                
+              <div class="col-md-3 mt-3">
+                <label class="form-label">Priority<span class="text-danger">*</span></label>
+  
+                <nz-select  [nzDisabled]="!!ticketId" class="form-select" nzShowSearch nzAllowClear formControlName="priority"
+                  [ngClass]="{'is-invalid': submitted1 && f1.priority.errors}">
+                  <nz-option
+                    *ngFor="let value of ['High','Medium']"
+                    [nzLabel]="value" [nzValue]="value"></nz-option>
+                </nz-select>
+  
+                <div *ngIf="submitted1 && f1.priority.errors" class="invalid-feedback">
+                  <div *ngIf="f1.priority.errors.required">
+                   Priority is required.
+                  </div>
+              </div>
+  
+              </div>
+              
+                <div  class="col-md-12 location-input-bottom-alignment">
+                  <label class="form-label">Description</label><span class="text-danger">*</span>
+                  <div>
+                    <ckeditor [disabled]="!!ticketId" placeholder="Type here" formControlName="description" [editor]="Editor"></ckeditor>
+        
+                  </div>
+                  <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+                    <div *ngIf="f.title.description.required">
+                      Title {{"common.isRequired" | translate}}
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 no-border">
+                  <div class="upload-btn-wrapper">
+                    <label *ngIf="!show && !ticketClose" class="form-label">Attachment From Customer</label>
+                    <div *ngIf="!show && !ticketClose">
+                    <div *ngIf="!addTicketForm?.value.ticketDocumentName" class="btns">Click or drag files to upload
+                       <input  class="form-control custom-input" type="file" id="formFileMultiple" (change)="onFileSelected($event,'ticket')">
+                   </div>
+                  </div>
+                   <div  class="btns" *ngIf="addTicketForm?.value.ticketDocumentName">{{addTicketForm?.value.ticketDocumentName}}
+                       <!-- <input class="form-control custom-input" type="file" id="formFileMultiple" (change)="onFileSelected($event,'Company')"> -->
+                       <span class="icons-file">
+                           <em class="bi bi-eye globally-change-icon-color" (click)="documentPreview('ticket')"></em>
+                           <em class="bi bi-download" (click)="downloadFile('ticket')"></em>
+                           <em *ngIf="!show && !ticketClose" class="bi bi-trash color-pencil-red" (click)="deleteFile('ticket',content1)"></em>
+                       </span>
+                   </div>
+                 </div>
+                 <button *ngIf="!show && !ticketClose" class="btn btn-outline-primary btn-lg float-end" data-bs-dismiss="modal" 
+                 type="submit" (click)="uploadDocument('ticket')"  [disabled]="addTicketForm?.value.ticketDocumentId || !addTicketForm?.value.ticketDocumentName" >
+                 {{ 'smartagent.portenquiry.document.uploadDocument' | translate }}
+               </button>
+                </div>
+                <div class="col-md-6 no-border"></div>
+                <div *ngIf="addTicketForm?.value.ticketDocumentNameAdmin" class="col-md-6 no-border">
+                  <label class="form-label">Attachment From Admin</label>
+                  <div class="upload-btn-wrapper">
+                   <div  class="btns" *ngIf="addTicketForm?.value.ticketDocumentNameAdmin">{{addTicketForm?.value.ticketDocumentNameAdmin}}
+                       <!-- <input class="form-control custom-input" type="file" id="formFileMultiple" (change)="onFileSelected($event,'Company')"> -->
+                       <span class="icons-file">
+                           <em class="bi bi-eye globally-change-icon-color" (click)="documentPreviewAdmin('ticket')"></em>
+                           <em class="bi bi-download" (click)="downloadFileAdmin('ticket')"></em>
+                       </span>
+                   </div>
+                 </div>
+                </div>
+                <div *ngIf="ticketDatas?.comments">
+                  <div *ngFor="let comment of ticketDatas.comments" class="col-md-12 location-input-bottom-alignment mt-2">
+                    <div class="justify-space">
+                      <div>
+                    <label class="form-label">Comment</label>
+                  </div>
+                  <div>
+                    <span class="form-lable query-log-text-style">Comment By :- {{comment.commentBy}} | {{comment.commentedOn | custom_date}}</span>
+                  </div>
+                  </div>
+                   <div class="log-content">
+                  <span
+                  [innerText]="comment.commentText"></span>
+          </div>
+                  </div>
+                </div>
+                <div class="col-md-12 location-input-bottom-alignment">
+                  <label class="form-label">Comment</label><span class="text-danger"></span>
+                  <div>
+                    <textarea placeholder="Add Comment here..." class="form-control" formControlName="comments" rows="5"></textarea>
+                  </div>
+                </div>
+               
+      
+      
+                <div class="form-group wrap-form-action mt-4">
+                  <button class="btn1 btn-lg float-end" (click)="closeModal()" type="submit">
+                    {{ "common.cancel" | translate }}
+                  </button>
+                  <button *ngIf="!isEdit && !show" (click)="onSave()"
+                    class="btn btn-outline-primary float-end" type="submit">
+                    {{'common.save' | translate}}
+                  </button>
+                  <button *ngIf="isEdit && !show && !ticketClose" (click)="onSave()"
+                    class="btn btn-outline-primary btn-lg float-end" type="submit">
+                    {{'common.update' | translate}}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+
+
+      
+      <ng-template #deletedata let-c="close" let-d="dismiss">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+            </div>
+            <div class="modal-body mt-4 d-flex align-items-center">
+                <em class="bi bi-question-circle text-danger fs-2 text-center float-start me-2"> </em> <span
+                    class=" text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+            </div>
+            <div class="modal-footer">
+                <div class="text-center">
+                    <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+                        {{ "common.no" | translate }}
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+                        {{ "common.yes" | translate }}
+                    </button>
+                </div>
+            </div>
+        </div>
+      </ng-template>
+
+      <ng-template #content1 let-c="close" let-d="dismiss">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+            </div>
+            <div class="modal-body mt-4">
+                <em class="ion-ios7-help-outline text-danger fs-2 text-center float-start me-2">
+                </em>
+                <span class="text-dark fs-6">{{"error.msg_delete" | translate}}</span>
+            </div>
+            <div class="modal-footer">
+                <div class="text-center">
+                    <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+                        {{"common.no" | translate}}
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+                        {{"common.yes" | translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </ng-template>

@@ -1,0 +1,391 @@
+@import '../../../assets/styles/mixins/global.scss';
+// for future use for date picker
+// small{
+//     font-size: 12px;
+//     color: #868789;
+// }
+//  .heading{
+//     font-size: 12px;
+// } 
+// a {
+//     color: #3b579d!important;
+//     :hover{
+//         text-decoration: underline !important;
+//     }
+// }
+// p{
+//     color: #525252;
+// }
+// .badge{
+//     @include new-heading-12;
+//     padding: 5px;  
+// }
+.boldheading {
+  font-weight: bolder;
+}
+.marginleft{
+  margin-left: 19px;
+  margin-bottom: 10px;
+}
+.margin{
+  margin-right: 24px;
+}
+.namebold1 {
+  font-weight: bold;
+  color: var(--change-theme);
+}
+
+.namebold {
+  font-weight: bold;
+}
+
+// .description{
+//     color: #000000 !important;
+// }
+.btn-link1 {
+  color: var(--change-theme);
+  font-weight: bold;
+}
+
+.checkboxname {
+  font-weight: bold;
+}
+
+.form-check {
+  display: block;
+
+
+}
+
+.form-check-label {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.form-check-input {
+  margin-top: 5px;
+}
+
+.fontweight {
+  font-weight: 700;
+}
+// for future use for date picker
+// ::ng-deep .from-to-date-alignment {
+//     display: flex;
+//     align-items: baseline;
+//     justify-content: space-between;
+//     padding: 0 1147px 0 0;
+
+//     span {
+//       color: var(--theme-modal-text-color);
+//       opacity: .5;
+//       display: block;
+//     }
+
+//     span {
+
+//       font-weight: 400;
+//       padding-right: 38px;
+
+//     }
+//   }
+
+//   ::ng-deep .datePosition mat-date-range-input {
+//     color: var(--toogle-text-color);
+//   }
+
+//   ::ng-deep  .datePosition {
+//     position: absolute;
+//     top: -27px;
+//     right: -349px;
+//     // border-bottom: 1px solid lightgray !important;
+//   }
+//   ::ng-deep .mat-datepicker-toggle {
+//     display: flex !important;
+//     align-items: center !important;
+//     justify-content: flex-end !important;
+//   }
+
+//   ::ng-deep .mat-icon-button {
+//     width: 40px !important;
+//     color: var(--toogle-text-color);
+//   }
+
+//   ::ng-deep .mat-date-range-input {
+//     top: 28px !important;
+//     position: relative !important;
+//   }
+
+//   ::ng-deep .mat-date-range-input-start-wrapper {
+//     width: 72px !important;
+//   }
+
+
+
+//   ::ng-deep .notification-contnet-alignment {
+//     display: flex;
+//     align-items: center;
+//     justify-content: space-between;
+//   }
+
+//   ::ng-deep .notification-contnet-alignment label {
+//     font-size: 14px !important;
+//   }
+
+//   ::ng-deep .notification-border-style {
+//     border: 1px solid var(--form-input-border-color);
+
+
+//     // active border class //
+
+//     &.notification-border-active {
+//       border: 1px solid #007BFF;
+//     }
+
+//     // active border class //
+//   }
+//   ::ng-deep .d-flexs{
+//     display: flex;
+//     justify-content: space-between;
+//     align-items: baseline;
+//   }
+//   ::ng-deep .notifications{
+//     overflow-x: auto;
+//     height: 100vh;
+//   }
+
+//   .mat-calendar-body-cell-container{
+//     background: #007BFF !important;
+//   }
+
+
+
+
+
+
+li {
+  list-style: none;
+}
+
+.my-fav-all-contnet-alignment {
+  background-color: var(--card-backgrond-color);
+  border-radius: 24px;
+  // height: 100vh;
+}
+
+
+.title-text {
+  span {
+    display: block;
+    color: var(--link-text-color);
+    font-size: 20px;
+    padding-top: 20px;
+  }
+}
+
+.my-notification {
+  padding: 26px;
+}
+
+.notification-m {
+  margin-right: 28px;
+}
+
+.my-fav-all-contnet-alignments {
+  background-color: var(--card-backgrond-color);
+  border-radius: 10px;
+}
+
+.d-flex {
+  display: flex;
+
+}
+
+.between-space {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  margin-top: 12px;
+}
+
+::ng-deep .notification mat-form-field .mat-form-field-infix {
+  display: flex !important;
+  width: unset !important;
+}
+
+
+mat-icon {
+  position: relative;
+  color: var(--headingColor);
+}
+
+.time {
+  margin-right: -20px;
+}
+
+
+
+mat-card {
+  margin-bottom: 5px;
+}
+
+.bg {
+  background-color: var(--theme-light-gray-background);
+}
+
+.icon {
+  color: var(--theme-500-black-color);
+}
+
+.image {
+  position: relative;
+  height: 20px;
+  width: 20px;
+  padding-left: 5px;
+}
+
+#img {
+  fill: var(--headingColor);
+
+}
+
+::ng-deep .mat-datepicker-toggle {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+}
+
+
+.date-and-text-alignment {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--theme-modal-text-color);
+
+
+
+  p {
+    font-size: 16px;
+    line-height: 26px;
+    color: var(--theme-modal-text-color);
+    color: var(--toogle-text-color);
+  }
+
+  .mat-form-field {
+    width: 300px !important;
+  }
+
+}
+
+.from-to-date-alignment {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 0 0 0 0;
+
+  span {
+    color: var(--theme-modal-text-color);
+    opacity: .5;
+    display: block;
+  }
+
+  span {
+
+    font-weight: 400;
+    padding-right: 38px;
+
+  }
+}
+
+.datePosition mat-date-range-input {
+  color: var(--toogle-text-color);
+}
+
+.datePosition {
+  position: absolute;
+  top: -27px;
+  right: -349px;
+}
+
+::ng-deep .mat-icon-button {
+  width: 40px !important;
+  color: var(--toogle-text-color);
+}
+
+::ng-deep .mat-date-range-input {
+  top: 28px !important;
+  position: relative !important;
+}
+
+::ng-deep .mat-date-range-input-start-wrapper {
+  width: 72px !important;
+}
+
+.datePosition {
+  position: absolute;
+  top: -27px;
+  right: -349px;
+}
+
+.notification-contnet-alignment {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.notification-contnet-alignment label {
+  font-size: 14px !important;
+}
+
+.notification-border-style {
+  border: 1px solid var(--form-input-border-color);
+
+
+
+
+  &.notification-border-active {
+    border: 1px solid #007BFF;
+  }
+
+
+}
+
+.d-flexs {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.notifications {
+  overflow-x: auto;
+  height: 100vh;
+}
+
+.notification-design-change {
+  padding: 16px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  border-radius: 20px;
+  margin: 0 0 10px 0;
+  background-color: #fff;
+  transition: .3s ease-in-out;
+  cursor: pointer;
+
+  &:hover {
+    transform: translate(0 , -2px);
+  }
+}
+.font-10{
+  font-size: 10px;
+  font-family:'Roboto';
+}
+.self-align{
+  align-self: flex-end
+}
+.font-12{
+  font-size: 11px;
+  font-family:'Roboto';
+  padding: 1px 8px !important;
+}
+.padding-left{
+  padding-left: 0px !important;
+}

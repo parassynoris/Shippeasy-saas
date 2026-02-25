@@ -1,0 +1,15 @@
+
+@import'../../../../../assets/styles/mixins/global.scss';
+::ng-deep {
+	.cdk-overlay-container,
+	.cdk-overlay-pane {
+	  z-index: 2000 !important;
+	}
+
+  }
+
+
+.globally-chnage-mobile-view{
+	margin-bottom: 10px;
+}
+

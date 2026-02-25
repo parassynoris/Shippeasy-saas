@@ -1,0 +1,90 @@
+<div class="table-with-gheading">
+    <div class="wrap-content">
+       
+        <div class="row">
+            <div class="horz-bar mb-3">
+                <span>Vessel : {{vesseldata}} || </span>
+                <span>Voyage : {{voyageList}}</span>
+
+            </div>
+            <div class="col-md-12 table-with-gheading">
+                <div class="horz-bar">Edit Terminal/FPOD </div>
+                <div class="table-responsive">
+                    <div class="wrap-table-area  wrap-table-design wrap-form-field"
+                        id="htmlData">
+                        <form [formGroup]="blForm">
+                            <table aria-describedby="mytable">
+                                <thead>
+                                    <tr class="field-name">
+                                        
+                                        <th scope="col">SR No.</th>
+                                        <th scope="col">FPOD</th>
+                                        <th scope="col">IGM No</th>
+                                        <th scope="col">IGM Date</th>
+                                        <th scope="col">Send Mail To</th>
+                                        <th scope="col"></th>
+                                        
+    
+                                    </tr>
+                                    <tr>
+                                        <th scope="col"> </th>
+                                        <th scope="col"> </th>
+                                        <th scope="col"> </th>
+                                        <th scope="col"> </th>
+                                        <th scope="col"> </th>
+                                        <th scope="col"> </th>
+
+                                       
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container formArrayName="blData">
+                                        <ng-container *ngFor="let bl of getControls(); let i = index"
+                                        [formGroupName]="i">
+                                        <tr>
+                                            <td>{{i+1}}</td>
+                                            <td>{{bl?.controls?.fpod?.value}}</td>
+                                            
+                                            <td>
+                                               <input class="w-100 border-0" formControlName="igmNo">
+                                            </td>
+                                            <td>
+                                                <nz-date-picker class="w-100 border-0" nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss"
+                                                formControlName="igmDate"></nz-date-picker>
+                                            </td>
+                                           
+                                            <td>
+                                                <input class="w-100 border-0" formControlName="email">
+                                            </td>
+                                            <td>
+                                               <button class="btn btn-outline-primary" (click)="sendMail(bl)">
+                                                Send Mail
+                                               </button>
+                                            </td>
+                                        </tr>
+                                        </ng-container>
+                                       
+                                    </ng-container>
+                                    
+                                
+                                </tbody>
+                            </table>
+                        </form>
+                       
+                    </div>
+                </div>
+                <div class="no-data-availble mt-0" *ngIf="houseBlList.length === 0">
+                    {{'common.no_data' | translate}}
+                </div>
+            </div>
+        </div>
+        <div class="btn-onscreen  my-3" >
+            <div class="form-group wrap-form-action ">
+                <button class="btn btn-outline-primary float-end" (click)="back()"> 
+                  Back </button>
+                  <button class="btn btn-outline-primary float-end" (click)="updateData()"> 
+                    Update </button>
+            </div>
+          </div>
+    </div>
+</div>

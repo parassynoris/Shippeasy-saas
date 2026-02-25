@@ -1,0 +1,243 @@
+
+@import'../../../../assets/styles/mixins/global.scss';
+.btn-style button{
+  padding: 4px 12px;
+  border-radius: 50px;
+}
+.input-txt {
+  font-size: 12px;
+  color: var(--theme-black-300);
+  border: 1px solid #d1d1d1;
+  font-weight: 400;
+}
+.divider {
+  border-left: 3px solid grey;
+  height: 30px;
+  opacity: .2;
+}
+
+  @media only screen and (max-width: 760px),
+    (min-device-width: 768px) and (max-device-width: 1024px) {
+    td:nth-of-type(1):before {
+      content: "SHIPEASY Ref. No.";
+    }
+    td:nth-of-type(2):before {
+      content: "Quote No.";
+    }
+    td:nth-of-type(3):before {
+      content: "Tank Type";
+    }
+    td:nth-of-type(4):before {
+      content: "Location";
+    }
+    td:nth-of-type(5):before {
+      content: "Shipper";
+    }
+    td:nth-of-type(6):before {
+      content: "Consignee";
+    }
+    td:nth-of-type(7):before {
+      content: "Product";
+    }
+    td:nth-of-type(8):before {
+      content: "Move On";
+    }
+    td:nth-of-type(9):before {
+      content: "Move Type";
+    }
+    td:nth-of-type(10):before {
+      content: "Shipment Type";
+    }
+    td:nth-of-type(11):before {
+      content: "Notify Party";
+    }
+    td:nth-of-type(12):before {
+      content: "Invoice Party";
+    }
+    td:nth-of-type(13):before {
+      content: "Shipping Line";
+    }
+    td:nth-of-type(14):before {
+      content: "Status";
+    }
+    td:nth-of-type(15):before {
+      content: "Action";
+    }
+  }
+  .tableFixHead td:nth-child(2),
+.tableFixHead th:nth-child(2) {
+  position: sticky;
+  left: 106px;
+  z-index: 1;
+  background-color: white;
+}
+.tableFixHead td:nth-child(3),
+.tableFixHead th:nth-child(3){
+  position: sticky;
+  left: 230px;
+  z-index: 1 !important;
+  background-color: white;
+}
+
+.menuright {
+  position: fixed;
+  right: 0;
+  top: 40%;
+  width: 10px;
+  margin: -2.5em 0 0 0;
+  z-index: 5;
+  background: var(--theme-white-background-color);
+  color: var(--link-text-color);
+  font-weight: bold;
+  text-align: left;
+  padding: 10px 30px 10px 0px;
+  box-shadow: var(--theme-shadow);
+  border-radius: 10px 0 0px 10px;
+  li {
+    width: 30px;
+    border-bottom: 1px solid var(--theme-border-color-light);
+    list-style: none;
+    padding: 0px 0 0px 3px;
+    &:last-child {
+      border-bottom: 0;
+    }
+    i,em{
+      font-size: 12px;
+    }
+  }
+}
+
+.tableFixHead td:nth-child(2),
+.tableFixHead th:nth-child(2) {
+  position: sticky;
+  left: 100px;
+  z-index: 3;
+  background-color: white;
+}
+
+.tableFixHead td:nth-child(3),
+.tableFixHead th:nth-child(3) {
+  position: sticky;
+  left: 239px;
+  z-index: 3 !important;
+  background-color: white;
+}
+.btn-outline-primary{
+  padding: 7px 9px 4px 9px;
+}
+.accordion-body {
+padding: 10px 0 !important;
+}
+.table-design { 
+  max-height: calc(100vh - 300px);
+}
+
+.ant-select{
+width: 100%;
+}
+.font-size{
+    font-size: 15px !important;
+    font-weight: 500 !important;
+}
+.btn-outline-primary{
+    padding: 3px 7px !important;
+}
+
+.form-check-input:checked {
+    border-color: var(--link-text-color);
+}
+.table-responsive {
+    margin-top: 20px;
+    max-height: 320px;
+
+    table {
+        border-spacing: 0 0px;
+
+        td {
+            border: 0;
+            border-bottom: 1px solid #e3e3e3;
+
+            &:first-child,
+            &:last-child {
+                border-radius: 0;
+            }
+        }
+    }
+}
+::ng-deep {
+    .wrap-modal-autosearch {
+        nz-select {
+
+            input,
+            select {
+                padding: 0 0px !important;
+                border: 1px solid rgb(207 202 202) !important;
+            }
+        }
+
+        .nz-form-select.wrap-inline-select nz-select-top-control {
+            height: 32px !important;
+        }
+    }
+
+    .cdk-overlay-container,
+    .cdk-overlay-pane {
+        z-index: 2000 !important;
+    }
+}
+
+.nz-select-width {
+    width: 100%;
+}
+
+.table-design td:nth-child(2) {
+  position: sticky;
+  left: 44px;
+  background: white;
+  width: 95px;
+}
+
+@media screen and (max-width: 1024px) {
+  .table-design td:nth-child(2){
+    left: 120px;
+  } 
+}
+
+.table-design td:nth-child(3),
+.table-design td:nth-child(4),
+.table-design td:nth-child(5),
+.table-design td:nth-child(6) {
+  position: unset;
+  left: unset;
+  z-index: unset;
+}
+
+.table-design th:first-child{
+  position: sticky;
+  left: 0;
+  z-index: 99;
+  background: white;
+  width: 43px;
+}
+
+.table-design th:nth-child(2) {
+  position: sticky;
+  left: 44px;
+  z-index: 99;
+  background: white;
+  width: 95px;
+}
+@media screen and (max-width: 1024px) {
+  .table-design th:nth-child(2){
+    left: 120px;
+  } 
+}
+
+.table-design th:nth-child(3),
+.table-design th:nth-child(4),
+.table-design th:nth-child(5),
+.table-design th:nth-child(6) {
+  position: unset;
+  left: unset;
+  z-index: unset;
+}

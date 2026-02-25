@@ -1,0 +1,50 @@
+
+@import'../../../../../assets/styles/mixins/global.scss';
+::ng-deep {
+	.cdk-overlay-container,
+	.cdk-overlay-pane {
+	  z-index: 2000 !important;
+	}
+
+  }
+
+
+.globally-chnage-mobile-view{
+	margin-bottom: 10px;
+}
+
+.upload-btn-wrapper {
+	position: relative;
+	overflow: hidden;
+	display: inline-block;
+	width: 100%;
+  }
+  .btns {
+	border: 2px dashed #c2bcbc;
+	color: var(--theme-gray-800); 
+	background-color: var(--theme-light-bg);
+	padding: 8px 20px;
+	border-radius: 8px;
+	font-size: 14px;
+	font-weight: bold;
+	text-align: center;
+  }
+
+  .upload-btn-wrapper input[type=file] {
+	font-size: 100px;
+	position: absolute;
+	left: 0;
+	top: 0;
+	opacity: 0;
+  }
+
+  .icons-file{
+	em{
+	  margin-right: 10px;
+	}
+   }
+
+   .disaplay-non{
+	pointer-events: none;
+	opacity: .7;
+  }

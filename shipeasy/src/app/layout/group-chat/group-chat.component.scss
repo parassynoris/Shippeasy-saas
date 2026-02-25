@@ -1,0 +1,176 @@
+.new-group-chat-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  background-color: #f7f7f7;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 100%;
+  padding: 5px 8px;
+}
+
+.back-arrow {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  margin-right: 5px;
+  color: #e0e0e0;
+  width: 40px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%
+}
+
+.back-arrow:hover {
+  color: #007BFF;
+}
+
+.search-input {
+  border: none;
+  outline: none;
+  flex-grow: 1;
+  font-size: 16px;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+  color: #333;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-input:focus {
+  background-color: white;
+}
+
+#contact-list {
+  height: 500px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-radius: 4px;
+
+}
+
+.contact-list .contact .wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-list .list-group-item .user-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.user-img {
+  width: 20%;
+}
+
+.user-name {
+  display: flex;
+  width: 80%;
+}
+
+.user-image {
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.imgs {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.user-name {
+  flex-grow: 1;
+  text-align: center;
+}
+
+.user-list .list-group-item {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  justify-content: flex-start;
+}
+
+.user-data {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.add-btn {
+  background-color: transparent;
+  color: #007BFF;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.add-btn i {
+  font-size: 18px;
+}
+
+.btn:hover {
+  background-color: unset !important;
+  color: #007BFF !important;
+  border: 1px solid white !important;
+}
+
+::ng-deep.model-right .modal-content {
+  height: 100px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.search-input {
+  flex: 1;
+}
+
+.next-button {
+  width: 40px !important;
+  background-color: #007BFF !important;
+}
+
+.footer-action {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+}
+
+.footer-action-group {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  display: flex;
+  width: calc(100% - 30px);
+  justify-content: space-between;
+}
+
+.select-member-heading {
+  color: #333;
+  font-size: 12px;
+  font-weight: bold;
+  margin: 10px 0;
+  text-align: center;
+}

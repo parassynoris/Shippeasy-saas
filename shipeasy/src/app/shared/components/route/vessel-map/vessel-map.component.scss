@@ -1,0 +1,29 @@
+@import'../../../../../assets/styles/mixins/global.scss';
+.alignItemsToCenter{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+.tableFilterContainer .drawerIcon{
+    padding: 0 1px;
+}
+.tableFilterContainer .drawerIcon mat-icon{
+    font-size: var(--xLargeFontSize) !important;
+    color: var(--gray) !important;
+}
+.searchIcon{
+    position: relative  !important;
+    color: var(--gray) !important;
+    top: 7px !important;
+}
+.errorHintRegex{
+    color: var(--diabosRed) !important;
+}
+.mapcontainer{
+    display: flex;
+    justify-content: center;
+}
+.font-size{
+    font-size: 14px;
+}

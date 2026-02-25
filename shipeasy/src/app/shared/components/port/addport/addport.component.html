@@ -1,0 +1,208 @@
+<div class="modal-content nz-allSelect">
+    <div class="modal-header">
+        <h4 class="modal-title" *ngIf="isAddMode">{{ 'smartagent.smartAgent.port.addPort' | translate}}</h4>
+        <h4 class="modal-title" *ngIf="!isAddMode">{{ 'smartagent.smartAgent.port.editPort' | translate}}</h4>
+        <button type="button" class="btn-close shadow-none" (click)="onSave()" aria-label="Close">
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="wrap-form-field padding-space  modal-bottom-alignment-for-mobile-view">
+            <form class="row g-3" [formGroup]="locationForm">
+                <div class="col-md-4">
+                    <label class="form-label"> {{"stolt.masters.PortMaster.port_name" | translate }} / Terminal / ICD <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control custom-input" id=" " formControlName="portName"
+                        placeholder="" value="" [ngClass]="{ 'is-invalid': submitted && f.portName.errors }" />
+                    <div *ngIf="submitted && f.portName.errors" class="invalid-feedback">
+                        <div *ngIf="f.portName.errors.required">
+                            {{"stolt.masters.PortMaster.portmastervalidation.portNameValidation" | translate }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{"stolt.masters.PortMaster.ShortName" | translate }}<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control custom-input" id=" " formControlName="shortName"
+                        placeholder="" value="" [ngClass]="{ 'is-invalid': submitted && f.shortName.errors }" />
+                    <div *ngIf="submitted && f.shortName.errors" class="invalid-feedback">
+                        <div *ngIf="f.shortName.errors.required">
+                            {{"stolt.masters.PortMaster.portmastervalidation.shortNameValidation" | translate }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{"stolt.masters.PortMaster.port_authority" | translate }}<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control custom-input" id=" " formControlName="portAuthority" oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^ A-Za-z0-9]/g,'').replace(/ +/g, ' ')"
+                        placeholder="" value="" [ngClass]="{ 'is-invalid': submitted && f.portAuthority.errors }" />
+                    <div *ngIf="submitted && f.portAuthority.errors" class="invalid-feedback">
+                        <div *ngIf="f.portAuthority.errors.required">
+                            {{"stolt.masters.PortMaster.portmastervalidation.portauthorityvalidation" | translate }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{"stolt.masters.PortMaster.address" | translate }}<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control custom-input" id=" " formControlName="address" placeholder="" oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^ A-Za-z0-9]/g,'').replace(/ +/g, ' ')"
+                        value="" [ngClass]="{ 'is-invalid': submitted && f.address.errors }" />
+                    <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
+                        <div *ngIf="f.address.errors.required">
+                            {{"stolt.masters.PortMaster.portmastervalidation.addressvalidation" | translate }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{"stolt.masters.PortMaster.Phone" | translate }}<span class="text-danger">*</span></label>
+                    <input type="text"  class="form-control custom-input" formControlName="phone" id=" "
+                        placeholder="" value="" [ngClass]="{ 'is-invalid': submitted && f.phone.errors }" />
+                    <div *ngIf="submitted && f.phone.errors" class="invalid-feedback">
+                        <div *ngIf="f.phone.errors.required">
+                            {{"stolt.masters.PortMaster.portmastervalidation.phonevalidation" | translate }}
+                        </div>
+                        <div *ngIf="f.phone.errors.pattern">{{'error.err_valid_phone' |
+                            translate}}</div>
+                        <div *ngIf="f.phone.errors.maxlength">{{'error.err_maxlength' |
+                            translate}}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{"stolt.masters.PortMaster.fax_no" | translate }}<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control custom-input" id=" " formControlName="faxNumber"
+                        placeholder="" value="" [ngClass]="{ 'is-invalid': submitted && f.faxNumber.errors }" />
+                    <div *ngIf="submitted && f.faxNumber.errors" class="invalid-feedback">
+                        <div *ngIf="f.faxNumber.errors.required"> {{
+                            "stolt.masters.PortMaster.portmastervalidation.faxvalidation" | translate }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{"stolt.masters.PortMaster.toll_free" | translate }}<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control custom-input" id=" " formControlName="tollNumber"
+                        placeholder="" value="" [ngClass]="{ 'is-invalid': submitted && f.tollNumber.errors }" />
+                    <div *ngIf="submitted && f.tollNumber.errors" class="invalid-feedback">
+                        <div *ngIf="f.tollNumber.errors.required"> {{
+                            "stolt.masters.PortMaster.portmastervalidation.tollnumbervalidation" | translate }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{"stolt.masters.PortMaster.email_id" | translate }}<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control custom-input" id=" " formControlName="emailId" placeholder=""
+                        value="" [ngClass]="{ 'is-invalid': submitted && f.emailId.errors }" />
+                    <div *ngIf="submitted && f.emailId.errors" class="invalid-feedback">
+                        <div *ngIf="f.emailId.errors.required"> {{
+                            "stolt.masters.PortMaster.portmastervalidation.emailvalidation" | translate }}</div>
+                        <div *ngIf="f.emailId.errors.pattern">{{'error.err_valid_email' | translate}}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{"stolt.masters.PortMaster.Latitude" | translate }}<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control custom-input" id=" " formControlName="latitude"
+                        placeholder="" value="" [ngClass]="{ 'is-invalid': submitted && f.latitude.errors }" />
+                    <div *ngIf="submitted && f.latitude.errors" class="invalid-feedback">
+                        <div *ngIf="f.latitude.errors.required"> {{
+                            "stolt.masters.PortMaster.portmastervalidation.latitudevalidation" | translate }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{"stolt.masters.PortMaster.Longitude" | translate }}<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control custom-input" id=" " formControlName="longitude"
+                        placeholder="" value="" [ngClass]="{ 'is-invalid': submitted && f.longitude.errors }" />
+                    <div *ngIf="submitted && f.longitude.errors" class="invalid-feedback">
+                        <div *ngIf="f.longitude.errors.required"> {{
+                            "stolt.masters.PortMaster.portmastervalidation.longitudevalidation" | translate }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{"stolt.masters.PortMaster.UN_locode" | translate }}<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control custom-input" id=" " formControlName="uncode" placeholder=""
+                        value="" [ngClass]="{ 'is-invalid': submitted && f.uncode.errors }" />
+                    <div *ngIf="submitted && f.uncode.errors" class="invalid-feedback">
+                        <div *ngIf="f.uncode.errors.required"> {{
+                            "stolt.masters.PortMaster.portmastervalidation.unvalidation" | translate }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{"stolt.masters.PortMaster.country" | translate }}<span class="text-danger">*</span></label>
+                    <select  class="form-select custom-input" formControlName="country"
+                    [ngClass]="{ 'is-invalid': submitted && f.country.errors }">                    
+                    <option *ngFor="let country of countryList" [value]="country?._source?.countryISOCode">
+                      {{country?._source?.countryName}}</option>
+                    </select>
+                    <div *ngIf="submitted && f.country.errors" class="invalid-feedback">
+                        <div *ngIf="f.country.errors.required"> {{
+                            "stolt.masters.PortMaster.portmastervalidation.countryvalidation" | translate }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{"stolt.masters.PortMaster.GMT_Offset" | translate }}<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control custom-input" id=" " formControlName="gmtOffset"
+                        placeholder="" value="" [ngClass]="{ 'is-invalid': submitted && f.gmtOffset.errors }" />
+                    <div *ngIf="submitted && f.gmtOffset.errors" class="invalid-feedback">
+                        <div *ngIf="f.gmtOffset.errors.required"> {{
+                            "stolt.masters.PortMaster.portmastervalidation.gmtvalidation" | translate }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{"stolt.masters.PortMaster.max_draft" | translate }}<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control custom-input" id=" " formControlName="maxDraft"
+                        placeholder="" value="" [ngClass]="{ 'is-invalid': submitted && f.maxDraft.errors }" />
+                    <div *ngIf="submitted && f.maxDraft.errors" class="invalid-feedback">
+                        <div *ngIf="f.maxDraft.errors.required"> {{
+                            "stolt.masters.PortMaster.portmastervalidation.maxdraftvalidation" | translate }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{"stolt.masters.PortMaster.port_type" | translate }}<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control custom-input" id=" " formControlName="portType"
+                        placeholder="" value="" [ngClass]="{ 'is-invalid': submitted && f.portType.errors }" />
+                    <div *ngIf="submitted && f.portType.errors" class="invalid-feedback">
+                        <div *ngIf="f.portType.errors.required">{{
+                            "stolt.masters.PortMaster.portmastervalidation.porttypevalidation" | translate }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{"stolt.masters.PortMaster.PortSize" | translate }}<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control custom-input" id=" " formControlName="portSize"
+                        placeholder="" value="" [ngClass]="{ 'is-invalid': submitted && f.portSize.errors }" />
+                    <div *ngIf="submitted && f.portSize.errors" class="invalid-feedback">
+                        <div *ngIf="f.portSize.errors.required"> {{
+                            "stolt.masters.PortMaster.portmastervalidation.portsizevalidation" | translate }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{"stolt.masters.PortMaster.Berth" | translate }}<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control custom-input" id=" " formControlName="berths" placeholder=""
+                        value="" [ngClass]="{ 'is-invalid': submitted && f.berths.errors }" />
+                    <div *ngIf="submitted && f.berths.errors" class="invalid-feedback">
+                        <div *ngIf="f.berths.errors.required">{{
+                            "stolt.masters.PortMaster.portmastervalidation.berthsvalidation" | translate }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{"stolt.masters.PortMaster.Terminal" | translate }}<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control custom-input" id=" " formControlName="terminals"
+                        placeholder="" value="" [ngClass]="{ 'is-invalid': submitted && f.terminals.errors }" />
+                    <div *ngIf="submitted && f.terminals.errors" class="invalid-feedback">
+                        <div *ngIf="f.terminals.errors.required"> {{
+                            "stolt.masters.PortMaster.portmastervalidation.terminalvalidation" | translate }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4 d-flex align-items-center">
+                    <input class="form-check-input" type="checkbox" checked value="checked"
+                        formControlName="ESIRebaleApplication"
+                        [ngClass]="{ 'is-invalid': submitted && f.ESIRebaleApplication.errors }" />
+                    <label class="form-check-label" for="flexCheckDefault">
+                        {{"stolt.masters.PortMaster.ESI_reble" | translate }}<span class="text-danger">*</span>
+                    </label>
+                    <div *ngIf="submitted && f.ESIRebaleApplication.errors" class="invalid-feedback">
+                        <div *ngIf="f.ESIRebaleApplication.errors.required"> {{
+                            "stolt.masters.PortMaster.portmastervalidation.esivalidation" | translate }}</div>
+                    </div>
+                </div>
+                <div class="form-group wrap-form-action mt-4">
+                    <button class="btn1 btn-lg float-end" (click)="onSave()" type="submit">
+                        {{ "common.cancel" | translate }}
+                    </button>
+                    <button (click)="locationsMasters()" class="btn btn-outline-primary btn-lg float-end" type="submit">
+                        {{ "common.save" | translate }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

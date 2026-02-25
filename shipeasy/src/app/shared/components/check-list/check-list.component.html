@@ -1,0 +1,129 @@
+<div class="wrap-table-area mb-5">
+  <div class="row mb-5">
+    <div class="col-md-12 ">
+      <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2 ">
+        <div class="mt-2">
+          <span>
+            <h5>{{ fromSize }}-{{ count }} of {{ toalLength }}</h5>
+          </span>
+        </div>
+        <div class="mt-2">
+          <span class="prv" [class.disable-arrow-sign]="fromSize === 1" (click)="prev()"><em
+              class="typcn typcn-chevron-left"></em></span>
+          <span class="prv" [class.disable-arrow-sign]="count === toalLength" (click)="next()"><em
+              class="typcn typcn-chevron-right"></em></span>
+        </div>
+        <div class="mt-2"><select class="form-select form-select-sm " (change)="filter($event)">
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+          </select></div>
+      </div>
+
+      <div class="float-clear-mobile-view d-flex flex-column flex-sm-row gap-3 float-start search-section">
+        <div class="input-group custom-input">
+          <input type="text" class="form-control" placeholder="Search" aria-label="Search">
+        </div>
+      </div>
+
+    </div>
+    <div class="col-md-12">
+      <div class="table-responsive">
+        <table aria-describedby="mytable" class="gfg">
+          <thead>
+            <tr class="field-name">
+              <th scope="col" (click)="sort(typeName)">{{ 'stolt.batch.check-list.column.name' | translate }}<em
+                  class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+              <th scope="col">{{ 'stolt.batch.check-list.column.checkbox' | translate }}</th>
+              <th scope="col" (click)="sort(typeDescription)">{{ 'stolt.batch.check-list.column.description' | translate
+                }} <em class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+            </tr>
+            <tr>
+              <th scope="col"><input type="text" class="form-control" [(ngModel)]="typeName"></th>
+              <th scope="col"></th>
+              <th scope="col"><input type="text" class="form-control" [(ngModel)]="typeDescription"></th>
+              <th scope="col" class="wrap-table-btn">
+                <button type="button" class="bi bi-search btn btn-outline-primary btn-sm rounded-pill" (click)="search()">
+                
+                </button>
+                <a (click)="clear()" class="bi bi-arrow-clockwise btn btn-outline-primary btn-sm rounded-pill"></a>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let check of checkListData; let i = index">
+              <td>{{check?.name}}</td>
+              <td>
+                <input type="checkbox" [(ngModel)]="check.isSelected" class="m-2" id="checklist{{ i }}"
+                  (change)="isAllSelected(i)" placeholder="" value=""
+     >
+              </td>
+              
+
+              <td>{{check?.description}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="no-data-availble" *ngIf="checkListData.length === 0">
+        {{ "common.no_data" | translate }}
+      </div>
+    </div>
+    <div>
+      <form [formGroup]="addCheckListForm" class="row g-3">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label for="Principal" class=" ">Ground Rent Applicable<span class="text-danger">*</span></label>
+            <select class="form-select shadow-none" formControlName="GroundRent"
+              [ngClass]="{ 'is-invalid': submitted && f.GroundRent.errors }">
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+            <div *ngIf="submitted && f.GroundRent.errors" class="invalid-feedback">
+              <div *ngIf="f.GroundRent.errors.required"> GroundRent required</div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="Principal" class=" ">Payment Details received from Customer <span class="text-danger">*</span></label>
+            <select class="form-select shadow-none" formControlName="PaymentDetails"
+              [ngClass]="{ 'is-invalid': submitted && f.PaymentDetails.errors }">
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+            <div *ngIf="submitted && f.PaymentDetails.errors" class="invalid-feedback">
+              <div *ngIf="f.PaymentDetails.errors.required"> Payment Details required</div>
+            </div>
+
+          </div>
+
+
+
+          <div class="col-md-4">
+            <label for="Principal" class=" ">OPS Receipt Generated <span class="text-danger">*</span></label>
+            <select class="form-select shadow-none" formControlName="OPS"
+              [ngClass]="{ 'is-invalid': submitted && f.OPS.errors }">
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+            <div *ngIf="submitted && f.OPS.errors" class="invalid-feedback">
+              <div *ngIf="f.OPS.errors.required"> OPS Receipt Generated required</div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">{{ 'stolt.enquiry.new.remarks' | translate }}</label>
+            <input type="text" class="form-control custom-input" formControlName="Remarks" placeholder="Remarks">
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="wrap-form-field btn-onscreen mb-3">
+    <button class="btn1 float-end" (click)="onClose()">
+      {{ 'common.cancel' | translate }}
+    </button>
+    <button class="btn btn-outline-primary float-end" (click)="checkboxStatus()" type="submit">
+      {{ 'common.save' | translate }}
+    </button>
+</div>

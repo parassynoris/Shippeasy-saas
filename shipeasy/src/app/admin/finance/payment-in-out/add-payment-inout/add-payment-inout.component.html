@@ -1,0 +1,258 @@
+<div class="modal-content nz-allSelect">
+    <div class="modal-headers">
+        <h4 class="modal-title">{{isPaymentIn ? 'Payment In' : 'Payment Out'}}
+        </h4>
+        <button type="button" class="btn-close shadow-none float-end" (click)="cancel()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+
+            <form class="row g-3" [formGroup]="shippingLineForm">
+
+                <div class="col-md-4">
+                    <label class="form-label">Party <span class="text-danger">*</span> </label>
+                    <nz-select class="form-select " nzShowSearch nzAllowClear formControlName="customer"
+                    (ngModelChange)="getListOfbillFrom();getInvoices()"
+                        [ngClass]="{'is-invalid': submitted && f.customer.errors}" nzPlaceHolder="Selct Customer">
+                        <nz-option *ngFor="let data of customerList"
+                            nzLabel="{{data?.partyShortcode}}{{data?.partyShortcode ? '-': ''}}{{data.name}}"
+                            [nzValue]="data?.partymasterId"></nz-option>
+                    </nz-select>
+                    <div *ngIf="submitted && f.customer.errors" class="invalid-feedback">
+                        <div *ngIf="f.customer.errors.required">Invoice Party is required</div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label"> {{'Party' | translate}} Branch  </label>
+          
+                    <nz-select nzAutocomplete="off" class="form-select" nzShowSearch nzAllowClear formControlName="billFromBranch"
+                      [ngClass]="{'is-invalid': submitted && f.billFromBranch.errors}" nzPlaceHolder="Selct Branch" 
+                      (ngModelChange)="getInvoices()">
+          
+                      <nz-option *ngFor="let branch of billFromBranchList" [nzLabel]="branch?.branch_name"
+                        [nzValue]="branch?.branch_name"></nz-option>
+                    </nz-select>
+          
+                    <div *ngIf="submitted && f.billFromBranch.errors" class="invalid-feedback">
+                      <div *ngIf="f.billFromBranch.errors.required"> Bill From Branch is required
+                      </div>
+                    </div>
+                  </div>
+               
+
+                  <div class="col-md-4"  >
+                    <label class="form-label">Invoice No.</label>
+                    <nz-select nzShowSearch nzServerSearch class="form-select height-auto"  formControlName="invoice" nzMode="multiple"
+                      [ngClass]="{'is-invalid': submitted && f.invoice.errors}" nzPlaceHolder="Search invoice, Batch No., MBL, HBL"
+                      [nzFilterOption]="nzFilterOption" (nzOnSearch)="search($event)" (ngModelChange)="calacAmount()">
+                      <nz-option *ngFor="let data of invoiceList" [nzLabel]="data?.invoiceNo" [nzValue]="data?.invoiceNo"></nz-option>
+                    </nz-select>
+          
+                    <div *ngIf="submitted && f.invoice.errors" class="invalid-feedback">
+                      <div *ngIf="f.invoice.errors.required">Invoice is required</div>
+                    </div>
+                  </div>
+
+
+                <div class="col-md-4" *ngIf="false">
+                    <label class="form-label">Bill No.</label>
+                    <input class="form-control custom-input" type="text" formControlName="billNo" placeholder="Bill No."
+                        [ngClass]="{'is-invalid': submitted && f.billNo.errors}" />
+                    <div *ngIf="submitted && f.billNo.errors" class="invalid-feedback">
+                        <div *ngIf="f.billNo.errors.required"> Bill No. {{ 'common.isRequired' | translate }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="mb-0 p-0 form-label">{{isPaymentIn ? 'Credit' : 'Debit'}} Date <span class="text-danger">*</span></label>
+                    <mat-form-field appearance="outline" class="custom-date-picker">
+                        <div class="d-flex align-items-center  w-100">
+                            <input matInput [matDatepicker]="billDate" formControlName="billDate" class="h-0"
+                                placeholder="{{isPaymentIn ? 'Credit' : 'Debit'}} Date" />
+                            <mat-datepicker-toggle matSuffix [for]="billDate"></mat-datepicker-toggle>
+                        </div>
+                        <mat-datepicker #billDate></mat-datepicker>
+                    </mat-form-field>
+                    <mat-error>
+                      <div class="set-error-msg" *ngIf="submitted && f?.billDate?.errors?.required">{{isPaymentIn ? 'Credit' : 'Debit'}} Date
+                          is required</div>
+                  </mat-error>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">{{ 'Payment Type' | translate }} <span class="text-danger">*</span></label>
+                    <nz-select class="form-select " nzShowSearch nzAllowClear formControlName="paymentMode"
+                    (ngModelChange)="paymentChange()"
+                        [ngClass]="{'is-invalid': submitted && f.paymentMode.errors}" nzPlaceHolder="Payment Type">
+                        <nz-option *ngFor="let data of paymentMode" [nzLabel]="data.typeName"
+                            [nzValue]="data.systemtypeId"></nz-option>
+                    </nz-select>
+                    <div *ngIf="submitted && f.paymentMode.errors" class="invalid-feedback">
+                        <div *ngIf="f.paymentMode.errors.required"> {{ 'Payment Type' |
+                            translate }} {{ 'common.isRequired' | translate }}
+                        </div>
+                    </div>
+                </div>
+
+
+               
+
+                <div class="col-md-4" *ngIf="paymentText == 'cheque' ">
+                    <label class="form-label">{{ 'Cheque No.' | translate
+                      }}</label>
+                    <input class="form-control custom-input" formControlName="chequeNo" type="text" value=""
+                      [ngClass]="{'is-invalid': submitted && f.chequeNo.errors}" value="" placeholder="Cheque No." />
+                    <div *ngIf="submitted && f.chequeNo.errors" class="invalid-feedback">
+                      <div *ngIf="f.chequeNo.errors.required"> {{
+                        'Cheque No.' | translate }} is required
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4" *ngIf="paymentText == 'cheque'">
+                    <label class="mb-0 p-0 form-label">Cheque Date</label>
+                    <mat-form-field appearance="outline" class="custom-date-picker">
+                        <div class="d-flex align-items-center  w-100">
+                            <input matInput [matDatepicker]="chequeDate" formControlName="chequeDate" class="h-0"
+                                placeholder="Cheque Date" />
+                            <mat-datepicker-toggle matSuffix [for]="chequeDate"></mat-datepicker-toggle>
+                        </div>
+                        <mat-datepicker #chequeDate></mat-datepicker>
+                    </mat-form-field>
+                </div>
+
+               
+
+                <div class="col-md-4" *ngIf="paymentText == 'cheque'">
+                  <label class="mb-0 p-0 form-label">Withdrawal Date</label>
+                  <mat-form-field appearance="outline" class="custom-date-picker">
+                      <div class="d-flex align-items-center  w-100">
+                          <input matInput [matDatepicker]="withdrawalDate" formControlName="withdrawalDate" class="h-0"
+                              placeholder="Withdrawal  Date"   />
+                          <mat-datepicker-toggle matSuffix [for]="withdrawalDate"></mat-datepicker-toggle>
+                      </div>
+                      <mat-datepicker #withdrawalDate></mat-datepicker>
+                  </mat-form-field>
+              </div>
+
+              <div class="col-md-4" *ngIf="paymentText == 'cheque'">
+                <label class="form-label">{{ 'Cheque Status' | translate }} </label>
+                <nz-select [nzDisabled]="f.withdrawalDate.value" class="form-select " nzShowSearch nzAllowClear formControlName="chequeStatus" 
+                    [ngClass]="{'is-invalid': submitted && f.chequeStatus.errors}" nzPlaceHolder="Cheque Status">
+                    <nz-option  nzLabel="Cheque Issued"  nzValue="Cheque Issued"></nz-option>
+                    <nz-option  nzLabel="Withdrawal Pending"  nzValue="Withdrawal Pending"></nz-option>
+                    <nz-option nzDisabled nzLabel="Withdrawal"  nzValue="Withdrawal"></nz-option>
+                </nz-select>
+                <div *ngIf="submitted && f.chequeStatus.errors" class="invalid-feedback">
+                    <div *ngIf="f.chequeStatus.errors.required"> {{ 'Status' |
+                        translate }} {{ 'common.isRequired' | translate }}
+                    </div>
+                </div>
+            </div>
+
+              <div class="col-md-4"  *ngIf="paymentText == 'bank' || paymentText == 'cheque'">
+                <label class="form-label">Bank </label>
+
+                <nz-select  class="form-select" nzShowSearch nzAllowClear
+                    formControlName="bank" [ngClass]="{'is-invalid': submitted && f.bank.errors}"
+                    nzPlaceHolder="Bank">
+                    <nz-option *ngFor="let data of  bankList" [nzLabel]="data.bankName"
+                        [nzValue]="data.bankId"></nz-option>
+                </nz-select> 
+
+                      <div *ngIf="submitted && f.bank.errors" class="invalid-feedback">
+                    <div *ngIf="f.bank.errors.required"> Bank is required
+                    </div>
+                </div>
+            </div>
+
+                <div class="col-md-4" *ngIf="paymentText !== 'cash' && paymentText !== ''">
+                    <label class="form-label">{{ 'Reference No./UTR ' | translate
+                      }}</label>
+                    <input class="form-control custom-input" formControlName="paymentRefNo" type="text" value=""
+                      [ngClass]="{'is-invalid': submitted && f.paymentRefNo.errors}" value="" placeholder="Ref Number" />
+                    <div *ngIf="submitted && f.paymentRefNo.errors" class="invalid-feedback">
+                      <div *ngIf="f.paymentRefNo.errors.required"> {{
+                        'Reference No.' | translate }}
+                      </div>
+                    </div>
+                  </div>
+
+
+                <div class="col-md-4">
+                    <label class="form-label">{{isPaymentIn ? 'Received' : 'Paid'}} Amount<span *ngIf="selectedCurrencyBank">({{ selectedCurrencyBank }})</span><span class="text-danger">*</span></label>
+                    <input class="form-control custom-input" type="number" formControlName="paidAmount" placeholder="{{isPaymentIn ? 'Received' : 'Paid'}} Amount"
+                      [ngClass]="{'is-invalid': submitted && f.paidAmount.errors}" (keyup)="checkPaidAmount();" (wheel)="$event.preventDefault()" />
+                    <div *ngIf="submitted && f.paidAmount.errors" class="invalid-feedback">
+                      <div *ngIf="f.paidAmount.errors.required"> {{isPaymentIn ? 'Received' : 'Paid'}} Amount {{ 'common.isRequired' | translate }}</div>
+                      <div *ngIf="f.paidAmount.errors.min">  {{ 'Amount must be at least 1.' | translate }}</div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-4 taggle form-check form-switch" >
+                    <label class="form-check-label">TDS Applicable  </label>
+                    <input  class="form-check-input mx-2" type="checkbox"
+                      id="flexSwitchCheckDefault" formControlName="tdsApplicable" (change)="calcuNetAmt()" (wheel)="$event.preventDefault()" >
+                  </div>
+
+                  <div class="col-md-4" *ngIf="f.tdsApplicable.value">
+                    <label class="form-label">TDS(%) </label>
+                    <input class="form-control custom-input" type="number" formControlName="tdsPer" placeholder="TDS(%)"
+                      [ngClass]="{'is-invalid': submitted && f.tdsPer.errors}" (keyup)="calcuNetAmt()" (wheel)="$event.preventDefault()"  />
+                    <div *ngIf="submitted && f.tdsPer.errors" class="invalid-feedback">
+                      <div *ngIf="f.tdsPer.errors.required"> TDS(%) {{ 'common.isRequired' | translate }}</div> 
+                    </div>
+                  </div>
+
+                  <div class="col-md-4" *ngIf="f.tdsApplicable.value">
+                    <label class="form-label">TDS Amount ({{this.currentUser?.currency?.currencyCode?.toUpperCase()}})<span class="text-danger">*</span></label>
+                    <input class="form-control custom-input" type="number" formControlName="tdsAmount" placeholder="TDS Amount"
+                      [ngClass]="{'is-invalid': submitted && f.tdsAmount.errors}" (keyup)="calcuTDSAmt()"  (wheel)="$event.preventDefault()" />
+                    <div *ngIf="submitted && f.tdsAmount.errors" class="invalid-feedback">
+                      <div *ngIf="f.tdsAmount.errors.required"> TDS Amount {{ 'common.isRequired' | translate }}</div>
+                      <div *ngIf="f.tdsAmount.errors.min">  {{ 'Amount must be at least 1.' | translate }}</div>
+                    </div>
+                  </div>
+
+               
+                  <div class="col-md-4" *ngIf="f.tdsApplicable.value">
+                    <label class="form-label">Net {{isPaymentIn ? 'Received' : 'Paid'}} Amount ({{this.currentUser?.currency?.currencyCode?.toUpperCase()}})<span class="text-danger">*</span></label>
+                    <input class="form-control custom-input" type="number" formControlName="netAmount" placeholder="Net {{isPaymentIn ? 'Received' : 'Paid'}} Amount"
+                      [ngClass]="{'is-invalid': submitted && f.netAmount.errors}" (keyup)=" calcuNetAmt()" (wheel)="$event.preventDefault()"  />
+                    <div *ngIf="submitted && f.netAmount.errors" class="invalid-feedback">
+                      <div *ngIf="f.netAmount.errors.required"> Net {{isPaymentIn ? 'Received' : 'Paid'}} Amount {{ 'common.isRequired' | translate }}</div>
+                      <div *ngIf="f.netAmount.errors.min">  {{ 'Amount must be at least 1.' | translate }}</div>
+                    </div>
+                  </div>
+
+
+                <div class="col-md-4">
+                    <label class="form-label">{{ 'stolt.finance.credit.new_credit_note.upload_document' | translate
+                        }}</label>
+                    <input class="form-control custom-input" [disabled]="this.isType === 'show' || this.isType === 'edit'"
+                        (change)="selectFile($event)" type="file" id="formFileMultiple">
+                    <span class="tag-doc" *ngIf="f.documentName.value">{{ f.documentName.value }} <em  class="bi bi-eye color-pencil-red ml-2" (click)="documentPreview(f.documentName.value)"></em></span>
+                </div>
+
+
+                <div class="col-md-4">
+                    <label class="form-label">Remarks </label>
+                    <textarea class="form-control" [ngClass]="{'is-invalid': submitted && f.remarks.errors}"
+                        formControlName="remarks" rows="3" cols="30" PlaceHolder="Remarks">
+                    </textarea>
+
+                </div>
+
+                <div class="form-group wrap-form-action mt-4">
+                    <button class="btn1 btn-lg float-end" (click)="cancel()">
+                        {{ "common.cancel" | translate }}
+                    </button>
+                    <button (click)="addPayment()" class="btn btn-outline-primary btn-lg float-end">
+                        {{ "common.save" | translate }}
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

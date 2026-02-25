@@ -1,0 +1,113 @@
+@media only screen and (max-width: 760px),
+    (min-device-width: 768px) and (max-device-width: 1024px) {
+    /*
+    Label the data
+    */
+    td:nth-of-type(1):before {
+      content: "Vendor Name ";
+    }
+    td:nth-of-type(2):before {
+      content: "Vendor Type";
+    }
+    td:nth-of-type(3):before {
+      content: "City";
+    }
+    td:nth-of-type(4):before {
+      content: "Country";
+    }
+    td:nth-of-type(5):before {
+      content: "Office Phone No.";
+    }
+    
+    td:nth-of-type(6):before {
+      content: "Address";
+    }
+   
+      td:nth-of-type(8):before {
+        content: "Action";
+      }
+  }
+  .menuright {
+    position: fixed;
+    right: 0;
+    top: 40%;
+    width: 10px;
+    margin: -2.5em 0 0 0;
+    z-index: 5;
+    background: var(--theme-white-background-color);
+    color: var(--link-text-color);
+    font-weight: bold;
+    text-align: left;
+    padding: 10px 30px 10px 0px;
+    box-shadow: var(--theme-shadow);
+    border-radius: 10px 0 0px 10px;
+}
+.wrap-right{
+  justify-content: flex-start !important;
+}
+.hidetab{
+    display: none;
+}
+.menuright li {
+    width: 30px;
+    border-bottom: 1px solid var(--theme-border-color-light);
+    list-style: none;
+    padding: 0px 0 0px 3px;
+}
+.custome-tab{
+  flex: 1 1 100% !important;
+}
+.menuright li:last-child {
+    border-bottom: 0;
+}
+.menuright li i {
+    font-size: 21px;
+    color: var(--link-text-color);
+}
+.table-with-gheading{
+  margin-top: 85px;
+}
+
+
+
+
+
+
+
+.tab-design-change {
+  padding: 20px 0;
+   .wrap-bar {
+    border-bottom: none !important;
+    display: flex;
+    justify-content: space-between;
+  }
+   .wrap-bar .wrap-right {
+    justify-content: flex-start !important;
+  }
+
+  .custome-tab .nav-tabs .nav-item button {
+    background: #F5F5F5 !important;
+    box-shadow: 0px 4px 4px 0px #0000001F;
+    border: none;
+    font-size: 14px !important;
+    line-height: 16px !important;
+    border-radius: 4px !important;
+    margin-bottom: 12px !important;
+  }
+  .nav-tabs {
+    border-bottom: none !important;
+  }
+  .custome-tab .nav-tabs .nav-item button.active {
+    background-color: var(--change-theme) !important;
+  }
+  .custome-tab ul {
+    padding-bottom: 2px !important;
+    box-shadow: 0px 4px 4px 0px #00000040;
+
+  }
+}
+@media (max-width: 1501px) {
+  .tab-design-change{
+    padding: 45px 0;
+  }
+  }

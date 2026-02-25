@@ -1,0 +1,97 @@
+<div class="mat-table-with-gheading">
+    <div class="wrapper">
+        <div class="container-fluid">
+            <form [formGroup]="form" (ngSubmit)="saveItems()">
+                <div class="border">
+                    <div class="available-items" cdkDropList [cdkDropListData]="availableItems" class="example-list"
+                        (cdkDropListDropped)="drop($event)">
+                        <div *ngFor="let item of availableItems" cdkDrag [cdkDragData]="item" class="example-box">
+                            {{item}}</div>
+                    </div>
+                </div>
+
+                <div class="separator"></div>
+                <!-- <button class="save-button" type="submit" [disabled]="!form.valid">Save</button> -->
+
+                <div>
+                    <div class="selected-items">
+                        <div *ngFor="let item of selectedItems; let i = index" cdkDrag [cdkDragData]="item"
+                            class="example-box" (click)="showRemoveButton(i)">
+                            <div class="content" [ngSwitch]="getItemType(item)">
+
+
+                                <div class="EmailName" *ngSwitchCase="'EmailName'" style="height: 90px;">
+                                    <div class="NgxEditor__Wrapper">
+                                        <input style="width: 100%; height: 50px;" type="text" id="EmailName"
+                                            name="EmailName" [placeholder]="'Email Template Name:-'"
+                                            formControlName="EmailName">
+                                    </div>
+                                    <div
+                                        *ngIf="form.get('EmailName').invalid && (form.get('EmailName').dirty || form.get('EmailName').touched)">
+                                        <span class="error-message" *ngIf="form.get('EmailName').errors.required">Email
+                                            Name is required</span>
+                                    </div>
+                                </div>
+
+                                <div class="subject" *ngSwitchCase="'subject'" style="height: 90px;">
+                                    <div class="NgxEditor__Wrapper">
+                                        <input style="width: 100%; height: 50px;" type="text" id="subject"
+                                            name="subject" [placeholder]="'Subject:-'" formControlName="subject">
+                                    </div>
+                                    <div
+                                        *ngIf="form.get('subject').invalid && (form.get('subject').dirty || form.get('subject').touched)">
+                                        <span class="error-message" *ngIf="form.get('subject').errors.required">Subject
+                                            is
+                                            required</span>
+                                    </div>
+                                </div>
+
+                                <!-- <div class="Header"  *ngSwitchCase="'Header'">
+                                    <img #logoContainer 
+                                        [src]="imgSrc ? imgSrc : '../../../../assets/img/logo-no-background.png'"
+                                        alt="Logo">
+                                </div> -->
+
+                                <div class="body" *ngSwitchCase="'body'" >
+                                    <ckeditor formControlName="body" [editor]="Editor"></ckeditor>
+                                    <div
+                                        *ngIf="form.get('body').invalid && (form.get('body').dirty || form.get('body').touched)">
+                                        <span class="error-message" *ngIf="form.get('body').errors.required">Body is
+                                            required</span>
+                                    </div>
+                                </div>
+
+                                <div *ngSwitchCase="'footer'" #footerContent>
+                                    <!-- <p style="text-align: center;">Rish Info Logistics Pvt. Ltd.</p>
+                                    <p style="text-align: center;">PV Enclave, 801-803, Sindhubhavan Rd, Bodakdev, Ahmedabad, Gujarat 380054.</p> -->
+                                </div>
+
+                            </div>
+
+                            <div class="remove-icon" *ngIf="removeButtonIndex === i" (click)="removeItem(i)">
+                                <i class="fas fa-times"></i>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-onscreen mb-3">
+                    <button class="btn1 btn-lg float-end" (click)="cancel()" type="submit">
+                        Cancel
+                    </button>
+                    <button (click)="saveItems()" class="btn btn-outline-primary btn-lg float-end" type="submit">
+                        Save
+                    </button>
+      
+                  </div>
+                <!-- <div class="text-end">
+                    <button type="button"  ></button>
+                    <button  class="btn btn-outline-secondary mr-2" type="button" [disabled]="!form.valid" (click)="saveItems()">save</button>
+                </div> -->
+
+                <div class="selected-items" #selectedItemsContainer>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

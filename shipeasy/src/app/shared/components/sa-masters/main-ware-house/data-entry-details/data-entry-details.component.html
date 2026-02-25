@@ -1,0 +1,203 @@
+<div class="mat-table-with-gheading">
+  <div class="wrapper">
+    <div class="container-fluid">
+      <div class="wrap-content">
+        <div class="row">
+          <div class="col-sm-12" style="margin-bottom: 90px;">
+            <div class="wrap-sticky">
+
+              <div class="page-title-box mt-2">
+                <ol class="breadcrumb ">
+                  <li class="breadcrumb-item active">Edit Booking</li>
+                  <li *ngIf="holdControl === 'space-certificate'" class="breadcrumb-item active color-red">
+                    Space Certificate</li>
+                  <li *ngIf="holdControl !== 'space-certificate'" class="breadcrumb-item active color-red capitlize">
+                    {{ holdControl }}</li>
+                </ol>
+              </div>
+
+
+              <div>
+                <div class="wrap-form-field my-2">
+                  <div class="">
+                    <div class="">
+                      <div class="all-new-box-alignment">
+
+                        <div class="box-design ml-2" [ngClass]="{ 'scanned-highlight': dataEntryList?.isScanned }">
+                          <label class="form-label">Booking No.</label>
+                          <div class="input-group date" id="datepicker">
+                            {{ dataEntryList?.jobNo || '-' }}
+                          </div>
+                        </div>
+
+                        <div class="box-design ml-2" [ngClass]="{ 'scanned-highlight': dataEntryList?.isScanned }">
+                          <label class="form-label">Shippling line</label>
+                          <div class="input-group date" id="datepicker">
+                            {{ dataEntryList?.shippingLineLedgerName || '-' }}
+                          </div>
+                        </div>
+
+                        <div class="box-design ml-2" [ngClass]="{ 'scanned-highlight': dataEntryList?.isScanned }">
+                          <label class="form-label">Vessel</label>
+                          <div class="input-group date" id="datepicker">
+                            {{ dataEntryList?.vesselName || '-' }}
+                          </div>
+                        </div>
+
+                        <div *ngIf="type === 'Bonded'" class="box-design ml-2"
+                          [ngClass]="{ 'scanned-highlight': dataEntryList?.isScanned }">
+                          <label class="form-label">Container</label>
+                          <div class="input-group date" id="datepicker">
+                            {{ getContainerDisplayText() }}
+                          </div>
+                        </div>
+
+
+
+
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="tab-design-change">
+                <div class="wrap-bar">
+                  <div class="custome-tab">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                      <li class="nav-item" role="presentation" *ngFor="let tab of filteredTabs">
+                        <button class="nav-link" [class.active]="holdControl === tab.key" id="{{ tab.id }}"
+                          data-bs-toggle="tab" data-bs-target="#{{ tab.control }}" type="button" role="tab"
+                          aria-controls="{{ tab.control }}" aria-selected="true" (click)="onTab(tab)">
+                          <ng-container>
+                            {{tab?.name }}
+                          </ng-container>
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-content" id="myTabContent">
+
+                <div *ngIf="holdControl === 'space-certificate'" [class.active]="holdControl === 'space-certificate'"
+                  class="tab-pane fade show" id="space-certificate" role="tabpanel"
+                  aria-labelledby="space-certificate-tab">
+                  <app-add-data-entry></app-add-data-entry>
+                </div>
+                <div *ngIf="holdControl === 'bill-entry'" [class.active]="holdControl === 'bill-entry'"
+                  class="tab-pane fade show" id="bill-entry" role="tabpanel" aria-labelledby="bill-entry-tab">
+                  <app-ware-house-bill-of-entry></app-ware-house-bill-of-entry>
+                </div>
+
+                <div *ngIf="holdControl === 'Container'" [class.active]="holdControl === 'Container'"
+                  class="tab-pane fade show" id="Container" role="tabpanel" aria-labelledby="Container">
+
+                  <div *ngIf="viewMode === 'default'"> <app-warehouse-container></app-warehouse-container> </div>
+                  <div *ngIf="viewMode === 'add'"> <app-warehouse-container></app-warehouse-container> </div>
+                  <div *ngIf="viewMode === 'edit'"> <app-warehouse-container></app-warehouse-container> </div>
+                </div>
+
+                <div *ngIf="holdControl === 'gateIn'" [class.active]="holdControl === 'gateIn'"
+                  class="tab-pane fade show" id="gateIn" role="tabpanel" aria-labelledby="gateIn">
+
+                  <div *ngIf="viewMode === 'default'"> <app-gate-in-data></app-gate-in-data> </div>
+                  <div *ngIf="viewMode === 'add'"> <app-add-gate-in></app-add-gate-in> </div>
+                  <div *ngIf="viewMode === 'edit'"> <app-add-gate-in></app-add-gate-in> </div>
+                  <div *ngIf="viewMode === 'clone'"> <app-add-gate-in></app-add-gate-in> </div>
+                </div>
+
+                <div *ngIf="holdControl === 'getIn'" [class.active]="holdControl === 'getIn'" class="tab-pane fade show"
+                  id="getIn" role="tabpanel" aria-labelledby="getIn">
+
+                  <div *ngIf="viewMode === 'default'"> <app-gate-entry></app-gate-entry> </div>
+                  <div *ngIf="viewMode === 'add'"> <app-gate-in></app-gate-in> </div>
+                  <div *ngIf="viewMode === 'edit'"> <app-gate-in></app-gate-in> </div>
+                </div>
+
+                <div *ngIf="holdControl === 'inwards'" [class.active]="holdControl === 'inwards'"
+                  class="tab-pane fade show" id="inwards" role="tabpanel" aria-labelledby="inwards-tab">
+                  <div *ngIf="viewMode === 'default'"><app-inwards-listing></app-inwards-listing></div>
+                  <div *ngIf="viewMode === 'add'"> <app-inwards></app-inwards> </div>
+                  <div *ngIf="viewMode === 'edit'"> <app-inwards></app-inwards> </div>
+                  <div *ngIf="viewMode === 'clone'"> <app-inwards></app-inwards> </div>
+                </div>
+                <div *ngIf="holdControl === 'inwards-containers'" [class.active]="holdControl === 'inwards-containers'"
+                  class="tab-pane fade show" id="inwards-containers" role="tabpanel"
+                  aria-labelledby="inwards-containers-tab">
+                  <div *ngIf="viewMode === 'default'"><app-inwards-container-handover></app-inwards-container-handover>
+                  </div>
+                  <div *ngIf="viewMode === 'add'">
+                    <app-inward-container-handover-add></app-inward-container-handover-add>
+                  </div>
+                  <div *ngIf="viewMode === 'edit'">
+                    <app-inward-container-handover-add></app-inward-container-handover-add>
+                  </div>
+                  <div *ngIf="viewMode === 'clone'">
+                    <app-inward-container-handover-add></app-inward-container-handover-add>
+                </div>
+                 </div>
+                <div *ngIf="holdControl === 'packing'" [class.active]="holdControl === 'packing'"
+                  class="tab-pane fade show" id="packing" role="tabpanel" aria-labelledby="packing">
+
+                  <div *ngIf="viewMode === 'default'"> <app-ware-house-packing></app-ware-house-packing> </div>
+                  <div *ngIf="viewMode === 'add'"> <app-ware-house-packing-add></app-ware-house-packing-add> </div>
+                  <div *ngIf="viewMode === 'edit'"> <app-ware-house-packing-add></app-ware-house-packing-add> </div>
+                </div>
+                <div *ngIf="holdControl === 'invoice'" [class.active]="holdControl === 'invoice'"
+                  class="tab-pane fade show" id="invoice" role="tabpanel" aria-labelledby="invoice-tab">
+                  <div *ngIf="viewMode === 'default'"> <app-invoices-warehouse></app-invoices-warehouse> </div>
+                  <div *ngIf="viewMode === 'add'"> <app-newinvoice-warehouse></app-newinvoice-warehouse> </div>
+                  <div *ngIf="viewMode === 'show'"> <app-newinvoice-warehouse></app-newinvoice-warehouse> </div>
+                  <div *ngIf="viewMode === 'edit'"> <app-newinvoice-warehouse></app-newinvoice-warehouse> </div>
+                </div>
+                <div *ngIf="holdControl === 'exbond-bill-entry'" [class.active]="holdControl === 'exbond-bill-entry'"
+                  class="tab-pane fade show" id="exbond-bill-entry" role="tabpanel"
+                  aria-labelledby="exbond-bill-entry-tab">
+                  <div *ngIf="viewMode === 'default'"><app-ex-bond-billentrys></app-ex-bond-billentrys></div>
+                  <div *ngIf="viewMode === 'add'"> <app-ex-bond-billentry-add></app-ex-bond-billentry-add> </div>
+                  <div *ngIf="viewMode === 'edit'"> <app-ex-bond-billentry-add></app-ex-bond-billentry-add> </div>
+                </div>
+                <div *ngIf="holdControl === 'dispatch'" [class.active]="holdControl === 'dispatch'"
+                  class="tab-pane fade show" id="dispatch" role="tabpanel" aria-labelledby="dispatch-tab">
+                  <div *ngIf="viewMode === 'default'"> <app-dispatch-details></app-dispatch-details> </div>
+                  <div *ngIf="viewMode === 'add'"> <app-dispatch-warehouse></app-dispatch-warehouse> </div>
+                  <div *ngIf="viewMode === 'edit'"> <app-dispatch-warehouse></app-dispatch-warehouse> </div>
+                </div>
+                <div *ngIf="holdControl === 'gateOut'" [class.active]="holdControl === 'gateOut'"
+                  class="tab-pane fade show" id="gateOut" role="tabpanel" aria-labelledby="gateOut">
+
+                  <div *ngIf="viewMode === 'default'"> <app-gate-out></app-gate-out> </div>
+                  <div *ngIf="viewMode === 'add'"> <app-gate-out-data></app-gate-out-data> </div>
+                  <div *ngIf="viewMode === 'edit'"> <app-gate-out-data></app-gate-out-data> </div>
+                  <div *ngIf="viewMode === 'clone'"> <app-gate-out-data></app-gate-out-data> </div>
+                </div>
+
+                <div *ngIf="holdControl === 'document'" [class.active]="holdControl === 'document'"
+                  class="tab-pane fade show" id="document" role="tabpanel" aria-labelledby="document">
+                  <app-warehouse-document></app-warehouse-document>
+                </div>
+
+                <!-- Packing tab -->
+
+
+                <!-- Vessel tab -->
+                <div *ngIf="holdControl === 'vessel'" [class.active]="holdControl === 'vessel'"
+                  class="tab-pane fade show" id="vessel" role="tabpanel" aria-labelledby="vessel">
+
+                  <div *ngIf="viewMode === 'default'"> <app-ware-house-vessel></app-ware-house-vessel> </div>
+                  <div *ngIf="viewMode === 'add'"> <app-ware-house-vessel></app-ware-house-vessel> </div>
+                  <div *ngIf="viewMode === 'edit'"> <app-ware-house-vessel></app-ware-house-vessel> </div>
+                </div>
+             
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

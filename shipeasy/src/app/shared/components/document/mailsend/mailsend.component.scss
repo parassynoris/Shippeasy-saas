@@ -1,0 +1,136 @@
+ @import "../../../../../assets/styles/mixins/global.scss";
+ .form-container {
+   margin: 20px;
+   padding: 20px;
+   border: 1px solid var(--theme-border-color-light);
+   border-radius: 10px;
+ }
+
+ .from form {
+   width: 100%;
+   margin-top: 10px;
+   padding: 10px;
+ }
+
+ /* .form-group {
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+   margin: 10px 0;
+   padding: 10px;
+ } */
+
+ .form-group:last-child {
+   border-bottom: none;
+ }
+
+ .form-group label {
+   width: 120px;
+   margin-right: 10px;
+ }
+
+ /* .form-group input {
+   flex: 1;
+ } */
+
+ button[type="submit"] {
+   margin-top: 10px;
+ }
+
+ .modal-header {
+   margin-bottom: 20px;
+   justify-content: end;
+   padding: 10px;
+   cursor: pointer;
+
+ }
+
+ .modal-header .button1 {
+   margin: 5px;
+ }
+
+ .file-upload-container {
+   border: 2px dashed #ccc;
+   padding: 20px;
+   text-align: center;
+   cursor: pointer;
+ }
+
+ .file-upload-container a {
+   text-decoration: underline;
+ }
+
+ .file-upload-container.drag-over {
+   border-color: #007bff;
+ }
+
+
+ .file-upload-container {
+   margin-bottom: 20px;
+ }
+
+ .document-container {
+   padding: 10px;
+ }
+
+ .file-container {
+   border: 1px solid var(--theme-border-color-light);
+   border-radius: 5px;
+   padding: 10px;
+   margin-bottom: 10px;
+   display: flex;
+   align-items: center;
+ }
+
+ .file-checkbox {
+   margin-right: 10px;
+ }
+
+ .file-container p {
+   margin: 0;
+ }
+
+ .file-container {
+  display: flex;
+  align-items: center;
+}
+
+.file-details {
+  flex: 1; 
+  display: flex;
+  align-items: center;
+}
+
+.file-checkbox {
+  margin-right: 10px; 
+}
+
+.file-container a{
+  width: 25px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: flex-end; 
+  align-items: center;
+}
+
+.modal-header{
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+ #button {
+  margin-top: 0px;
+}
+
+.btn1{
+  color: var(--change-theme);
+  border: 1px solid var(--change-theme) !important;
+  background-color: white;
+  letter-spacing: 0px !important;
+  padding: 4px 8px !important;
+  font-weight: 500 !important;
+  border-radius: 5px !important;
+  font-size: 12px;
+}

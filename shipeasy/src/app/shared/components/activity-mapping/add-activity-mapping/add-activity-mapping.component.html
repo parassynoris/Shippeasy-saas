@@ -1,0 +1,72 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h4 class="modal-title" *ngIf="isAddMode">{{ 'Add Activity Mapping' | translate}}</h4>
+        <h4 class="modal-title" *ngIf="!isAddMode">{{ 'Edit Activity Mapping' | translate}}</h4>
+        <button type="button" class="btn-close shadow-none" (click)="onSave()" aria-label="Close">
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="wrap-form-field padding-space  modal-bottom-alignment-for-mobile-view">
+            <form class="row g-3" [formGroup]="activityForm">
+
+                <div class="col-md-4">
+                    <label for="parentId" class="form-label">Activity<span class="text-danger">*</span></label>
+                    <select id="parentId" class="form-select  custom-input" formControlName="parentId"
+                        (change)="setActivityName($event)" [ngClass]="{ 'is-invalid': submitted && f.parentId.errors }">
+                        <option *ngFor="let activity of activityList" [value]="activity?._source?.activityId">
+                            {{activity?._source?.mappingName ? activity?._source?.mappingName
+                            :activity?._source?.activityName}}</option>
+                    </select>
+                    <div *ngIf="submitted && f.parentId.errors" class="invalid-feedback">
+                        <div *ngIf="f.parentId.errors.required">{{
+                            'smartagent.smartAgent.AllformAddedit.parentIdisrequired' | translate }}</div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">{{ "smartagent.smartAgent.activity.activity_map_name" | translate}}<span
+                            class="text-danger">*</span></label>
+                    <input type="text" class="form-control custom-input" id=" " formControlName="mappingName"
+                        placeholder="" [ngClass]="{ 'is-invalid': submitted && f.mappingName.errors }" />
+                    <div *ngIf="submitted && f.mappingName.errors" class="invalid-feedback">
+                        <div *ngIf="f.mappingName.errors.required">
+                            {{"smartagent.smartAgent.activity.activity_map_name_validation" | translate }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">VMSCode/PrincipalCode<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control custom-input" id=" " formControlName="principalCode" oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^ A-Za-z]/g,'').replace(/ +/g, ' ')"
+                        placeholder="" [ngClass]="{ 'is-invalid': submitted && f.principalCode.errors }" />
+                    <div *ngIf="submitted && f.principalCode.errors" class="invalid-feedback">
+                        <div *ngIf="f.principalCode.errors.required">
+                            {{"smartagent.smartAgent.activity.activity_map_name_validation" | translate }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="taggle form-check form-switch">
+                        <label class="form-check-label" for="flexSwitchCheckDefault"> {{ "stolt.masters.uom.status" |
+                            translate
+                            }}</label>
+                        <input class="form-check-input" formControlName="status" type="checkbox"
+                            id="flexSwitchCheckDefault">
+                    </div>
+                </div>
+                <div class="form-group wrap-form-action mt-4">
+                    <button class="btn1 btn-lg float-end" (click)="onSave()">
+                        {{ "common.cancel" | translate }}
+                    </button>
+                    <button (click)="activityMasters()" class="btn btn-outline-primary btn-lg float-end">
+                        <ng-container *ngIf="isAddMode">
+                            {{ "common.save" | translate }}
+                        </ng-container>
+                        <ng-container *ngIf="!isAddMode">
+                            {{ "common.update" | translate }}
+                        </ng-container>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

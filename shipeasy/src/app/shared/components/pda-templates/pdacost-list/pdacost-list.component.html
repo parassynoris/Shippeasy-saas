@@ -1,0 +1,94 @@
+<div class="table-with-gheading">
+    <div class="wrap-table-area">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="d-flex flex-column flex-sm-row gap-3 float-start ">
+            <div class="input-group custom-input">
+              <input type="text" class="form-control" placeholder="Search" aria-label="Search">
+            </div>
+          </div>
+          <div class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2 ">
+            <div class="mt-2">
+              <span>
+                <h5>{{ fromSize }}-{{ count }} of {{ toalLength }}</h5>
+              </span>
+            </div>
+            <div class="mt-2">
+              <span class="prv" [class.disable-arrow-sign]="fromSize === 1" (click)="prev()"
+              ><em class="typcn typcn-chevron-left"></em
+            ></span>
+            <span class="prv" [class.disable-arrow-sign]="count === toalLength" (click)="next()"
+              ><em class="typcn typcn-chevron-right"></em
+            ></span>
+            </div>
+            <div class="mt-2"><select class="form-select form-select-sm " (change)="filter($event)">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+              </select></div>
+            <div class="mt-2">
+              <a class="new-action" (click)="open(AddClause)">{{ 'stolt.masters.pda_template.pda_cost_item.add_cost_item' | translate }}</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="table-responsive">
+            <table aria-describedby="mytable" class="gfg">
+              <thead>
+                <tr class="field-name">
+                  <th scope="col">{{ 'stolt.masters.pda_template.pda_cost_item.process_type' | translate }}  <em class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                  <th scope="col">{{ 'stolt.masters.pda_template.pda_cost_item.template_type' | translate }}</th>
+                  <th scope="col">{{ 'stolt.masters.pda_template.pda_cost_item.cost_head' | translate }}  <em class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                  <th scope="col">{{ 'stolt.masters.pda_template.pda_cost_item.description' | translate }}  <em class="typcn typcn-arrow-unsorted arrow-icons"></em></th>
+                  <th scope="col"></th>
+                </tr>
+                <tr>
+                  <th scope="col"><input type="text" class="form-control" id=""></th>
+                  <th scope="col"><input type="text" class="form-control" id=""></th>
+                  <th scope="col"><input type="text" class="form-control" id=""></th>
+                  <th scope="col"><input type="text" class="form-control" id=""></th>
+
+                  <th scope="col"  class="wrap-table-btn">
+                    <button type="button" class="btn btn-outline-primary">{{ 'common.search_btn' | translate }}</button>
+                    <a routerLink="#" class="clearbtn">{{ 'common.clear' | translate }}</a>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let pdacost of pdacostData ; let i = index">
+                  <td class="uppercase">{{pdacost._source?.proceeType}}</td>
+                  <td>{{pdacost._source?.proceeType}}</td>
+                  <td>{{pdacost._source?.proceeType}}</td>
+                  <td>{{pdacost._source?.proceeType}}</td>
+
+                  <td class="action-field">
+                    <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop"><a (click)="open(AddClause,pdacost)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                    </span>
+                    <span nz-tooltip nzTooltipTitle="{{ 'common.delete' | translate }}" class="mtop"><a routerLink="#"><em class="typcn typcn-trash"></em></a>
+                    </span>
+
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+<ng-template  #AddClause let-modal >
+    <div class="modal-dialog modal-dialog-scrollable modal-lg custom-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="templateModalLabel">{{ 'stolt.masters.pda_template.pda_cost_item.add_cost_items.add_cost_item' | translate }}</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="onSave()"></button>
+        </div>
+        <div class="modal-body">
+            <app-add-pda-costitem [pdacost]="getUser"></app-add-pda-costitem>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+

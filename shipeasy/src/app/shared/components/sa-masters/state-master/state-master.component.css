@@ -1,0 +1,27 @@
+.globally-chnage-mobile-view {
+    margin-bottom: 10px;
+  }
+
+  .wrap1{
+    white-space:wrap;
+  width:330px;
+  }
+
+  .text-center{
+    white-space:wrap;
+  width:200px;
+  }
+
+  ::ng-deep .wrap-modal-autosearch nz-select input, ::ng-deep .wrap-modal-autosearch nz-select select {
+    padding: 0 0px !important;
+    border: 1px solid #000 !important;
+ }
+  ::ng-deep .wrap-modal-autosearch .nz-form-select.wrap-inline-select nz-select-top-control {
+    height: 32px !important;
+ }
+  ::ng-deep .cdk-overlay-container, ::ng-deep .cdk-overlay-pane {
+    z-index: 2000 !important;
+ }
+  .nz-select-width {
+    width: 100%;
+ }

@@ -1,0 +1,37 @@
+@import '../../../../../assets/styles/mixins/global.scss';
+.modal-header {
+
+     border-bottom: 0;
+     padding-bottom: 0;
+}
+.modal-title
+{color:#007BFF; }
+.btn-close{
+
+    color:#007BFF; 
+}
+.modal-content {
+    padding:10px 20px;
+    border: 0;
+}
+.modal-body {
+    @media screen and (max-width: 767px)  {
+        padding-bottom: 0px;
+    }
+}
+::ng-deep {
+
+    .cdk-overlay-container,
+    .cdk-overlay-pane {
+      z-index: 2000 !important;
+    }
+    
+  
+  }
+  .set-error-msg{
+    width: 100%;
+    margin-top: .25rem;
+    font-size: .875em;
+    color: var(--bs-form-invalid-color);
+  }
+

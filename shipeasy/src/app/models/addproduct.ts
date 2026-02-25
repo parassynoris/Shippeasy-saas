@@ -1,0 +1,65 @@
+export interface Product {
+    productId: string;
+    createdOn: string;
+    createdBy: string;
+    createdByUID: string;
+    updatedOn: string;
+    updatedBy: string;
+    productName: string;
+    productType: string;
+    customerName: string;
+    imcoClass: string;
+    hazSubclass: string;
+    imdgPage: string;
+    unNumber: string;
+    densityGravity: string;
+    flashPoint: string;
+    psn: string;
+    technicalName: string;
+    packingGroup: string;
+    subRisk: string;
+    marinePollution: boolean;
+    emsNo: string;
+    emsCode: string;
+    mfagNo: string;
+    hsCode: string;
+    tankType: string;
+    msdsFile: string;
+    isApproved: string;
+    lineRef: boolean;
+    shippingName: string;
+    imoNo: string;
+    UNDGType: string;
+    reportableQuantity: string;
+    flashpointCelsius: string;
+    flashpointFahrenheit: string;
+    toxinHazard: boolean;
+    hazardZone: string;
+    customerNameId: string;
+    module: string;
+    packingGroupName: string;
+    tenantId: string;
+    documents:string;
+    status: boolean;
+    __v: number;
+  }
+  
+  interface SystemType {
+  _id: { $oid: string };
+  systemtypeId: string;
+  createdBy: string;
+  createdOn: string;
+  module: string;
+  orgId: string;
+  status: boolean;
+  tenantId: string;
+  typeActive: boolean;
+  typeCategory: string;
+  typeDescription: string;
+  typeName: string;
+  typeParentType: string;
+  typeRef: string;
+  typeRefId: string;
+  updatedBy: string;
+  updatedOn: string;
+}

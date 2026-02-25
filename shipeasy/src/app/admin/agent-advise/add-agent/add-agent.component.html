@@ -1,0 +1,25 @@
+<div class="table-with-gheading">
+  <div class="wrapper">
+    <div class="container-fluid">
+      <div class="wrap-content">
+        <div class="row">
+          <div class="col-sm-12  mb-5">
+            <div class="page-title-box">
+              <div class="btn-group mt-2">
+                <ol class="breadcrumb hide-phone p-0 m-0">
+                  <!-- <li class="breadcrumb-item">SHIPEASY</li> -->
+                  <li class="breadcrumb-item active">Agent Advice</li>
+                  <li class="breadcrumb-item active color-red">{{currentUrl}} Agent Advice</li>
+                </ol>
+              </div>
+            </div>
+            <!-- <app-new-agent-advise [isPage]="'agent-advise'" [isshowDetails]="false" [importAgentAdviceDetail]="importAgentAdviceDetail" (onCloseNew)="onClose()"></app-new-agent-advise> -->
+         <app-new-import-enquiry [importAgentAdviceDetail]="importAgentAdviceDetail"></app-new-import-enquiry>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

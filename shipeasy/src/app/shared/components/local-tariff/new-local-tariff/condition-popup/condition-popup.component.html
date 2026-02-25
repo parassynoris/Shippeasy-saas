@@ -1,0 +1,77 @@
+<div class="modal-content nz-allSelect">
+    <div class="modal-header">
+        <button type="button" class="btn-close shadow-none" (click)="onCancle()" aria-label="Close"></button>
+
+    </div>
+    <div class="modal-body">
+        <div class="wrap-table-area">
+            <div class="row">
+              <form [formGroup]="addRuleForm">
+                  <div>
+                      <div class="mx-0 px-0 mt-3 my-2 text-start margintop20">
+                          <button class="btn btn-link p-0 additional-btn" (click)="addNewVariable()">
+                              <em class="bi-plus me-1"></em>Add
+                          </button>
+                      </div>
+                      <table #tableAll aria-describedby="mytable" class="gfg">
+                          <thead>
+                              <tr class="field-name">
+                                  <th scope="col">Sr. No.</th>
+                                  <th scope="col">Variable1</th>
+                                  <th scope="col">Condition</th>
+                                  <th scope="col">Value2</th>
+                                  <th scope="col">Action</th>
+                              </tr>
+                          </thead>
+          
+                          <ng-container formArrayName="variableDetails">
+                              <tr *ngFor="let variable of getVariablearray(); let i = index" [formGroupName]="i">
+                                  <td>
+                                      {{ i + 1 }}
+                                  </td>
+          
+                                  <td class="text-center">
+                                      <nz-select class="form-select" nzShowSearch nzAllowClear
+                                          formControlName="variable">
+                                          <nz-option *ngFor="let vari of variableList" [nzLabel]="vari?.name"
+                                              [nzValue]="vari?.value"></nz-option>
+                                      </nz-select>
+                                  </td>
+          
+                                  <td class="text-center">
+                                      <nz-select class="form-select" nzShowSearch nzAllowClear
+                                          formControlName="condition">
+                                          <nz-option *ngFor="let condition of condtionList"
+                                              [nzLabel]="condition?.name" [nzValue]="condition?.value"></nz-option>
+                                      </nz-select>
+                                  </td>
+          
+                                  <td class="text-center">
+                                      <input type="text" class="form-control custom-input" value="{{
+                                              'stolt.masters.product.addproduct.product_name_value'
+                                              | translate
+                                          }}" formControlName="value" />
+                                  </td>
+                                  <td></td>
+                              </tr>
+                          </ng-container>
+                      </table>
+                  </div>
+              </form>
+            
+      
+            </div>
+          </div>
+          <div class="col-md-12">
+            <button type="submit" (click)="onCancle()" class="btn btn-outline-primary float-end mt-3">
+              OK
+            </button>
+            <button  type="submit" (click)="addRow()"
+              class="btn btn-outline-primary float-end mt-3">
+             Add Row
+            </button>
+           
+          </div>
+    </div>
+   
+</div>

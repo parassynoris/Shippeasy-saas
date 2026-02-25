@@ -1,0 +1,302 @@
+<ng-template #AddClause let-modal>
+  <div class="modal-content nz-allSelect vessel-master-component">
+    <div class="modal-headers mt-2">
+      <h4 *ngIf="!this.airIdToUpdate" class="modal-title">
+        {{ "common.add" | translate }}
+        Flight details
+      </h4>
+      <h4 *ngIf="this.airIdToUpdate" class="modal-title">
+        {{ "common.edit" | translate }}
+        Flight details
+      </h4>
+      <button type="button" class="btn-close shadow-none float-end" (click)="onSave()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view pb-0">
+        <form [formGroup]="addVesselForm">
+          <div class="row g-3">
+
+            <div class="col-md-3 nz-select">
+              <label for="Flight Name" class="form-label">Flight Number<span class="text-danger">*</span></label>
+              <input type="text" class="form-control custom-input rounded-0" formControlName="flight"
+                  placeholder="Flight Number" [ngClass]="{'is-invalid': submitted && f.flight.errors}" />
+                <div *ngIf="submitted && f.flight.errors" class="invalid-feedback" >
+                  <div *ngIf="f.flight.errors.required">Flight Number is required</div>
+                </div>
+              </div>
+          
+
+            <div class="col-md-3 nz-select">
+              <label for="Airline" class="form-label">Airline Name<span class="text-danger">*</span></label>
+              <nz-select class="form-select" nzShowSearch nzAllowClear nzPlaceHolder="Airline Name"
+                formControlName="airline" [ngClass]="{'is-invalid': submitted && f.airline.errors}" >
+                <nz-option *ngFor="let data of airLineType" [nzLabel]="data?.name" [nzValue]="data?.shippinglineId"></nz-option>
+              </nz-select>
+              <div *ngIf="submitted && f.airline.errors" class="invalid-feedback">
+                <div *ngIf="f.airline.errors.required">Airline Name is required</div>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-field-section">
+                <label class="form-label">Airline Code (IATA code)<span class="text-danger">*</span></label>
+                <input type="text" class="form-control custom-input rounded-0" formControlName="airlineCode"
+                  placeholder="Airline Code (IATA code)" [ngClass]="{'is-invalid': submitted && f.airlineCode.errors}" />
+                  <div *ngIf="submitted && f.airlineCode.errors" class="invalid-feedback">
+                    <div *ngIf="f.airlineCode.errors.required">Airline Code (IATA code) is required</div>
+                  </div>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-field-section">
+                <label class="form-label">Aircraft Type<span class="text-danger">*</span></label>
+                <input type="text" class="form-control custom-input rounded-0" formControlName="aircraftType"
+                  placeholder="Aircraft Type" [ngClass]="{'is-invalid': submitted && f.aircraftType.errors}" />
+                <div *ngIf="submitted && f.aircraftType.errors" class="invalid-feedback">
+                  <div *ngIf="f.aircraftType.errors.required">Aircraft Type is required</div>
+                </div>
+              </div>
+            </div>
+
+
+
+            <div class="col-md-3">
+              <div class="form-field-section">
+                <label class="form-label">Maximum Cargo Capacity</label>
+                <input type="number" class="form-control custom-input rounded-0" formControlName="cargo"
+                  placeholder="Maximum Cargo Capacity" />
+              </div>
+            </div>
+
+
+
+            <div class="col-md-3">
+              <div class="form-field-section">
+                <label class="form-label">Maximum Volume</label>
+                <input type="number" class="form-control custom-input rounded-0" formControlName="volumey"
+                  placeholder="Maximum Volume" />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group wrap-form-action p-0">
+            <button class="btn1 btn-lg float-end" (click)="onSave()" type="submit">
+              {{ "common.cancel" | translate }}
+            </button>
+            <button *ngIf="show !== 'show'" (click)="vesselMasters()" class="btn btn-outline-primary btn-lg float-end" type="submit">
+              <ng-container *ngIf="!airIdToUpdate">
+                {{ "common.save" | translate }}
+              </ng-container>
+              <ng-container *ngIf="this.airIdToUpdate">
+                {{ "common.update" | translate }}
+              </ng-container>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<div class="tab-design-change">
+  <div class="wrap-bar">
+    <div class="custome-tab">
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation" *ngFor="let tab of tabs">
+          <button class="nav-link" [class.active]="holdControl === tab.key" id="{{ tab.id }}" data-bs-toggle="tab"
+            data-bs-target="#{{ tab.control }}" type="button" role="tab" aria-controls="{{ tab.control }}"
+            aria-selected="true" (click)="onTab(tab)">
+            {{ tab.name }}
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+
+
+        <div *ngIf="holdControl === 'Rail'" [class.active]="holdControl === 'Rail'"
+          class="disabledNoOfCasesDiv tab-pane fade show" id="Rail" role="tabpanel" aria-labelledby="Rail-tab">
+          <app-rail-fleet></app-rail-fleet>
+        </div>
+      
+        <div *ngIf="holdControl === 'Ocean'" [class.active]="holdControl === 'Ocean'"
+          class="disabledNoOfCasesDiv tab-pane fade show" id="Ocean" role="tabpanel" aria-labelledby="Ocean-tab">
+          <app-ocen-fleet></app-ocen-fleet>
+        </div>
+        <div *ngIf="holdControl === 'Land'" [class.active]="holdControl === 'Land'"
+          class="disabledNoOfCasesDiv tab-pane fade show" id="Land" role="tabpanel" aria-labelledby="Land-tab">
+          <app-land-fleet></app-land-fleet>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="table-header-area" *ngIf="holdControl != 'Ocean'&& holdControl != 'Land' && holdControl != 'Rail'">
+  <div class="mat-table-with-gheading">
+    <div class="wrapper">
+      <div class="container-fluid">
+        <div class=" pt-2">
+          <div class="wrap-mat-table-area">
+            <div class="table-header-area pt-2">
+              <div>
+                <table-filters [TDP]="[false, false, true, true]" (filterInput)="applyFilter($event)"
+                  (onClickExport)="exportAsExcelFile()">
+                </table-filters>
+              </div>
+              <div class="header-right">
+                <a class="new-action btn btn-outline-primary btn-sm rounded-pill" appAccessControl
+                  featureCode="['STM016']" accessType="add" (click)="open(AddClause)">Add Flight details</a>
+              </div>
+            </div>
+          </div>
+          <div class="table-card">
+            <div class="table-design example-container mat-elevation-z8">
+              <table mat-table [dataSource]="dataSource" matSort class="full-width-table" summary="agreement">
+                <ng-container matColumnDef="#">
+                  <th scope="col" mat-header-cell *matHeaderCellDef style="width: 3%;">
+                    # <em class="custom-tooltip" [attr.title]="'Toggle Filters'"
+                      (click)="toggleFilters = !toggleFilters" class="bi bi-search"></em>
+                  </th>
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    {{ element?.id}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                  <th scope="col" id="action" class="charterersPdfHead" mat-header-cell *matHeaderCellDef
+                    style="width: 8%;">
+                    {{ 'Actions' }}
+                  </th>
+                  <td class="borderBottom" mat-cell *matCellDef="let element; let i = index">
+
+                    <div class="d-flex" style="align-items: center;">
+                      <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop">
+                        <a routerLink="#" appAccessControl featureCode="['STM016']" accessType="update"
+                          (click)="open(AddClause, element)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                      </span>
+                      <span nz-tooltip nzTooltipTitle="{{ 'common.view' | translate }}" class="mx-1">
+                        <a appAccessControl featureCode="['STM011']" accessType="view"
+                          (click)="open(AddClause, element,'show')">
+                          <em class="bi bi-eye globally-change-icon-color"></em>
+                        </a>
+                      </span>
+                      <span class="form-check form-switch mx1 mb-0 mt-1">
+                        <input appAccessControl featureCode="['STM011']" accessType="update" class="form-check-input"
+                          type="checkbox" role="switch" id="flexSwitchCheckChecked" (change)="changeStatus(element,i)"
+                          [checked]="element.status" />
+                        <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                      </span>
+                    </div>
+                  </td>
+
+
+                </ng-container>
+                <ng-container matColumnDef="airline">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Airline Name
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.airline }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="airlineCode">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Airline Code
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.airlineCode}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="flight">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Flight No
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.flight}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="aircraftType">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Aircraft Type
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.aircraftType}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="cargo">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Maximum Cargo Capacity
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.cargo}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="volumey">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Maximum Volume
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.volumey}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="status">
+                  <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+                    Status
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.status? "Active" : "Inactive"}}
+                  </td>
+                </ng-container> 
+
+                <ng-container *ngFor="let headersFilter of displayedColumns1; let i=index" [matColumnDef]="headersFilter">
+                  <th mat-header-cell *matHeaderCellDef [class.display-none]="toggleFilters">
+                    <div class="filters-container" [class.animate]="!toggleFilters">
+                      <em *ngIf="i > 0 && i < displayedColumns1.length - 2" class="custom-tooltip bi bi-x-circle"
+                        [attr.title]="'Clear Filters'" (click)="clearFilters(); toggleFilters = !toggleFilters">
+                      </em>
+                      <div *ngIf="i > 1 && i < displayedColumns1.length - 0" appearance="outline">
+                        <ng-container *ngIf="displayedColumns[i] === 'status'; else textInput">
+                          <select class="form-control" [(ngModel)]="filtersModel[i]" (change)="searchColumns()">
+                            <option value="">All</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                          </select>
+                        </ng-container>
+                        <ng-template #textInput>
+                          <input class="form-control input-txt" placeholder="Press 'Enter' to search" [(ngModel)]="filtersModel[i]"
+                            (keyup.enter)="searchColumns()">
+                        </ng-template>
+                      </div>
+                    </div>
+                  </th>
+                </ng-container>               
+
+                <tr mat-header-row class="header-height" *matHeaderRowDef="displayedColumns">
+                </tr>
+                <tr mat-header-row class="no-default-height" *matHeaderRowDef="displayedColumns1"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns">
+                </tr>
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+                    <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+                    <span *ngIf="!loaderService?.isLoadingcircle && !dataSource?.data?.length">No data available</span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            <div [ngClass]="{'display-none' : toalLength < 10}">
+              <mat-paginator [length]="toalLength" [pageSize]="pageSize" [pageIndex]="pageNumber-1"
+                (page)="onPageChange($event)" [pageSizeOptions]="_gc.PAGINATOR_OPTIONS"
+                showFirstLastButtons></mat-paginator>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

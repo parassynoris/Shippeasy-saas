@@ -1,0 +1,323 @@
+<div class="department-container">
+
+  <table class="department-table">
+    <thead>
+      <tr>
+        <th style="width: 40px;">Drag</th>
+        <th>Department</th>
+        <th>Masking Name</th>
+        <th>Tier Count</th>
+        <th>Tier Name</th>
+        <!-- <th>Action</th> -->
+      </tr>
+    </thead>
+
+    <tbody cdkDropList (cdkDropListDropped)="onRowDrop($event)">
+      <tr 
+        *ngFor="let config of departmentConfigs; let configIndex = index" 
+        cdkDrag
+        [cdkDragData]="config"
+        class="draggable-row">
+        
+        <!-- Drag Handle Column -->
+        <td class="drag-handle-cell">
+          <div class="drag-handle" cdkDragHandle>
+            <em class="bi bi-grip-vertical"></em>
+          </div>
+        </td>
+
+        <td>
+          <nz-select 
+            class="nz-form-select" 
+            style="width: 100%;" 
+            [(ngModel)]="config.department" 
+            nzDisabled="true"
+            nzAllowClear>
+            <nz-option [nzLabel]="config.department" [nzValue]="config.department"></nz-option>
+          </nz-select>
+        </td>
+
+        <td>
+          <input 
+            type="text" 
+            [(ngModel)]="config.maskingName" 
+            class="input-field"
+            readonly
+          />
+        </td>
+
+        <td>
+         {{ config.tiers?.length || 0 }}
+        </td>
+
+        <td>
+          <!-- Improved Tier Display -->
+          <div class="tier-list-container">
+            <div 
+              cdkDropList 
+              (cdkDropListDropped)="onTierDrop($event, configIndex)"
+              class="tier-drop-zone">
+              
+              <div 
+                *ngFor="let tier of config.tiers; let tierIndex = index" 
+                cdkDrag
+                [cdkDragData]="tier"
+                class="tier-item">
+                
+                <!-- Updated Tier Content Layout -->
+                <div class="tier-content-improved">
+                  <!-- Tier Name and User Selection Row -->
+                  <div class="tier-main-row">
+                    <div class="tier-name-section">
+                      <input 
+                        type="text" 
+                        [(ngModel)]="tier.tierName" 
+                        placeholder="Tier Name" 
+                        class="tier-name-input-improved" 
+                      />
+                    </div>
+                    
+                    <div class="tier-users-section">
+                      <nz-select 
+                        class="nz-form-select tier-select-improved" 
+                        [(ngModel)]="tier.selectedUsers" 
+                        nzMode="multiple" 
+                        nzShowSearch
+                        nzAllowClear 
+                        nzPlaceHolder="Select Users" 
+                        [nzSortComparator]="null">
+                        <nz-option 
+                          *ngFor="let user of getUsersByDepartment(config.department)" 
+                          [nzLabel]="getUserDisplayName(user)"
+                          [nzValue]="user.userId">
+                        </nz-option>
+                      </nz-select>
+                    </div>
+                  </div>
+
+                  <!-- Checkbox and Actions Row -->
+                  <div class="tier-bottom-row">
+                    <div class="tier-checkbox-section">
+                      <label class="improved-checkbox">
+                        <input 
+                          type="checkbox" 
+                          [(ngModel)]="tier.valueBasedApprovals"
+                          (change)="onValueBasedChange(configIndex, tierIndex, tier.valueBasedApprovals)"
+                        /> 
+                        <span class="checkbox-text">Value Based Approvals</span>
+                      </label>
+                      <label class="improved-checkbox">
+                        <input 
+                          type="checkbox" 
+                          [(ngModel)]="tier.allApprovalRequired"
+                        /> 
+                        <span class="checkbox-text">All Approval required</span>
+                      </label>
+                    </div>
+
+                    <div class="tier-actions-section">
+                      <button 
+                        class="tier-action-btn add-btn" 
+                        (click)="addTier(configIndex)"
+                        *ngIf="tierIndex === config.tiers.length - 1"
+                        type="button">
+                        + Add Another
+                      </button>
+                      <button 
+                        class="tier-action-btn remove-btn" 
+                        (click)="removeTier(configIndex, tierIndex)"
+                        *ngIf="config.tiers.length > 1"
+                        type="button">
+                        × Remove
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+
+        <!-- <td class="actions"> -->
+          <!-- <button 
+            class="btn save" 
+            (click)="save(configIndex)"
+            type="button"
+            title="Save this department only"
+          >
+            Save
+          </button> -->
+          <!-- <span style="margin-top: 3px; font-size: 17px;" nz-tooltip nzTooltipTitle="Delete" class="mtop">
+            <a (click)="deleteConfig(configIndex)">
+              <em class="bi-icon-sz bi bi-trash color-pencil-red"></em>
+            </a>
+          </span> -->
+        <!-- </td> -->
+      </tr>
+
+      <tr *ngIf="departmentConfigs.length === 0">
+        <td colspan="6" style="text-align: center; padding: 20px; color: #666;">
+          No departments available. Please check your API response.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="btn-onscreen wrap-form-action mb-3">
+    <button type="button" class="btn1 float-end" (click)="saveAllConfigurations()">
+      Save
+    </button>
+  </div>
+
+  <div *ngIf="showValueBasedModal" class="modal-overlay" (click)="closeValueBasedModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3 style="text-align:center; color:#0d47a1;">Value Based Approach</h3>
+
+      <div *ngIf="selectedConfigIndex !== -1 && selectedTierIndex !== -1">
+        <div class="section">
+          <h4 style="color:#0d47a1;">DA Total</h4>
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="daMinCommercial">Minimum (Commercial)</label>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  [(ngModel)]="departmentConfigs[selectedConfigIndex].tiers[selectedTierIndex].valueBasedConfig.daTotal.minCommercial" 
+                  placeholder="Minimum (Commercial)">
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="daMaxCommercial">Maximum (Commercial)</label>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  [(ngModel)]="departmentConfigs[selectedConfigIndex].tiers[selectedTierIndex].valueBasedConfig.daTotal.maxCommercial" 
+                  placeholder="Maximum (Commercial)">
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="daSeqCommercial">Sequence (Commercial)</label>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  [(ngModel)]="departmentConfigs[selectedConfigIndex].tiers[selectedTierIndex].valueBasedConfig.daTotal.sequenceCommercial">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="daMinNonCommercial">Minimum (Non-Commercial)</label>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  [(ngModel)]="departmentConfigs[selectedConfigIndex].tiers[selectedTierIndex].valueBasedConfig.daTotal.minNonCommercial">
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="daMaxNonCommercial">Maximum (Non-Commercial)</label>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  [(ngModel)]="departmentConfigs[selectedConfigIndex].tiers[selectedTierIndex].valueBasedConfig.daTotal.maxNonCommercial">
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="daSeqNonCommercial">Sequence (Non-Commercial)</label>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  [(ngModel)]="departmentConfigs[selectedConfigIndex].tiers[selectedTierIndex].valueBasedConfig.daTotal.sequenceNonCommercial">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h4 style="color:#0d47a1;">Department Total</h4>
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="deptMinCommercial">Minimum (Commercial)</label>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  [(ngModel)]="departmentConfigs[selectedConfigIndex].tiers[selectedTierIndex].valueBasedConfig.departmentTotal.minCommercial">
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="deptMaxCommercial">Maximum (Commercial)</label>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  [(ngModel)]="departmentConfigs[selectedConfigIndex].tiers[selectedTierIndex].valueBasedConfig.departmentTotal.maxCommercial">
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="deptSeqCommercial">Sequence (Commercial)</label>
+                <input 
+                  type="number" 
+                  class="form-control"  
+                  [(ngModel)]="departmentConfigs[selectedConfigIndex].tiers[selectedTierIndex].valueBasedConfig.departmentTotal.sequenceCommercial">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="deptMinNonCommercial">Minimum (Non-Commercial)</label>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  [(ngModel)]="departmentConfigs[selectedConfigIndex].tiers[selectedTierIndex].valueBasedConfig.departmentTotal.minNonCommercial">
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="deptMaxNonCommercial">Maximum (Non-Commercial)</label>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  [(ngModel)]="departmentConfigs[selectedConfigIndex].tiers[selectedTierIndex].valueBasedConfig.departmentTotal.maxNonCommercial">
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="deptSeqNonCommercial">Sequence (Non-Commercial)</label>
+                <input 
+                  type="number" 
+                  class="form-control"  
+                  [(ngModel)]="departmentConfigs[selectedConfigIndex].tiers[selectedTierIndex].valueBasedConfig.departmentTotal.sequenceNonCommercial">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn1" (click)="saveValueBasedConfig()">
+          Save                
+        </button>
+        <button type="button" class="btn btn-outline-primary" (click)="closeValueBasedModal()">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

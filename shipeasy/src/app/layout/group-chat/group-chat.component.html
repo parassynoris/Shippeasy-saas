@@ -1,0 +1,68 @@
+<div class="content">
+  <h6 *ngIf="!viewStepper" class="select-member-heading">Select Member</h6>
+  <div class="new-group-chat-container" *ngIf="!viewStepper">
+    <div class="search-bar">
+      <button class="back-arrow" (click)="onBackClick()" aria-label="Go back">
+        <i class="bi bi-arrow-left-circle"></i>
+      </button>
+
+      <mat-form-field class="w-100 user-select-input members-selected-form" appearance="fill">
+        <mat-chip-list #chipList aria-label="User selection">
+          <mat-chip *ngFor="let user of selectedUsers" (removed)="remove(user)" color="primary">
+            <em *ngIf="!user?.name">No User Name</em>
+            {{ user.name }}
+            <button matChipRemove aria-label="Remove user">
+              <i class="bi bi-x-circle"></i>
+            </button>
+          </mat-chip>
+          <input placeholder="Search User..." #userCtrl name="user-filter" (input)="onSearch($event)"
+            [matChipInputFor]="chipList" />
+
+        </mat-chip-list>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="content" id="contact-list" *ngIf="!viewStepper">
+    <mat-selection-list class="user-list mt-2" #userList multiple="false">
+      <mat-list-option checkboxPosition="after" *ngFor="let user of userData" [value]="user"
+        (click)="onUserSelect(user)">
+        <div class="user-item d-flex">
+          <div class="user-data">
+            <div class="user-img">
+              <img matListAvatar src="../../../assets/img/profiles.png" alt="User Image" class="user-image" />
+            </div>
+            <div class="user-name">
+              <span>{{ user.name }}</span>
+            </div>
+          </div>
+        </div>
+      </mat-list-option>
+    </mat-selection-list>
+
+    <div class="footer-action" *ngIf="selectedUsers && selectedUsers.length > 0">
+      <button mat-mini-fab aria-label="Next Stage" class="next-button" (click)="onCreateGroupClick()">
+        <mat-icon class="arrow">arrow_forward</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <ng-container *ngIf="viewStepper">
+    <h4 class="select-member-heading">Group Details</h4>
+    <mat-form-field class="w-100" appearance="fill">
+      <mat-label>Group Name</mat-label>
+      <input matInput required="required" type="text" name="channelName" [(ngModel)]="channelName" />
+    </mat-form-field>
+    <div class="footer-action-group">
+
+      <button mat-mini-fab aria-label="go back to users selection" (click)="gotoSelectMembersStep()"
+        class="next-button">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <button mat-mini-fab aria-label="Create Channel" class="next-button"
+        *ngIf="channelName && channelName.trim() !== ''" (click)="invokeCreateChannel()">
+        <mat-icon>done</mat-icon>
+      </button>
+    </div>
+  </ng-container>
+</div>

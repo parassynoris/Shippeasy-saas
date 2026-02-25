@@ -1,0 +1,855 @@
+<div class="table-with-gheading">
+  <ng-container *ngIf=" screen === 'receipt'">
+    <div class="add-new-recepit-title wrap-form-field mb-5">
+  
+    <div class="accordion form-accordian" id="accordionPanelsStayOpenExample">
+      <div class="accordion-item">
+        <div id="raouteDetails" class="accordion-collapse collapse show" aria-labelledby="route"
+          data-bs-parent="#accordionPanelsStayOpenExample">
+          <div class="accordion-body px-0">
+            <div class="row">
+              <form [formGroup]="newPayment">
+                <div class="row g-4">
+                  <div class="col-md-3" *ngIf="!this.isAddMode">
+                    <label class="form-label">{{'stolt.finance.new_payment.reciept_no' | translate}}</label>
+                    <input disabled formControlName="reciept_no" class="form-control custom-input" type="text">
+                  </div>
+
+                  <div class="col-md-3 ">
+                    <label class="form-label">Shipper <span
+                      class="text-danger">*</span></label>
+      
+                    <nz-select (ngModelChange)="fatchInvoiceData($event,true)" class="form-select" nzShowSearch nzAllowClear
+                      formControlName="invoice_party" [ngClass]="{'is-invalid': submitted && f.invoice_party.errors}" nzPlaceHolder="Shipper">
+                      <nz-option *ngFor="let invoice of invoicingpartyList" [nzLabel]="invoice.name"
+                        [nzValue]="invoice.partymasterId"></nz-option>
+                    </nz-select>
+                    <div *ngIf="submitted && f.invoice_party.errors" class="invalid-feedback" style="position:absolute">
+                      <div *ngIf="f.invoice_party.errors.required">Shipper is required</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3 ">
+                    <label class="form-label">Received From <span
+                      class="text-danger">*</span></label>
+      
+                    <nz-select class="form-select " nzShowSearch nzAllowClear formControlName="recieved_from"
+                      [ngClass]="{'is-invalid': submitted && f.recieved_from.errors}" nzPlaceHolder="Recieved From">
+                      <nz-option *ngFor="let invoice of partymasterList" [nzLabel]="invoice.name"
+                        [nzValue]="invoice.partymasterId"></nz-option>
+                    </nz-select>
+                    <div *ngIf="submitted && f.recieved_from.errors" class="invalid-feedback" style="position:absolute">
+                      <div *ngIf="f.recieved_from.errors.required">{{'stolt.finance.new_payment.recieved_from' | translate}}
+                        is required</div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 ">
+                    <label class="form-label">Job No <span class="text-danger">*</span></label>
+                    <nz-select class="form-select" nzShowSearch nzAllowClear formControlName="batch_no"
+                      [ngClass]="{'is-invalid': submitted && f.batch_no.errors}" nzPlaceHolder="Job No">
+                      <nz-option *ngFor="let invoice of batchInvoiceList" [nzLabel]="invoice?.batchNo"
+                        [nzValue]="invoice?.batchId"></nz-option>
+                    </nz-select>
+                    <div *ngIf="submitted && f.batch_no.errors" class="invalid-feedback" style="position:absolute">
+                      <div *ngIf="f.batch_no.errors.required">Job No is required</div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 ">
+                    <label class="form-label"> {{'stolt.finance.new_payment.payment_mode' | translate}} <span
+                        class="text-danger">*</span></label>
+                    <nz-select class="form-select " nzShowSearch nzAllowClear formControlName="payment_mode"
+                      [ngClass]="{'is-invalid': submitted && f.payment_mode.errors}" (ngModelChange)="instrumentAmount()">
+                      <nz-option *ngFor="let mode of paymentMode" [nzLabel]="mode.typeName"
+                        [nzValue]="mode.systemtypeId"></nz-option>
+                    </nz-select>
+                    <div *ngIf="submitted && f.payment_mode.errors" class="invalid-feedback" style="position:absolute">
+                      <div *ngIf="f.payment_mode.errors.required">{{
+                        'stolt.finance.new_payment.paymentValidation.paymentModeValidation' | translate }}</div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 " *ngIf="paymentModeType != 'cash'">
+                    <label class="form-label"> {{'stolt.finance.new_payment.remitance_bank' | translate}} <span
+                        class="text-danger">*</span></label>
+                    <nz-select class="form-select " nzShowSearch nzAllowClear formControlName="remitance_bank"
+                      [ngClass]="{'is-invalid': submitted && f.remitance_bank.errors}" nzPlaceHolder="Remitance Bank">
+                      <nz-option *ngFor="let bank of bankList" [nzLabel]="bank.bankName"
+                        [nzValue]="bank.bankId"></nz-option>
+                    </nz-select>
+      
+                    <div *ngIf="submitted && f.remitance_bank.errors" class="invalid-feedback" style="position:absolute">
+                      <div *ngIf="f.remitance_bank.errors.required">{{
+                        'stolt.finance.new_payment.paymentValidation.remitanceBankValidation' | translate }}</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3 " *ngIf="paymentModeType != 'cash'">
+                    <label class="form-label"> {{'stolt.finance.new_payment.deposit_bank' | translate}} <span
+                        class="text-danger">*</span></label>
+                    <nz-select class="form-select " nzShowSearch nzAllowClear formControlName="beneficiary_bank"
+                      [ngClass]="{'is-invalid': submitted && f.beneficiary_bank.errors}" nzPlaceHolder="Beneficiary Bank">
+                      <nz-option *ngFor="let bank of userBankList" [nzLabel]="bank.bankName"
+                        [nzValue]="bank.bankId"></nz-option>
+                    </nz-select>
+                    <div *ngIf="submitted && f.beneficiary_bank.errors" class="invalid-feedback" style="position:absolute">
+                      <div *ngIf="f.beneficiary_bank.errors.required">{{'stolt.finance.new_payment.deposit_bank' | translate}} is required</div>
+                    </div>
+                  </div>
+                
+                  <div class="col-md-3" *ngIf="paymentModeType != 'cash'">
+                    <label class="form-label">Bank Instrument No</label>
+                    <input onkeydown="return event.keyCode !== 69"
+                      [ngClass]="{ 'is-invalid': submitted && f.paymentreference_no.errors }"
+                      formControlName="paymentreference_no" class="form-control custom-input" type="number" placeholder="Instrument No">
+                    <div *ngIf="submitted && f.paymentreference_no.errors" class="invalid-feedback" style="position:absolute">
+                      <div *ngIf="f.paymentreference_no.errors.required">Bank Instrument No is required</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3" *ngIf="paymentModeType != 'cash'">
+                    <label class="form-label">Bank Instrument Date</label>
+                    <mat-form-field  appearance="outline" class="custom-date-picker">
+                     <div class="d-flex align-items-center w-100">
+                      <input matInput
+                      [matDatepicker]="pickerEta" formControlName="paymentreference_date" class="h-0" placeholder="Instrument Date"/>
+                    <mat-datepicker-toggle matSuffix [for]="pickerEta"></mat-datepicker-toggle>
+                     </div>
+                      <mat-datepicker #pickerEta></mat-datepicker>
+                    </mat-form-field>
+                    <mat-error>
+                      <div *ngIf=" submitted && f?.paymentreference_date?.errors?.required" class="set-error-msg">Bank Instrument Date is required
+                    </div>
+                  </mat-error>
+                  </div>
+                  <div class="col-md-3" *ngIf="paymentModeType != 'cash'">
+                    <label class="form-label"> Instrument {{'stolt.finance.new_payment.amount' | translate}}</label>
+                    <input formControlName="amount" onkeydown="return event.keyCode !== 69"
+                      [ngClass]="{ 'is-invalid': submitted && f.amount.errors }" class="form-control custom-input"
+                      type="number" placeholder="Amount">
+                    <div *ngIf="submitted && f.amount.errors" class="invalid-feedback" style="position:absolute">
+                      <div *ngIf="f.amount.errors.required">{{ 'stolt.finance.new_payment.paymentValidation.amountValidation'
+                        |
+                        translate }}</div>
+                    </div>
+                  </div>
+                           
+                  <div class="col-md-3 " *ngIf="false">
+                    <label class="form-label"> {{'stolt.finance.new_payment.status' | translate}} <span
+                        class="text-danger">*</span></label>
+      
+                    <nz-select class="form-select " nzShowSearch nzAllowClear formControlName="payment_status"
+                      [ngClass]="{'is-invalid': submitted && f.payment_status.errors}" nzPlaceHolder="Payment Status">
+                      <nz-option nzLabel="Completed" nzValue="Completed"></nz-option>
+                      <nz-option nzLabel="Refunded" nzValue="Refunded"></nz-option>
+                      <nz-option nzLabel="Processed" nzValue="Processed"></nz-option>
+                    </nz-select>
+      
+                    <div *ngIf="submitted && f.payment_status.errors" class="invalid-feedback" style="position:absolute">
+                      <div *ngIf="f.payment_status.errors.required">{{
+                        'stolt.finance.new_payment.paymentValidation.statusValidation' | translate }}</div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 ">
+                    <label class="form-label"> {{'stolt.finance.new_payment.currency' | translate}} <span
+                        class="text-danger">*</span></label>
+      
+                    <nz-select nzDisabled class="form-select " nzShowSearch nzAllowClear formControlName="currency"
+                      [ngClass]="{'is-invalid': submitted && f.currency.errors}">
+                      <nz-option *ngFor="let currency of currencyList" [nzLabel]="currency.currencyShortName"
+                        [nzValue]="currency.currencyId"></nz-option>
+                    </nz-select>
+      
+                    <div *ngIf="submitted && f.currency.errors" class="invalid-feedback" style="position:absolute">
+                      <div *ngIf="f.currency.errors.required">{{
+                        'stolt.finance.new_payment.paymentValidation.currencyValidation' | translate }}</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3 ">
+                    <label class="form-label">{{'stolt.finance.new_payment.amount' | translate}} <span
+                        class="text-danger">*</span></label>
+                    <input formControlName="cheque_amount" [ngClass]="{ 'is-invalid': submitted && f.cheque_amount.errors }"
+                      class="form-control custom-input" type="number" placeholder="Payment Amount">
+                    <div *ngIf="submitted && f.cheque_amount.errors" class="invalid-feedback" style="position:absolute">
+                      <div *ngIf="f.cheque_amount.errors.required"> Amount is required </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3 ">
+                    <label class="form-label"> {{'stolt.finance.new_payment.remarks' | translate}}</label>
+                    <input formControlName="remarks" [ngClass]="{ 'is-invalid': submitted && f.remarks.errors }"
+                      class="form-control custom-input" type="text" placeholder="Remarks">
+                    <div *ngIf="submitted && f.remarks.errors" class="invalid-feedback" style="position:absolute">
+                      <div *ngIf="f.remarks.errors.required">{{
+                        'stolt.finance.new_payment.paymentValidation.REMARKSValidation'
+                        | translate }}</div>
+                    </div>
+                  </div>
+      
+                  <div class="col-md-3">
+                    <label class="form-label">
+                      {{ 'stolt.finance.new_payment.upload_document' | translate }}
+                    </label>
+                    <input 
+                      [readonly]="key === 'reciept-posting'"
+                      [disabled]="disableInput"
+                      [ngClass]="{ 'is-invalid': submitted && f.upload_document.errors }"
+                      class="form-control custom-input"
+                      type="file"
+                      id="formFileMultiple"
+                      (change)="selectFile($event)">
+                    
+                    <span *ngIf="!isAddMode && filename">{{ filename }}</span>
+                    
+                    <div *ngIf="submitted && f.upload_document.errors" class="invalid-feedback" style="position:absolute">
+                      <div *ngIf="f.upload_document.errors.required">
+                        {{ 'stolt.finance.new_payment.paymentValidation.uploadDocumentValidation' | translate }}
+                      </div>
+                    </div>
+                  </div> 
+      
+                </div>
+              </form>
+            </div>
+        </div>
+      </div>
+      </div>
+      <div class="accordion-item display-none">
+        <h2 class="accordion-header" id="demo1">
+          <button type="button" data-bs-toggle="collapse" data-bs-target="#demo" aria-expanded="false"
+            aria-controls="demo">
+          </button>
+        </h2>
+        <div id="demo" aria-labelledby="demo1" data-bs-parent="#accordionPanelsStayOpenExample">
+          <div class="accordion-body">
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+     
+
+
+      <div class="wrap-table-area" *ngIf="key !== 'reciept'">
+        <div class="row"> 
+          <div class="col-md-12">
+            <div class="table-responsive">
+              <form [formGroup]="invoiceForm">
+                <table aria-describedby="mytable" class="gfg">
+                  <thead>
+                    <tr class="field-name">
+                      <th scope="col" *ngIf="!recieptDetails.isPosting"> </th>
+                      <th scope="col"> {{'stolt.finance.new_payment.batch_no' | translate}}</th>
+                      <!-- <th scope="col"> {{'stolt.finance.new_payment.move_no' | translate}}</th> -->
+                      <th scope="col"> {{'stolt.finance.new_payment.invoice_no' | translate}}</th>
+                      <th scope="col"> {{'stolt.finance.new_payment.invoice_date' | translate}}</th>
+                      <th scope="col"> {{'stolt.finance.new_payment.invoice_amount_gst' | translate}}</th>
+                      <th scope="col"> {{'stolt.finance.new_payment.invoice_amount' | translate}}</th>
+                      <!-- <th scope="col"> {{'stolt.finance.new_payment.collected_amount' | translate}}</th> -->
+                      <th scope="col"> {{'Paid Amount' | translate}}</th>
+                      <th scope="col"> {{'stolt.finance.new_payment.outstanding_amount' | translate}}</th>
+                    
+                      <!-- <th scope="col"> {{'stolt.finance.new_payment.credit_note_amount' | translate}}</th> -->
+                      <th *ngIf="!recieptDetails.isPosting" scope="col"> {{'stolt.finance.new_payment.full_amount' | translate}}</th>
+                      <!-- <th scope="col"> {{'stolt.finance.new_payment.tds_percentage' | translate}}</th>
+                      <th scope="col"> {{'stolt.finance.new_payment.tds_amount' | translate}}</th>
+                      <th scope="col"> {{'stolt.finance.new_payment.tds_year' | translate}}</th> -->
+                      <th *ngIf="!recieptDetails.isPosting" scope="col">Receive Amount in ({{currentAgent?.currency?.currencyCode}})</th>
+                    
+                    </tr>
+                  </thead>
+                  <tbody *ngIf="this.invoiceDetails.length !== 0">
+                    <ng-container formArrayName="Rows">
+                      <tr *ngFor="let itemrow of invoiceForm.controls.Rows.controls; let i=index;let l=last"
+                        [formGroupName]="i">
+                        <td *ngIf="!recieptDetails.isPosting"><input type="checkbox" class="m-2" formControlName="isSelected" 
+                     
+                            [checked]="itemrow?.controls?.isSelected?.value"
+                            (change)="changeStatus($event.target.checked,itemrow?.value,i);onAccountBalance()" ></td>
+                        <td>{{itemrow?.controls?.batchNo?.value}}</td>
+                        <!-- <td>{{itemrow?.controls?.moveNo?.value}}</td> -->
+                        <td>{{itemrow?.controls?.invoiceNo?.value}}</td>
+                        <td>{{itemrow?.controls?.invoice_date?.value | date : 'dd-MM-yyyy'}}</td>
+                        <td class="text-end">{{itemrow?.controls?.invoiceAmountNoTax?.value | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td>
+
+                        <td class="text-end">
+                          <!-- <input class="form-control custom-input rounded-0" formControlName="invoiceAmount"
+                           disabled type="number"> -->
+                           {{itemrow?.controls?.invoiceAmount?.value | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}
+                        </td>
+                     
+                        <td class="text-end">
+                          <!-- <input readonly class="form-control custom-input rounded-0" formControlName="collected_amount"
+                            (keyup)="changeAmount(i)" type="number"> -->
+                            {{itemrow?.controls?.collected_amount?.value | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}
+                          </td>
+                        <td class="text-end">
+                          <!-- <input class="form-control custom-input rounded-0" formControlName="outstanding_amount"
+                            disabled type="number"> -->
+                            <span *ngIf="!recieptDetails.isPosting"> {{itemrow?.controls?.outstanding_amount?.value - itemrow?.controls?.cheque?.value | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</span>
+                            <span *ngIf="recieptDetails.isPosting">{{itemrow?.controls?.outstanding_amount?.value | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</span>
+                           
+                        </td>
+                        <!-- (click)="openCreditNote(AddCredit,i,itemrow?.controls?.batchId?.value)" -->
+                        <!-- <td class="text-end">
+                           <input
+                            class="form-control custom-input rounded-0" formControlName="credit_amount" disabled
+                            type="number">  
+                            {{itemrow?.controls?.credit_amount?.value | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td> -->
+                        <td *ngIf="!recieptDetails.isPosting" class="text-center">
+                          <input type="checkbox" formControlName="fullAmount" (change)="fullAmountSet(i)">
+                        </td>
+                        <!-- <td>
+                          <input class="form-control custom-input rounded-0" formControlName="tds_percentage"
+                            (keyup)="selectPercentage($event.target.value,i,itemrow?.controls?.invoiceAmountNoTax?.value)"
+                            type="number">
+                        
+                        </td> -->
+                        <!-- <td>
+                          <input class="form-control custom-input rounded-0" formControlName="tds_amount" disabled
+                            type="number" readonly="isType !== 'posting'">
+                        </td> -->
+                        <!-- <td>
+                          <nz-select class="form-select w-100" nzShowSearch nzAllowClear formControlName="tds_year"
+                            [nzDisabled]=" isPosting">
+                            <nz-option nzLabel="{{ previousYear-1 }}-{{ previoushalfYear }}"
+                              nzValue="{{ previousYear-1 }}-{{ previoushalfYear }}"></nz-option>
+                            <nz-option nzLabel="{{ previousYear }}-{{ currentYear }}"
+                              nzValue="{{ previousYear }}-{{ currentYear }}"></nz-option>
+                          </nz-select>
+                        </td> -->
+                        <td *ngIf="!recieptDetails.isPosting" class="text-end">
+                          <input class="form-control custom-input rounded-0 text-end" formControlName="cheque"
+                            type="number" [readonly]="itemrow?.controls?.fullAmount?.value"  (keyup)="onAccountBalance()" >
+                        </td>
+                     
+                      </tr>
+                    </ng-container>
+                    <tr class="footer-ui" *ngIf="!recieptDetails.isPosting">
+                      <th scope="col" colspan="2" class="footer-heading">
+                        <label>Balance Amount ({{currentAgent?.currency?.currencyCode}})</label>
+                        <input   readonly value="{{onAccountValue - allChequeAmt}}" type="text" [(ngModel)]="onAccountValue" [ngModelOptions]="{standalone: true}" class="custom-input border text-end">
+                      </th>
+                      <!-- <th scope="col" colspan="2" class="footer-heading">
+                        <label>On Account TDS Year</label>
+                        <select class="custom-input border" [(ngModel)]="onAccountTdsYear" [ngModelOptions]="{standalone: true}">
+                          <option value="{{ previousYear-1 }}-{{ previoushalfYear }}">{{ previousYear-1 }}-{{
+                            previoushalfYear }}</option>
+                          <option value="{{ previousYear }}-{{ currentYear }}">{{ previousYear }}-{{ currentYear }}
+                          </option>
+                        </select>
+                      
+                      </th>
+                      <th scope="col" colspan="2" class="footer-heading">
+                        <label>On Account TDS Year Amount</label>
+                        <input [(ngModel)]="onAccountTdsAmount" type="number" [ngModelOptions]="{standalone: true}" class="custom-input border">
+                      </th> -->
+                      <th scope="col" colspan="2" class="footer-heading">
+                        <label>Remarks</label>
+                        <input [(ngModel)]="onAccountRemark" type="text" [ngModelOptions]="{standalone: true}" class="custom-input border">
+                      </th>
+                    </tr>
+                  </tbody>
+                </table>
+              </form>
+            </div>
+            <div class="no-data-availble" *ngIf="this.invoiceDetails.length === 0">
+              {{'common.no_data' | translate}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="screen === 'submit'">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="veselother  ">
+          <h2>Invoice Details</h2>
+        </div>
+        <div class="table-responsive">
+          <div class="wrap-table-area wrap-form-field costtable">
+            <table aria-describedby="mytable4">
+              <thead>
+                <tr class="bg-primary">
+                  <th scope="col" class=" py-2">Job No</th>
+                    <th scope="col" rowspan="2" >BL Name</th>
+                    <th scope="col" rowspan="2" *ngIf="enquiryDetails?.basicDetails?.ShipmentTypeName === 'Ocean'">Vessel</th>
+                    <th scope="col" rowspan="2" *ngIf="enquiryDetails?.basicDetails?.ShipmentTypeName === 'Ocean'">Voyage</th>
+                    <th scope="col" rowspan="2" >Consignee</th>
+                    <!-- <th scope="col" rowspan="2" >Job No</th> -->
+                    <th scope="col" rowspan="2" >Invoice No.</th>
+                    <th scope="col" rowspan="2" >Invoice Date</th>
+                    <th scope="col" rowspan="2" >Invoice Party</th>
+                    <!-- <th scope="col" rowspan="2" >Credit Note Amount</th> -->
+                    <th scope="col" rowspan="2" >Outstanding Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of recieptDetails?.invoiceData">
+                  <td>{{data?.batchNo}}</td>
+                  <td>{{data?.blName}}</td>
+                  <td *ngIf="enquiryDetails?.basicDetails?.ShipmentTypeName === 'Ocean'">{{data?.vesselName}}</td>
+                  <td *ngIf="enquiryDetails?.basicDetails?.ShipmentTypeName === 'Ocean'">{{data?.vesselName}}</td>
+                  <td>{{ data?.consigneeName }}</td>
+                  <!-- <td>{{data?.batchNo}}</td> -->
+                  <td>{{data?.invoiceNo}}</td>
+                  <td>{{data?.invoice_date | date : 'dd-MM-yyyy'}}</td>
+                  <td>{{data?.invoiceToName}}</td>
+                  <!-- <td class="text-end">{{data?.credit_amount | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td> -->
+                  <td class="text-end">{{data?.outstanding_amount - data?.cheque | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        </div>
+    </div>
+    </ng-container>
+
+
+
+  <ng-container *ngIf=" screen === 'confirmation'">
+    <div class="row">
+      <div class="col-md-12">
+
+        <ng-container *ngIf="receiptType === 'Bank'">
+        <div class="veselother  ">
+          <h2>Bank Details</h2>
+        </div>
+        <div class="table-responsive">
+          <div class="wrap-table-area wrap-form-field costtable">
+            <table aria-describedby="mytable4">
+              <thead>
+                <tr class="bg-primary">
+                  <th scope="col" class=""> {{
+                    "stolt.finance.new_payment.instrument_type" | translate
+                    }}</th>
+                  <th scope="col">{{ "stolt.finance.new_payment.bankName" | translate }}</th>
+                  <th scope="col"> {{ "stolt.finance.new_payment.instr_no" | translate }}</th>
+                  <th scope="col"> {{ "stolt.finance.new_payment.instr_date" | translate }}</th>
+                  <th scope="col"> {{ "stolt.finance.new_payment.instr_amount" | translate }}</th>
+                  <th scope="col">{{ "stolt.finance.new_payment.payIndicator" | translate }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{recieptDetails?.paymentType}}</td>
+                  <td>{{ recieptDetails?.beneficiary_bank }}</td>
+                  <td>{{ recieptDetails?.paymentreference_no }}</td>
+                  <td>{{ recieptDetails?.paymentDate | date : 'dd-MM-yyyy'}}</td>
+                  <td>{{ recieptDetails?.amount | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td>
+                  <td> <input class="form-control custom-input" type="text" />
+                  </td>
+                </tr>
+                <tr class="footer-ui mb-5">
+                 
+                  <th colspan="2" scope="col" class="footer-heading border-0 bg-white">
+                    <label>On Account TDS Year: {{recieptDetails?.onAccountYear}}</label>
+                    
+                  </th>
+                  <th colspan="2" scope="col" class="footer-heading border-0 bg-white">
+                    <label>On Account Amount: {{recieptDetails?.onAccountTdsAmt}}</label>
+                   
+                  </th>
+                  <th scope="col" colspan="2" class="footer-heading border-0 bg-white float-end">
+                    <label>TOTAL : </label>
+                    <input type="text" disabled value="{{recieptDetails?.amount}}"
+                      class="custom-input border" />
+                  </th>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </ng-container>
+        <div class="veselother ">
+          <h2>Job Details</h2>
+        </div>
+        <div class="col-md-12 wrap-table-area mb-5">
+          <div class="table-responsive">
+            <div class=" wrap-form-field costtable  ">
+              <table aria-describedby="mytable4">
+                <thead>
+                  <tr class="bg-primary">
+                    <th scope="col" rowspan="2" >Job No</th>
+                    <th scope="col" rowspan="2" >{{ recieptDetails?.invoiceData[0]?.vesselName ? 'Vessel/Voyage' : 'Airline/Flight No' }}</th>
+                    <th scope="col" rowspan="2" >Consignee</th>
+                    <!-- <th scope="col" rowspan="2" >Move No</th> -->
+                    
+                    <th scope="col" rowspan="2" >Invoice No</th>
+                    <th scope="col" rowspan="2" >Invoice Amount</th>
+                    <th scope="col" rowspan="2" >
+                      Paid Amount
+                    </th>
+                    <th scope="col" rowspan="2" >
+                      Outstanding Amount
+                    </th>
+                    <!-- <th scope="col" rowspan="2" >TDS Year</th> -->
+                    <th   scope="col" rowspan="2" >{{recieptDetails.isPosting ? 'Action' : 'Amount Recieved' }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngFor="let invoice of recieptDetails?.invoiceData;let i=index">
+                  <tr >
+                    <td>{{ invoice?.batchNo }}</td>
+                    <!-- <td>{{ invoice?.vesselName || invoice?.carrierName }}/{{ invoice?.voyageNumber || invoice?.flightNo }}</td> -->
+                    <td> {{ invoice?.vesselName ? (invoice?.vesselName + '/' + (invoice?.voyageNumber || '')) : (invoice?.carrierName + '/' + (invoice?.flightNo || '')) }}</td>
+                    <td>{{ invoice?.consigneeName }}</td>
+                    <!-- <td>{{ invoice?.moveNo }}</td> -->
+                  
+                    <td>{{ invoice?.invoiceNo }}</td>
+                    <td class="text-end">{{ invoice?.invoiceAmount | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td>
+                    <td class="text-end">{{ (invoice?.collected_amount || 0)| number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td>
+                    <td class="text-end">{{ invoice?.outstanding_amount - invoice?.cheque || 0 | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td>
+                    <!-- <td>{{ invoice?.tds_year }} </td> -->
+                    <td  class="d-flex justify-content-between">
+                      <input *ngIf="!recieptDetails.isPosting" readonly type="text" class="form-control rounded-0 text-end" [(ngModel)]="invoice.cheque" />
+                      <em class="bi bi-three-dots dots-color-change cursor-pointer ml-2 border px-1" (click)="chargeOpen(i)"></em>
+                    </td>
+                  </tr>
+                  <ng-container *ngIf="i === chargeIndex">
+                  <tr>
+                    <th scope="col" colspan="2" class="border-0 bg-white"></th>
+                    <th scope="col" class=" py-2">Charge Name</th>
+                    <th scope="col" >
+                      Amount 
+                    </th>
+                    <th scope="col" >
+                      Tax Amount
+                    </th>
+                    <th scope="col" >
+                      Total Amount
+                    </th>
+                    <th scope="col" >
+                      Current Receipt Amount<br>
+                      <input type="text" class="custom-input border" disabled [value]="invoice?.cheque" />
+                    </th>
+                  </tr>
+                  <tr *ngFor="let charge of invoice.chargeNames">
+                    <td colspan="2" class="border-0"></td>
+                    <td>{{ charge?.costItemName }}</td>
+                    <td class="text-end">{{charge?.selEstimates?.taxableAmount | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td>
+                    <td class="text-end">{{charge?.selEstimates?.sgst | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td>
+                    <td class="text-end">{{charge?.selEstimates?.totalAmount | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td>
+                    <td>
+                      <input type="text" disabled class="custom-input border text-end" [value]="charge?.selEstimates?.totalAmount" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" class="border-0"></td>
+                    <td>BASE AMT ({{currentAgent?.currency?.currencyCode}})</td>
+                    <td></td>
+                    <td>
+                      <!-- TDS PER <input type="number" [(ngModel)]="invoice.tds_percentage" (keyup)="calOnPer($event,i)"
+                        class="custom-input border text-end" /> -->
+                      </td>
+                    <td>
+                      <!-- <input type="number"  [(ngModel)]="invoice.tds_amount"  (keyup)="calOnAMT($event,i)"
+                       class="custom-input border text-end" /> -->
+                      </td>
+                    <td  > <input type="number" disabled [(ngModel)]="invoice.invoiceAmountNoTax"  (keyup)="tdsTotalValue($event)"
+                        class="custom-input border text-end" /></td>
+                   
+                  </tr>
+                  <!-- <tr>
+                    <td colspan="2" class="border-0"></td>
+                    <td>SHORT COLLECTION</td>
+                    <td colspan="3"></td>
+                    <td><input type="text" disabled [value]="invoice.shortAmount || 0"   class="custom-input border text-end" /></td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" class="border-0"></td>
+                    <td>EXCESS COLLECTION</td>
+                    <td colspan="3"></td>
+                    <td><input type="text" disabled [value]="invoice.excessAmount || 0"  class="custom-input border text-end" /></td>
+                  </tr> -->
+                  <tr>
+                    <td colspan="2" class="border-0"></td>
+                    <td>TOTAL</td>
+                    <td colspan="3"></td>
+                    <td><input type="text" disabled [value]="invoice?.chequeFinal || invoice?.cheque" class="custom-input border text-end" /></td>
+                  </tr>
+                </ng-container>
+                </ng-container>
+                </tbody>
+               
+
+                <tr class="footer-ui mb-5" *ngIf="!recieptDetails.isPosting">
+                  <th colspan="2" scope="col" class="footer-heading border-0 bg-white">
+                  </th>
+                  <th colspan="4" scope="col" class="footer-heading border-0 bg-white">
+                    <label  >Balance Amount ({{currentAgent?.currency?.currencyCode}}) </label>{{calTotBase()}}
+                    <input    type="text" [value]="finalOnAccTotal" disabled class="custom-input border text-end" />
+                  </th>
+                  <th scope="col" colspan="2" class="footer-heading border-0 bg-white">
+                    <label>TOTAL ({{currentAgent?.currency?.currencyCode}}) : </label>
+                    <input type="text" [value]="finalTotal" disabled
+                      class="custom-input border text-end" />
+                  </th>
+                </tr>
+              </table>
+              <div *ngIf="false" class="form-group wrap-form-action mt-4 d-flex justify-content-center">
+                <button class="btn btn-outline-primary btn-lg mx-1" (click)="ReceptPost()">
+                  Preview
+                </button>
+                <button class="btn btn-outline-secondary btn-lg gap-2 mx-1">
+                  Edit
+                </button>
+                <button class="btn btn-outline-primary btn-lg mx-1">
+                  {{ "common.cancel" | translate }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+
+  <ng-container *ngIf=" screen === 'posting'">
+    <div class="wrap-form-field">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="table-responsive">
+            <div class="costtable">
+              <p class="main-c px-4 py-2">BANK RECEIPT VOUCHER</p>
+              <table aria-describedby="mytable5">
+                <thead>
+                  <tr>
+                    <th scope="col" rowspan="6">
+                      <strong>Being :</strong> BEING RECEIPT POSTING FOR AGENT/RCPT/{{ recieptDetails?.paymentNo }},
+                      DT: {{ recieptDetails?.paymentDate | date:'dd/MM/yyyy' }}
+                    </th>
+                    <th scope="col" rowspan="6">
+                      <strong>Transaction Date :</strong> {{ recieptDetails?.paymentDate | date:'dd/MM/yyyy' }}
+                    </th>
+                  </tr>
+                </thead>
+                <thead>
+                  <tr>
+                    <th scope="col" rowspan="6">
+                      <strong>Cheque No: </strong>
+                    </th>
+                    <th scope="col" rowspan="6"><strong>Cheque Date:</strong></th>
+                  </tr>
+                </thead>
+              </table>
+              <table aria-describedby="mytable6">
+                <thead>
+                  <tr>
+                    <th scope="col" rowspan="2">A/C HEAD</th>
+                    <th scope="col" rowspan="2">ACCOUNT HEAD / NARRATION</th>
+                    <th scope="col" rowspan="2">CHARGE NAME</th>
+                    <th scope="col" rowspan="2">DEPT NAME</th>
+                    <th scope="col" rowspan="2">VOYAGE</th>
+                    <th scope="col" rowspan="2">Job No</th>
+                    <th scope="col" rowspan="2">CURR</th>
+                    <th scope="col" colspan="2" class="text-center text-primary">AMOUNT</th>
+                    <!-- <th scope="col" rowspan="2">COST CENTER</th> -->
+                    <!-- <th scope="col" colspan="2" class="text-center text-primary">INR</th> -->
+                  </tr>
+                  <tr>
+                  
+                    <th scope="col">CREDIT</th>
+                    <th scope="col">DEBIT</th>
+                    <!-- <th scope="col">DEBIT</th>
+                    <th scope="col">CREDIT</th> -->
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let invoice of recieptDetails?.invoiceData">
+                    <td class="text-center"></td>
+                    <td class="text-center">
+                    </td>
+                    <td><span *ngFor="let data of invoice?.chargeNames">{{data?.costItemName}},<br></span></td>
+                    <td>SHIPEASY BANK CONTAINERS</td>
+                    <td>{{invoice?.vesselName}}</td>
+                    <td>{{invoice?.batchNo}}</td>
+                    <td>{{recieptDetails?.currency}}</td>
+                 
+
+                    <td class="text-end">{{00.00 | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td>
+                    <td class="text-end">{{invoice?.cheque | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td>
+                    <!-- <td></td> -->
+                    <!-- <td class="text-end">{{invoice?.cheque}}</td>
+                    <td class="text-end">00.00</td> -->
+                  </tr>
+                </tbody>
+                <tr>
+                  <td colspan="7" class="text-end border-bottom-0 border-start-0">
+                    Total
+                  </td>
+                 
+                  <td class="text-end">{{00.00 | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td>
+                  <td class="bnull text-end">{{finalPostAmt() | number : '1.2-2'  | customCurrency: currentAgent?.currency?.currencyCode}}</td>
+                  <!-- <td colspan="1" class="text-end border-bottom-0"></td>
+                  <td class="bnull text-end">{{finalPostAmt()}}</td>
+                  <td class="text-end">00.00</td> -->
+
+                </tr>
+              </table>
+              <div class="form-group wrap-form-action my-3 d-flex justify-content-center">
+              
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <div class="wrap-form-field btn-onscreen mb-3">
+    <div class="form-group wrap-form-action">
+
+      <ng-container *ngIf="isType !== 'posting'">
+        <button (click)="onCloseInvoice($event)" class="btn1 btn-lg float-end">
+          {{ "common.cancel" | translate }}
+        </button>
+        <button *ngIf="isType !== 'show' && screen === 'receipt'" class="btn btn-outline-primary btn-lg float-end"
+          (click)="onSave(true)">
+          {{ "common.save" | translate }}
+        </button>
+        <!-- <button *ngIf="isType !== 'show' && screen === 'receipt' && !isAddMode" appAccessControl featureCode="['STFR01']" accessType="print" (click)="getPaymentreciept()" class="btn btn-outline-primary btn-lg float-end"
+           >
+          Print
+        </button> -->
+      
+      </ng-container>
+
+      <ng-container *ngIf="isType === 'posting' && !recieptDetails.isPosting">
+        <button *ngIf="screen === 'receipt'" (click)="onCloseInvoice($event)"
+          class="btn1 btn-lg float-end">
+          {{ "common.cancel" | translate }}
+        </button>
+        <button *ngIf="screen !== 'receipt'" (click)="screen = 'receipt'"
+          class="btn btn-outline-secondary btn-lg float-end">
+          {{ "common.back" | translate }}
+        </button>
+        <button *ngIf="screen === 'receipt'" class="btn btn-outline-primary  float-end"
+          (click)="onSave(false)">
+          Save Invoice
+        </button>
+        <!-- openReceiptType(AddReceiptType) -->
+        <button *ngIf="screen === 'submit'" (click)="screen = 'confirmation';" class="btn btn-outline-primary  float-end">
+          Submit
+        </button>
+
+        <button *ngIf="screen === 'posting'" class="btn btn-outline-primary  float-end" (click)="onSave1(true)">
+          Posting
+        </button>
+        <button *ngIf="screen === 'confirmation'" (click)="onSave1(false)" class="btn btn-outline-primary  float-end">
+          {{ "common.save" | translate }}
+        </button>
+      </ng-container>
+      <ng-container *ngIf="isType === 'posting' && recieptDetails.isPosting">
+        <button (click)="onCloseInvoice($event)" class="btn1 btn-lg float-end">
+          {{ "common.cancel" | translate }}
+        </button>
+        <!-- <button (click)="getPaymentreciept()"  class="btn btn-outline-secondary btn-lg float-end">
+          Print
+        </button> -->
+        <button *ngIf="screen === 'receipt'" class="btn btn-outline-primary  float-end"
+          (click)="screen = 'confirmation'">
+          Preview
+        </button>
+        <button *ngIf="screen === 'confirmation'" class="btn btn-outline-primary  float-end"
+          (click)="screen = 'posting'">
+          Preview
+        </button>
+      </ng-container>
+
+    </div>
+  </div>
+</div>
+<ng-template #AddReceiptType let-modal>
+  <div class="modal-content">
+    <div class="modal-body">
+      <div class="wrap-form-field padding-space  modal-bottom-alignment-for-mobile-view">
+      
+        <div><h6>Please Select Receipt Type</h6></div>
+        <div class="col-md-12 chk d-flex">
+          <div class="d-flex align-items-center">
+          <input type="radio" value="Bank" [(ngModel)]="receiptType" />
+          <label class=" px-2 mb-0">Bank
+          </label>
+        </div>
+        <div class="d-flex align-items-center">
+          <input class="pl-3" type="radio" value="Cash"  [(ngModel)]="receiptType"/>
+          <label class=" px-2 mb-0">Cash
+          </label>
+        </div>
+
+        </div>
+
+            <div class="form-group wrap-form-action mt-4 text-center">
+              <button class="btn btn-outline-primary " (click)="onSaves()">
+                {{ "common.ok" | translate }}
+              </button>
+              <button class="btn btn-outline-primary"(click)="onSaves();receiptType = ''">
+                {{ "common.cancel" | translate }}
+              </button>
+            </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #AddCredit let-modal>
+  <div class="modal-content">
+    <div class="modal-body">
+      <div class="wrap-form-field padding-space  modal-bottom-alignment-for-mobile-view">
+        <div>
+          <form class="row">
+            <div class="wrap-table-area">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="table-responsive wrap-table-area costtable">
+                    <table aria-describedby="mytable7">
+                      <thead>
+                        <tr>
+                          <th scope="col"></th>
+                          <!-- <th scope="col">invoiceNo</th> -->
+                          <th scope="col">Credit Note To</th>
+                          <th scope="col">Date</th>
+                          <th scope="col">Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let credit of creditList; let a = index">
+                          <td><input type="radio" id="{{ 'data'+a }}"
+                              (change)="creditData(credit?.amountReceived,i)" name="credit" class=""></td>
+                          <!-- <td>{{ credit?.invoiceNumber }}</td> -->
+                          <td>{{ credit?.creditToName }}</td>
+                          <td>{{ credit?.creditDate | date : 'dd-MM-yyyy'}}</td>
+                          <td>{{ credit?.amountReceived }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="no-data-availble" *ngIf="this.creditList.length === 0">
+                    {{'common.no_data' | translate}}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group wrap-form-action mt-4">
+              <button class="btn1 btn-lg float-end" (click)="onSaves()">
+                {{ "common.cancel" | translate }}
+              </button>
+              <button class="btn btn-outline-primary btn-lg float-end" (click)="onSaves()">
+                {{ "common.ok" | translate }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

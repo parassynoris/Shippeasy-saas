@@ -1,0 +1,157 @@
+
+@import '../../../../../assets/styles/mixins/global.scss';
+
+.btn-onscreen{
+  z-index: 99 !important;
+}
+.wrap-form-field {
+  .form-label {
+    font-size: 12px;
+  } 
+}
+
+.action-field {
+  .active {
+    i , em {
+      color: #181824;
+    }
+  }
+}
+
+.wrap-form-action {
+  margin-top: 15px;
+}
+
+.hover-active {
+  cursor: pointer;
+}
+
+.width100{
+width: 100% !important;
+}
+.width100px{
+  width: 104px !important;
+  }
+.width175px{
+  width: 175px !important;
+}
+
+@media only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px) {
+
+  /*
+  Label the data
+  */
+  td:nth-of-type(1):before {
+    content: "Container No";
+  }
+
+  td:nth-of-type(2):before {
+    content: "Container Type";
+  }
+
+  td:nth-of-type(3):before {
+    content: "Container Weight";
+  }
+
+  td:nth-of-type(4):before {
+    content: "Corgo Type";
+  }
+
+  td:nth-of-type(5):before {
+    content: "BL No";
+  }
+
+  td:nth-of-type(6):before {
+    content: "Shipping Bill";
+  }
+
+  td:nth-of-type(7):before {
+    content: "DO";
+  }
+
+  td:nth-of-type(8):before {
+    content: "SOB";
+  }
+
+  td:nth-of-type(9):before {
+    content: "Bond";
+  }
+
+  td:nth-of-type(10):before {
+    content: "UN No";
+  }
+
+  td:nth-of-type(11):before {
+    content: "Status";
+  }
+
+  td:nth-of-type(12):before {
+    content: "Action";
+  }
+
+  .wrap-inner-table.wrap-form-field {
+    &::after {
+      top: -17px;
+      width: 23px;
+      height: 47px;
+      border-width: 16px 22px 10px 0;
+
+    }
+  }
+
+
+}
+
+ 
+
+.tableFixHead td:nth-child(2),
+.tableFixHead th:nth-child(2) {
+  position: sticky;
+  left: 28px;
+  // z-index: 9;
+  background-color: white;
+}
+.tableFixHead th:nth-child(2) { 
+  background-color: #e2e3e5;
+}
+ 
+.disable-field{
+  background-color:gainsboro !important ;
+}
+.ft-18{
+  font-size: 12px;
+}
+.container-table{
+  .table-design {
+    /* padding: 10px; */
+    overflow-x: overlay;
+  min-height: auto !important;
+    max-height: calc(100vh - 317px);
+  }
+}
+
+.mat-table-with-gheading .table-design table thead tr th { 
+  padding: 8px 5px;
+}
+::ng-deep .tank-component .mat-form-field-appearance-legacy .mat-form-field-underline {
+  background-color: transparent !important;
+}
+::ng-deep .tank-component .mat-input-element{
+  padding:12px !important;
+}
+.custom-date-style {
+  border-radius: 4px;
+  width: 156px !important;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0px 5px 0px 5px !important;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-flex {
+  margin-top: -0.25em;
+  position: relative;
+  width: 156px !important;
+}

@@ -1,0 +1,153 @@
+<div class="table-header-area pt-3">
+    <div>
+        <!-- <table-filters [TDP]="[false, false, true, true]" (filterInput)="applyFilter($event)"
+            (onClickExport)="export()">
+        </table-filters> -->
+    </div>
+    <div class="header-right">
+        <a *ngIf="currentLogin === 'transporter' || isTransport" (click)="open(AddClause)" title="Add Milestone" class="max-con new-action  btn btn-outline-primary btn-sm rounded-pill"
+            routerLink="add">Add Milestone</a>
+    </div>
+</div>
+
+<div class="table-card">
+    <div class="table-design example-container mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" matSort class="" summary="agreement">
+
+            <ng-container matColumnDef="#">
+                <th scope="col" mat-header-cell *matHeaderCellDef>
+                    #
+                </th>
+                <td mat-cell *matCellDef="let element;let i = index">
+                    {{ i+1}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="milestoneEvent"> 
+                <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Milestone Event
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    {{ element?.milestoneEvent }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="milestoneDate">
+                <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Milestone Date
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    {{ element?.milestoneDate | date : 'dd-MM-yyyy,hh:mm'}}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="updateBy">
+                <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Updated By
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    {{ element?.updatedBy}}
+                </td>
+            </ng-container>
+   
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" [attr.colspan]="displayedColumns.length" class="text-center">
+                    <span *ngIf="loaderService?.isLoadingcircle">{{_gc?.LOADER_TEXT}}</span>
+                    <span *ngIf="!loaderService?.isLoadingcircle && !dataSource?.data?.length">No data available</span>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+    <div [ngClass]="{'display-none' : dataSource.filteredData.length < 10}">
+        <mat-paginator [pageSizeOptions]="pagenation" showFirstLastButtons aria-label="Select page">
+        </mat-paginator>
+    </div>
+</div>
+
+
+
+<ng-template #AddClause let-modal> 
+        <div class="modal-headers mt-2">
+            <h4 class="modal-title">
+                Milestone Event
+            </h4> 
+            <button type="button" class="btn-close shadow-none float-end" (click)="onCancel()"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body nz-allSelect">
+            <div class="wrap-form-field padding-space modal-bottom-alignment-for-mobile-view">
+                <form [formGroup]="addDriverForm">
+                    <div class="row g-3">
+
+                        <div class="col-md-6 nz-select">
+                            <label for="vehicle" class="form-label">Milestone Event <span
+                                    class="text-danger">*</span>
+                            </label>
+
+                            <input type="text"  [ngClass]="{'is-invalid': submitted && f1.milestoneEvent.errors}" class="form-control custom-input" formControlName="milestoneEvent" >
+                            <div *ngIf="submitted && f1.milestoneEvent.errors" class="invalid-feedback">
+                                <div *ngIf="f1.milestoneEvent.errors.required">Milestone Event is required</div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 nz-select">
+                            <label for="driver" class="form-label">Milestone Date <span
+                                    class="text-danger">*</span>
+                            </label>
+                            <nz-date-picker class="form-select custom-input" nzShowTime nzFormat="dd-MM-yyyy HH:mm:ss" formControlName="milestoneDate" 
+                                            [nzDisabledDate]="disabledDate"
+                            [ngClass]="{'is-invalid': submitted && f1.milestoneDate.errors}"></nz-date-picker>
+                            <div *ngIf="submitted && f1.milestoneDate.errors" class="invalid-feedback">
+                                <div *ngIf="f1.milestoneDate.errors.required">Milestone Date is required</div>
+                            </div>
+                        </div>
+
+                        
+
+
+                    </div>
+
+
+                    <div class="form-group wrap-form-action mt-4">
+                        <button class="btn1 btn-lg float-end" (click)="onCancel()" type="submit">
+                            {{ "common.cancel" | translate }}
+                        </button>
+                        <button *ngIf="show !== 'show'" (click)="onSave()" class="btn btn-outline-primary btn-lg float-end"
+                            type="submit">
+                            <ng-container *ngIf="!batchIdToUpdate">
+                                {{ "common.save" | translate }}
+                            </ng-container>
+                            <ng-container *ngIf="batchIdToUpdate">
+                                {{ "common.update" | translate }}
+                            </ng-container>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+   
+</ng-template>
+
+
+<ng-template #deleteInvoice let-c="close" let-d="dismiss">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="btn-close shadow-none" aria-label="Close" (click)="d('Cross click')"></button>
+        </div>
+        <div class="modal-body mt-4 d-flex align-items-center">
+            <em class="bi bi-question-circle text-danger fs-2 text-center float-start me-2"> </em> <span
+                class=" text-dark fs-6"> {{ "error.msg_delete" | translate }}</span>
+        </div>
+        <div class="modal-footer">
+            <div class="text-center">
+                <button type="button" class="btn btn-secondary btn-sm me-3" (click)="d('Cross click')">
+                    No
+                </button>
+                <button type="button" class="btn btn-danger btn-sm" (click)="c('yes')">
+                    Yes
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-template>

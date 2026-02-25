@@ -1,0 +1,25 @@
+
+$font-primary-style: 'Open Sans', sans-serif;
+$animation-time: .3s ease-in-out;
+
+$pixel: (
+  sm: 5px,
+  md: 10px,
+  lg: 15px,
+  xl: 20px,
+  xl-2: 25px,
+  null: 0,
+);
+
+$layout: (
+  flex: flex,
+  center: center,
+  relative: relative,
+  right: right,
+  pointer: pointer,
+  grid: grid,
+  absolute: absolute,
+  w-full: 100%,
+  h-full: 100%,
+  h-screen: 100vh,
+);

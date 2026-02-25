@@ -1,0 +1,68 @@
+@import '../../../../assets/styles/mixins/global.scss';
+
+.cost-items-bottom-alignment {
+    @media screen and (max-width: 767px)  {
+        padding: 0 15px 20px 15px;
+    }
+}
+
+.invalid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: .875em;
+    color: #dc3545;
+}
+
+::ng-deep {
+
+    .cdk-overlay-container,
+    .cdk-overlay-pane {
+      z-index: 2000 !important;
+    } 
+  }
+
+  .globally-chnage-mobile-view {
+	margin-bottom: 10px;
+}
+
+.wrap{
+    white-space:wrap;
+  width:250px;
+}
+nz-select {
+  height: calc(1.5em + .75rem + 2px); /* Adjust the height as needed */
+  border: none !important; /* Adjust the border radius as needed */
+}
+
+::ng-deep.ant-select-selector{
+  border-radius: 5px !important;
+}
+::ng-deep .multiselect-item-checkbox :before {
+  -webkit-animation: .2s ease-in borderscale;
+  animation: .2s ease-in borderscale;
+  // background: #007BFF !important;
+}
+::ng-deep.multiselect-item-checkbox input[type=checkbox]:checked + div:before{
+   background: #007BFF !important;
+}
+
+::ng-deep  .multiselect-item-checkbox :before {
+  box-sizing: content-box;
+  content: "";
+  color: #007BFF !important;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 14px;
+  height: 14px;
+  margin-top: -9px;
+  border: 2px solid #C00909 !important;
+  text-align: center;
+  transition: .4s;
+}
+::ng-deep .selected-item{
+  border: 1px solid #007BFF !important;
+  background-color: #007BFF !important;
+ 
+}

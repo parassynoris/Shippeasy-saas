@@ -1,0 +1,97 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h4 class="modal-title" *ngIf="isAddMode">{{ "common.add" | translate }} {{ "stolt.masters.PortMapping.AddPortActivityMap" | translate }}</h4>
+        <h4 class="modal-title" *ngIf="!isAddMode">{{ "common.edit" | translate }} {{ "stolt.masters.PortMapping.AddPortActivityMap" | translate }}</h4>
+        <button type="button" class="btn-close shadow-none" (click)="onSave()" aria-label="Close">
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="wrap-form-field padding-space  modal-bottom-alignment-for-mobile-view">
+            <form class="row g-3" [formGroup]="locationForm">
+                <div class="col-md-4">
+                    <label class="form-label"> {{ "stolt.masters.PortMapping.PortName" | translate }}<span class="text-danger">*</span></label>
+                    <select (change)="setPort($event)" class="form-select custom-input" formControlName="parentId"
+                        [ngClass]="{ 'is-invalid': submitted && f.parentId.errors }">
+                        <option *ngFor="let port of PortList" [value]="port?._source?.portId">
+                            {{port?._source?.portDetails?.portName}}</option>
+                    </select>
+                    <div *ngIf="submitted && f.parentId.errors" class="invalid-feedback">
+                        <div *ngIf="f.parentId.errors.required">
+                            {{ "stolt.masters.PortMapping.PortName" | translate }} {{ "common.isRequired" | translate }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{ "stolt.masters.PortMapping.activity" | translate }}<span class="text-danger">*</span></label>
+                    <select class="form-select custom-input" formControlName="activity" [ngClass]="{ 'is-invalid': submitted && f.activity.errors }">
+                        <option *ngFor="let activity of activityList" [value]="activity?._source?.activityId">
+                            {{activity?._source?.activityName}}</option>
+                    </select>
+                    <div *ngIf="submitted && f.activity.errors" class="invalid-feedback">
+                        <div *ngIf="f.activity.errors.required">{{ "stolt.masters.PortMapping.activity" | translate }} {{ "common.isRequired" | translate }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{ "stolt.masters.PortMapping.MapName" | translate }}<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control custom-input" id=" " formControlName="portMappingName" oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^ A-Za-z]/g,'').replace(/ +/g, ' ')"
+                        placeholder="" value="" [ngClass]="{ 'is-invalid': submitted && f.portMappingName.errors }" />
+                    <div *ngIf="submitted && f.portMappingName.errors" class="invalid-feedback">
+                        <div *ngIf="f.portMappingName.errors.required">
+                            {{ "stolt.masters.PortMapping.MapName" | translate }} {{ "common.isRequired" | translate }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label"> {{ "stolt.masters.PortMapping.PrincipalCode" | translate }}<span
+                            class="text-danger">*</span></label>
+                    <input type="text" class="form-control custom-input" id=" " formControlName="principalCode" oninput="this.value= this.value.replace(/^\s*\s*$/,'').replace(/[^ A-Za-z0-9]/g,'').replace(/ +/g, ' ')"
+                        placeholder="" value="" [ngClass]="{ 'is-invalid': submitted && f.principalCode.errors }" />
+                    <div *ngIf="submitted && f.principalCode.errors" class="invalid-feedback">
+                        <div *ngIf="f.principalCode.errors.required">
+                            {{ "stolt.masters.PortMapping.PrincipalCode" | translate }} {{ "common.isRequired" | translate }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label"> {{ "stolt.masters.PortMapping.CargoType" | translate }}<span class="text-danger">*</span></label>
+                    <select class="form-select custom-input" formControlName="cargoType"
+                        [ngClass]="{ 'is-invalid': submitted && f.cargoType.errors }">
+                        <option *ngFor="let cargo of cargoTypeList" [value]="cargo?._source?.systemtypeId">
+                            {{cargo?._source.typeName}}</option>
+                    </select>
+                    <div *ngIf="submitted && f.cargoType.errors" class="invalid-feedback">
+                        <div *ngIf="f.cargoType.errors.required">
+                            {{ "stolt.masters.PortMapping.CargoType" | translate }} {{ "common.isRequired" | translate }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{ "stolt.masters.PortMapping.Country" | translate }}<span
+                            class="text-danger">*</span></label>
+                    <select class="form-select custom-input" formControlName="country"
+                        [ngClass]="{ 'is-invalid': submitted && f.country.errors }">
+                        <option *ngFor="let country of countryList" [value]="country?._source?.countryISOCode">
+                            {{country?._source?.countryName}}</option>
+                    </select>
+                    <div *ngIf="submitted && f.country.errors" class="invalid-feedback">
+                        <div *ngIf="f.country.errors.required"> {{ "stolt.masters.PortMapping.Country" | translate }} {{ "common.isRequired" | translate }}</div>
+                    </div> 
+                </div>
+                <div class="form-group wrap-form-action mt-4">
+                    <button class="btn1 btn-lg float-end" (click)="onSave()" type="submit">
+                        {{ "common.cancel" | translate }}
+                    </button>
+                    <button (click)="portMappingMasters()" class="btn btn-outline-primary btn-lg float-end"
+                        type="submit">
+                        <ng-container *ngIf="isAddMode">
+                            {{ "common.save" | translate }}
+                          </ng-container>
+                          <ng-container *ngIf="!isAddMode">
+                            {{ "common.update" | translate }}
+                          </ng-container>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

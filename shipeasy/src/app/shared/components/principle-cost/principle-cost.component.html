@@ -1,0 +1,109 @@
+<div class="table-with-gheading">
+    <div class="wrap-table-area">
+        <div class="row">
+            <div class="col-md-12">
+                <div
+                    class="globally-chnage-mobile-view d-flex flex-column flex-sm-row gap-3 float-end wrap-pagination pb-2 ">
+                    <div class="mt-2">
+                        <span>
+                            <a routerLink=""><em class="ti-export" style="margin-right: 15px"></em></a>
+                            <a routerLink=""><em class="ti-printer"></em></a>
+                        </span>
+                    </div>
+                    <div class="mt-2">
+                        <span>
+                            <h5>{{ fromSize }}-{{ count }} of {{ toalLength }}</h5>
+                        </span>
+                    </div>
+                    <div class="mt-2">
+
+                        <span class="prv" [class.disable-arrow-sign]="fromSize === 1" (click)="prev()"
+                        ><em class="typcn typcn-chevron-left"></em
+                      ></span>
+                      <span class="prv" [class.disable-arrow-sign]="count === toalLength" (click)="next()"
+                        ><em class="typcn typcn-chevron-right"></em
+                      ></span>
+                    </div>
+                    <div class="mt-2">
+                        <select class="form-select form-select-sm" (change)="filter($event)">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                    <div class="mt-2">
+                        <a class="new-action" (click)="open()">
+                            {{"smartagent.smartAgent.costHead.addCostItem" | translate}}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table aria-describedby="mytable" class="gfg">
+                        <thead>
+                            <tr class="field-name">
+                                <th scope="col"> {{ "smartagent.smartAgent.costHead.costHead" | translate}}<em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                                </th>
+                                <th scope="col"> {{ "smartagent.smartAgent.costHead.costItemNAme" | translate}}<em
+                                        class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                                </th>
+                                <th scope="col">{{ "smartagent.smartAgent.costHead.cost_item_map" | translate}}
+                                     <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                                </th>
+                                <th scope="col">{{ "smartagent.smartAgent.costHead.cost_head_map" | translate}}
+                                     <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                                </th>
+                                <th scope="col">{{ "common.status" | translate}}
+                                     <em class="typcn typcn-arrow-unsorted arrow-icons"></em>
+                                </th>
+                                <th scope="col"></th>
+                            </tr>
+                            <tr>
+                                <th scope="col">
+                                    <input type="text" class="form-control" id="" [(ngModel)]="costHead" />
+                                </th>
+                                <th scope="col">
+                                    <input type="text" class="form-control" id="" [(ngModel)]="costItemName" />
+                                </th>
+                                <th scope="col">
+                                    <input type="text" class="form-control" id="" [(ngModel)]="costItemMapName" />
+                                </th>
+                                <th scope="col">
+                                    <input type="text" class="form-control" id="" [(ngModel)]="costHeadMapName" />
+                                </th>
+                                <th scope="col">
+                                    <input type="text" class="form-control" id="" [(ngModel)]="status" />
+                                </th>
+                                <th scope="col"  class="wrap-table-btn text-center">
+                                    <button type="button" class="btn btn-outline-primary">
+                                        {{ "common.search_btn" | translate }} 
+                                    </button>
+                                    <a class="clearbtn">{{ "common.clear" | translate }}</a>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let costitem of costItemList">
+                                <td>{{costitem?._source?.costheadName}}</td>
+                                <td>{{costitem?._source?.costitemName}}</td>
+                                <td>{{costitem?._source?.costItemMapName}}</td>
+                                <td>{{costitem?._source?.costHeadMapName}}</td>
+                                <td>{{costitem?._source?.status}}</td>
+                                <td class="action-field">
+                                    <span nz-tooltip nzTooltipTitle="{{ 'common.edit' | translate }}" class="mtop">
+                                      <a (click)="onEdit(costitem,costitem.costitemId)"><em class="bi bi-pencil color-pencil-red"></em></a>
+                                  </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="no-data-availble" *ngIf="costItemList.length === 0">
+                  {{'common.no_data' | translate}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

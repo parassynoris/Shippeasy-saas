@@ -1,0 +1,112 @@
+
+// @media only screen and (max-width: 760px),
+// (min-device-width: 768px) and (max-device-width: 1024px)  {
+// 	/*
+// 	Label the data
+// 	*/
+// 	td:nth-of-type(1):before { content: "Location Name"; }
+// 	td:nth-of-type(2):before { content: "Port Type"; }
+// 	td:nth-of-type(3):before { content: "City, Country "; }
+// 	td:nth-of-type(4):before { content: "Action"; }
+// }
+
+.location-input-bottom-alignment {
+	@media screen and (max-width: 767px)  {
+		padding: 0 15px 20px 15px;
+	}
+}
+
+@import ' ../../../../../../assets/styles/mixins/global.scss';
+
+.form-accordian h2 button {
+   padding: 7px 15px !important;
+   box-shadow: none !important;
+   font-size: 14px !important;
+   color: var(--theme-black-320) !important;
+  background-color: var(--theme-light-bg) !important;
+ }
+ 
+ .form-accordian .accordion-button::after {
+  filter: none !important;
+ }
+ 
+ .form-accordian .accordion-item {
+   margin-bottom: 25px;
+   border: 0;
+ }
+ 
+ .form-accordian .accordion-item:last-child {
+   margin-bottom: 0px;
+ }
+ .accordion-item  {
+   button {
+     width: 100% !important;
+     display: flex;
+     align-items: center;
+     @include new-heading-14;
+   }
+ }
+ ::ng-deep {
+   .cdk-overlay-container,
+   .cdk-overlay-pane {
+     z-index: 2000 !important;
+   }
+ 
+ }
+
+ .table-header-area .header-rightt a{
+  margin-left: 649px;
+ }
+
+.wrap{
+  white-space:wrap;
+  width:475px;
+}
+
+.wrap1{
+  white-space:wrap;
+  width:375px;
+}
+
+.table-design td:nth-child(2) {
+  position: sticky;
+  left: 44px;
+  background: white;
+  width: 95px;
+}
+
+.table-design td:nth-child(3),
+.table-design td:nth-child(4),
+.table-design td:nth-child(5),
+.table-design td:nth-child(6),
+.table-design td:nth-child(7) {
+  position: unset;
+  left: unset;
+  z-index: unset;
+}
+
+.table-design th:first-child{
+  position: sticky;
+  left: 0;
+  z-index: 99;
+  background: white;
+  width: 43px;
+}
+
+.table-design th:nth-child(2) {
+  position: sticky;
+  left: 44px;
+  z-index: 99;
+  background: white;
+  width: 95px;
+}
+
+.table-design th:nth-child(3),
+.table-design th:nth-child(4),
+.table-design th:nth-child(5),
+.table-design th:nth-child(6),
+.table-design th:nth-child(7) {
+  position: unset;
+  left: unset;
+  z-index: unset;
+}

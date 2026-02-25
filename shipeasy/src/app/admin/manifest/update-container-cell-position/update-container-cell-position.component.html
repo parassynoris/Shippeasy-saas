@@ -1,0 +1,95 @@
+<div class="table-with-gheading">
+    <div class="wrap-content">
+       
+        <div class="row">
+            <div class="horz-bar mb-3">
+                <span>Vessel : {{vesseldata}} || </span>
+                <span>Voyage : {{voyageList}}</span>
+
+            </div>
+            <div class="col-md-12 table-with-gheading">
+                <div class="horz-bar">Edit Terminal/FPOD Container Wise</div>
+                <div class="table-responsive">
+                    <div class="wrap-table-area  wrap-table-design wrap-form-field"
+                        id="htmlData">
+                        <form [formGroup]="blForm">
+                            <table aria-describedby="mytable">
+                                <thead>
+                                    <tr class="field-name">
+                                        
+                                        <th scope="col">SR No.</th>
+                                        <th scope="col">BL No.</th>
+                                        <th scope="col">Container No.</th>
+                                        <th scope="col">Type</th>
+                                        <th scope="col">Size</th>
+                                        <th scope="col">Baplie</th>
+                                        <th scope="col">Position</th>
+                                        <th scope="col">Seal No.</th>
+                                        <th scope="col">POD Terms</th>
+    
+    
+                                    </tr>
+                                    <tr>
+                                        <th scope="col"> </th>
+                                        <th scope="col"> </th>
+                                        <th scope="col"> </th>
+                                        <th scope="col"> </th>
+                                        <th scope="col"> </th>
+                                        <th scope="col">
+                                            <input type="file" class="form-control" (change)="fileUpload($event)" 
+                                            id="file-upload" name="fileUpload" accept=".xls,.xlsx">
+                                        </th>
+                                        <th scope="col">
+                                          
+                                        </th>
+                                        <th scope="col"> </th>
+                                        <th scope="col"> </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container formArrayName="blData">
+                                        <ng-container *ngFor="let bl of getControls(); let i = index"
+                                        [formGroupName]="i">
+                                        <tr>
+                                            <td>{{i+1}}</td>
+                                            <td>{{bl?.controls?.blNumber?.value}}</td>
+                                            <td>{{bl?.controls?.containerNumber?.value}}</td>
+                                            <td>{{bl?.controls?.containerType?.value}}</td>
+                                            <td>{{bl?.controls?.containerSize?.value}}</td>
+                                            <td>
+                                               <input class="form-control" formControlName="baplie">
+                                            </td>
+                                            <td>
+                                                <input class="form-control" formControlName="positionNo">
+                                            </td>
+                                            <td>
+                                                <input class="form-control" formControlName="sealNo">
+                                            </td>
+                                          
+                                        </tr>
+                                        </ng-container>
+                               
+                                    </ng-container>
+                                    
+                                
+                                </tbody>
+                            </table>
+                        </form>
+                       
+                    </div>
+                </div>
+                <div class="no-data-availble mt-0" *ngIf="houseBlList.length === 0">
+                    {{'common.no_data' | translate}}
+                </div>
+            </div>
+        </div>
+        <div class="btn-onscreen  my-3" >
+            <div class="form-group wrap-form-action ">
+                <button class="btn btn-outline-primary float-end" (click)="back()"> 
+                  Back </button>
+                  <button class="btn btn-outline-primary float-end" (click)="updateData()"> 
+                    Update </button>
+            </div>
+          </div>
+    </div>
+</div>
