@@ -127,7 +127,7 @@ shipmentTypes = [ ];
     this.getSystemTypeDropDowns()
     this._cognito.getUserDatails()?.subscribe((resp) => {
       if (resp != null) {
-        this.getCognitoUserDetail = resp?.userData 
+        this.getCognitoUserDetail = resp?.userData
       }
     })
     this.isExport = localStorage.getItem('isExport') === 'false' ? false : true
@@ -151,18 +151,18 @@ shipmentTypes = [ ];
     this.userName = localStorage.getItem('userName')
     this.commonService.dashboardKey = ''
     this.commonService.dashboardJobKey = ''
-   
+
 
   }
 
   loadTypeListOriginal:any=[]
   getPartyMaster() {
     let payload = this.commonService.filterList();
-  
+
     if (!payload?.query) {
       payload.query = {};
     }
-  
+
     // Add filter for customerType.item_text values
     payload.query = {
       ...payload.query,
@@ -171,7 +171,7 @@ shipmentTypes = [ ];
         $in: ['Shipper', 'Consignee', 'Booking Party']
       }
     };
-  
+
     this._api.getSTList("partymaster", payload)?.subscribe((res: any) => {
       this.partymasterList = res?.documents;
     });
@@ -199,11 +199,11 @@ shipmentTypes = [ ];
       this.shipmentTypes = res?.documents?.filter(x => (x.typeCategory === "carrierType" && (x?.typeName?.toLowerCase() == "ocean" || x?.typeName?.toLowerCase() == "air")));
 
 
-      if (this.shipmentType?.toLowerCase() == 'air') { 
+      if (this.shipmentType?.toLowerCase() == 'air') {
         this.loadTypes = this.loadTypeListOriginal?.filter((x) => ['Loose', 'ULD Container']?.find(t => t.toLowerCase() === x.typeName.toLowerCase()))
-      } else if (this.shipmentType?.toLowerCase() == 'ocean') { 
+      } else if (this.shipmentType?.toLowerCase() == 'ocean') {
         this.loadTypes = this.loadTypeListOriginal?.filter((x) => ['FCL', 'LCL']?.find(t => t.toLowerCase() === x.typeName.toLowerCase()))
-      }else if (this.shipmentType?.toLowerCase() == 'land') { 
+      }else if (this.shipmentType?.toLowerCase() == 'land') {
         this.loadTypes = this.loadTypeListOriginal?.filter((x) => ['PTL', 'FWL','FCL']?.find(t => t.toLowerCase() === x.typeName.toLowerCase()))
       }
 
@@ -265,7 +265,7 @@ shipmentTypes = [ ];
     if (this.selectedReminderTypes.length && this.selectedReminderTypes[0] === 'Pending') {
       payload.query = {
         ...payload.query,
-        'reminderStatus': 'Pending' 
+        'reminderStatus': 'Pending'
       };
     }
     this._api
@@ -289,7 +289,7 @@ shipmentTypes = [ ];
       });
   }
 
- 
+
 
   ngOnInit(): void {
     this.getDashboardDataAsPerMilestone();
@@ -305,7 +305,7 @@ shipmentTypes = [ ];
     this.getBatchList();
     this.getInvoice()
     this.getFilteredTicketCount()
-    
+
     setTimeout(() => {
       (document.getElementById('Pending') as HTMLInputElement).checked = true;
       this.selectedReminderTypes = ['Pending'];
@@ -314,7 +314,7 @@ shipmentTypes = [ ];
   }
 
   ngAfterViewInit(): void {
-    (mapboxgl as any).accessToken = '[REMOVED]';
+    (mapboxgl as any).accessToken = environment.mapboxAccessToken || '';
     this.map = new mapboxgl.Map({
       container: 'map',
       style: this.style,
@@ -341,14 +341,14 @@ shipmentTypes = [ ];
         ...payload.query,
         // isExport : this.isExport,
         shippinglineId : this.getCognitoUserDetail?.driverId,
-        flowType: 'Transporter' 
-      } 
+        flowType: 'Transporter'
+      }
     } else {
       if (payload?.query) payload.query = {
         ...payload.query,
         // isExport : this.isExport,
         flowType: this.selectTYPE
-      } 
+      }
     }
 
     this.commonService.getDashboardReport('dashboardReport', payload)?.subscribe((res: any) => {
@@ -360,7 +360,7 @@ shipmentTypes = [ ];
   }
   containerslocation() {
     let payload = this.commonService.filterList();
-  
+
     // Apply date filter if dateRange exists
     if (this.dateRange) {
       const formattedDateString = this.datePipe.transform(this.dateRange[0], 'yyyy-MM-dd');
@@ -372,7 +372,7 @@ shipmentTypes = [ ];
         };
       }
     }
-  
+
     // Conditionally add partymasterId if selected
     if (this.selectedPartyId) {
       if (payload?.query) {
@@ -383,8 +383,8 @@ shipmentTypes = [ ];
         delete (payload.query as any)['partymasterId'];
       }
     }
-    
-  
+
+
     // Add login-based filters
     if (this.currentLogin === 'transporter') {
       if (payload?.query) {
@@ -402,39 +402,39 @@ shipmentTypes = [ ];
         };
       }
     }
-  
+
     // API Call
     this.commonService.getDashboardReport('locationWiseContainers', payload)?.subscribe(
       (res: any) => {
         this.loader1 = false;
         this.containersData = res;
         console.log('containersData', this.containersData);
-  
+
         // Clear old markers
         this.clearAllMarkers();
-  
+
         // If no data, return early
         if (!this.containersData || !this.containersData.length) {
           console.warn('No container data available');
           return;
         }
-  
+
         // Plot containers on map
         this.containersData.forEach((batch: any) => {
           batch.containers.forEach((container: any) => {
             const firstEvent = container.events.find((event: any) => event.serialno === 1);
             if (firstEvent) {
               const { latitude, longitude, currentlocation } = firstEvent;
-  
+
               const markerElement = document.createElement('div');
               markerElement.className = 'container-marker';
               markerElement.innerHTML = `<strong>${container.containerNumber}</strong>`;
-  
+
               const pin = new mapboxgl.Marker()
                 .setLngLat([longitude, latitude])
                 .setPopup(new mapboxgl.Popup().setHTML(generateHistoryPopup(batch.batchNo, container)))
                 .addTo(this.map);
-  
+
               const label = new mapboxgl.Marker(markerElement)
                 .setLngLat([longitude, latitude])
                 .addTo(this.map);
@@ -443,19 +443,19 @@ shipmentTypes = [ ];
         });
       }
     );
-  
+
     function generateHistoryPopup(batchNo: string, container: any): string {
       const lastEvent = container.events[container.events.length - 1];
       const currentLocation = lastEvent ? lastEvent.currentlocation : "Unknown";
-  
+
       let popupContent = `<div style="max-height: 200px; overflow-y: auto;">`;
       popupContent += `<strong style="color: #007BFF;"> Batch No :- ${batchNo}</strong><br>`;
       popupContent += `<strong style="color: #007BFF;"> Container No :- ${container.containerNumber}</strong><br>`;
       popupContent += `<strong>Current Location:</strong> ${currentLocation}<br><br>`;
-  
+
       container.events.forEach((event: any) => {
         const { currentlocation, timestamptimezone } = event;
-  
+
         let formattedDate = 'N/A';
         if (timestamptimezone) {
           try {
@@ -464,11 +464,11 @@ shipmentTypes = [ ];
             console.error('Invalid timestamptimezone:', timestamptimezone, err);
           }
         }
-  
+
         popupContent += `<strong>Location:</strong> ${currentlocation}<br>
                          <strong>Timestamp:</strong> ${formattedDate}<br><br>`;
       });
-  
+
       popupContent += `</div>`;
       return popupContent;
     }
@@ -481,7 +481,7 @@ shipmentTypes = [ ];
   getDashboardDataAsPerMilestone() {
     this.loader1 = true;
     let payload = this.commonService.filterList();
-  
+
     if (this.dateRange) {
       const formattedDateString = this.datePipe.transform(this.dateRange[0], 'yyyy-MM-dd');
       const formattedDateString1 = this.datePipe.transform(this.dateRange[1], 'yyyy-MM-dd');
@@ -490,7 +490,7 @@ shipmentTypes = [ ];
         to: formattedDateString1.substring(0, 10) + 'T23:59:00.000Z'
       };
     }
-  
+
     if (this.currentLogin === 'transporter') {
       if (payload?.query) payload.query = {
         ...payload.query,
@@ -501,7 +501,7 @@ shipmentTypes = [ ];
       if (payload?.query) payload.query = {
         ...payload.query,
         flowType: this.selectTYPE?.toLowerCase(),
-        shipmentType: this.shipmentType , // Adding shipmentType to payload 
+        shipmentType: this.shipmentType , // Adding shipmentType to payload
       };
       if(this.loadType){
         payload.query = {
@@ -510,7 +510,7 @@ shipmentTypes = [ ];
         };
       }
     }
-  
+
     this.commonService.getDashboardReport('milestoneWiseJobs', payload)?.subscribe((res: any) => {
       this.loader1 = false;
       this.totalData = res;
@@ -518,11 +518,11 @@ shipmentTypes = [ ];
       this.setPieChartData(this.totalData, 'Job Status');
     });
   }
-  onShipmentTypeChange(value?: string) { 
-    
+  onShipmentTypeChange(value?: string) {
+
       this.shipmentType = value;
       this.loadType = '';
-    
+
     this.getDashboardDataAsPerMilestone(); // Refresh dashboard data
     this.getChartData(); // Refresh chart data
   }
@@ -621,23 +621,23 @@ shipmentTypes = [ ];
   onCheckboxChange(event: any, reminderType: string) {
     if (reminderType === 'All' && event.target.checked) {
       (document.getElementById('Pending') as HTMLInputElement).checked = false;
-      this.selectedReminderTypes = []; 
+      this.selectedReminderTypes = [];
     } else if (reminderType === 'Pending' && event.target.checked) {
       (document.getElementById('All') as HTMLInputElement).checked = false;
-      this.selectedReminderTypes = ['Pending']; 
+      this.selectedReminderTypes = ['Pending'];
     } else {
-      this.selectedReminderTypes = []; 
+      this.selectedReminderTypes = [];
     }
-  
+
     this.getRemiders();
   }
   getChartData() {
     let payload = this.commonService.filterList();
-  
+
     if (payload?.query) {
       payload.query = {
         "flowType": this.selectTYPE === 'Import' ? 'Import' : this.selectTYPE === 'Export' ? 'Export' : 'Transporter',
-        "shipmentType": this.shipmentType,  // Adding shipmentType to payload 
+        "shipmentType": this.shipmentType,  // Adding shipmentType to payload
       };
     }
 
@@ -647,7 +647,7 @@ shipmentTypes = [ ];
         "loadType" : this.loadType
       };
     }
-  
+
     this.commonService.getSTList1('chartDataDashboard', payload)?.subscribe((res: any) => {
       this.ChartData = this.transformResponseToChartData(res?.data);
       this.setLineChartData(this.ChartData, 'Bookings ');
@@ -672,13 +672,13 @@ shipmentTypes = [ ];
 
   navigateToNewTab1(milestoneId){
     // this.router.navigate([`/batch/list?${milestoneId}`]);
-    this.router.navigate(['/batch/list'], { 
-      queryParams: { 
+    this.router.navigate(['/batch/list'], {
+      queryParams: {
         status: milestoneId,
         shipmentType: this.shipmentType,
         loadType: this.loadType,
         isExport: this.isExport,
-      } 
+      }
     });
 
   }
@@ -759,10 +759,10 @@ shipmentTypes = [ ];
         };
       }
     }
-  
+
     this.commonService.getSTList('agent', payload).subscribe((data) => {
       this.smartAgentList = data.documents;
-  
+
       // Count by status
       this.smartAgentTrialCount = this.smartAgentList.filter(agent => agent.agentStatus === 'trial').length;
       this.smartAgentregisteredCount = this.smartAgentList.filter(agent => agent.agentStatus === 'registered').length;
@@ -827,7 +827,7 @@ shipmentTypes = [ ];
         this.buyerInvoiceCount = this.invoiceList.filter(invoice => invoice.type === 'buyerInvoice').length;
       });
     }
-  
+
     fetchCountonselection(){
       this.getInvoice();
       this.getBatchList();
@@ -836,7 +836,7 @@ shipmentTypes = [ ];
 
     getFilteredTicketCount() {
       this.loaderService.showcircle(); // optional: show loader
-    
+
       const payload: any = {
         query: {
           bool: {
@@ -850,7 +850,7 @@ shipmentTypes = [ ];
         },
         size: 0 // we only need the count, not the actual data
       };
-    
+
       this.commonService.getSTList('ticket', payload)?.subscribe((res: any) => {
         this.filteredTicketCount = res?.totalCount || 0;
         this.loaderService.hidecircle(); // optional: hide loader

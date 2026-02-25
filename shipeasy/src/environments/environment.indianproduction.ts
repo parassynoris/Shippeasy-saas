@@ -9,6 +9,7 @@ export const environment = {
     AWS_ACCESS_KEY_ID: process.env['AWS_ACCESS_KEY_ID'] || '',
     AWS_SECRET_ACCESS_KEY: process.env['AWS_SECRET_ACCESS_KEY'] || '',
     AWS_REGION: "ap-south-1",
+    mapboxAccessToken: process.env['MAPBOX_ACCESS_TOKEN'] || '',
     azureClientId: 'a4864937-0446-44ca-8120-a05d3a0a93c3',
     redirectUri: '/registration',
     tenantId : 'c057b376-3869-4d60-801a-b1d9a332dd97',
@@ -93,7 +94,7 @@ export const environment = {
     socketUrl:"https://api.shippeasy.com",
 
   storageAccountName : 'shipeasy',
-  storageAccountKey :  '[REMOVED]',
+  storageAccountKey :  process.env['AZURE_STORAGE_ACCOUNT_KEY'] || '',
   containerName: 'ship-docs',
   igmMsgType:'SACHI01',
     igmMsgversion:'ICES1_5',

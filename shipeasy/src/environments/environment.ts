@@ -12,6 +12,7 @@ export const environment = {
   AWS_ACCESS_KEY_ID: process.env['AWS_ACCESS_KEY_ID'] || '',
   AWS_SECRET_ACCESS_KEY: process.env['AWS_SECRET_ACCESS_KEY'] || '',
   AWS_REGION: "ap-south-1",
+  mapboxAccessToken: process.env['MAPBOX_ACCESS_TOKEN'] || '',
   // baseUrl: 'http://diabos-api.centralus.azurecontainer.io:8290/contract/',
   cognito: {
     // userPoolId: 'ap-south-1_sMbdhMlON',
@@ -97,7 +98,7 @@ export const environment = {
   socketUrl:"https://shippeasy-api-dev.synoris.co",
 
 storageAccountName : 'shipeasy',
-storageAccountKey :  '[REMOVED]',
+storageAccountKey :  process.env['AZURE_STORAGE_ACCOUNT_KEY'] || '',
 containerName: 'ship-docs',
 igmMsgType:'SACHI01',
   igmMsgversion:'ICES1_5',

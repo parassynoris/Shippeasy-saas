@@ -30,7 +30,7 @@ export class ConatinerTrackComponent implements OnInit {
   vesselEvents: any
   lastTruckEvents:any
   style = 'mapbox://styles/mapbox/streets-v11';
- 
+
 
   lat = 22.339111;
   lng = 70.818217;
@@ -64,8 +64,7 @@ export class ConatinerTrackComponent implements OnInit {
   ngOnInit(): void {
     mapboxgl as typeof mapboxgl;
     this.map = new mapboxgl.Map({
-        accessToken:
-            '[REMOVED]',
+        accessToken: environment.mapboxAccessToken || '',
         container: 'map',
         style: this.style,
         zoom: 2,
@@ -79,7 +78,7 @@ export class ConatinerTrackComponent implements OnInit {
     //   this.map.setPaintProperty('road', 'line-color', '#000000');
     //   this.map.setPaintProperty('building', 'fill-color', '#000000');
     // });
- 
+
     this.map.addControl(new mapboxgl.NavigationControl());
 
     if(this.containerNo){
@@ -105,20 +104,20 @@ getrecords(containerNo) {
     let payload = {
       "containerNumber": containerNo || "MRKU5415024"
     };
-  
+
     this.commonService.getcontainer('containerTrack', payload).subscribe((events) => {
       const data = events
       this.seqData = data;
-  
+
       const predictedEvents = events.filter(event => event?.transportmode.toLowerCase() === 'truck');
       const historicalEvents = events.filter(event => event?.transportmode.toLowerCase() === 'vessel');
       // const latestEvents = events.point.positions.filter(event => event?.tag.toLowerCase() === 'latest');
-      
+
       this.addMarkers(predictedEvents, 'red');
       this.addMarkers(historicalEvents, 'blue');
-  
+
       this.fitMapToMarkers([...predictedEvents, ...historicalEvents]);
-  
+
       // Add lines for historical and predicted events
       this.map.addLayer({
         id: 'truck-events-line',
@@ -132,12 +131,12 @@ getrecords(containerNo) {
           'line-cap': 'round'
         },
         paint: {
-          'line-color': '#517b96', 
-          'line-width': 3, 
-          'line-dasharray': [2, 4] 
+          'line-color': '#517b96',
+          'line-width': 3,
+          'line-dasharray': [2, 4]
         }
       });
-      
+
       this.map.addLayer({
         id: 'vessel-events-line',
         type: 'line',
@@ -150,11 +149,11 @@ getrecords(containerNo) {
           'line-cap': 'round'
         },
         paint: {
-          'line-color': '#502db2', 
+          'line-color': '#502db2',
           'line-width': 5
         }
       });
-      
+
       // this.map.addLayer({
       //   id: 'latest-events-circle',
       //   type: 'circle',
@@ -177,10 +176,10 @@ getrecords(containerNo) {
       //       'interpolate',
       //       ['linear'],
       //       ['zoom'],
-      //       10,  
-      //       5,   
-      //       15,  
-      //       20  
+      //       10,
+      //       5,
+      //       15,
+      //       20
       //     ],
       //     'circle-color': 'rgba(1, 164, 233, 0.5)', // Semi-transparent blue
       //     'circle-opacity': 0.7
@@ -206,15 +205,15 @@ getrecords(containerNo) {
       //     }
       //   },
       //   paint: {
-      //     'circle-radius': 8, 
-      //     'circle-color': '#003366', 
-      //     'circle-opacity': 1 
+      //     'circle-radius': 8,
+      //     'circle-color': '#003366',
+      //     'circle-opacity': 1
       //   }
       // });
 
       const firstHistoricEvent = predictedEvents[0];
       const lastPredictedEvent = historicalEvents[historicalEvents.length - 1];
-      
+
       if (firstHistoricEvent) {
         this.map.addLayer({
           id: 'first-historic-event-circle',
@@ -234,13 +233,13 @@ getrecords(containerNo) {
             }
           },
           paint: {
-            'circle-radius': 10, 
-            'circle-color': '#008000', 
+            'circle-radius': 10,
+            'circle-color': '#008000',
             'circle-opacity': 1
           }
         });
       }
-      
+
       if (lastPredictedEvent) {
         this.map.addLayer({
           id: 'last-predicted-event-circle',
@@ -260,13 +259,13 @@ getrecords(containerNo) {
             }
           },
           paint: {
-            'circle-radius': 10, 
-            'circle-color': '#008000', 
+            'circle-radius': 10,
+            'circle-color': '#008000',
             'circle-opacity': 1
           }
         });
       }
-      
+
       // let radius = 5;
       // let growing = true;
       // const pulsate = () => {
@@ -278,15 +277,15 @@ getrecords(containerNo) {
       //     if (radius <= 5) growing = true;
       //   }
       //   this.map.setPaintProperty('latest-events-circle', 'circle-radius', radius);
-      //   requestAnimationFrame(pulsate); 
+      //   requestAnimationFrame(pulsate);
       // };
       // pulsate();
     });
 }
 
 
-  
-  
+
+
   fitMapToMarkers(events: any[]): void {
     if (events.length === 0) return;
 
@@ -297,7 +296,7 @@ getrecords(containerNo) {
     });
 
     this.map.fitBounds(bounds, {
-      padding: 50, 
+      padding: 50,
       maxZoom: 10,
       animate: true
     });
