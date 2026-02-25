@@ -1,13 +1,13 @@
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
- 
+
 export const environment = {
     production: false,
     // AWS_ACCESS_KEY_ID: "[REMOVED]",
     // AWS_SECRET_ACCESS_KEY: "[REMOVED]",
-    AWS_ACCESS_KEY_ID: "[REMOVED]",
-    AWS_SECRET_ACCESS_KEY: "[REMOVED]",
+    AWS_ACCESS_KEY_ID: process.env['AWS_ACCESS_KEY_ID'] || '',
+    AWS_SECRET_ACCESS_KEY: process.env['AWS_SECRET_ACCESS_KEY'] || '',
     AWS_REGION: "ap-south-1",
     azureClientId: 'a4864937-0446-44ca-8120-a05d3a0a93c3',
     redirectUri: '/registration',
@@ -15,7 +15,7 @@ export const environment = {
     // baseUrl: 'http://diabos-api.centralus.azurecontainer.io:8290/contract/',
     cognito: {
       // userPoolId: 'ap-south-1_sMbdhMlON',
-   
+
       // userPoolWebClientId: '1flct3t7rtuu31j5fuc7lgntb6'
       // userPoolId: 'ap-south-1_0UIwATTNq',
       // userPoolWebClientId: '3vt3d5bgtv5banqgaqqjshtra6',
@@ -28,21 +28,21 @@ export const environment = {
     },
     // baseUrl: 'https://diabos-api.centralus.azurecontainer.io:8253/contract/',
     // baseUrlMaster: 'https://diabos-api.centralus.azurecontainer.io:8253/'
-   
+
     //for dev purpose
     token_name: 'id',
     baseUrl: '#{baseUrl}#',
     // baseUrlMaster: 'http://diabos-api.centralus.azurecontainer.io:8290/',
-   
+
     // for dev
-   
+
     // baseUrl: 'http://diabos-api-qa.centralus.azurecontainer.io:8290/contract/',
-   
+
     //baseUrlMaster: 'http://diabos-api-qa.centralus.azurecontainer.io:8290/',
     // for qa
     //  baseUrlMaster: 'http://diabos-api-qa.centralus.azurecontainer.io:8290/',
     // for qa https
-   
+
     // baseUrlMaster: 'http://diabos-api-dev.centralus.azurecontainer.io:8290/',
     // baseUrlMaster:
     //  'https://api-dev.diabosapp.biz/api/',
@@ -55,7 +55,7 @@ export const environment = {
     environment:"indian-production",
     serverUrl: 'https://apm.synoris.co',
     // baseUrlMaster: 'https://shipeasy-api-demo.azurewebsites.net/api/',
-   
+
     // baseUrlMaster: 'https://8bhcmpcf-3000.inc1.devtunnels.ms/api/',
     'x-api-key' : "ycqlHySaCH8hX1PmS50ar2dYA1lwJKYm97X1DW11",
     logoutURL: "https://diabos-saweb.azurewebsites.net/login",
@@ -71,7 +71,7 @@ export const environment = {
     isQA: true,
     validate: {
       email: '^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$',
-   
+
       password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
       phone: '^((\\+91-?)|0)?[0-9]{10}$',
       number: '^[0-9]*$',
@@ -89,17 +89,17 @@ export const environment = {
       appId: "1:198648109724:web:ad300def453336e5026b59",
       measurementId: "G-B1Q5PLSV9Q"
     },
-   
+
     socketUrl:"https://api.shippeasy.com",
-   
+
   storageAccountName : 'shipeasy',
   storageAccountKey :  '[REMOVED]',
   containerName: 'ship-docs',
   igmMsgType:'SACHI01',
     igmMsgversion:'ICES1_5',
-   
+
   };
-   
+
   /*
   * For easier debugging in development mode, you can import the following file
   * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

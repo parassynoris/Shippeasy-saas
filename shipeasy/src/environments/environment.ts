@@ -9,8 +9,8 @@ export const environment = {
   tenantId : 'c057b376-3869-4d60-801a-b1d9a332dd97',
   // AWS_ACCESS_KEY_ID: "[REMOVED]",
   // AWS_SECRET_ACCESS_KEY: "[REMOVED]",
-  AWS_ACCESS_KEY_ID: "[REMOVED]",
-  AWS_SECRET_ACCESS_KEY: "[REMOVED]",
+  AWS_ACCESS_KEY_ID: process.env['AWS_ACCESS_KEY_ID'] || '',
+  AWS_SECRET_ACCESS_KEY: process.env['AWS_SECRET_ACCESS_KEY'] || '',
   AWS_REGION: "ap-south-1",
   // baseUrl: 'http://diabos-api.centralus.azurecontainer.io:8290/contract/',
   cognito: {

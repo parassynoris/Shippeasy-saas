@@ -6,8 +6,8 @@ export const environment = {
     production: false,
     // AWS_ACCESS_KEY_ID: "[REMOVED]",
     // AWS_SECRET_ACCESS_KEY: "[REMOVED]",
-    AWS_ACCESS_KEY_ID: "[REMOVED]",
-    AWS_SECRET_ACCESS_KEY: "[REMOVED]",
+    AWS_ACCESS_KEY_ID: process.env['AWS_ACCESS_KEY_ID'] || '',
+    AWS_SECRET_ACCESS_KEY: process.env['AWS_SECRET_ACCESS_KEY'] || '',
     AWS_REGION: "ap-south-1",
     azureClientId: 'a4864937-0446-44ca-8120-a05d3a0a93c3',
     redirectUri: '/registration',
@@ -28,7 +28,7 @@ export const environment = {
     },
     // baseUrl: 'https://diabos-api.centralus.azurecontainer.io:8253/contract/',
     // baseUrlMaster: 'https://diabos-api.centralus.azurecontainer.io:8253/'
-   
+
     //for dev purpose
     token_name: 'id',
     baseUrl: '#{baseUrl}#',
