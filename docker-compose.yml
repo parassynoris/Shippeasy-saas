@@ -1,0 +1,92 @@
+version: "3.9"
+
+# All variables are read from the root .env file (copy .env.example → .env).
+# Nothing is hardcoded — safe to commit this file as-is.
+#
+# LOCAL DEV (build from source):
+#   docker compose up --build
+#
+# CI/CD DEPLOY (pull pre-built images, no rebuild):
+#   BACKEND_TAG=abc1234 FRONTEND_TAG=abc1234 docker compose up -d --no-build
+
+networks:
+  shipeasy_net:
+    driver: bridge
+
+volumes:
+  mongo_data:
+  logs_data:
+
+services:
+
+  # ─────────────────────────────────────────────
+  # MongoDB
+  # ─────────────────────────────────────────────
+  mongo:
+    image: mongo:6
+    container_name: shipeasy_mongo
+    restart: unless-stopped
+    networks:
+      - shipeasy_net
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME:-shipeasy}
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # ─────────────────────────────────────────────
+  # Backend API
+  # ─────────────────────────────────────────────
+  backend:
+    # CI/CD sets BACKEND_IMAGE + BACKEND_TAG → pulls pre-built image.
+    # Local dev with --build ignores the `image:` field and builds from source.
+    image: ${BACKEND_IMAGE:-shipeasy-api}:${BACKEND_TAG:-latest}
+    build:
+      context: ./shipeasy-api
+      dockerfile: Dockerfile
+    container_name: shipeasy_api
+    restart: unless-stopped
+    networks:
+      - shipeasy_net
+    depends_on:
+      mongo:
+        condition: service_healthy
+    ports:
+      - "${BACKEND_PORT:-3000}:3000"
+    env_file:
+      - ./shipeasy-api/.env
+    environment:
+      PORT: 3000
+      NODE_ENV: ${NODE_ENV:-production}
+      MONGO_URI: mongodb://mongo:27017/${MONGO_DB_NAME:-shipeasy}
+    volumes:
+      - logs_data:/app/logs
+
+  # ─────────────────────────────────────────────
+  # Frontend (Angular → nginx)
+  # ─────────────────────────────────────────────
+  frontend:
+    image: ${FRONTEND_IMAGE:-shipeasy-frontend}:${FRONTEND_TAG:-latest}
+    build:
+      context: ./shipeasy
+      dockerfile: Dockerfile
+      args:
+        ENVIRONMENT: ${NODE_ENV:-production}
+        API_URL: ${API_URL:-/api}
+        API_URL_MASTER: ${API_URL_MASTER:-/api/}
+        SOCKET_URL: ${SOCKET_URL:-}
+    container_name: shipeasy_frontend
+    restart: unless-stopped
+    networks:
+      - shipeasy_net
+    depends_on:
+      - backend
+    ports:
+      - "${FRONTEND_PORT:-80}:80"
+    environment:
+      BACKEND_URL: ${BACKEND_URL:-http://backend:3000}

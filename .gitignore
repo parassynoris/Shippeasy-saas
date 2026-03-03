@@ -1,0 +1,8 @@
+# Root .gitignore — covers Docker Compose environment file
+.env
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

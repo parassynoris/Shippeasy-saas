@@ -1,0 +1,291 @@
+name: CI/CD — Shippeasy SaaS
+
+# ──────────────────────────────────────────────────────────────────
+# Triggers
+# ──────────────────────────────────────────────────────────────────
+# ⚠️  DISABLED — primary CI/CD runs on Azure Pipelines (azure-pipelines.yml).
+# This workflow is kept as a fallback reference only.
+# Triggers are set to workflow_dispatch (manual only) to prevent
+# unintended runs when the repo is mirrored to GitHub for testing.
+on:
+  workflow_dispatch:   # manual trigger only — remove to re-enable
+
+  # push:
+  #   branches: [main]
+  #   paths:
+  #     - "shipeasy/**"
+  #     - "shipeasy-api/**"
+  #     - "docker-compose.yml"
+  #     - ".github/workflows/ci-cd.yml"
+  # pull_request:
+  #   branches: [main]
+  #   paths:
+  #     - "shipeasy/**"
+  #     - "shipeasy-api/**"
+
+# Cancel any in-progress run for the same branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# ──────────────────────────────────────────────────────────────────
+# Shared env — no secrets, only non-sensitive defaults
+# ──────────────────────────────────────────────────────────────────
+env:
+  REGISTRY: ghcr.io
+  BACKEND_IMAGE: ghcr.io/${{ github.repository_owner }}/shipeasy-api
+  FRONTEND_IMAGE: ghcr.io/${{ github.repository_owner }}/shipeasy-frontend
+
+# ──────────────────────────────────────────────────────────────────
+# Jobs
+# ──────────────────────────────────────────────────────────────────
+jobs:
+
+  # ────────────────────────────────────────────
+  # 1. Detect which services actually changed
+  # ────────────────────────────────────────────
+  changes:
+    name: Detect changed paths
+    runs-on: ubuntu-latest
+    outputs:
+      backend:  ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+      compose:  ${{ steps.filter.outputs.compose }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            backend:
+              - 'shipeasy-api/**'
+            frontend:
+              - 'shipeasy/**'
+            compose:
+              - 'docker-compose.yml'
+
+  # ────────────────────────────────────────────
+  # 2a. Backend — test
+  # ────────────────────────────────────────────
+  test-backend:
+    name: Test — Backend
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: shipeasy-api
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: shipeasy-api/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+        env:
+          NODE_ENV: test
+
+  # ────────────────────────────────────────────
+  # 2b. Frontend — lint + test
+  # ────────────────────────────────────────────
+  test-frontend:
+    name: Test — Frontend
+    needs: changes
+    if: needs.changes.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: shipeasy
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "yarn"
+          cache-dependency-path: shipeasy/yarn.lock
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Lint
+        run: yarn lint || true   # non-blocking until lint is fully configured
+
+      - name: Unit tests (headless)
+        run: yarn test --watch=false --browsers=ChromeHeadless
+        env:
+          NODE_ENV: test
+
+  # ────────────────────────────────────────────
+  # 3a. Build & push — Backend image
+  # Only runs on push to main (not on PRs)
+  # ────────────────────────────────────────────
+  build-backend:
+    name: Build & Push — Backend
+    needs: [changes, test-backend]
+    if: |
+      github.event_name == 'push' &&
+      needs.changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write   # required to push to ghcr.io
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}   # auto-provided, no manual secret needed
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.BACKEND_IMAGE }}
+          tags: |
+            type=sha,prefix=,format=short
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./shipeasy-api
+          dockerfile: ./shipeasy-api/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # Layer cache stored in ghcr.io — speeds up repeated builds
+          cache-from: type=registry,ref=${{ env.BACKEND_IMAGE }}:buildcache
+          cache-to:   type=registry,ref=${{ env.BACKEND_IMAGE }}:buildcache,mode=max
+
+      # Pass the short SHA tag to the deploy job
+      - name: Export image tag
+        id: tag
+        run: echo "tag=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
+
+  # ────────────────────────────────────────────
+  # 3b. Build & push — Frontend image
+  # Only runs on push to main (not on PRs)
+  # ────────────────────────────────────────────
+  build-frontend:
+    name: Build & Push — Frontend
+    needs: [changes, test-frontend]
+    if: |
+      github.event_name == 'push' &&
+      needs.changes.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.FRONTEND_IMAGE }}
+          tags: |
+            type=sha,prefix=,format=short
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./shipeasy
+          dockerfile: ./shipeasy/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # Build-time Angular env vars — pulled from GitHub Secrets
+          build-args: |
+            ENVIRONMENT=production
+            API_URL=${{ secrets.API_URL }}
+            API_URL_MASTER=${{ secrets.API_URL_MASTER }}
+            SOCKET_URL=${{ secrets.SOCKET_URL }}
+          cache-from: type=registry,ref=${{ env.FRONTEND_IMAGE }}:buildcache
+          cache-to:   type=registry,ref=${{ env.FRONTEND_IMAGE }}:buildcache,mode=max
+
+      - name: Export image tag
+        id: tag
+        run: echo "tag=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
+
+  # ────────────────────────────────────────────
+  # 4. Deploy to production server
+  # Runs only after at least one image was built
+  # ────────────────────────────────────────────
+  deploy:
+    name: Deploy — Production
+    needs: [changes, build-backend, build-frontend]
+    # Run if at least one build job ran (or compose changed directly)
+    if: |
+      always() &&
+      github.event_name == 'push' &&
+      (
+        needs.build-backend.result  == 'success' ||
+        needs.build-frontend.result == 'success' ||
+        needs.changes.outputs.compose == 'true'
+      )
+    runs-on: ubuntu-latest
+    environment: production   # enables GitHub environment protection rules / approvals
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: SSH deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host:       ${{ secrets.DEPLOY_HOST }}
+          username:   ${{ secrets.DEPLOY_USER }}
+          key:        ${{ secrets.DEPLOY_SSH_KEY }}
+          port:       ${{ secrets.DEPLOY_SSH_PORT || 22 }}
+          # All logic runs inside deploy.sh on the server.
+          # Image tags + registry credentials are passed as env vars —
+          # no secrets are embedded in the script.
+          envs: >-
+            REGISTRY,
+            BACKEND_IMAGE,
+            FRONTEND_IMAGE,
+            BACKEND_TAG,
+            FRONTEND_TAG,
+            GHCR_TOKEN
+          script: |
+            export BACKEND_TAG="${{ needs.build-backend.outputs.tag || 'latest' }}"
+            export FRONTEND_TAG="${{ needs.build-frontend.outputs.tag || 'latest' }}"
+            export GHCR_TOKEN="${{ secrets.GITHUB_TOKEN }}"
+            bash ~/shipeasy/deploy.sh

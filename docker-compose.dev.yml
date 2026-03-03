@@ -1,0 +1,45 @@
+version: "3.9"
+
+# ──────────────────────────────────────────────────────────
+# Development overrides
+# Usage: docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+# ──────────────────────────────────────────────────────────
+
+services:
+
+  # ─────────────────────────────────────────────
+  # MongoDB — expose port locally for DB tools
+  # ─────────────────────────────────────────────
+  mongo:
+    ports:
+      - "27017:27017"
+
+  # ─────────────────────────────────────────────
+  # Backend — hot reload via nodemon + source mount
+  # ─────────────────────────────────────────────
+  backend:
+    build:
+      context: ./shipeasy-api
+      dockerfile: Dockerfile.dev
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ./shipeasy-api:/app
+      - /app/node_modules        # preserve container node_modules
+    command: ["npx", "nodemon", "index.js"]
+
+  # ─────────────────────────────────────────────
+  # Frontend — Angular dev server with hot reload
+  # ─────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./shipeasy
+      dockerfile: Dockerfile.dev
+    ports:
+      - "4200:4200"
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ./shipeasy:/app
+      - /app/node_modules        # preserve container node_modules
+    command: ["yarn", "start", "--host", "0.0.0.0", "--disable-host-check"]

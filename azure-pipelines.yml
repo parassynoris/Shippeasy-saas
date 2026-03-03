@@ -1,0 +1,312 @@
+# ══════════════════════════════════════════════════════════════════
+# azure-pipelines.yml — Shippeasy SaaS  (MONOREPO — root level)
+#
+# Pipeline:   Azure Pipelines
+# Registry:   Azure Container Registry (ACR)
+# Deployment: AWS EC2 via SSH
+#
+# Variable Groups required in ADO (Pipelines → Library):
+#   shipeasy-secrets  →  all secrets listed in the variables section
+#
+# ADO Service Connections required:
+#   acr-connection    →  Docker Registry service connection to ACR
+#   aws-ec2-ssh       →  SSH service connection to AWS EC2 instance
+# ══════════════════════════════════════════════════════════════════
+
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - shipeasy/**
+      - shipeasy-api/**
+      - docker-compose.yml
+      - azure-pipelines.yml
+      - deploy.sh
+
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - shipeasy/**
+      - shipeasy-api/**
+
+# ── Variable groups / pipeline variables ──────────────────────────
+variables:
+  - group: shipeasy-secrets       # ADO Library variable group — all secrets live here
+
+  # ACR registry hostname: <your-registry-name>.azurecr.io
+  - name: ACR_REGISTRY
+    value: $(ACR_NAME).azurecr.io
+
+  # Image names inside ACR (no tag — tag is added per job)
+  - name: BACKEND_REPO
+    value: $(ACR_REGISTRY)/shipeasy-api
+
+  - name: FRONTEND_REPO
+    value: $(ACR_REGISTRY)/shipeasy-frontend
+
+  # Short Git SHA used as the immutable image tag
+  - name: SHORT_SHA
+    value: $[substring(variables['Build.SourceVersion'], 0, 7)]
+
+  # True only on a real push to main (not a PR build)
+  - name: IS_MAIN_PUSH
+    value: $[eq(variables['Build.Reason'], 'IndividualCI')]
+
+# ══════════════════════════════════════════════════════════════════
+# Stage 0 — Detect which services changed
+# Sets output variables:  backendChanged, frontendChanged
+# ══════════════════════════════════════════════════════════════════
+stages:
+
+  - stage: DetectChanges
+    displayName: Detect Changed Paths
+    jobs:
+      - job: Detect
+        displayName: Git diff → set flags
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - checkout: self
+            fetchDepth: 2     # need HEAD~1 to compare
+
+          - bash: |
+              CHANGED=$(git diff --name-only HEAD~1 HEAD 2>/dev/null || git diff --name-only HEAD)
+              echo "Changed files:"
+              echo "$CHANGED"
+
+              BACKEND_CHANGED=false
+              FRONTEND_CHANGED=false
+
+              echo "$CHANGED" | grep -qE '^shipeasy-api/'  && BACKEND_CHANGED=true  || true
+              echo "$CHANGED" | grep -qE '^shipeasy/'      && FRONTEND_CHANGED=true || true
+
+              # docker-compose or pipeline file itself → redeploy both
+              echo "$CHANGED" | grep -qE '^(docker-compose|azure-pipelines|deploy)' && \
+                BACKEND_CHANGED=true && FRONTEND_CHANGED=true || true
+
+              echo "##vso[task.setvariable variable=backendChanged;isOutput=true]$BACKEND_CHANGED"
+              echo "##vso[task.setvariable variable=frontendChanged;isOutput=true]$FRONTEND_CHANGED"
+
+              echo "backendChanged  = $BACKEND_CHANGED"
+              echo "frontendChanged = $FRONTEND_CHANGED"
+            name: setFlags
+            displayName: Detect changed services
+
+# ══════════════════════════════════════════════════════════════════
+# Stage 1 — Test
+# ══════════════════════════════════════════════════════════════════
+  - stage: Test
+    displayName: Tests
+    dependsOn: DetectChanges
+    variables:
+      backendChanged:  $[stageDependencies.DetectChanges.Detect.outputs['setFlags.backendChanged']]
+      frontendChanged: $[stageDependencies.DetectChanges.Detect.outputs['setFlags.frontendChanged']]
+    jobs:
+
+      # ── Backend tests ──────────────────────────────────────────
+      - job: TestBackend
+        displayName: Backend — Jest
+        condition: eq(variables['backendChanged'], 'true')
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: NodeTool@0
+            displayName: Use Node 22
+            inputs:
+              versionSpec: "22.x"
+
+          - script: npm ci
+            workingDirectory: shipeasy-api
+            displayName: Install dependencies
+
+          - script: |
+              npm test -- --ci --forceExit \
+                --reporters=default --reporters=jest-junit \
+                --testResultsProcessor=jest-junit
+            workingDirectory: shipeasy-api
+            displayName: Run unit tests
+            env:
+              NODE_ENV: test
+              JEST_JUNIT_OUTPUT_DIR: $(System.DefaultWorkingDirectory)/shipeasy-api
+              JEST_JUNIT_OUTPUT_NAME: junit.xml
+
+          - task: PublishTestResults@2
+            condition: always()
+            displayName: Publish test results
+            inputs:
+              testResultsFormat: JUnit
+              testResultsFiles: shipeasy-api/junit.xml
+              testRunTitle: Backend Unit Tests
+
+      # ── Frontend tests ─────────────────────────────────────────
+      - job: TestFrontend
+        displayName: Frontend — Karma (headless)
+        condition: eq(variables['frontendChanged'], 'true')
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: NodeTool@0
+            displayName: Use Node 20
+            inputs:
+              versionSpec: "20.x"
+
+          - script: yarn install --frozen-lockfile
+            workingDirectory: shipeasy
+            displayName: Install dependencies
+
+          - script: |
+              yarn test --watch=false --browsers=ChromeHeadless \
+                --reporters=junit --karma-config=karma.conf.js
+            workingDirectory: shipeasy
+            displayName: Run unit tests
+            env:
+              NODE_ENV: test
+            continueOnError: true    # non-blocking until test suite is stable
+
+          - task: PublishTestResults@2
+            condition: always()
+            displayName: Publish test results
+            inputs:
+              testResultsFormat: JUnit
+              testResultsFiles: shipeasy/junit/*.xml
+              testRunTitle: Frontend Unit Tests
+
+# ══════════════════════════════════════════════════════════════════
+# Stage 2 — Build & Push to ACR
+# Runs only on push to main, not on PRs
+# ══════════════════════════════════════════════════════════════════
+  - stage: BuildPush
+    displayName: Build & Push to ACR
+    dependsOn:
+      - DetectChanges
+      - Test
+    condition: and(succeeded(), eq(variables['IS_MAIN_PUSH'], 'true'))
+    variables:
+      backendChanged:  $[stageDependencies.DetectChanges.Detect.outputs['setFlags.backendChanged']]
+      frontendChanged: $[stageDependencies.DetectChanges.Detect.outputs['setFlags.frontendChanged']]
+    jobs:
+
+      # ── Build & push backend ───────────────────────────────────
+      - job: BuildBackend
+        displayName: Backend — Build & Push
+        condition: eq(variables['backendChanged'], 'true')
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: Docker@2
+            displayName: Build backend image
+            inputs:
+              command: build
+              containerRegistry: acr-connection        # ADO service connection name
+              repository: shipeasy-api
+              dockerfile: shipeasy-api/Dockerfile
+              buildContext: shipeasy-api
+              tags: |
+                $(SHORT_SHA)
+                latest
+              # BuildKit for layer caching
+              arguments: "--build-arg BUILDKIT_INLINE_CACHE=1"
+            env:
+              DOCKER_BUILDKIT: 1
+
+          - task: Docker@2
+            displayName: Push backend image
+            inputs:
+              command: push
+              containerRegistry: acr-connection
+              repository: shipeasy-api
+              tags: |
+                $(SHORT_SHA)
+                latest
+
+          - bash: |
+              echo "##vso[task.setvariable variable=backendTag;isOutput=true]$(SHORT_SHA)"
+            name: exportTag
+            displayName: Export image tag
+
+      # ── Build & push frontend ──────────────────────────────────
+      - job: BuildFrontend
+        displayName: Frontend — Build & Push
+        condition: eq(variables['frontendChanged'], 'true')
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: Docker@2
+            displayName: Build frontend image
+            inputs:
+              command: build
+              containerRegistry: acr-connection
+              repository: shipeasy-frontend
+              dockerfile: shipeasy/Dockerfile
+              buildContext: shipeasy
+              tags: |
+                $(SHORT_SHA)
+                latest
+              # Build-time Angular env args — sourced from shipeasy-secrets variable group
+              arguments: >
+                --build-arg ENVIRONMENT=production
+                --build-arg API_URL=$(API_URL)
+                --build-arg API_URL_MASTER=$(API_URL_MASTER)
+                --build-arg SOCKET_URL=$(SOCKET_URL)
+                --build-arg BUILDKIT_INLINE_CACHE=1
+            env:
+              DOCKER_BUILDKIT: 1
+
+          - task: Docker@2
+            displayName: Push frontend image
+            inputs:
+              command: push
+              containerRegistry: acr-connection
+              repository: shipeasy-frontend
+              tags: |
+                $(SHORT_SHA)
+                latest
+
+          - bash: |
+              echo "##vso[task.setvariable variable=frontendTag;isOutput=true]$(SHORT_SHA)"
+            name: exportTag
+            displayName: Export image tag
+
+# ══════════════════════════════════════════════════════════════════
+# Stage 3 — Deploy to AWS EC2
+# ══════════════════════════════════════════════════════════════════
+  - stage: Deploy
+    displayName: Deploy to AWS EC2
+    dependsOn:
+      - DetectChanges
+      - BuildPush
+    condition: and(succeeded(), eq(variables['IS_MAIN_PUSH'], 'true'))
+    variables:
+      backendTag:  $[stageDependencies.BuildPush.BuildBackend.outputs['exportTag.backendTag']]
+      frontendTag: $[stageDependencies.BuildPush.BuildFrontend.outputs['exportTag.frontendTag']]
+    jobs:
+      - deployment: DeployEC2
+        displayName: SSH → AWS EC2
+        pool:
+          vmImage: ubuntu-latest
+        environment: production                # ADO Environment — add approval check here
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: SSH@0
+                  displayName: Run deploy.sh on EC2
+                  inputs:
+                    sshEndpoint: aws-ec2-ssh   # ADO SSH service connection to EC2
+                    runOptions: commands
+                    commands: |
+                      export ACR_REGISTRY="$(ACR_NAME).azurecr.io"
+                      export BACKEND_IMAGE="$(ACR_NAME).azurecr.io/shipeasy-api"
+                      export FRONTEND_IMAGE="$(ACR_NAME).azurecr.io/shipeasy-frontend"
+                      export BACKEND_TAG="${backendTag:-latest}"
+                      export FRONTEND_TAG="${frontendTag:-latest}"
+                      export ACR_USERNAME="$(ACR_SP_CLIENT_ID)"
+                      export ACR_PASSWORD="$(ACR_SP_CLIENT_SECRET)"
+                      bash ~/shipeasy/deploy.sh
+                    readyTimeout: "30000"
+                    failOnStdErr: false

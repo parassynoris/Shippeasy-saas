@@ -1,0 +1,16 @@
+# Development Dockerfile — Angular dev server
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install yarn globally
+RUN npm install -g yarn
+
+COPY package.json ./
+RUN yarn install
+
+COPY . .
+
+EXPOSE 4200
+
+CMD ["yarn", "start", "--host", "0.0.0.0", "--disable-host-check"]

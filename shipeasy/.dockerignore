@@ -1,5 +1,4 @@
 node_modules
-npm-debug.log
 dist
 .git
 .github
@@ -9,13 +8,9 @@ dist
 .env
 .env.*
 coverage
-.nyc_output
-junit.xml
-logs
 *.log
 Dockerfile*
 docker-compose*
 .idea
 .vscode
-tests
-dist
+e2e

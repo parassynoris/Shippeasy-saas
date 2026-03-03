@@ -1,30 +1,148 @@
-# Docker
-# Build a Docker image
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+# ⚠️  DEPRECATED — this file covered the backend only.
+# The active pipeline is now the root-level azure-pipelines.yml
+# which covers the full monorepo (frontend + backend + deploy).
+# This file is kept for reference only and must NOT be registered
+# as an active pipeline in Azure DevOps.
+#
+# To prevent accidental runs, all triggers are disabled below.
+# ──────────────────────────────────────────────────────────────────
 
-trigger:
-- main
+trigger: none
+pr: none
 
-resources:
-- repo: self
+# ── Original content preserved below for reference ────────────────
+
+# trigger (disabled):
+  branches:
+    include: [main]
+  paths:
+    include:
+      - shipeasy-api/**
+      - docker-compose.yml
+
+pr:
+  branches:
+    include: [main]
+  paths:
+    include:
+      - shipeasy-api/**
 
 variables:
-- group: shipeasy-api
-  tag: '$(Build.BuildId)'
+  - group: shipeasy-api          # ADO variable group — holds REGISTRY, IMAGE_NAME, etc.
+  - name: IMAGE_TAG
+    value: $(Build.SourceVersion)  # full commit SHA
+  - name: SHORT_TAG
+    value: $[substring(variables['Build.SourceVersion'], 0, 7)]
 
 stages:
-- stage: Build
-  displayName: Build image
-  jobs:
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: ubuntu-latest
-    steps:
-    - task: Docker@2
-      displayName: Build an image
-      inputs:
-        command: build
-        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
-        tags: |
-          $(tag)
+
+  # ────────────────────────────────────────────
+  # Stage 1 — Test
+  # ────────────────────────────────────────────
+  - stage: Test
+    displayName: Run Tests
+    jobs:
+      - job: UnitTests
+        displayName: Jest unit tests
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: "22.x"
+            displayName: Use Node 22
+
+          - script: npm ci
+            workingDirectory: shipeasy-api
+            displayName: Install dependencies
+
+          - script: npm test -- --ci --reporters=jest-junit
+            workingDirectory: shipeasy-api
+            displayName: Run tests
+            env:
+              NODE_ENV: test
+
+          - task: PublishTestResults@2
+            condition: always()
+            inputs:
+              testResultsFormat: JUnit
+              testResultsFiles: shipeasy-api/junit.xml
+
+  # ────────────────────────────────────────────
+  # Stage 2 — Build & Push
+  # Skipped on pull requests
+  # ────────────────────────────────────────────
+  - stage: BuildPush
+    displayName: Build & Push Docker Image
+    dependsOn: Test
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'IndividualCI'))
+    jobs:
+      - job: BuildPush
+        displayName: Build and push to registry
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: Docker@2
+            displayName: Log in to container registry
+            inputs:
+              command: login
+              containerRegistry: $(DOCKER_SERVICE_CONNECTION)   # ADO service connection
+
+          - task: Docker@2
+            displayName: Build image
+            inputs:
+              command: build
+              repository: $(REGISTRY)/$(IMAGE_NAME)
+              dockerfile: shipeasy-api/Dockerfile
+              buildContext: shipeasy-api
+              tags: |
+                $(SHORT_TAG)
+                latest
+
+          - task: Docker@2
+            displayName: Push image
+            inputs:
+              command: push
+              repository: $(REGISTRY)/$(IMAGE_NAME)
+              tags: |
+                $(SHORT_TAG)
+                latest
+
+          - script: |
+              echo "##vso[task.setvariable variable=DEPLOYED_TAG;isOutput=true]$(SHORT_TAG)"
+            name: setTag
+            displayName: Export image tag
+
+  # ────────────────────────────────────────────
+  # Stage 3 — Deploy
+  # ────────────────────────────────────────────
+  - stage: Deploy
+    displayName: Deploy to Production
+    dependsOn: BuildPush
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'IndividualCI'))
+    variables:
+      DEPLOYED_TAG: $[stageDependencies.BuildPush.BuildPush.outputs['setTag.DEPLOYED_TAG']]
+    jobs:
+      - deployment: DeployProduction
+        displayName: SSH deploy
+        pool:
+          vmImage: ubuntu-latest
+        environment: production        # ADO environment with approval gate
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: SSH@0
+                  displayName: Deploy via SSH
+                  inputs:
+                    sshEndpoint: $(SSH_SERVICE_CONNECTION)   # ADO service connection
+                    runOptions: commands
+                    commands: |
+                      export BACKEND_TAG="$(DEPLOYED_TAG)"
+                      export FRONTEND_TAG="$(DEPLOYED_TAG)"
+                      export GHCR_TOKEN="$(GHCR_TOKEN)"
+                      export REGISTRY="$(REGISTRY)"
+                      export BACKEND_IMAGE="$(REGISTRY)/$(IMAGE_NAME)"
+                      export FRONTEND_IMAGE="$(REGISTRY)/$(FRONTEND_IMAGE_NAME)"
+                      bash ~/shipeasy/deploy.sh
+                    readyTimeout: "20000"

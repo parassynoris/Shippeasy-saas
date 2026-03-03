@@ -1,20 +1,34 @@
-# Use an official Node.js runtime as the base image
-FROM node:22
+# ──────────────────────────────────────────────
+# Stage 1 — Install production dependencies only
+# ──────────────────────────────────────────────
+FROM node:22-alpine AS deps
 
-# Set the working directory in the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json to the container
 COPY package*.json ./
+RUN npm ci --omit=dev
 
-# Install app dependencies
-RUN npm install
+# ──────────────────────────────────────────────
+# Stage 2 — Lean production image
+# ──────────────────────────────────────────────
+FROM node:22-alpine AS production
 
-# Copy your application code into the container
+WORKDIR /app
+
+# Create non-root user/group first so we can set correct ownership
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+# Copy production node_modules from deps stage
+COPY --from=deps /app/node_modules ./node_modules
+
+# Copy application source
 COPY . .
 
-# Expose a port for your Node.js application (adjust this if needed)
+# Create logs directory; set ownership so non-root appuser can write
+RUN mkdir -p logs && chown -R appuser:appgroup /app
+
+USER appuser
+
 EXPOSE 3000
 
-# Define the command to run your application
-CMD [ "node", "index.js" ]
+CMD ["node", "index.js"]
