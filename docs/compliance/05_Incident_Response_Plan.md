@@ -40,6 +40,17 @@ For P1/P2 incidents, the Incident Commander is the first responder who pages the
 
 ## 4. Incident Response Phases
 
+```mermaid
+flowchart LR
+    P1["🔍 Phase 1<br/>Detection &amp; Triage"]
+    P2["🛡️ Phase 2<br/>Containment"]
+    P3["🔎 Phase 3<br/>Investigation &amp;<br/>Eradication"]
+    P4["♻️ Phase 4<br/>Recovery"]
+    P5["📋 Phase 5<br/>Post-Incident<br/>Review"]
+
+    P1 --> P2 --> P3 --> P4 --> P5
+```
+
 ### Phase 1 — Detection & Triage
 
 **Sources of detection:**

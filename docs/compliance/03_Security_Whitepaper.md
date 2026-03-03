@@ -68,14 +68,17 @@ Out of scope:
 
 ### 3.1 Defence in Depth Layers
 
-```
-Layer 1 — Perimeter:    AWS Security Group (stateful firewall)
-Layer 2 — Host:         Ubuntu UFW + OS hardening
-Layer 3 — Container:    Docker isolation, non-root users, minimal base images
-Layer 4 — Application:  JWT auth, input validation, rate limiting
-Layer 5 — Data:         Encrypted at rest (EBS), TLS in transit
-Layer 6 — Secrets:      ADO Variable Groups (masked), server-only .env
-Layer 7 — Monitoring:   Elastic APM, Winston logs, CloudWatch, SNS alerts
+```mermaid
+flowchart TD
+    L1["Layer 1 — Perimeter<br/>AWS Security Group — stateful firewall"]
+    L2["Layer 2 — Host<br/>Ubuntu UFW + OS hardening"]
+    L3["Layer 3 — Container<br/>Docker isolation · non-root users · minimal images"]
+    L4["Layer 4 — Application<br/>JWT auth · input validation · rate limiting"]
+    L5["Layer 5 — Data<br/>Encrypted at rest EBS · TLS in transit"]
+    L6["Layer 6 — Secrets<br/>ADO Variable Groups masked · server-only .env"]
+    L7["Layer 7 — Monitoring<br/>Elastic APM · Winston · CloudWatch · SNS alerts"]
+
+    L1 --> L2 --> L3 --> L4 --> L5 --> L6 --> L7
 ```
 
 ### 3.2 Trust Boundaries

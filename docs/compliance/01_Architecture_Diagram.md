@@ -8,105 +8,80 @@
 
 ## 1. High-Level System Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                          INTERNET / END USERS                               │
-│              (Browsers, Mobile PWA, Third-party Webhooks)                   │
-└───────────────────────────────────┬─────────────────────────────────────────┘
-                                    │ HTTPS :443 / HTTP :80
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                         AWS — ap-south-1 (Mumbai)                           │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │                    Public Subnet (10.0.1.0/24)                       │   │
-│  │                                                                      │   │
-│  │   ┌──────────────────────────────────────────────────────────────┐   │   │
-│  │   │                  EC2 Instance  (t3.medium)                   │   │   │
-│  │   │                  Amazon Linux 2 / Ubuntu 22.04               │   │   │
-│  │   │                                                              │   │   │
-│  │   │   ┌─────────────────────────────────────────────────────┐    │   │   │
-│  │   │   │              Docker Engine                          │    │   │   │
-│  │   │   │                                                     │    │   │   │
-│  │   │   │  ┌─────────────┐  ┌──────────────┐  ┌───────────-┐  │    │   │   │
-│  │   │   │  │  nginx      │  │  Node.js API │  │  MongoDB   │  │    │   │   │
-│  │   │   │  │  (frontend) │  │  (backend)   │  │  (data)    │  │    │   │   │
-│  │   │   │  │  port: 80   │  │  port: 3000  │  │  internal  │  │    │   │   │
-│  │   │   │  │  Angular SPA│  │  Express 4   │  │  port 27017│  │    │   │   │
-│  │   │   │  └──────┬──────┘  └──────┬───────┘  └─────--┬───-┘  │    │   │   │
-│  │   │   │         │  /api proxy    │                  │       │    │   │   │
-│  │   │   │         └───────────────►│◄─────────────────┘       │    │   │   │
-│  │   │   │                          │   shipeasy_net (bridge)  │    │   │   │
-│  │   │   └─────────────────────────┬┴──────────────────────────┘    │   │   │
-│  │   │                             │                                │   │   │
-│  │   │   Named Volumes:            │                                │   │   │
-│  │   │   ├── mongo_data (/data/db) │                                │   │   │
-│  │   │   └── logs_data  (/app/logs)│                                │   │   │
-│  │   └──────────────────────────────────────────────────────────────┘   │   │
-│  │                                                                      │   │
-│  │   Security Group: shipeasy-sg                                        │   │
-│  │   Inbound:  80/tcp (0.0.0.0/0), 443/tcp (0.0.0.0/0), 22/tcp (CI CIDR)│   │
-│  │   Outbound: ALL (0.0.0.0/0)                                          │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │                    Private Subnet (10.0.2.0/24)                      │   │
-│  │   (Reserved for future: RDS, ElastiCache, additional services)       │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │   AWS Services (Managed)                                             │   │
-│  │   ├── S3 Bucket:      shipeasy-docs (document storage)               │   │
-│  │   ├── S3 Bucket:      shipeasy-backups (MongoDB dumps)               │   │
-│  │   ├── CloudWatch:     EC2 metrics, log groups, alarms                │   │
-│  │   ├── SNS Topic:      shipeasy-alerts (ops notifications)            │   │
-│  │   ├── IAM:            Roles, Policies, Instance Profile              │   │
-│  │   └── Route 53:       DNS management (optional)                      │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    Users["🌐 Internet / End Users<br/>Browsers · Mobile PWA · Webhooks"]
 
-External Integrations:
-┌────────────────────────────────────────────────────────────────────────────┐
-│  Azure Container Registry  →  Docker image pull (ACR)                      │
-│  Azure Blob Storage        →  Document/file storage (shipeasy container)   │
-│  AWS Cognito               →  User authentication (ap-south-1)             │
-│  Google OAuth              →  SSO login                                    │
-│  Elastic APM               →  Application performance monitoring           │
-│  Firebase FCM              →  Push notifications (PWA)                     │
-│  Mapbox GL                 →  Map rendering                                │
-│  WhatsApp Business API     →  Messaging integration                        │
-│  ULIP API                  →  Container tracking / logistics data          │
-│  OpenAI / Gemini           →  AI-assisted features                         │
-│  Bold BI                   →  Embedded reporting                           │
-└────────────────────────────────────────────────────────────────────────────┘
+    subgraph AWS["AWS — ap-south-1 Mumbai"]
+        subgraph PublicSubnet["Public Subnet 10.0.1.0/24"]
+            subgraph EC2["EC2 t3.medium — Ubuntu 22.04<br/>SG: shipeasy-app-sg"]
+                subgraph DockerNet["Docker Bridge — shipeasy_net"]
+                    FE["nginx :80<br/>Angular SPA"]
+                    API["Node.js API :3000<br/>Express 4 + Socket.io"]
+                    DB["MongoDB :27017<br/>internal only<br/>vol: mongo_data"]
+                end
+            end
+        end
+        subgraph PrivateSubnet["Private Subnet 10.0.2.0/24"]
+            Reserved["Reserved — RDS / ElastiCache"]
+        end
+        S3["S3 Buckets<br/>shipeasy-docs / shipeasy-backups"]
+        CW["CloudWatch<br/>Metrics + Logs + Alarms"]
+        SNS["SNS — shipeasy-alerts"]
+        IAM["IAM — Roles + Policies"]
+    end
+
+    ACR["Azure Container Registry<br/>Docker Images"]
+    AzBlob["Azure Blob Storage<br/>ship-docs container"]
+    Cognito["AWS Cognito<br/>ap-south-1"]
+    GoogleOAuth["Google OAuth 2.0"]
+    APM["Elastic APM<br/>apm.synoris.co"]
+    Firebase["Firebase FCM<br/>Push Notifications"]
+    WhatsApp["WhatsApp Business API"]
+    ULIP["ULIP API<br/>Logistics Tracking"]
+    OpenAI["OpenAI / Gemini"]
+    BoldBI["Bold BI<br/>Embedded Reporting"]
+
+    Users -->|"HTTPS :443 / :80"| FE
+    FE -->|"/api/* proxy_pass"| API
+    API --> DB
+    API --> S3
+    API --> CW
+    API --> SNS
+    API --> AzBlob
+    API --> Cognito
+    API --> GoogleOAuth
+    API --> APM
+    API --> WhatsApp
+    API --> ULIP
+    API --> OpenAI
+    API --> BoldBI
+    FE --> Firebase
+    ACR -->|"docker pull"| EC2
 ```
 
 ---
 
 ## 2. Request Flow (Runtime)
 
-```
-User Browser
-    │
-    │  GET https://app.shippeasy.com/
-    ▼
-EC2 :80 → nginx container
-    │
-    ├── Static assets  →  served directly from /usr/share/nginx/html
-    │
-    └── /api/* requests
-            │
-            │  proxy_pass http://backend:3000/
-            ▼
-        Node.js API container
-            │
-            ├── JWT validation (middleware/auth.js)
-            │
-            ├── Business logic (controllers/)
-            │
-            └── MongoDB (shipeasy_net bridge → mongo container)
-                    │
-                    └── Named volume: mongo_data (persisted on EC2 EBS)
+```mermaid
+sequenceDiagram
+    participant U as User Browser
+    participant N as nginx :80
+    participant A as Node.js API :3000
+    participant M as MongoDB
+
+    U->>N: GET https://app.shippeasy.com/
+    alt Static asset (HTML / JS / CSS)
+        N-->>U: Served from /usr/share/nginx/html
+    else /api/* request
+        N->>A: proxy_pass http://backend:3000/
+        A->>A: JWT validation (middleware/auth.js)
+        A->>M: Query / Write (shipeasy_net bridge)
+        M-->>A: Result
+        A-->>N: JSON response
+        N-->>U: JSON response
+    end
 ```
 
 ---

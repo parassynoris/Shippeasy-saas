@@ -208,17 +208,27 @@ The application enforces role-based access via JWT claims and user model roles s
 
 **API Authorization flow:**
 
-```
-Request → validateAuth middleware
-              │
-              ├── Verify JWT signature (SECRET_KEY_JWT)
-              ├── Check tokenVersion matches MongoDB user record
-              ├── Load user + org data into res.locals
-              │
-              └── Controller checks res.locals.user.role
-                       │
-                       ├── Allowed → proceed
-                       └── Denied  → 403 Forbidden
+```mermaid
+flowchart TD
+    Req["HTTP Request"]
+    Auth["validateAuth middleware<br/>middleware/auth.js"]
+    JWTVerify{"Verify JWT signature<br/>SECRET_KEY_JWT"}
+    TokenVer{"Check tokenVersion<br/>matches MongoDB user"}
+    LoadUser["Load user + org<br/>into res.locals"]
+    Controller["Controller logic"]
+    RoleCheck{"Check res.locals.user.role"}
+    Proceed["✅ Proceed"]
+    Err401["401 Unauthorized"]
+    Err403["403 Forbidden"]
+
+    Req --> Auth --> JWTVerify
+    JWTVerify -->|"invalid"| Err401
+    JWTVerify -->|"valid"| TokenVer
+    TokenVer -->|"mismatch"| Err401
+    TokenVer -->|"match"| LoadUser
+    LoadUser --> Controller --> RoleCheck
+    RoleCheck -->|"allowed"| Proceed
+    RoleCheck -->|"denied"| Err403
 ```
 
 ---

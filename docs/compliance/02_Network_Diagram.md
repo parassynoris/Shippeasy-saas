@@ -8,49 +8,34 @@
 
 ## 1. VPC Layout
 
-```
-AWS Region: ap-south-1 (Mumbai)
-┌──────────────────────────────────────────────────────────────────────────────┐
-│  VPC: shipeasy-vpc   CIDR: 10.0.0.0/16                                       │
-│                                                                              │
-│  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │  Availability Zone: ap-south-1a                                         │ │
-│  │                                                                         │ │
-│  │  ┌──────────────────────────────────────────────┐                       │ │
-│  │  │  PUBLIC SUBNET                               │                       │ │
-│  │  │  CIDR:   10.0.1.0/24                         │                       │ │
-│  │  │  Purpose: Application servers                │                       │ │
-│  │  │                                              │                       │ │
-│  │  │  ┌───────────────────────────────────────┐   │                       │ │
-│  │  │  │  EC2: shipeasy-prod                   │   │                       │ │
-│  │  │  │  Type: t3.medium                      │   │                       │ │
-│  │  │  │  Private IP: 10.0.1.10                │   │                       │ │
-│  │  │  │  Public IP:  (Elastic IP)             │   │                       │ │
-│  │  │  │  OS: Ubuntu 22.04 LTS                 │   │                       │ │
-│  │  │  │  SG: shipeasy-app-sg                  │   │                       │ │
-│  │  │  │  IAM Role: shipeasy-ec2-role          │   │                       │ │
-│  │  │  └───────────────────────────────────────┘   │                       │ │
-│  │  └──────────────────────────────────────────────┘                       │ │
-│  │                                                                         │ │
-│  │  ┌──────────────────────────────────────────────┐                       │ │
-│  │  │  PRIVATE SUBNET                              │                       │ │
-│  │  │  CIDR:   10.0.2.0/24                         │                       │ │
-│  │  │  Purpose: Reserved (RDS / ElastiCache)       │                       │ │
-│  │  │  Currently: Empty                            │                       │ │
-│  │  └──────────────────────────────────────────────┘                       │ │
-│  └─────────────────────────────────────────────────────────────────────────┘ │
-│                                                                              │
-│  ┌──────────────────────────────────────────────────┐                        │
-│  │  Internet Gateway: shipeasy-igw                  │                        │
-│  │  Attached to: shipeasy-vpc                       │                        │
-│  └──────────────────────────────────────────────────┘                        │
-│                                                                              │
-│  Route Tables:                                                               │
-│  ├── Public RT:  10.0.0.0/16 → local                                         │
-│  │               0.0.0.0/0   → shipeasy-igw                                  │
-│  └── Private RT: 10.0.0.0/16 → local                                         │
-│                  0.0.0.0/0   → NAT Gateway (when added)                      │
-└──────────────────────────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    Internet["🌐 Internet"]
+
+    subgraph VPC["VPC: shipeasy-vpc — CIDR 10.0.0.0/16  |  ap-south-1"]
+        IGW["Internet Gateway<br/>shipeasy-igw"]
+
+        subgraph AZ["Availability Zone: ap-south-1a"]
+            subgraph PubSub["Public Subnet — 10.0.1.0/24"]
+                SG["Security Group<br/>shipeasy-app-sg<br/>In: :80 :443 :22"]
+                EC2["EC2: shipeasy-prod<br/>Private IP: 10.0.1.10<br/>Elastic IP — public<br/>t3.medium · Ubuntu 22.04<br/>IAM: shipeasy-ec2-role"]
+                SG --> EC2
+            end
+            subgraph PrivSub["Private Subnet — 10.0.2.0/24"]
+                Reserved["Reserved<br/>Future: RDS / ElastiCache"]
+            end
+        end
+
+        subgraph RT["Route Tables"]
+            PubRT["Public RT<br/>10.0.0.0/16 → local<br/>0.0.0.0/0 → IGW"]
+            PrivRT["Private RT<br/>10.0.0.0/16 → local<br/>0.0.0.0/0 → NAT GW"]
+        end
+    end
+
+    Internet -->|":80 / :443"| IGW
+    IGW --> SG
+    PubSub -.->|"route"| PubRT
+    PrivSub -.->|"route"| PrivRT
 ```
 
 ---
@@ -81,55 +66,42 @@ AWS Region: ap-south-1 (Mumbai)
 
 ## 3. Network Flow Diagram
 
-```
-INTERNET
-    │
-    │  TCP :80 / :443
-    ▼
-┌─────────────────────────────┐
-│   Internet Gateway (IGW)    │
-│   shipeasy-igw              │
-└──────────────┬──────────────┘
-               │
-               │  Routed to 10.0.1.0/24 (Public Subnet)
-               ▼
-┌─────────────────────────────┐
-│   Security Group            │
-│   shipeasy-app-sg           │
-│   Allow: :80, :443, :22     │
-└──────────────┬──────────────┘
-               │
-               ▼
-┌─────────────────────────────────────────────────────────────────┐
-│   EC2: shipeasy-prod (10.0.1.10)                                │
-│                                                                 │
-│   ┌─────────────────────────────────────────────────────────┐   │
-│   │  Docker Bridge Network: shipeasy_net (172.18.0.0/16)    │   │
-│   │                                                         │   │
-│   │   nginx          →  172.18.0.2:80                       │   │
-│   │   Node.js API    →  172.18.0.3:3000                     │   │
-│   │   MongoDB        →  172.18.0.4:27017  (internal only)   │   │
-│   │                                                         │   │
-│   │   nginx ──/api/*──► Node.js API ──► MongoDB             │   │
-│   │                              └─────► Azure Blob Storage │   │
-│   │                              └─────► AWS Cognito        │   │
-│   │                              └─────► External APIs      │   │
-│   └─────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    Internet["🌐 Internet<br/>TCP :80 / :443"]
+    IGW["Internet Gateway<br/>shipeasy-igw"]
+    SG["Security Group<br/>shipeasy-app-sg<br/>Allow :80, :443, :22"]
 
-               │  Outbound HTTPS (:443)
-               ▼
-┌─────────────────────────────────────────────────────────────────┐
-│   External Services                                             │
-│   ├── shippeasy.azurecr.io        (Docker image pull)           │
-│   ├── *.blob.core.windows.net     (Azure Blob Storage)          │
-│   ├── cognito-idp.ap-south-1.amazonaws.com (AWS Cognito)        │
-│   ├── apm.synoris.co              (Elastic APM)                 │
-│   ├── api.openai.com              (OpenAI)                      │
-│   ├── fcm.googleapis.com          (Firebase push)               │
-│   ├── api.mapbox.com              (Mapbox)                      │
-│   └── graph.facebook.com         (WhatsApp Business API)        │
-└─────────────────────────────────────────────────────────────────┘
+    subgraph EC2["EC2: shipeasy-prod — 10.0.1.10"]
+        subgraph DockerNet["Docker Bridge — shipeasy_net  172.18.0.0/16"]
+            nginx["nginx — 172.18.0.2:80<br/>Angular SPA"]
+            NodeAPI["Node.js API — 172.18.0.3:3000"]
+            MongoDB["MongoDB — 172.18.0.4:27017<br/>⛔ internal only"]
+        end
+    end
+
+    subgraph External["External Services — outbound HTTPS :443"]
+        ACR["shippeasy.azurecr.io<br/>Docker images"]
+        AzBlob["*.blob.core.windows.net<br/>Azure Blob Storage"]
+        AWSCognito["cognito-idp.ap-south-1<br/>AWS Cognito"]
+        APM["apm.synoris.co<br/>Elastic APM"]
+        OpenAI["api.openai.com"]
+        FCM["fcm.googleapis.com<br/>Firebase FCM"]
+        Mapbox["api.mapbox.com"]
+        WA["graph.facebook.com<br/>WhatsApp API"]
+    end
+
+    Internet --> IGW --> SG --> nginx
+    nginx -->|"/api/* proxy"| NodeAPI
+    NodeAPI --> MongoDB
+    NodeAPI --> ACR
+    NodeAPI --> AzBlob
+    NodeAPI --> AWSCognito
+    NodeAPI --> APM
+    NodeAPI --> OpenAI
+    nginx --> FCM
+    NodeAPI --> Mapbox
+    NodeAPI --> WA
 ```
 
 ---

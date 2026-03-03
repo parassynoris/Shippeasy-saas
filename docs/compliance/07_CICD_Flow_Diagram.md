@@ -8,177 +8,88 @@
 
 ## 1. End-to-End CI/CD Pipeline
 
-```
-DEVELOPER WORKSTATION
-┌────────────────────────────────────┐
-│                                    │
-│  feature/* branch                  │
-│  git commit -m "feat: ..."         │
-│  git push origin feature/my-feat   │
-│                                    │
-└──────────────┬─────────────────────┘
-               │
-               │  Pull Request → main
-               ▼
-┌────────────────────────────────────────────────────────────────────────────┐
-│  AZURE REPOS / GITHUB (Source Control)                                      │
-│                                                                              │
-│  main branch    ◄──── PR approved + squash merge                            │
-│                                 │                                            │
-│                  trigger: push to main                                       │
-└─────────────────────────────────┼────────────────────────────────────────┘
-                                  │
-                                  ▼
-┌────────────────────────────────────────────────────────────────────────────┐
-│  AZURE PIPELINES  (azure-pipelines.yml)                                     │
-│                                                                              │
-│  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │  STAGE 0 — DetectChanges  (ubuntu-latest agent)                      │   │
-│  │                                                                       │   │
-│  │  git diff HEAD~1 HEAD                                                 │   │
-│  │  ┌──────────────────┐    ┌──────────────────┐                        │   │
-│  │  │ backendChanged?  │    │ frontendChanged?  │                        │   │
-│  │  │  shipeasy-api/** │    │  shipeasy/**      │                        │   │
-│  │  └────────┬─────────┘    └────────┬──────────┘                       │   │
-│  │           │ output vars            │ output vars                      │   │
-│  └───────────┼────────────────────────┼──────────────────────────────────┘  │
-│              │                        │                                       │
-│  ┌───────────▼────────────────────────▼──────────────────────────────────┐  │
-│  │  STAGE 1 — Test  (parallel jobs)                                       │  │
-│  │                                                                         │  │
-│  │  ┌──────────────────────────────┐  ┌─────────────────────────────┐    │  │
-│  │  │  TestBackend (if changed)    │  │  TestFrontend (if changed)  │    │  │
-│  │  │  Node 22                     │  │  Node 20                    │    │  │
-│  │  │  npm ci                      │  │  yarn install               │    │  │
-│  │  │  npm test (Jest)             │  │  yarn test (Karma headless) │    │  │
-│  │  │  PublishTestResults (JUnit)  │  │  PublishTestResults (JUnit) │    │  │
-│  │  └──────────────────────────────┘  └─────────────────────────────┘    │  │
-│  │                                                                         │  │
-│  │  ⛔ FAIL: Build stops here if any test fails                           │  │
-│  └───────────────────────────────────────────────────────────────────────┘  │
-│                                                                               │
-│  ┌───────────────────────────────────────────────────────────────────────┐  │
-│  │  STAGE 2 — BuildPush  (only on push to main, not PRs)                  │  │
-│  │                                                                         │  │
-│  │  ┌──────────────────────────────────┐                                  │  │
-│  │  │  BuildBackend (if backendChanged)│                                  │  │
-│  │  │                                  │                                  │  │
-│  │  │  docker build (BuildKit)         │                                  │  │
-│  │  │  Context: ./shipeasy-api         │                                  │  │
-│  │  │  Dockerfile: multi-stage         │                                  │  │
-│  │  │    Stage 1: npm ci --omit=dev    │                                  │  │
-│  │  │    Stage 2: node:22-alpine       │                                  │  │
-│  │  │             non-root appuser     │                                  │  │
-│  │  │                                  │                                  │  │
-│  │  │  docker push → ACR               │                                  │  │
-│  │  │  Tags: <sha7>  +  latest         │                                  │  │
-│  │  │  Cache: ACR buildcache layer     │                                  │  │
-│  │  └──────────────────────────────────┘                                  │  │
-│  │                                                                         │  │
-│  │  ┌──────────────────────────────────┐                                  │  │
-│  │  │  BuildFrontend (if frontendChanged)                                 │  │
-│  │  │                                  │                                  │  │
-│  │  │  docker build (BuildKit)         │                                  │  │
-│  │  │  Context: ./shipeasy             │                                  │  │
-│  │  │  Build ARGs (from Variable Group)│                                  │  │
-│  │  │    API_URL, API_URL_MASTER       │                                  │  │
-│  │  │    SOCKET_URL, ENVIRONMENT       │                                  │  │
-│  │  │  Dockerfile: multi-stage         │                                  │  │
-│  │  │    Stage 1: node:20-alpine       │                                  │  │
-│  │  │             yarn install         │                                  │  │
-│  │  │             ng build --prod      │                                  │  │
-│  │  │             sed replaces env URLs│                                  │  │
-│  │  │    Stage 2: nginx:stable-alpine  │                                  │  │
-│  │  │             + nginx.conf.template│                                  │  │
-│  │  │                                  │                                  │  │
-│  │  │  docker push → ACR               │                                  │  │
-│  │  │  Tags: <sha7>  +  latest         │                                  │  │
-│  │  └──────────────────────────────────┘                                  │  │
-│  │                                                                         │  │
-│  └───────────────────────────────────────────────────────────────────────┘  │
-│                                                                               │
-│  ┌───────────────────────────────────────────────────────────────────────┐  │
-│  │  STAGE 3 — Deploy  (ADO Environment: production)                       │  │
-│  │                                                                         │  │
-│  │  ⏸  Optional: Manual Approval Gate (ADO Environment check)             │  │
-│  │                                                                         │  │
-│  │  SSH → AWS EC2 (aws-ec2-ssh service connection)                        │  │
-│  │                                                                         │  │
-│  │  Runs deploy.sh with env vars:                                         │  │
-│  │    ACR_REGISTRY, BACKEND_IMAGE, FRONTEND_IMAGE                        │  │
-│  │    BACKEND_TAG=<sha7>, FRONTEND_TAG=<sha7>                            │  │
-│  │    ACR_USERNAME, ACR_PASSWORD (masked vars)                           │  │
-│  │                                                                         │  │
-│  └───────────────────────────────────────────────────────────────────────┘  │
-└───────────────────────────────────────────────────────────────────────────────┘
-                                  │
-                                  │  SSH + env vars
-                                  ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  AWS EC2 — deploy.sh                                                         │
-│                                                                               │
-│  1. docker login <acr>.azurecr.io  (service principal)                       │
-│       └── ACR_USERNAME + ACR_PASSWORD                                         │
-│                                                                               │
-│  2. docker pull <acr>.azurecr.io/shipeasy-api:<sha7>                         │
-│     docker pull <acr>.azurecr.io/shipeasy-frontend:<sha7>                    │
-│                                                                               │
-│  3. Update .env                                                               │
-│       BACKEND_TAG=<sha7>                                                      │
-│       FRONTEND_TAG=<sha7>                                                     │
-│                                                                               │
-│  4. docker compose up -d --no-build --no-deps --pull never backend           │
-│     docker compose up -d --no-build --no-deps --pull never frontend          │
-│     (mongo is NOT restarted)                                                  │
-│                                                                               │
-│  5. Health checks (HTTP polling)                                              │
-│       /api-docs  → backend healthy?                                           │
-│       /          → frontend healthy?                                          │
-│                                                                               │
-│  6. docker logout <acr>.azurecr.io                                           │
-│                                                                               │
-│  7. docker image prune -f                                                     │
-│                                                                               │
-│  ✅ Deploy log: ~/shipeasy/deploy.log                                        │
-└─────────────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    Dev["👨‍💻 Developer<br/>git push → feature/*"]
+    PR["Azure Repos<br/>Pull Request → main"]
+    Detect["Stage 0: DetectChanges<br/>git diff HEAD~1 HEAD"]
+    BackendChanged{"backend<br/>changed?"}
+    FrontendChanged{"frontend<br/>changed?"}
+    TestBE["TestBackend<br/>npm ci + Jest<br/>PublishTestResults"]
+    TestFE["TestFrontend<br/>yarn + Karma headless<br/>PublishTestResults"]
+    Fail["❌ Pipeline fails<br/>Merge blocked"]
+    BuildBE["BuildBackend<br/>docker build · BuildKit<br/>node:22-alpine multi-stage<br/>ACR push — sha7 + latest"]
+    BuildFE["BuildFrontend<br/>docker build · BuildKit<br/>nginx:stable-alpine multi-stage<br/>Build ARGs: API_URL, SOCKET_URL<br/>ACR push — sha7 + latest"]
+    Gate{"⏸ Manual approval<br/>ADO Environment gate<br/>optional"}
+    Deploy["Stage 3: Deploy<br/>SSH → AWS EC2<br/>ADO: aws-ec2-ssh"]
+    DeployScript["deploy.sh on EC2<br/>1. docker login ACR<br/>2. docker pull images<br/>3. update .env tags<br/>4. docker compose up<br/>5. health checks<br/>6. docker logout + prune"]
+    HealthCheck{"Health checks<br/>/api-docs + /"}
+    Success["✅ Deployment complete"]
+    Rollback["⚠️ Alert team — manual rollback"]
+    Cancelled["🚫 Deployment cancelled"]
+
+    Dev -->|"Pull Request"| PR
+    PR --> Detect
+    Detect --> BackendChanged
+    Detect --> FrontendChanged
+    BackendChanged -->|"yes"| TestBE
+    FrontendChanged -->|"yes"| TestFE
+    TestBE -->|"fail"| Fail
+    TestFE -->|"fail"| Fail
+    TestBE -->|"pass"| BuildBE
+    TestFE -->|"pass"| BuildFE
+    BuildBE --> Gate
+    BuildFE --> Gate
+    Gate -->|"approved"| Deploy
+    Gate -->|"rejected"| Cancelled
+    Deploy --> DeployScript
+    DeployScript --> HealthCheck
+    HealthCheck -->|"pass"| Success
+    HealthCheck -->|"fail"| Rollback
 ```
 
 ---
 
 ## 2. PR Validation Flow (no deploy)
 
-```
-git push origin feature/my-feature
-         │
-         │  Pull Request opened → main
-         ▼
-Azure Pipelines PR trigger
-         │
-         ├── Stage 0: DetectChanges
-         ├── Stage 1: Test (backend + frontend)
-         │
-         └── ✅ Green → PR can be merged
-             ❌ Red   → PR blocked until tests pass
-             
-         Note: BuildPush and Deploy stages do NOT run on PRs
-               (condition: IS_MAIN_PUSH == true)
+```mermaid
+flowchart TD
+    Push["git push<br/>feature/my-feature"]
+    PROpen["Pull Request opened → main"]
+    Detect["Stage 0: DetectChanges"]
+    Tests["Stage 1: Test<br/>backend + frontend in parallel"]
+    Green["✅ PR can be merged"]
+    Red["❌ PR blocked until tests pass"]
+    Note["ℹ️ BuildPush + Deploy stages<br/>do NOT run on PRs<br/>condition: IS_MAIN_PUSH == true"]
+
+    Push --> PROpen --> Detect --> Tests
+    Tests -->|"all pass"| Green
+    Tests -->|"any fail"| Red
+    Green -.-> Note
 ```
 
 ---
 
 ## 3. Image Lifecycle in ACR
 
-```
-Build #1 (commit: abc1234)
-  → shipeasy-api:abc1234  (immutable)
-  → shipeasy-api:latest   (mutable pointer)
+```mermaid
+flowchart LR
+    B1["Build #1<br/>commit: abc1234"]
+    I1["shipeasy-api:abc1234<br/>immutable"]
+    L1["shipeasy-api:latest<br/>→ abc1234"]
 
-Build #2 (commit: def5678)
-  → shipeasy-api:def5678  (immutable)
-  → shipeasy-api:latest   (moved to def5678)
+    B2["Build #2<br/>commit: def5678"]
+    I2["shipeasy-api:def5678<br/>immutable"]
+    L2["shipeasy-api:latest<br/>→ def5678"]
 
-ACR Lifecycle Policy: keep last 20 tags
-  → Tags abc1234 through def5600 auto-deleted after 20 builds
+    Policy["ACR Lifecycle Policy<br/>Keep last 20 tags<br/>Older tags auto-deleted"]
+
+    B1 --> I1
+    B1 --> L1
+    B2 --> I2
+    B2 --> L2
+    L1 -.->|"pointer moved"| L2
+    Policy -.-> I1
 ```
 
 ---
@@ -216,21 +127,32 @@ Alternatively, re-run the ADO pipeline on a previous commit:
 
 ## 5. Pipeline Variables & Secrets Flow
 
-```
-Azure DevOps Library
-└── Variable Group: shipeasy-secrets
-    ├── ACR_NAME          (plain)    ──► BuildPush stage (--build-arg)
-    ├── API_URL           (plain)    ──► Frontend Docker build ARG
-    ├── API_URL_MASTER    (plain)    ──► Frontend Docker build ARG
-    ├── SOCKET_URL        (plain)    ──► Frontend Docker build ARG
-    ├── ACR_SP_CLIENT_ID  (🔒secret) ──► Deploy stage SSH env var
-    └── ACR_SP_CLIENT_SECRET (🔒secret) ► Deploy stage SSH env var
+```mermaid
+flowchart LR
+    subgraph ADO["Azure DevOps Library"]
+        VG["Variable Group<br/>shipeasy-secrets"]
+        ACR_NAME["ACR_NAME — plain"]
+        API_URL["API_URL — plain"]
+        API_URL_M["API_URL_MASTER — plain"]
+        SOCKET_URL["SOCKET_URL — plain"]
+        SP_ID["ACR_SP_CLIENT_ID 🔒 secret"]
+        SP_SEC["ACR_SP_CLIENT_SECRET 🔒 secret"]
+    end
 
-Secrets marked 🔒 are:
-  - Masked in all pipeline logs (ADO redacts them)
-  - Never written to disk on the agent
-  - Passed to EC2 only via SSH environment injection
-  - Immediately discarded after deploy.sh exits
+    subgraph Pipeline["Azure Pipelines Stages"]
+        BuildStage["BuildPush stage<br/>--build-arg injection"]
+        DeployStage["Deploy stage<br/>SSH env vars"]
+    end
+
+    EC2["EC2 deploy.sh<br/>docker login ACR"]
+
+    ACR_NAME --> BuildStage
+    API_URL --> BuildStage
+    API_URL_M --> BuildStage
+    SOCKET_URL --> BuildStage
+    SP_ID --> DeployStage
+    SP_SEC --> DeployStage
+    DeployStage -->|"SSH env injection<br/>vars discarded after exit"| EC2
 ```
 
 ---
