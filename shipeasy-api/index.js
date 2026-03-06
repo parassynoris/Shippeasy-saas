@@ -2,24 +2,64 @@ require('dotenv').config({ path: '.env' })
 
 const requestTracer = require('./middleware/requestTracer')
 const express = require('express');
+const compression = require('compression');
 const app = express();
 const cors = require('cors');
-app.use(cors());
-app.use(express.json({ limit: '50mb' }))
+const { securityHeaders, apiLimiter, sanitizeInput } = require('./middleware/security');
+
+// ── Security headers (helmet) ───────────────────────────────────
+app.use(securityHeaders);
+
+// ── Response compression ────────────────────────────────────────
+app.use(compression());
+
+// ── CORS ────────────────────────────────────────────────────────
+const allowedOrigins = process.env.CORS_ORIGINS ? process.env.CORS_ORIGINS.split(',').map(o => o.trim()) : [];
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key', 'frontend-trace-id'],
+  credentials: true
+}));
+
+// ── Body parsing with reduced default limit ─────────────────────
+// Preserve raw body for webhook signature verification (HMAC)
+app.use(express.json({
+  limit: '1mb',
+  verify: (req, res, buf) => {
+    req.rawBody = buf.toString();
+  }
+}))
 app.use(express.urlencoded({ extended: false }));
-// app.use(express.text({ type: '*/*' })); 
+
+// ── NoSQL injection prevention ──────────────────────────────────
+app.use(sanitizeInput);
+
+// ── Request tracing ─────────────────────────────────────────────
 app.use(requestTracer);
+
+// ── General API rate limiter ────────────────────────────────────
+app.use(apiLimiter);
 
 const http = require('http').createServer(app);
 
+// ── APM Configuration ───────────────────────────────────────────
+const isProduction = process.env.NODE_ENV === 'production';
 const apm = require('elastic-apm-node').start({
 	serviceName: 'shipeasy-api',
 	serverUrl: process.env.APM_SERVER,
 	environment: process.env.ENVIRONMENT,
-	captureBody: 'all',
+	captureBody: isProduction ? 'errors' : 'all',
 	captureHeaders: true, 
 	captureErrors: true, 
-	transactionSampleRate: 1.0,
+	transactionSampleRate: isProduction ? 0.1 : 1.0,
 });
 
 const socketHelper = require('./service/socketHelper');
@@ -79,17 +119,13 @@ mongo.connectToDatabase();
 
 const { verificationWebhookWhatsapp } = require('./controller/whatsapp.controller');
 const { webhookWhatsapp } = require('./controller/webhooks.controller');
+const { verifyWhatsAppSignature } = require('./middleware/webhookAuth');
 
-app.use((req, res, next) => {
-	res.header('Access-Control-Allow-Origin', '*'); // Replace '*' with the specific origin you want to allow
-	res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-	res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-	next();
-});
+// CORS is handled by the cors() middleware above
 
 
 app.get('/webhook', [ verificationWebhookWhatsapp])
-app.post('/webhook', [ webhookWhatsapp])
+app.post('/webhook', [ verifyWhatsAppSignature, webhookWhatsapp])
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -137,6 +173,20 @@ app.use(
 	swaggerUi.setup(specs, { explorer: true, cors: true })
 );
 
+// Global error handling middleware
+app.use((err, req, res, next) => {
+	console.error(JSON.stringify({
+		traceId: req?.traceId,
+		error: err.message,
+		stack: process.env.NODE_ENV === 'production' ? undefined : err.stack,
+		timestamp: new Date().toISOString()
+	}));
+	res.status(err.status || 500).json({
+		error: process.env.NODE_ENV === 'production' ? 'Internal server error' : err.message,
+		traceId: req?.traceId
+	});
+});
+
 console.log(`[${new Date().toISOString()}] Starting the server...`);
 
 http.listen(PORT, () => {
@@ -146,5 +196,61 @@ http.listen(PORT, () => {
 });
 
 const schedulers = require('./service/schedulers')
+
+// ── Graceful shutdown ───────────────────────────────────────────
+function gracefulShutdown(signal) {
+  console.log(JSON.stringify({
+    event: 'shutdown_initiated',
+    signal,
+    timestamp: new Date().toISOString(),
+  }));
+
+  // Stop accepting new connections
+  http.close(() => {
+    console.log(JSON.stringify({
+      event: 'http_server_closed',
+      timestamp: new Date().toISOString(),
+    }));
+
+    // Close MongoDB connection pool
+    mongo.disconnectFromDatabase().then(() => {
+      console.log(JSON.stringify({
+        event: 'database_disconnected',
+        timestamp: new Date().toISOString(),
+      }));
+      process.exit(0);
+    }).catch((err) => {
+      console.error(JSON.stringify({
+        event: 'database_disconnect_error',
+        error: err.message,
+        timestamp: new Date().toISOString(),
+      }));
+      process.exit(1);
+    });
+  });
+
+  // Force exit after 30 seconds if graceful shutdown hangs
+  setTimeout(() => {
+    console.error(JSON.stringify({
+      event: 'forced_shutdown',
+      reason: 'Graceful shutdown timed out after 30s',
+      timestamp: new Date().toISOString(),
+    }));
+    process.exit(1);
+  }, 30000).unref();
+}
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
+// Catch unhandled rejections to prevent silent failures
+process.on('unhandledRejection', (reason, promise) => {
+  console.error(JSON.stringify({
+    event: 'unhandled_rejection',
+    reason: reason?.message || String(reason),
+    stack: reason?.stack,
+    timestamp: new Date().toISOString(),
+  }));
+});
 
 module.exports = app

@@ -306,14 +306,24 @@ async function sendFilteredContainerMessage(to, text, action) {
 
 
 exports.verificationWebhookWhatsapp = async (req, res, next) => {
-    // Verification for Webhook
-    const VERIFY_TOKEN = '2o213JAoHp0wHpxjgP6lBPamzlxXhlIRAJ1AKEW5Tjf1i5FXrkkFrVLIx1HIl9jQQA5rxBG96u93USrwRk46Wax7SMoLcppbLQoIzFi39OCJ2o4B53S7YUD9I1WpWGZMWqDlhquUDISycWeMdBDe8drCpiH9WuQCGDZdxmhPvaPzj2yPw76bxVKj0sdPxb0IpwSrC9UQFz35w5XUwJEcgy7uTBBWrWSL9Q55JzQGwxzlMr4ommbajvi05xj4If8S';
+    const VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN;
+
+    if (!VERIFY_TOKEN) {
+        console.error('WHATSAPP_VERIFY_TOKEN is not configured');
+        return res.sendStatus(500);
+    }
 
     const mode = req.query['hub.mode'];
-    const token = req.query['hub.verify_token'];
+    const token = req.query['hub.verify_token'] || '';
     const challenge = req.query['hub.challenge'];
 
-    if (mode && token === VERIFY_TOKEN) {
+    // Use timing-safe comparison to prevent timing attacks
+    const tokenBuffer = Buffer.from(token, 'utf8');
+    const expectedBuffer = Buffer.from(VERIFY_TOKEN, 'utf8');
+    const tokensMatch = tokenBuffer.length === expectedBuffer.length &&
+        crypto.timingSafeEqual(tokenBuffer, expectedBuffer);
+
+    if (mode === 'subscribe' && tokensMatch) {
         res.status(200).send(challenge);
     } else {
         res.sendStatus(403);

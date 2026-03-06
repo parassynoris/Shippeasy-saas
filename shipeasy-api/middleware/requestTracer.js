@@ -10,7 +10,7 @@ const excludedEndpoints = [
     '/health'
 ];
 
-const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'BYUKXCRPHYRFOJINZHPSXZMQEULXFJOF'; // Must be 32 characters
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY; // Must be 32 characters — set via environment variable
 const IV_LENGTH = 16; // For AES, this is always 16
 
 function encrypt(text) {
@@ -45,6 +45,15 @@ const requestTracer = (req, res, next) => {
         const contentType = req.headers['content-type'];
 
         // Only decrypt if the content type is 'text/plain' or another encrypted data type
+        if ((process.env.ENCRYPTION === 'true') && !ENCRYPTION_KEY) {
+            console.error(JSON.stringify({
+                traceId: req?.traceId,
+                error: 'ENCRYPTION is enabled but ENCRYPTION_KEY is not set in environment variables',
+                timestamp: new Date().toISOString()
+            }));
+            return res.status(500).send({ error: 'Server encryption misconfiguration' });
+        }
+
         if ((process.env.ENCRYPTION === 'true') && contentType && contentType.includes('text/plain') && (!excludedEndpoints.includes(req.path))) {
             if (req.body && typeof req.body === 'string') {
                 try {
@@ -91,27 +100,54 @@ const requestTracer = (req, res, next) => {
 
         res.setHeader('X-Trace-Id', req.traceId);
         
-        // Log request
-        console.log(JSON.stringify({
+        // Sanitize sensitive fields from logged body
+        const sensitiveFields = ['Password', 'password', 'newPassword', 'currentPassword', 'token', 'accessToken', 'authorization'];
+        function sanitizeBody(body) {
+            if (!body || typeof body !== 'object') return body;
+            const sanitized = { ...body };
+            for (const field of sensitiveFields) {
+                if (sanitized[field]) sanitized[field] = '[REDACTED]';
+            }
+            return sanitized;
+        }
+
+        // Log request (without sensitive data; skip body in production for performance)
+        const isProduction = process.env.NODE_ENV === 'production';
+        const logEntry = {
             userId : req.userId,
             traceId: req.traceId,
             method: req.method,
             url: req.url,
             timestamp: new Date().toISOString(),
-            headers: req.headers,
-            body: req.body
-        }));
+        };
+        if (!isProduction) {
+            logEntry.body = sanitizeBody(req.body);
+        }
+        console.log(JSON.stringify(logEntry));
 
         // Capture response using event listener
         const originalSend = res.send;
         res.send = function(body) {
-            console.log(JSON.stringify({
+            // Log response metadata (skip body in production for performance)
+            const responseLog = {
                 userId : req.userId,
                 traceId: req.traceId,
                 responseTimestamp: new Date().toISOString(),
                 statusCode: res.statusCode,
-                responseBody: body
-            }));
+            };
+
+            if (!isProduction) {
+                let logBody = body;
+                try {
+                    const parsed = typeof body === 'string' ? JSON.parse(body) : body;
+                    logBody = sanitizeBody(parsed);
+                } catch (e) {
+                    logBody = typeof body === 'string' && body.length > 500 ? body.substring(0, 500) + '...' : body;
+                }
+                responseLog.responseBody = logBody;
+            }
+
+            console.log(JSON.stringify(responseLog));
 
             if (process.env.ENCRYPTION === 'true' && (!excludedEndpoints.includes(req.path))) {
                 // Check if body is a string, buffer, or an object
@@ -121,8 +157,6 @@ const requestTracer = (req, res, next) => {
 
                 // Encrypt the response body
                 const encryptedBody = encrypt(body);
-
-                // console.log(decrypt(encryptedBody))
 
                 // Call the original send function with the encrypted body
                 return originalSend.call(this, encryptedBody);

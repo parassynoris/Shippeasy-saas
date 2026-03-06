@@ -9039,8 +9039,81 @@ const schemas = {
     }
 }
 let newSchemaWithObject = {};
+
+/**
+ * Database indexes for common query patterns.
+ * These improve query performance at scale by avoiding full collection scans.
+ */
+const collectionIndexes = {
+    user: [
+        { fields: { userLogin: 1 }, options: { unique: true, sparse: true } },
+        { fields: { userEmail: 1 }, options: { sparse: true } },
+        { fields: { orgId: 1 } },
+        { fields: { tokenVersion: 1 } },
+    ],
+    agent: [
+        { fields: { agentId: 1 }, options: { unique: true } },
+        { fields: { orgId: 1 } },
+    ],
+    quotation: [
+        { fields: { quotationId: 1 }, options: { unique: true } },
+        { fields: { orgId: 1, createdOn: -1 } },
+        { fields: { orgId: 1, enquiryStatus: 1 } },
+    ],
+    job: [
+        { fields: { jobId: 1 }, options: { unique: true } },
+        { fields: { orgId: 1, createdOn: -1 } },
+        { fields: { orgId: 1, status: 1 } },
+    ],
+    role: [
+        { fields: { roleId: 1 }, options: { unique: true } },
+    ],
+    batch: [
+        { fields: { batchId: 1 }, options: { unique: true } },
+        { fields: { orgId: 1, createdOn: -1 } },
+    ],
+    bl: [
+        { fields: { blId: 1 }, options: { unique: true } },
+        { fields: { orgId: 1, createdOn: -1 } },
+    ],
+    party: [
+        { fields: { partyId: 1 }, options: { unique: true } },
+        { fields: { orgId: 1 } },
+    ],
+    event: [
+        { fields: { eventId: 1 }, options: { unique: true } },
+        { fields: { entityId: 1 } },
+        { fields: { orgId: 1 } },
+    ],
+    emailtemplate: [
+        { fields: { emailtemplateId: 1 }, options: { unique: true } },
+        { fields: { orgId: 1 } },
+    ],
+    message: [
+        { fields: { messageId: 1 }, options: { unique: true } },
+        { fields: { createdOn: -1 } },
+    ],
+    inappnotification: [
+        { fields: { inappnotificationId: 1 }, options: { unique: true } },
+        { fields: { userId: 1, createdOn: -1 } },
+    ],
+};
+
 Object.keys(schemas).forEach((collectionName) => {
     const schema = new mongoose.Schema(schemas[collectionName]);
+
+    // Apply database indexes for this collection
+    const indexes = collectionIndexes[collectionName];
+    if (indexes) {
+        indexes.forEach(idx => {
+            schema.index(idx.fields, idx.options || {});
+        });
+    } else {
+        // Default indexes: add orgId index for any collection that has it
+        if (schema.path('orgId')) {
+            schema.index({ orgId: 1 });
+        }
+    }
 
     if (!(["inappnotification", "logaudit"].includes(collectionName))) {
         schema.post('findOneAndUpdate', async function (doc) {

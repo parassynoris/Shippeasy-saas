@@ -157,11 +157,11 @@ export class GlobalConstants {
   //   static FILE_SIZE: string;
   //common arrays
 
-  // DMS CONSTANTS BEGINS
+  // DMS CONSTANTS BEGINS — credentials must be configured at deployment, not in source code
   public static readonly SERVER_NAME = 'DMS SERVER';
   public static readonly ROOM_NAME = 'DIABOS DMS';
-  public static readonly USER_NAME = 'adminuser';
-  public static readonly PASSWORD = 'Content@151';
+  public static readonly USER_NAME = process.env['DMS_USERNAME'] || '';
+  public static readonly PASSWORD = process.env['DMS_PASSWORD'] || '';
   public static readonly LOCAL_ADDRESS = '10.4.8.8';
   public static readonly ENCRYPTION_LOGIC = '2';
   public static readonly NODE_ID = '3';
