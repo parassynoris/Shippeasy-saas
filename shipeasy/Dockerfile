@@ -41,7 +41,10 @@ FROM nginx:stable-alpine
 # Template — nginx entrypoint substitutes ${BACKEND_URL} at startup
 COPY nginx.conf.template /etc/nginx/templates/default.conf.template
 
+# TLS template available for production use — swap via volume mount
+COPY nginx-tls.conf.template /etc/nginx/ssl/nginx-tls.conf.template
+
 COPY --from=build /usr/src/ng-app/dist/smartagent/ /usr/share/nginx/html
 
-EXPOSE 80
+EXPOSE 80 443
 CMD ["nginx", "-g", "daemon off;"]

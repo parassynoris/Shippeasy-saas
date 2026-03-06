@@ -1,0 +1,32 @@
+{
+  "env": {
+    "node": true,
+    "commonjs": true,
+    "es2021": true,
+    "jest": true
+  },
+  "extends": "eslint:recommended",
+  "parserOptions": {
+    "ecmaVersion": "latest"
+  },
+  "rules": {
+    "no-console": ["warn", { "allow": ["info", "error"] }],
+    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_|^next$|^req$|^res$" }],
+    "prefer-const": "error",
+    "no-var": "error",
+    "eqeqeq": ["error", "always"],
+    "no-eval": "error",
+    "no-implied-eval": "error",
+    "no-new-func": "error",
+    "no-return-await": "warn",
+    "no-throw-literal": "error",
+    "no-useless-catch": "warn",
+    "require-await": "warn"
+  },
+  "ignorePatterns": [
+    "node_modules/",
+    "logs/",
+    "coverage/",
+    "router/swagger-docs.js"
+  ]
+}

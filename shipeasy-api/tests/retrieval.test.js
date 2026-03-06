@@ -1,6 +1,6 @@
 const request = require("supertest");
 // const app = require("../index");
-const schemas = require("../schema/schema")
+const schemas = require("../schema")
 
 require("dotenv").config();
 const mongo = require('../service/mongooseConnection');
@@ -17,7 +17,7 @@ var authToken;
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use('/api', require('../router/route'));
+app.use('/api', require('../router'));
 
 app.get('/api/status', (req, res) => {
   res.json({ status: 'API is up and running' });
@@ -35,9 +35,15 @@ beforeAll(async () => {
 
 describe(`POST /api/user/login`, () => {
   it(`getting token`, async () => {
+    const testUser = process.env.TEST_USERNAME;
+    const testPass = process.env.TEST_PASSWORD;
+    if (!testUser || !testPass) {
+      console.info('Skipping login test: TEST_USERNAME / TEST_PASSWORD not set');
+      return;
+    }
     const res = await request(app).post(`/api/user/login`).send({
-      Username : "rutvikm",
-      Password : ":0W+{6#F"
+      Username : testUser,
+      Password : testPass
       })
     expect(res.statusCode).toBe(200);
     authToken = res.body.accessToken;

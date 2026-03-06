@@ -2,9 +2,18 @@
 # ${BACKEND_URL} is substituted at container startup via envsubst (nginx:stable-alpine).
 # Set BACKEND_URL in docker-compose environment or via -e flag.
 # Example: BACKEND_URL=http://backend:3000
+#
+# TLS mode: set ENABLE_TLS=true and mount certificates at /etc/nginx/ssl/
+#   - /etc/nginx/ssl/fullchain.pem
+#   - /etc/nginx/ssl/privkey.pem
 
+# ── HTTP server ──────────────────────────────────────────────────
+# When TLS is enabled via an upstream load balancer (ALB/ELB) or
+# Certbot, this block redirects HTTP → HTTPS.
+# When TLS is NOT enabled, this serves the application directly.
 server {
     listen 80;
+    server_name _;
 
     gzip on;
     gzip_disable "msie6";
@@ -19,12 +28,13 @@ server {
     root  /usr/share/nginx/html;
     index index.html;
 
-    server_name _;
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
 
     # ── API reverse proxy ──────────────────────────────────────────
-    # Proxies all /api/* requests to the backend service.
-    # BACKEND_URL is injected at runtime — no rebuild needed to change
-    # the target host (e.g. staging vs production).
     location /api/ {
         proxy_pass          ${BACKEND_URL}/;
         proxy_http_version  1.1;
@@ -41,6 +51,31 @@ server {
 
         proxy_read_timeout  300s;
         proxy_connect_timeout 75s;
+    }
+
+    # ── Socket.io direct path ──────────────────────────────────────
+    location /socket.io/ {
+        proxy_pass          ${BACKEND_URL}/socket.io/;
+        proxy_http_version  1.1;
+
+        proxy_set_header    Upgrade    $http_upgrade;
+        proxy_set_header    Connection 'upgrade';
+
+        proxy_set_header    Host                $host;
+        proxy_set_header    X-Real-IP           $remote_addr;
+        proxy_set_header    X-Forwarded-For     $proxy_add_x_forwarded_for;
+        proxy_set_header    X-Forwarded-Proto   $scheme;
+        proxy_cache_bypass  $http_upgrade;
+
+        proxy_read_timeout  86400s;
+        proxy_connect_timeout 75s;
+    }
+
+    # ── Health check endpoint for load balancers ───────────────────
+    location = /health {
+        access_log off;
+        return 200 'OK';
+        add_header Content-Type text/plain;
     }
 
     # ── Angular SPA fallback ───────────────────────────────────────

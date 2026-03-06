@@ -29,8 +29,6 @@ import { HelpComponent } from './help/help.component';
 import { ContactUsComponent } from './contact-us/contact-us.component';
 import { PagenotfoundModule } from './pagenotfound/pagenotfound.module';
 import { ReminderPopUpComponent } from '../shared/components/reminder-pop-up/reminder-pop-up.component';
-import { DashboardModule } from '../admin/dashboard/dashboard.module';
-import { EnquiryModule } from '../admin/enquiry/enquiry.module';
 import { GroupChatComponent } from './group-chat/group-chat.component';
 import { NewChatComponent } from './new-chat/new-chat.component';
 
@@ -61,8 +59,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     ContactUsComponent, GroupChatComponent, NewChatComponent
   ],
   imports: [
-    EnquiryModule,
-    DashboardModule,
     PagenotfoundModule,
     BrowserModule,
     LayoutRoutingModule,

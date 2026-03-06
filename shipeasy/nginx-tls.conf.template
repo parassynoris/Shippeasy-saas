@@ -1,0 +1,111 @@
+# nginx-tls.conf.template
+# TLS-enabled nginx configuration for production deployments.
+#
+# Usage: Mount this as /etc/nginx/templates/default.conf.template
+# and mount TLS certificates:
+#   - /etc/nginx/ssl/fullchain.pem
+#   - /etc/nginx/ssl/privkey.pem
+#
+# Required env vars: BACKEND_URL, SERVER_NAME
+# Example:
+#   BACKEND_URL=http://backend:3000
+#   SERVER_NAME=app.shippeasy.com
+
+# ── HTTP → HTTPS redirect ─────────────────────────────────────────
+server {
+    listen 80;
+    server_name _;
+
+    location = /health {
+        access_log off;
+        return 200 'OK';
+        add_header Content-Type text/plain;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+# ── HTTPS server ───────────────────────────────────────────────────
+server {
+    listen 443 ssl http2;
+    server_name ${SERVER_NAME};
+
+    ssl_certificate     /etc/nginx/ssl/fullchain.pem;
+    ssl_certificate_key /etc/nginx/ssl/privkey.pem;
+
+    ssl_protocols       TLSv1.2 TLSv1.3;
+    ssl_ciphers         HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers on;
+    ssl_session_cache   shared:SSL:10m;
+    ssl_session_timeout 10m;
+
+    # HSTS — instruct browsers to always use HTTPS
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+    gzip on;
+    gzip_disable "msie6";
+    gzip_comp_level 6;
+    gzip_min_length 1000;
+    gzip_buffers 16 8k;
+    gzip_http_version 1.1;
+    gzip_types text/plain text/css application/json application/javascript
+               text/xml application/xml application/xml+rss text/javascript
+               image/svg+xml;
+
+    root  /usr/share/nginx/html;
+    index index.html;
+
+    # ── API reverse proxy ──────────────────────────────────────────
+    location /api/ {
+        proxy_pass          ${BACKEND_URL}/;
+        proxy_http_version  1.1;
+
+        proxy_set_header    Upgrade    $http_upgrade;
+        proxy_set_header    Connection 'upgrade';
+
+        proxy_set_header    Host                $host;
+        proxy_set_header    X-Real-IP           $remote_addr;
+        proxy_set_header    X-Forwarded-For     $proxy_add_x_forwarded_for;
+        proxy_set_header    X-Forwarded-Proto   $scheme;
+        proxy_cache_bypass  $http_upgrade;
+
+        proxy_read_timeout  300s;
+        proxy_connect_timeout 75s;
+    }
+
+    # ── Socket.io ──────────────────────────────────────────────────
+    location /socket.io/ {
+        proxy_pass          ${BACKEND_URL}/socket.io/;
+        proxy_http_version  1.1;
+
+        proxy_set_header    Upgrade    $http_upgrade;
+        proxy_set_header    Connection 'upgrade';
+
+        proxy_set_header    Host                $host;
+        proxy_set_header    X-Real-IP           $remote_addr;
+        proxy_set_header    X-Forwarded-For     $proxy_add_x_forwarded_for;
+        proxy_set_header    X-Forwarded-Proto   $scheme;
+        proxy_cache_bypass  $http_upgrade;
+
+        proxy_read_timeout  86400s;
+        proxy_connect_timeout 75s;
+    }
+
+    # ── Health check ───────────────────────────────────────────────
+    location = /health {
+        access_log off;
+        return 200 'OK';
+        add_header Content-Type text/plain;
+    }
+
+    # ── Angular SPA fallback ───────────────────────────────────────
+    location / {
+        try_files $uri /index.html;
+    }
+}

@@ -1,6 +1,6 @@
 {
     "/api/*": {
-        "target": "https://diabos-masters.centralus.azurecontainer.io:8253",
+        "target": "http://localhost:3000",
         "secure": false,
         "logLevel": "debug"
     }
