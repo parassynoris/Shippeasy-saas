@@ -166,7 +166,7 @@ stages:
             displayName: Run unit tests
             env:
               NODE_ENV: test
-            continueOnError: true    # non-blocking until test suite is stable
+            continueOnError: false
 
           - task: PublishTestResults@2
             condition: always()

@@ -94,6 +94,14 @@ exports.validateAuth = async (req, res, next) => {
         return next();
     }
 
+    const expectedApiKey = process.env.X_API_KEY;
+    if (expectedApiKey) {
+        const clientApiKey = req.headers['x-api-key'];
+        if (!clientApiKey || clientApiKey !== expectedApiKey) {
+            return res.status(403).json({ message: 'Invalid or missing API key' });
+        }
+    }
+
     if (!req.headers.authorization) {
         return res.status(401).json({ message: 'No token provided' });
     }
