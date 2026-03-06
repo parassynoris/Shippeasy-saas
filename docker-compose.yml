@@ -66,6 +66,12 @@ services:
       MONGO_URI: mongodb://mongo:27017/${MONGO_DB_NAME:-shipeasy}
     volumes:
       - logs_data:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   # ─────────────────────────────────────────────
   # Frontend (Angular → nginx)
@@ -85,7 +91,8 @@ services:
     networks:
       - shipeasy_net
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     ports:
       - "${FRONTEND_PORT:-80}:80"
     environment:

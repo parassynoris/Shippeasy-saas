@@ -2,8 +2,18 @@ require('dotenv').config({ path: '.env' })
 
 const requestTracer = require('./middleware/requestTracer')
 const express = require('express');
+const compression = require('compression');
 const app = express();
 const cors = require('cors');
+const { securityHeaders, apiLimiter, sanitizeInput } = require('./middleware/security');
+
+// ── Security headers (helmet) ───────────────────────────────────
+app.use(securityHeaders);
+
+// ── Response compression ────────────────────────────────────────
+app.use(compression());
+
+// ── CORS ────────────────────────────────────────────────────────
 const allowedOrigins = process.env.CORS_ORIGINS ? process.env.CORS_ORIGINS.split(',').map(o => o.trim()) : [];
 app.use(cors({
   origin: function (origin, callback) {
@@ -18,21 +28,32 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key', 'frontend-trace-id'],
   credentials: true
 }));
-app.use(express.json({ limit: '50mb' }))
+
+// ── Body parsing with reduced default limit ─────────────────────
+app.use(express.json({ limit: '1mb' }))
 app.use(express.urlencoded({ extended: false }));
-// app.use(express.text({ type: '*/*' })); 
+
+// ── NoSQL injection prevention ──────────────────────────────────
+app.use(sanitizeInput);
+
+// ── Request tracing ─────────────────────────────────────────────
 app.use(requestTracer);
+
+// ── General API rate limiter ────────────────────────────────────
+app.use(apiLimiter);
 
 const http = require('http').createServer(app);
 
+// ── APM Configuration ───────────────────────────────────────────
+const isProduction = process.env.NODE_ENV === 'production';
 const apm = require('elastic-apm-node').start({
 	serviceName: 'shipeasy-api',
 	serverUrl: process.env.APM_SERVER,
 	environment: process.env.ENVIRONMENT,
-	captureBody: 'all',
+	captureBody: isProduction ? 'errors' : 'all',
 	captureHeaders: true, 
 	captureErrors: true, 
-	transactionSampleRate: 1.0,
+	transactionSampleRate: isProduction ? 0.1 : 1.0,
 });
 
 const socketHelper = require('./service/socketHelper');

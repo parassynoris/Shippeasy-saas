@@ -3,6 +3,10 @@ const router = express.Router();
 
 const { validateAuth } = require('../middleware/auth')
 const { checkIndex } = require('../middleware/checkIndex')
+const { authLimiter } = require('../middleware/security')
+const { loginValidation, resetValidation, changePasswordValidation, agentOnboardingValidation } = require('../middleware/validation')
+const { enforceTenantIsolation } = require('../middleware/tenant')
+const { checkPlanAccess } = require('../middleware/planEnforcement')
 
 const jasperController = require('../controller/jasperController');
 
@@ -10,6 +14,10 @@ const multer = require('multer');
 const proxy = require("express-http-proxy");
 
 var bodyParser = require('body-parser');
+
+// ── Higher body limit for file upload routes only ───────────────
+const largeBodyParser = express.json({ limit: '50mb' });
+
 const { downloadQrCode, getQrData, getWarehouseQrData } = require('../controller/qr.controller');
 const { createLoadPlan, calculateLoad } = require('../controller/loadPlan.controller');
 const { profileCompletion, chatInitialization, chartDataDashboard, clearAllNotification, sendBookingConfirmation } = require('../controller/dashboard.controller');
@@ -92,7 +100,7 @@ router.post('/oceanIOWebhook', [oceanIOWebhook])
 
 router.post('/chartDataDashboard', [validateAuth, chartDataDashboard])
 
-router.post('/agentOnBoarding', [ agentOnBoarding])
+router.post('/agentOnBoarding', authLimiter, agentOnboardingValidation, [ agentOnBoarding])
 
 router.post('/quotationRate', [validateAuth, quotationRate])
 
@@ -117,9 +125,9 @@ router.post('/clearAllNotification', [validateAuth, clearAllNotification])
 
 router.post('/report/:reportName', [validateAuth, reports])
 
-router.post('/user/login', [getToken])
-router.post('/user/reset', [resetUser])
-router.post('/user/change-password',[changePassword]),
+router.post('/user/login', authLimiter, loginValidation, [getToken])
+router.post('/user/reset', authLimiter, resetValidation, [resetUser])
+router.post('/user/change-password', authLimiter, changePasswordValidation, [changePassword]),
 
 router.get('/quotation/update/:id/:status', [quotationUpdates])
 
@@ -129,8 +137,8 @@ router.post('/checkOrderReport', [validateAuth, checkOrderReport])
 
 router.post('/downloadOrderReport', [validateAuth, downloadOrderReport])
 
-router.post('/uploadfile', upload.single('file'), [validateAuth, uploadFile])
-router.post('/uploadpublicreport', upload.single('file'), [validateAuth, uploadPublicFile])
+router.post('/uploadfile', largeBodyParser, upload.single('file'), [validateAuth, uploadFile])
+router.post('/uploadpublicreport', largeBodyParser, upload.single('file'), [validateAuth, uploadPublicFile])
 
 router.post('/downloadfile/:fileName', [validateAuth, downloadFile])
 router.post('/downloadmobilefile/:fileName', [validateAuth, downloadMobileFile])
@@ -141,13 +149,13 @@ router.post('/email/send', [validateAuth, emailApi])
 router.post('/auth', [validateAuth, authProfile])
 
 router.post('/search/:indexName/:id?', [validateAuth, get])
-router.post('/:indexName', [validateAuth, checkIndex,  insert])
+router.post('/:indexName', [validateAuth, checkIndex, enforceTenantIsolation, checkPlanAccess, insert])
 
-router.post('/:indexName/batchinsert', [validateAuth, checkIndex, insertBatch])
-router.put('/:indexName/batchupdate', [validateAuth, checkIndex, updateBatch])
+router.post('/:indexName/batchinsert', [validateAuth, checkIndex, enforceTenantIsolation, checkPlanAccess, insertBatch])
+router.put('/:indexName/batchupdate', [validateAuth, checkIndex, enforceTenantIsolation, checkPlanAccess, updateBatch])
 
-router.put('/:indexName/:id', [validateAuth, checkIndex, update])
-router.delete('/:indexName/:id', [validateAuth, checkIndex, deleteCommon])
+router.put('/:indexName/:id', [validateAuth, checkIndex, enforceTenantIsolation, checkPlanAccess, update])
+router.delete('/:indexName/:id', [validateAuth, checkIndex, enforceTenantIsolation, deleteCommon])
 
 /**
  * @swagger

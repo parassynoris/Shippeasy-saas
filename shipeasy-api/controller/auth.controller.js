@@ -7,8 +7,6 @@ exports.getToken = async (req, res, next) => {
     const { Username, Password } = req.body;
 
     if (Username && Password) {
-        let roles = [];
-
         const UserSearch = mongoose.models.UserSearch || mongoose.model('UserSearch', Schema['user'], 'users');
 
         // Find user by username first, then verify password securely
@@ -37,39 +35,22 @@ exports.getToken = async (req, res, next) => {
 
                 if (user.isTrial){
                     if (new Date(user.trialValidTill) < new Date()) {
-                        res.status(401).json({ message: 'Your trial period has been expired' });
-                    } else {
-                        const token = jwt.sign({ user: { id: user.userId, username: user.userLogin, sessionToken: user.tokenVersion} }, process.env.SECRET_KEY_JWT, { expiresIn: '24h' });
-        
-                        for (let i = 0; i < user?.roles?.length; i++) {
-                            const RoleSchema = Schema["role"];
-                            const RoleSearch = mongoose.models.RoleSearch || mongoose.model('RoleSearch', RoleSchema, 'roles');
-        
-                            await RoleSearch.findOne({ 'roleId': user.roles[i].roleId }).then(async function (roleFound) {
-                                if (roleFound)
-                                    roles.push(roleFound)
-                            });
-                        }
-        
-                        res.send({ "accessToken": token, accesslevel: roles, userData: user })
+                        return res.status(401).json({ message: 'Your trial period has been expired' });
                     }
                 } else if (!(user.userStatus)){
-                    res.status(401).json({ message: 'You need to re-register, Please contact support team!' });
-                } else {
-                    const token = jwt.sign({ user: { id: user.userId, username: user.userLogin, sessionToken: user.tokenVersion} }, process.env.SECRET_KEY_JWT, { expiresIn: '24h' });
-    
-                    for (let i = 0; i < user?.roles?.length; i++) {
-                        const RoleSchema = Schema["role"];
-                        const RoleSearch = mongoose.models.RoleSearch || mongoose.model('RoleSearch', RoleSchema, 'roles');
-    
-                        await RoleSearch.findOne({ 'roleId': user.roles[i].roleId }).then(async function (roleFound) {
-                            if (roleFound)
-                                roles.push(roleFound)
-                        });
-                    }
-    
-                    res.send({ "accessToken": token, accesslevel: roles, userData: user })
+                    return res.status(401).json({ message: 'You need to re-register, Please contact support team!' });
                 }
+
+                const token = jwt.sign({ user: { id: user.userId, username: user.userLogin, sessionToken: user.tokenVersion} }, process.env.SECRET_KEY_JWT, { expiresIn: '24h' });
+    
+                // Fetch all roles in a single query (fixes N+1 pattern)
+                const roleIds = (user.roles || []).map(r => r.roleId);
+                const RoleSearch = mongoose.models.RoleSearch || mongoose.model('RoleSearch', Schema["role"], 'roles');
+                const roles = roleIds.length > 0 
+                    ? await RoleSearch.find({ 'roleId': { $in: roleIds } })
+                    : [];
+    
+                res.send({ "accessToken": token, accesslevel: roles, userData: user })
             } else {
                 res.status(401).json({ message: 'Invalid credentials' });
             }
@@ -202,23 +183,17 @@ exports.authProfile = async (req, res, next) => {
     let roles = [];
 
     if (user) {
-        for (let i = 0; i < user?.roles?.length; i++) {
-            const RoleSchema = Schema["role"];
-            const RoleSearch = mongoose.models.RoleSearch || mongoose.model('RoleSearch', RoleSchema, 'roles');
-
-            await RoleSearch.findOne({ 'roleId': user.roles[i].roleId }).then(async function (roleFound) {
-                if (roleFound) {
-                    const roleWithUserData = {
-                        ...roleFound.toObject(),
-                        userData: user
-                    };
-
-                    roles.push(roleWithUserData)
-                }
-            });
+        // Fetch all roles in a single query (fixes N+1 pattern)
+        const roleIds = (user.roles || []).map(r => r.roleId);
+        const RoleSearch = mongoose.models.RoleSearch || mongoose.model('RoleSearch', Schema["role"], 'roles');
+        
+        if (roleIds.length > 0) {
+            const foundRoles = await RoleSearch.find({ 'roleId': { $in: roleIds } });
+            roles = foundRoles.map(roleFound => ({
+                ...roleFound.toObject(),
+                userData: user
+            }));
         }
-    } else {
-        data.tenantId = '1'
     }
 
     res.send(roles)

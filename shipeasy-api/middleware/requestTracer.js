@@ -151,8 +151,6 @@ const requestTracer = (req, res, next) => {
                 // Encrypt the response body
                 const encryptedBody = encrypt(body);
 
-                // console.log(decrypt(encryptedBody))
-
                 // Call the original send function with the encrypted body
                 return originalSend.call(this, encryptedBody);
             } else {
