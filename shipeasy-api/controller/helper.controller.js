@@ -13,9 +13,10 @@ const pdfScanner = require("pdf-parse")
 const ediController = require('../controller/ediController')
 const OpenAI = require("openai")
 const objecdiff = require('objecdiff');
-const openAIClient = new OpenAI({
-    apiKey: process.env.OPENAI_API, // This is the default and can be omitted
-});
+let openAIClient = null;
+if (process.env.OPENAI_API) {
+    openAIClient = new OpenAI({ apiKey: process.env.OPENAI_API });
+}
 const { sendMessage, getTextMessageInput } = require("./../service/messageHelper");
 const fs = require('fs');
 const _ = require('lodash');

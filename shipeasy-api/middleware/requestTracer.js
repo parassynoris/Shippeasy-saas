@@ -1,138 +1,119 @@
 const { v4: uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const requestContext = require('../service/requestContext')
+const requestContext = require('../service/requestContext');
 
 const excludedEndpoints = [
-	'/pdf/download',
-	'/uploadfile',
-	'/downloadfile',
-    '/health'
+    '/pdf/download',
+    '/uploadfile',
+    '/downloadfile',
+    '/health',
 ];
 
-const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'BYUKXCRPHYRFOJINZHPSXZMQEULXFJOF'; // Must be 32 characters
-const IV_LENGTH = 16; // For AES, this is always 16
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY;
+const IV_LENGTH = 16;
 
 function encrypt(text) {
-	let iv = crypto.randomBytes(IV_LENGTH);
-	let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(ENCRYPTION_KEY), iv);
-	let encrypted = cipher.update(text);
-
-	encrypted = Buffer.concat([encrypted, cipher.final()]);
-
-	return iv.toString('hex') + ':' + encrypted.toString('hex');
+    if (!ENCRYPTION_KEY) throw new Error('ENCRYPTION_KEY not configured');
+    const iv = crypto.randomBytes(IV_LENGTH);
+    const cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(ENCRYPTION_KEY), iv);
+    let encrypted = cipher.update(text);
+    encrypted = Buffer.concat([encrypted, cipher.final()]);
+    return iv.toString('hex') + ':' + encrypted.toString('hex');
 }
+
 function decrypt(text) {
-    let textParts = text.split(':');
-    let iv = Buffer.from(textParts.shift(), 'hex'); // Extract IV
-    let encryptedText = Buffer.from(textParts.join(':'), 'hex'); // Extract encrypted data
-    let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(ENCRYPTION_KEY), iv);
+    if (!ENCRYPTION_KEY) throw new Error('ENCRYPTION_KEY not configured');
+    const textParts = text.split(':');
+    const iv = Buffer.from(textParts.shift(), 'hex');
+    const encryptedText = Buffer.from(textParts.join(':'), 'hex');
+    const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(ENCRYPTION_KEY), iv);
     let decrypted = decipher.update(encryptedText);
-
     decrypted = Buffer.concat([decrypted, decipher.final()]);
-
     return decrypted.toString();
+}
+
+const SENSITIVE_HEADERS = new Set([
+    'authorization', 'cookie', 'x-api-key',
+]);
+
+function sanitizeHeaders(headers) {
+    const sanitized = {};
+    for (const [key, value] of Object.entries(headers)) {
+        sanitized[key] = SENSITIVE_HEADERS.has(key.toLowerCase()) ? '[REDACTED]' : value;
+    }
+    return sanitized;
 }
 
 const requestTracer = (req, res, next) => {
     const traceId = uuidv4();
 
     requestContext.run(traceId, () => {
-        req.traceId = traceId; // Attach traceId to request object
-        req.frontendTraceId = req.headers['frontend-trace-id']
+        req.traceId = traceId;
+        req.frontendTraceId = req.headers['frontend-trace-id'];
 
-    
         const contentType = req.headers['content-type'];
 
-        // Only decrypt if the content type is 'text/plain' or another encrypted data type
-        if ((process.env.ENCRYPTION === 'true') && contentType && contentType.includes('text/plain') && (!excludedEndpoints.includes(req.path))) {
+        if (
+            process.env.ENCRYPTION === 'true'
+            && ENCRYPTION_KEY
+            && contentType && contentType.includes('text/plain')
+            && !excludedEndpoints.some(ep => req.path.includes(ep))
+        ) {
             if (req.body && typeof req.body === 'string') {
                 try {
-                    // Decrypt the incoming raw body (encrypted text)
                     req.body = decrypt(req.body);
-
-                    // Optionally parse as JSON if expected
                     try {
                         req.body = JSON.parse(req.body);
-                    } catch (err) {
-                        console.error(JSON.stringify({
-                            traceId : req?.traceId,
-                            error: err,
-                            stack : err?.stack
-                        }))
-                    }
+                    } catch (_) { /* body is not JSON — leave as string */ }
                 } catch (error) {
-                    console.error(JSON.stringify({
-                        userId : req.userId,
-                        traceId: req.traceId,
-                        method: req.method,
-                        url: req.url,
-                        timestamp: new Date().toISOString(),
-                        headers: req.headers,
-                        body: req.body
-                    }));
-                    
-                    return res.status(400).send({ error: 'Invalid encrypted data' });
+                    return res.status(400).json({ error: 'Invalid encrypted data' });
                 }
             }
         }
 
         try {
-            const decoded = jwt.verify(req.headers.authorization.replace("Bearer").slice(), process.env.SECRET_KEY_JWT);
-            req.userId = decoded.user.id
-            req.username = decoded.user.username
-        } catch (err) {
-            console.error(JSON.stringify({
-                traceId : req?.traceId,
-                error: err,
-                stack : err?.stack
-            }))
-        }
+            const authHeader = req.headers.authorization;
+            if (authHeader) {
+                const token = authHeader.startsWith('Bearer ')
+                    ? authHeader.slice(7)
+                    : authHeader;
+                const decoded = jwt.verify(token, process.env.SECRET_KEY_JWT);
+                req.userId = decoded.user.id;
+                req.username = decoded.user.username;
+            }
+        } catch (_) { /* token is invalid or missing — auth middleware will handle */ }
 
         res.setHeader('X-Trace-Id', req.traceId);
-        
-        // Log request
-        console.log(JSON.stringify({
-            userId : req.userId,
-            traceId: req.traceId,
-            method: req.method,
-            url: req.url,
-            timestamp: new Date().toISOString(),
-            headers: req.headers,
-            body: req.body
-        }));
 
-        // Capture response using event listener
-        const originalSend = res.send;
-        res.send = function(body) {
-            console.log(JSON.stringify({
-                userId : req.userId,
+        if (process.env.NODE_ENV !== 'production') {
+            console.info(JSON.stringify({
                 traceId: req.traceId,
-                responseTimestamp: new Date().toISOString(),
-                statusCode: res.statusCode,
-                responseBody: body
+                method: req.method,
+                url: req.url,
+                timestamp: new Date().toISOString(),
+                userId: req.userId,
             }));
+        }
 
-            if (process.env.ENCRYPTION === 'true' && (!excludedEndpoints.includes(req.path))) {
-                // Check if body is a string, buffer, or an object
+        const originalSend = res.send;
+        res.send = function (body) {
+            if (
+                process.env.ENCRYPTION === 'true'
+                && ENCRYPTION_KEY
+                && !excludedEndpoints.some(ep => req.path.includes(ep))
+            ) {
                 if (typeof body === 'object') {
                     body = JSON.stringify(body);
                 }
-
-                // Encrypt the response body
                 const encryptedBody = encrypt(body);
-
-                // console.log(decrypt(encryptedBody))
-
-                // Call the original send function with the encrypted body
                 return originalSend.call(this, encryptedBody);
-            } else {
-                return originalSend.call(this, body);
             }
+            return originalSend.call(this, body);
         };
 
         next();
-    })
+    });
 };
 
-module.exports = requestTracer; 
+module.exports = requestTracer;

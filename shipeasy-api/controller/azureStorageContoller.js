@@ -1,13 +1,13 @@
 const { BlobServiceClient } = require("@azure/storage-blob");
 
-// Replace with your Azure Storage account connection string
-const connectionString = process.env.AZURE_CONNECTION_STRING;
+const connectionString = process.env.AZURE_CONNECTION_STRING || process.env.AZURE_STORAGE_CONNECTION_STRING;
 
-// Create a BlobServiceClient
-const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
+let blobServiceClient = null;
+if (connectionString) {
+    blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
+}
 
-// Specify the container name
-const containerName = "ship-docs";
+const containerName = process.env.AZURE_CONTAINER_NAME || "ship-docs";
 
 async function streamToString(readableStream) {
     return new Promise((resolve, reject) => {

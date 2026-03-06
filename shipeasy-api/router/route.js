@@ -1,13 +1,23 @@
 const express = require('express');
 const router = express.Router();
 
-const { validateAuth } = require('../middleware/auth')
-const { checkIndex } = require('../middleware/checkIndex')
+const { validateAuth } = require('../middleware/auth');
+const { checkIndex } = require('../middleware/checkIndex');
+const { enforceTenantIsolation } = require('../middleware/tenantIsolation');
+const { authLimiter, uploadLimiter } = require('../middleware/security');
+const {
+    validateLogin,
+    validatePasswordReset,
+    validateCrudInsert,
+    validateCrudUpdate,
+    validateSearch,
+    validateFileDownload,
+} = require('../middleware/validateRequest');
 
 const jasperController = require('../controller/jasperController');
 
 const multer = require('multer');
-const proxy = require("express-http-proxy");
+const proxy = require('express-http-proxy');
 
 var bodyParser = require('body-parser');
 const { downloadQrCode, getQrData, getWarehouseQrData } = require('../controller/qr.controller');
@@ -20,7 +30,7 @@ const { pushToZircon, cancelFromZircon } = require('../controller/eInvoicing.con
 const { contactFormFilled, quotationUpdates } = require('../controller/non-auth.controller');
 const { dashboardReport, reports } = require('../controller/reports.controller');
 const { oceanIOWebhook } = require('../controller/webhooks.controller');
-const { agentOnBoarding, getToken, resetUser, authProfile ,changePassword } = require('../controller/auth.controller');
+const { agentOnBoarding, getToken, resetUser, authProfile, changePassword } = require('../controller/auth.controller');
 const { getMails, sendBatchEmail, sendBookingMail, emailApi } = require('../controller/email.controller');
 const { createOrderReport, checkOrderReport, downloadOrderReport } = require('../controller/creditReport.controller');
 const { uploadFile, uploadPublicFile, downloadFile, downloadMobileFile, downloadPublicFile, uploadPublicFileForWhatsapp } = require('../controller/storage.controller');
@@ -77,11 +87,16 @@ router.post('/chatInitialization', [validateAuth, chatInitialization])
 
 
 router.post('/:fromPage/contactFormFilled', async (req, res, next) => {
-  const token = req.headers.authorization.split(" ")[1]
-  if (token === process.env.WORDPRESS_TOKEN)
-    next()
-  else
-    res.status(401).send("Unauthorized")
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  const token = authHeader.split(' ')[1];
+  if (token && token === process.env.WORDPRESS_TOKEN) {
+    next();
+  } else {
+    res.status(401).json({ error: 'Unauthorized' });
+  }
 }, [contactFormFilled])
 
 router.post('/dashboardReport', [validateAuth, dashboardReport])
@@ -115,9 +130,9 @@ router.post('/clearAllNotification', [validateAuth, clearAllNotification])
 
 router.post('/report/:reportName', [validateAuth, reports])
 
-router.post('/user/login', [getToken])
-router.post('/user/reset', [resetUser])
-router.post('/user/change-password',[changePassword]),
+router.post('/user/login', authLimiter, validateLogin, getToken);
+router.post('/user/reset', authLimiter, validatePasswordReset, resetUser);
+router.post('/user/change-password', authLimiter, validateAuth, changePassword);
 
 router.get('/quotation/update/:id/:status', [quotationUpdates])
 
@@ -127,25 +142,25 @@ router.post('/checkOrderReport', [validateAuth, checkOrderReport])
 
 router.post('/downloadOrderReport', [validateAuth, downloadOrderReport])
 
-router.post('/uploadfile', upload.single('file'), [validateAuth, uploadFile])
-router.post('/uploadpublicreport', upload.single('file'), [validateAuth, uploadPublicFile])
+router.post('/uploadfile', uploadLimiter, upload.single('file'), [validateAuth, uploadFile])
+router.post('/uploadpublicreport', uploadLimiter, upload.single('file'), [validateAuth, uploadPublicFile])
 
-router.post('/downloadfile/:fileName', [validateAuth, downloadFile])
-router.post('/downloadmobilefile/:fileName', [validateAuth, downloadMobileFile])
-router.post('/downloadpublicfile/:fileName', [validateAuth, downloadPublicFile])
+router.post('/downloadfile/:fileName', validateFileDownload, [validateAuth, downloadFile])
+router.post('/downloadmobilefile/:fileName', validateFileDownload, [validateAuth, downloadMobileFile])
+router.post('/downloadpublicfile/:fileName', validateFileDownload, [validateAuth, downloadPublicFile])
 
 router.post('/email/send', [validateAuth, emailApi])
 
 router.post('/auth', [validateAuth, authProfile])
 
-router.post('/search/:indexName/:id?', [validateAuth, get])
-router.post('/:indexName', [validateAuth, checkIndex,  insert])
+router.post('/search/:indexName/:id?', validateSearch, [validateAuth, enforceTenantIsolation, get])
+router.post('/:indexName', validateCrudInsert, [validateAuth, checkIndex, enforceTenantIsolation, insert])
 
-router.post('/:indexName/batchinsert', [validateAuth, checkIndex, insertBatch])
-router.put('/:indexName/batchupdate', [validateAuth, checkIndex, updateBatch])
+router.post('/:indexName/batchinsert', validateCrudInsert, [validateAuth, checkIndex, enforceTenantIsolation, insertBatch])
+router.put('/:indexName/batchupdate', validateCrudInsert, [validateAuth, checkIndex, enforceTenantIsolation, updateBatch])
 
-router.put('/:indexName/:id', [validateAuth, checkIndex, update])
-router.delete('/:indexName/:id', [validateAuth, checkIndex, deleteCommon])
+router.put('/:indexName/:id', validateCrudUpdate, [validateAuth, checkIndex, enforceTenantIsolation, update])
+router.delete('/:indexName/:id', validateCrudUpdate, [validateAuth, checkIndex, enforceTenantIsolation, deleteCommon])
 
 /**
  * @swagger
