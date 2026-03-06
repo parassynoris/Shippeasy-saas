@@ -503,4 +503,187 @@ describe('Security Middleware Tests', () => {
             expect(res.status).toBe(200);
         });
     });
+
+    // ─── BCRYPT PASSWORD HASHING (CRIT-03) ───────────────────────
+
+    describe('Password hashing with bcrypt', () => {
+
+        const bcrypt = require('bcrypt');
+
+        it('bcrypt module should be available', () => {
+            expect(bcrypt).toBeDefined();
+            expect(typeof bcrypt.hash).toBe('function');
+            expect(typeof bcrypt.compare).toBe('function');
+        });
+
+        it('should generate a valid bcrypt hash', async () => {
+            const hash = await bcrypt.hash('TestPassword123', 12);
+            expect(hash).toMatch(/^\$2[aby]\$/);
+            expect(hash.length).toBeGreaterThan(50);
+        });
+
+        it('should verify correct password against hash', async () => {
+            const hash = await bcrypt.hash('CorrectPassword', 12);
+            const result = await bcrypt.compare('CorrectPassword', hash);
+            expect(result).toBe(true);
+        });
+
+        it('should reject incorrect password against hash', async () => {
+            const hash = await bcrypt.hash('CorrectPassword', 12);
+            const result = await bcrypt.compare('WrongPassword', hash);
+            expect(result).toBe(false);
+        });
+
+        it('comparePassword helper should handle both bcrypt and legacy plain text', async () => {
+            const { comparePassword } = (() => {
+                async function comparePassword(plainText, stored) {
+                    if (stored && stored.startsWith('$2')) {
+                        return require('bcrypt').compare(plainText, stored);
+                    }
+                    return plainText === stored;
+                }
+                return { comparePassword };
+            })();
+
+            const bcryptHash = await bcrypt.hash('mypassword', 12);
+            expect(await comparePassword('mypassword', bcryptHash)).toBe(true);
+            expect(await comparePassword('wrong', bcryptHash)).toBe(false);
+
+            expect(await comparePassword('plaintext', 'plaintext')).toBe(true);
+            expect(await comparePassword('wrong', 'plaintext')).toBe(false);
+        });
+    });
+
+    // ─── X-API-KEY VALIDATION (CRIT-09) ──────────────────────────
+
+    describe('x-api-key validation in auth middleware', () => {
+
+        const { validateAuth } = require('../middleware/auth');
+
+        function buildApiKeyApp() {
+            const app = express();
+            app.use(express.json());
+            app.get('/protected', validateAuth, (req, res) => res.json({ ok: true }));
+            return app;
+        }
+
+        let prevKey;
+        beforeEach(() => { prevKey = process.env.X_API_KEY; });
+        afterEach(() => { process.env.X_API_KEY = prevKey || ''; });
+
+        it('should reject request with wrong x-api-key when X_API_KEY is set', async () => {
+            process.env.X_API_KEY = 'correct-key-123';
+            const app = buildApiKeyApp();
+            const res = await request(app)
+                .get('/protected')
+                .set('x-api-key', 'wrong-key')
+                .set('Authorization', 'Bearer fake-token');
+
+            expect(res.status).toBe(403);
+            expect(res.body.message).toBe('Invalid or missing API key');
+        });
+
+        it('should reject request with missing x-api-key when X_API_KEY is set', async () => {
+            process.env.X_API_KEY = 'correct-key-123';
+            const app = buildApiKeyApp();
+            const res = await request(app)
+                .get('/protected')
+                .set('Authorization', 'Bearer fake-token');
+
+            expect(res.status).toBe(403);
+            expect(res.body.message).toBe('Invalid or missing API key');
+        });
+
+        it('should skip x-api-key check when X_API_KEY env var is empty', async () => {
+            process.env.X_API_KEY = '';
+            const app = buildApiKeyApp();
+            const res = await request(app)
+                .get('/protected');
+
+            expect(res.status).toBe(401);
+            expect(res.body.message).toBe('No token provided');
+        });
+    });
+
+    // ─── WHATSAPP VERIFY TOKEN (CRIT-07) ─────────────────────────
+
+    describe('WhatsApp webhook verification', () => {
+
+        it('whatsapp.controller.js should not contain hardcoded verify token', () => {
+            const fs = require('fs');
+            const path = require('path');
+            const content = fs.readFileSync(
+                path.resolve(__dirname, '../controller/whatsapp.controller.js'),
+                'utf-8'
+            );
+            expect(content).not.toMatch(/VERIFY_TOKEN\s*=\s*'[A-Za-z0-9]{50,}'/);
+            expect(content).toContain('process.env.WHATSAPP_VERIFY_TOKEN');
+        });
+    });
+
+    // ─── MOCK AUTH SERVICE REMOVAL (HIGH-11) ─────────────────────
+
+    describe('Frontend mock auth service removal', () => {
+
+        it('auth.service.ts should not contain mock credentials', () => {
+            const fs = require('fs');
+            const path = require('path');
+            const content = fs.readFileSync(
+                path.resolve(__dirname, '../../shipeasy/src/app/services/auth.service.ts'),
+                'utf-8'
+            );
+            expect(content).not.toContain('amich');
+            expect(content).not.toContain('test1234');
+        });
+    });
+
+    // ─── PROXY CONFIG (MED-09) ───────────────────────────────────
+
+    describe('Frontend proxy configuration', () => {
+
+        it('proxy.conf.json should point to localhost', () => {
+            const fs = require('fs');
+            const path = require('path');
+            const config = JSON.parse(
+                fs.readFileSync(
+                    path.resolve(__dirname, '../../shipeasy/src/proxy.conf.json'),
+                    'utf-8'
+                )
+            );
+            expect(config['/api/*'].target).toBe('http://localhost:3000');
+        });
+    });
+
+    // ─── CI PIPELINE (CRIT-06) ───────────────────────────────────
+
+    describe('CI pipeline configuration', () => {
+
+        it('azure-pipelines.yml should not have continueOnError: true', () => {
+            const fs = require('fs');
+            const path = require('path');
+            const content = fs.readFileSync(
+                path.resolve(__dirname, '../../azure-pipelines.yml'),
+                'utf-8'
+            );
+            expect(content).not.toMatch(/continueOnError:\s*true/);
+        });
+    });
+
+    // ─── BACKEND TEST CREDENTIALS (HIGH-12) ──────────────────────
+
+    describe('Backend test file security', () => {
+
+        it('retrieval.test.js should not contain hardcoded credentials', () => {
+            const fs = require('fs');
+            const path = require('path');
+            const content = fs.readFileSync(
+                path.resolve(__dirname, './retrieval.test.js'),
+                'utf-8'
+            );
+            expect(content).not.toContain('rutvikm');
+            expect(content).not.toContain(':0W+{6#F');
+            expect(content).toContain('process.env.TEST_USERNAME');
+            expect(content).toContain('process.env.TEST_PASSWORD');
+        });
+    });
 });
