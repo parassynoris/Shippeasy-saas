@@ -1,99 +1,104 @@
 const { mongoose, Schema, invoiceSchema, uuid, jwt, crypto, axios, azureStorage, inAppNotificationService, querystring, nodemailer, pdfScanner, ediController, OpenAI, objecdiff, sendMessage, getTextMessageInput, fs, _, simpleParser, connect, imapConfig, transporter, getChangedFields, removeIdField, recordLogAudit, encryptObject, decryptObject, isSubset, createInAppNotification, replacePlaceholders, generateRandomPassword, triggerPointExecute, insertIntoTally, getTransporter, getChildCompany, sendMail } = require('./helper.controller')
+const bcrypt = require('bcrypt');
+const logger = require('../utils/logger');
 
+const BCRYPT_ROUNDS = 12;
+
+async function comparePassword(plainText, stored) {
+    if (stored && stored.startsWith('$2')) {
+        return bcrypt.compare(plainText, stored);
+    }
+    return plainText === stored;
+}
+
+async function fetchRoles(user) {
+    const roles = [];
+    for (let i = 0; i < user?.roles?.length; i++) {
+        const RoleSchema = Schema['role'];
+        const RoleSearch = mongoose.models.RoleSearch || mongoose.model('RoleSearch', RoleSchema, 'roles');
+        const roleFound = await RoleSearch.findOne({ roleId: user.roles[i].roleId });
+        if (roleFound) roles.push(roleFound);
+    }
+    return roles;
+}
 
 exports.getToken = async (req, res, next) => {
     const { Username, Password } = req.body;
 
-    if (Username && Password) {
-        let roles = [];
+    if (!Username || !Password) {
+        return res.status(401).json({ message: 'please provide Username, Password' });
+    }
 
+    try {
         const UserSearch = mongoose.models.UserSearch || mongoose.model('UserSearch', Schema['user'], 'users');
 
-        await UserSearch.findOneAndUpdate({ 'password': Password, 'userLogin': Username }, { $inc: { tokenVersion: 1 } }, { new: true, upsert: false, setDefaultsOnInsert: true}).then(async function (user) {
-            if (user) {
-                if (user.isTrial){
-                    if (new Date(user.trialValidTill) < new Date()) {
-                        res.status(401).json({ message: 'Your trial period has been expired' });
-                    } else {
-                        const token = jwt.sign({ user: { id: user.userId, username: user.userLogin, sessionToken: user.tokenVersion} }, process.env.SECRET_KEY_JWT, { expiresIn: '24h' });
-        
-                        for (let i = 0; i < user?.roles?.length; i++) {
-                            const RoleSchema = Schema["role"];
-                            const RoleSearch = mongoose.models.RoleSearch || mongoose.model('RoleSearch', RoleSchema, 'roles');
-        
-                            await RoleSearch.findOne({ 'roleId': user.roles[i].roleId }).then(async function (roleFound) {
-                                if (roleFound)
-                                    roles.push(roleFound)
-                            });
-                        }
-        
-                        res.send({ "accessToken": token, accesslevel: roles, userData: user })
-                    }
-                } else if (!(user.userStatus)){
-                    res.status(401).json({ message: 'You need to re-register, Please contact support team!' });
-                } else {
-                    const token = jwt.sign({ user: { id: user.userId, username: user.userLogin, sessionToken: user.tokenVersion} }, process.env.SECRET_KEY_JWT, { expiresIn: '24h' });
-    
-                    for (let i = 0; i < user?.roles?.length; i++) {
-                        const RoleSchema = Schema["role"];
-                        const RoleSearch = mongoose.models.RoleSearch || mongoose.model('RoleSearch', RoleSchema, 'roles');
-    
-                        await RoleSearch.findOne({ 'roleId': user.roles[i].roleId }).then(async function (roleFound) {
-                            if (roleFound)
-                                roles.push(roleFound)
-                        });
-                    }
-    
-                    res.send({ "accessToken": token, accesslevel: roles, userData: user })
-                }
-            } else {
-                res.status(401).json({ message: 'Invalid credentials' });
-            }
-        }).catch(function (err) {
-            console.error(JSON.stringify({
-                traceId : req?.traceId,
-                error: err,
-                stack : err?.stack
-            }))
-            res.status(401).json({ message: err });
-        });
-    } else {
-        res.status(401).json({ message: "please provide Username, Password" });
+        const user = await UserSearch.findOne({ userLogin: Username });
+        if (!user) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+
+        const passwordMatch = await comparePassword(Password, user.password);
+        if (!passwordMatch) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+
+        if (user.isTrial && new Date(user.trialValidTill) < new Date()) {
+            return res.status(401).json({ message: 'Your trial period has been expired' });
+        }
+
+        if (!user.userStatus) {
+            return res.status(401).json({ message: 'You need to re-register, Please contact support team!' });
+        }
+
+        user.tokenVersion = (user.tokenVersion || 0) + 1;
+        await UserSearch.updateOne({ userLogin: Username }, { $set: { tokenVersion: user.tokenVersion } });
+
+        const token = jwt.sign(
+            { user: { id: user.userId, username: user.userLogin, sessionToken: user.tokenVersion } },
+            process.env.SECRET_KEY_JWT,
+            { expiresIn: '24h' }
+        );
+
+        const roles = await fetchRoles(user);
+        res.send({ accessToken: token, accesslevel: roles, userData: user });
+
+    } catch (err) {
+        logger.error('Login error', { traceId: req?.traceId, error: err.message, stack: err?.stack });
+        res.status(500).json({ message: 'An error occurred during login' });
     }
 }
 
 
 exports.resetUser = async (req, res, next) => {
     const { userEmail, userLogin } = req.body;
-    const newPassword = generateRandomPassword(8)
+    const newPlainPassword = generateRandomPassword(8);
 
-    const UserSearch = mongoose.models.UserSearch || mongoose.model('UserSearch', Schema['user'], 'users');
-    const options = {
-        returnDocument: 'after',
-        projection: { _id: 0, __v: 0 },
-    };
-    await UserSearch.findOneAndUpdate({ 'userLogin': userLogin, 'userEmail': userEmail }, { password: newPassword }, options).then(async function (user) {
+    try {
+        const UserSearch = mongoose.models.UserSearch || mongoose.model('UserSearch', Schema['user'], 'users');
+        const hashedPassword = await bcrypt.hash(newPlainPassword, BCRYPT_ROUNDS);
+
+        const options = { returnDocument: 'after', projection: { _id: 0, __v: 0 } };
+        const user = await UserSearch.findOneAndUpdate(
+            { userLogin: userLogin, userEmail: userEmail },
+            { password: hashedPassword },
+            options
+        );
+
         if (user) {
-            await sendMail(undefined, null, "aa57a341-ec59-11f0-8305-4fb3fd895feb", [{ "email": user.userEmail }], [], { userEmail: user.userEmail, name: user.name, userLastName: user.userLastname, userLogin: user.userLogin, password: newPassword });
-
-            res.send({ status: "success", message: "User asscoiated with provided credentials is successfully reset" })
+            await sendMail(undefined, null, "aa57a341-ec59-11f0-8305-4fb3fd895feb", [{ "email": user.userEmail }], [], { userEmail: user.userEmail, name: user.name, userLastName: user.userLastname, userLogin: user.userLogin, password: newPlainPassword });
+            res.send({ status: "success", message: "User associated with provided credentials is successfully reset" });
         } else {
             res.status(401).json({ message: 'Invalid credentials' });
         }
-    }).catch(function (err) {
-        console.error(JSON.stringify({
-            traceId : req?.traceId,
-            error: err,
-            stack : err?.stack
-        }))
-        res.status(401).json({ message: err });
-    });
+    } catch (err) {
+        logger.error('Password reset error', { traceId: req?.traceId, error: err.message, stack: err?.stack });
+        res.status(500).json({ message: 'An error occurred during password reset' });
+    }
 }
 
 exports.changePassword = async (req, res, next) => {
     const { userEmail, userLogin, currentPassword, newPassword } = req.body;
 
-    // Validation
     if (!userEmail || !userLogin || !currentPassword || !newPassword) {
         return res.status(400).json({ message: 'All fields are required' });
     }
@@ -105,43 +110,35 @@ exports.changePassword = async (req, res, next) => {
     const UserSearch = mongoose.models.UserSearch || mongoose.model('UserSearch', Schema['user'], 'users');
 
     try {
-        // Find user
-        const user = await UserSearch.findOne({ 
-            userLogin: userLogin, 
-            userEmail: userEmail 
-        });
-
+        const user = await UserSearch.findOne({ userLogin, userEmail });
         if (!user) {
             return res.status(404).json({ message: 'User not found with provided credentials' });
         }
 
-        // Compare current password (plain text comparison)
-        if (user.password !== currentPassword) {
+        const currentMatch = await comparePassword(currentPassword, user.password);
+        if (!currentMatch) {
             return res.status(401).json({ message: 'Current password is incorrect' });
         }
 
-        // Check if new password is same as current password
-        if (user.password === newPassword) {
+        const sameAsOld = await comparePassword(newPassword, user.password);
+        if (sameAsOld) {
             return res.status(400).json({ message: 'New password cannot be the same as current password' });
         }
 
-        // Update password directly (plain text - NOT SECURE)
+        const hashedPassword = await bcrypt.hash(newPassword, BCRYPT_ROUNDS);
         const updatedUser = await UserSearch.findOneAndUpdate(
-            { userLogin: userLogin, userEmail: userEmail },
-            { password: newPassword }, // Storing plain text password
+            { userLogin, userEmail },
+            { password: hashedPassword },
             { new: true }
         );
 
         if (updatedUser) {
-            // Optional: Send confirmation email
             await sendMail(
-                undefined, 
-                null, 
-                "aa57a341-ec59-11f0-8305-4fb3fd895feb", 
-                [{ "email": updatedUser.userEmail }], 
-                [], 
-                { 
-                    userEmail: updatedUser.userEmail, 
+                undefined, null,
+                "aa57a341-ec59-11f0-8305-4fb3fd895feb",
+                [{ "email": updatedUser.userEmail }], [],
+                {
+                    userEmail: updatedUser.userEmail,
                     name: updatedUser.name,
                     userLastName: updatedUser.userLastname,
                     userLogin: updatedUser.userLogin,
@@ -149,20 +146,15 @@ exports.changePassword = async (req, res, next) => {
                 }
             );
 
-            res.status(200).json({ 
-                status: "success", 
-                message: "Password changed successfully. Please login with your new password." 
+            res.status(200).json({
+                status: "success",
+                message: "Password changed successfully. Please login with your new password."
             });
         } else {
             res.status(500).json({ message: 'Failed to update password' });
         }
-
     } catch (err) {
-        console.error(JSON.stringify({
-            traceId: req?.traceId,
-            error: err.message,
-            stack: err?.stack
-        }));
+        logger.error('Change password error', { traceId: req?.traceId, error: err.message, stack: err?.stack });
         res.status(500).json({ message: 'An error occurred while changing password' });
     }
 };
