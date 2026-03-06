@@ -35,9 +35,15 @@ beforeAll(async () => {
 
 describe(`POST /api/user/login`, () => {
   it(`getting token`, async () => {
+    const testUser = process.env.TEST_USERNAME;
+    const testPass = process.env.TEST_PASSWORD;
+    if (!testUser || !testPass) {
+      console.info('Skipping login test: TEST_USERNAME / TEST_PASSWORD not set');
+      return;
+    }
     const res = await request(app).post(`/api/user/login`).send({
-      Username : "rutvikm",
-      Password : ":0W+{6#F"
+      Username : testUser,
+      Password : testPass
       })
     expect(res.statusCode).toBe(200);
     authToken = res.body.accessToken;

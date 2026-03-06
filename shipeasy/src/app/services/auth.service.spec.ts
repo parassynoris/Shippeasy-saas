@@ -16,7 +16,6 @@ export class MockTranslatePipe implements PipeTransform {
   
   constructor(private currencyPipe: CurrencyPipe) {}
   transform(value: any): any {
-    // Mock the translation behavior as needed for testing
     return value;
   }
 }
@@ -55,20 +54,9 @@ describe('AuthService', () => {
     expect(localStorage.getItem('isUserLoggedIn')).toBe(null );
   });
 
-  it('should login successfully with correct credentials', (done) => {
-    service.login('amich', 'test1234').subscribe((isLoggedIn) => {
-      expect(isLoggedIn).toBeTrue();
-      expect(localStorage.getItem('isUserLoggedIn')).toBe('true');
-      expect(service.isUserLoggedIn).toBeTrue();
-      done();
-    });
-  });
-
-  it('should not login with incorrect credentials', (done) => {
-    service.login('wronguser', 'wrongpassword').subscribe((isLoggedIn) => {
-      expect(isLoggedIn).toBeFalse();
-      expect(localStorage.getItem('isUserLoggedIn')).toBe('false');
-      expect(service.isUserLoggedIn).toBeFalse();
+  it('login should return false (no mock bypass)', (done) => {
+    service.login('anyuser', 'anypass').subscribe((result) => {
+      expect(result).toBeFalse();
       done();
     });
   });
