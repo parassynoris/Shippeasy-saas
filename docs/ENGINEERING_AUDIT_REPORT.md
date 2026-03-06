@@ -999,7 +999,7 @@ Replace direct `require()` imports with a DI container (e.g., `awilix` or `tsyri
 - [x] Add webhook signature verification (OceanIO, WhatsApp)
 - [x] Add file upload content-type validation
 - [x] Implement NoSQL injection prevention
-- [ ] Add API key authentication for service-to-service calls
+- [x] Add API key authentication for service-to-service calls
 
 ### Performance
 
@@ -1025,11 +1025,12 @@ Replace direct `require()` imports with a DI container (e.g., `awilix` or `tsyri
 - [ ] Add SSL/TLS termination at load balancer
 - [x] Configure container resource limits (CPU/memory)
 - [ ] Add Docker image vulnerability scanning in CI
+- [x] Add graceful shutdown with signal handling
 
 ### SaaS Architecture
 
 - [x] Add tenant isolation middleware (orgId enforcement)
-- [x] Add subscription plan enforcement middleware
+- [x] Add subscription plan enforcement middleware (soft/hard mode)
 - [x] Define plan tiers (free/pro/enterprise)
 - [ ] Integrate billing provider (Stripe/Razorpay)
 - [x] Add usage metering per tenant
@@ -1042,11 +1043,12 @@ Replace direct `require()` imports with a DI container (e.g., `awilix` or `tsyri
 - [ ] Increase test coverage to >70% line coverage
 - [ ] Add unit tests for all controller functions
 - [ ] Add integration tests for auth flows
-- [ ] Add security tests (injection, CORS, auth bypass)
+- [x] Add security tests (NoSQL injection prevention, webhook auth, file validation)
 - [ ] Add load tests for critical endpoints (k6/Artillery)
 - [ ] Add contract tests for external API integrations
 - [ ] Add database migration tests
 - [ ] Set up coverage gates in CI pipeline
+- [x] Add unit tests for middleware (security, API key, plan enforcement, tenant isolation, usage tracking, validation)
 
 ### Documentation
 
@@ -1055,9 +1057,9 @@ Replace direct `require()` imports with a DI container (e.g., `awilix` or `tsyri
 - [x] Compliance documentation suite
 - [x] Engineering audit report
 - [ ] API documentation (Swagger/OpenAPI completeness)
-- [ ] Runbook for common operational procedures
+- [x] Runbook for common operational procedures
 - [ ] Incident response playbooks per service
-- [ ] Onboarding guide for new developers
+- [x] Onboarding guide for new developers
 
 ---
 
