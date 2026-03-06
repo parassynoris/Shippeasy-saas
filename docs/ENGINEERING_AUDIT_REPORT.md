@@ -457,8 +457,8 @@ The security audit identified several critical vulnerabilities that have been ad
 | ~~**No input validation middleware**~~ | ~~High~~ | ~~✅ FIXED — Added `express-validator` validation schemas for login, reset, change-password, and agent onboarding endpoints.~~ | ~~Implemented.~~ |
 | **Mass assignment via generic CRUD** | High | The generic `/:indexName` endpoints accept any JSON body and pass it to Mongoose `create()` or `findByIdAndUpdate()`. Clients can inject any field, including administrative flags or role escalations. **Mitigated** by NoSQL injection prevention middleware and tenant isolation. | Implement per-collection field whitelists or replace generic CRUD with collection-specific controllers. |
 | **JWT with no refresh token** | Medium | JWT tokens expire in 24 hours with no refresh token mechanism. Users must re-authenticate after expiry, and there is no way to revoke tokens before expiry. | Implement a refresh token flow with short-lived access tokens (15 min) and long-lived refresh tokens. |
-| **Unauthenticated webhook endpoints** | Medium | `POST /api/oceanIOWebhook` and `POST /webhook` (WhatsApp) accept requests without any authentication or signature verification. | Implement HMAC signature verification for all webhook endpoints. |
-| **File upload lacks content-type validation** | Medium | The file upload endpoint does not validate content types or file extensions, potentially allowing upload of executable files. | Add MIME type validation and file extension whitelisting. |
+| ~~**Unauthenticated webhook endpoints**~~ | ~~Medium~~ | ~~✅ FIXED — Added HMAC-SHA256 signature verification middleware for WhatsApp and OceanIO webhooks. Hardcoded WhatsApp verification token moved to environment variable.~~ | ~~Implemented.~~ |
+| ~~**File upload lacks content-type validation**~~ | ~~Medium~~ | ~~✅ FIXED — Added file upload validation middleware with MIME type whitelist, extension blocklist, and size limit enforcement.~~ | ~~Implemented.~~ |
 | ~~**APM captures full request bodies**~~ | ~~Low~~ | ~~✅ FIXED — Changed `captureBody` to `errors` in production; reduced `transactionSampleRate` to `0.1`.~~ | ~~Implemented.~~ |
 
 ---
@@ -562,12 +562,13 @@ schema.index({ email: 1 }, { unique: true });
 |---|---|---|---|
 | P0 | Fix N+1 queries with `$in` operators | 5x faster auth responses | ✅ FIXED |
 | P0 | Add database indexes for common queries | 10-100x faster queries at scale | ✅ FIXED |
-| P1 | Enforce pagination limits | Prevent OOM on large collections | |
+| P1 | Enforce pagination limits | Prevent OOM on large collections | ✅ FIXED |
 | P1 | Add response compression | 60-80% bandwidth reduction | ✅ FIXED |
 | P1 | Reduce APM sample rate | 20-30% latency reduction | ✅ FIXED |
+| P1 | Add MongoDB connection pooling | Better connection management | ✅ FIXED |
 | P2 | Add Redis caching layer | 90% fewer DB reads for config data | |
 | P2 | Reduce body parser limit | Prevent memory exhaustion attacks | ✅ FIXED |
-| P3 | Optimize log verbosity | Reduce storage costs | |
+| P2 | Optimize log verbosity | Reduce storage costs | ✅ FIXED |
 
 ---
 
@@ -995,8 +996,8 @@ Replace direct `require()` imports with a DI container (e.g., `awilix` or `tsyri
 - [x] Add input validation middleware (express-validator)
 - [ ] Implement refresh token flow with revocation
 - [x] Add content security policy headers (via helmet)
-- [ ] Add webhook signature verification (OceanIO, WhatsApp)
-- [ ] Add file upload content-type validation
+- [x] Add webhook signature verification (OceanIO, WhatsApp)
+- [x] Add file upload content-type validation
 - [x] Implement NoSQL injection prevention
 - [ ] Add API key authentication for service-to-service calls
 
@@ -1007,10 +1008,10 @@ Replace direct `require()` imports with a DI container (e.g., `awilix` or `tsyri
 - [x] Add response compression middleware
 - [x] Reduce APM sample rate to 10% in production
 - [ ] Add Redis caching layer for configuration and rates
-- [ ] Implement proper pagination with enforced limits
+- [x] Implement proper pagination with enforced limits
 - [x] Reduce default request body limit to 1MB
-- [ ] Add connection pooling configuration for MongoDB
-- [ ] Optimize log verbosity (metadata only by default)
+- [x] Add connection pooling configuration for MongoDB
+- [x] Optimize log verbosity (metadata only by default)
 
 ### Infrastructure
 
@@ -1022,7 +1023,7 @@ Replace direct `require()` imports with a DI container (e.g., `awilix` or `tsyri
 - [ ] Add automated database backups (daily mongodump to S3)
 - [ ] Create staging environment with pipeline integration
 - [ ] Add SSL/TLS termination at load balancer
-- [ ] Configure container resource limits (CPU/memory)
+- [x] Configure container resource limits (CPU/memory)
 - [ ] Add Docker image vulnerability scanning in CI
 
 ### SaaS Architecture
@@ -1031,9 +1032,9 @@ Replace direct `require()` imports with a DI container (e.g., `awilix` or `tsyri
 - [x] Add subscription plan enforcement middleware
 - [x] Define plan tiers (free/pro/enterprise)
 - [ ] Integrate billing provider (Stripe/Razorpay)
-- [ ] Add usage metering per tenant
-- [ ] Add feature flag system
-- [ ] Add per-tenant rate limiting
+- [x] Add usage metering per tenant
+- [x] Add feature flag system
+- [x] Add per-tenant rate limiting
 - [ ] Add self-service plan management UI
 
 ### Testing
