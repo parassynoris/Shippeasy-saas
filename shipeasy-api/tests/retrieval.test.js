@@ -17,7 +17,7 @@ var authToken;
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use('/api', require('../router/route'));
+app.use('/api', require('../router'));
 
 app.get('/api/status', (req, res) => {
   res.json({ status: 'API is up and running' });
