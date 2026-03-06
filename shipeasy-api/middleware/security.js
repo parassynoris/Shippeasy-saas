@@ -11,11 +11,11 @@ const securityHeaders = helmet({
 
 /**
  * General API rate limiter
- * 100 requests per 15 minutes per IP
+ * Configurable via RATE_LIMIT_MAX env var (default: 100 per 15 minutes per IP)
  */
 const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 100,
+    max: parseInt(process.env.RATE_LIMIT_MAX, 10) || 100,
     standardHeaders: true,
     legacyHeaders: false,
     message: {
@@ -32,11 +32,11 @@ const apiLimiter = rateLimit({
 
 /**
  * Strict rate limiter for authentication endpoints
- * 10 attempts per 15 minutes per IP
+ * Configurable via AUTH_RATE_LIMIT_MAX env var (default: 10 per 15 minutes per IP)
  */
 const authLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 10,
+    max: parseInt(process.env.AUTH_RATE_LIMIT_MAX, 10) || 10,
     standardHeaders: true,
     legacyHeaders: false,
     message: {

@@ -9110,7 +9110,7 @@ Object.keys(schemas).forEach((collectionName) => {
         });
     } else {
         // Default indexes: add orgId index for any collection that has it
-        if (schemas[collectionName].orgId) {
+        if (schema.path('orgId')) {
             schema.index({ orgId: 1 });
         }
     }

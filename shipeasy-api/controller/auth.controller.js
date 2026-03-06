@@ -47,7 +47,7 @@ exports.getToken = async (req, res, next) => {
                 const roleIds = (user.roles || []).map(r => r.roleId);
                 const RoleSearch = mongoose.models.RoleSearch || mongoose.model('RoleSearch', Schema["role"], 'roles');
                 const roles = roleIds.length > 0 
-                    ? await RoleSearch.find({ 'roleId': { $in: roleIds } })
+                    ? await RoleSearch.find({ 'roleId': { $in: roleIds } }).lean()
                     : [];
     
                 res.send({ "accessToken": token, accesslevel: roles, userData: user })
@@ -188,9 +188,9 @@ exports.authProfile = async (req, res, next) => {
         const RoleSearch = mongoose.models.RoleSearch || mongoose.model('RoleSearch', Schema["role"], 'roles');
         
         if (roleIds.length > 0) {
-            const foundRoles = await RoleSearch.find({ 'roleId': { $in: roleIds } });
+            const foundRoles = await RoleSearch.find({ 'roleId': { $in: roleIds } }).lean();
             roles = foundRoles.map(roleFound => ({
-                ...roleFound.toObject(),
+                ...roleFound,
                 userData: user
             }));
         }

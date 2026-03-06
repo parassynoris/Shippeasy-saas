@@ -44,6 +44,17 @@ function enforceTenantIsolation(req, res, next) {
         if (Array.isArray(req.body)) {
             req.body = req.body.map(doc => ({ ...doc, orgId }));
         } else if (typeof req.body === 'object' && req.body !== null) {
+            // Log potential cross-tenant access attempts
+            if (req.body.orgId && req.body.orgId !== orgId) {
+                console.warn(JSON.stringify({
+                    traceId: req.traceId,
+                    event: 'TENANT_ISOLATION_OVERRIDE',
+                    message: 'Request body contained orgId different from authenticated user',
+                    requestedOrgId: req.body.orgId,
+                    authenticatedOrgId: orgId,
+                    timestamp: new Date().toISOString(),
+                }));
+            }
             req.body.orgId = orgId;
         }
     }
