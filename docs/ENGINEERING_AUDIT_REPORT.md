@@ -393,10 +393,10 @@ The codebase demonstrates a functional product with a wide feature set, but suff
 
 | Issue | Severity | Description |
 |---|---|---|
-| **Generic CRUD with dynamic schema lookup** | High | The `:indexName` parameter allows clients to specify which MongoDB collection to operate on. While `checkIndex` middleware validates the name, the pattern enables mass assignment risks where clients can write arbitrary fields to any collection. |
-| **N+1 queries in role fetching** | Medium | The auth controller fetches roles sequentially in a loop rather than using `$in` queries or aggregation pipelines. This causes O(n) database calls per authentication request. |
-| **No input validation middleware** | High | No use of `express-validator`, `joi`, or similar libraries. Request bodies are passed directly to Mongoose without sanitization or shape validation. |
-| **No rate limiting** | High | No `express-rate-limit` or equivalent. All endpoints, including authentication, are vulnerable to brute force and abuse. |
+| **Generic CRUD with dynamic schema lookup** | High | The `:indexName` parameter allows clients to specify which MongoDB collection to operate on. While `checkIndex` middleware validates the name, the pattern enables mass assignment risks where clients can write arbitrary fields to any collection. **Mitigated** by tenant isolation middleware that enforces orgId scoping. |
+| ~~**N+1 queries in role fetching**~~ | ~~Medium~~ | ~~✅ FIXED — Replaced sequential loop with `$in` query for bulk role fetching.~~ |
+| ~~**No input validation middleware**~~ | ~~High~~ | ~~✅ FIXED — Added express-validator for auth endpoints (login, reset, change-password, onboarding).~~ |
+| ~~**No rate limiting**~~ | ~~High~~ | ~~✅ FIXED — Added express-rate-limit: 100 req/15min general, 10 req/15min for auth endpoints.~~ |
 | **Large function sizes** | Medium | Several controller functions exceed 200 lines, mixing business logic, data access, and response formatting. |
 | **Dead code and commented-out blocks** | Low | Multiple files contain commented-out code blocks, unused imports, and dead code paths that obscure the active codebase. |
 | **Inconsistent error handling** | Medium | Mix of `.catch()` chains, `try/catch` blocks, unhandled promise rejections, and callback-style error handling across controllers. |
@@ -451,15 +451,15 @@ The security audit identified several critical vulnerabilities that have been ad
 
 | Risk | Severity | Description | Recommendation |
 |---|---|---|---|
-| **No rate limiting on auth endpoints** | High | Login, registration, and password reset endpoints have no request throttling, making them vulnerable to brute force attacks and credential stuffing. | Implement `express-rate-limit` with stricter limits on auth routes (e.g., 5 attempts per 15 minutes). |
-| **No helmet.js security headers** | High | Missing `X-Content-Type-Options`, `X-Frame-Options`, `Strict-Transport-Security`, `Content-Security-Policy`, and other security headers. | Add `helmet` middleware to Express app configuration. |
+| ~~**No rate limiting on auth endpoints**~~ | ~~High~~ | ~~✅ FIXED — Added `express-rate-limit` with 10 attempts per 15 minutes for auth routes and 100 per 15 minutes for general API.~~ | ~~Implemented.~~ |
+| ~~**No helmet.js security headers**~~ | ~~High~~ | ~~✅ FIXED — Added `helmet` middleware to Express app with `X-Content-Type-Options`, `X-Frame-Options`, `Strict-Transport-Security`, and other headers.~~ | ~~Implemented.~~ |
 | **No CSRF protection** | Medium | No CSRF tokens are generated or validated. While JWT-based auth is inherently less susceptible, cookie-based sessions (if used) would be vulnerable. | Implement CSRF token middleware or ensure all auth is strictly header-based. |
-| **No input validation middleware** | High | Request bodies are passed directly to Mongoose operations without schema validation. This allows injection of unexpected fields and potential NoSQL injection via `$where` or `$regex` operators. | Add `express-validator` or `joi` validation schemas for all endpoints. |
-| **Mass assignment via generic CRUD** | High | The generic `/:indexName` endpoints accept any JSON body and pass it to Mongoose `create()` or `findByIdAndUpdate()`. Clients can inject any field, including administrative flags or role escalations. | Implement per-collection field whitelists or replace generic CRUD with collection-specific controllers. |
+| ~~**No input validation middleware**~~ | ~~High~~ | ~~✅ FIXED — Added `express-validator` validation schemas for login, reset, change-password, and agent onboarding endpoints.~~ | ~~Implemented.~~ |
+| **Mass assignment via generic CRUD** | High | The generic `/:indexName` endpoints accept any JSON body and pass it to Mongoose `create()` or `findByIdAndUpdate()`. Clients can inject any field, including administrative flags or role escalations. **Mitigated** by NoSQL injection prevention middleware and tenant isolation. | Implement per-collection field whitelists or replace generic CRUD with collection-specific controllers. |
 | **JWT with no refresh token** | Medium | JWT tokens expire in 24 hours with no refresh token mechanism. Users must re-authenticate after expiry, and there is no way to revoke tokens before expiry. | Implement a refresh token flow with short-lived access tokens (15 min) and long-lived refresh tokens. |
 | **Unauthenticated webhook endpoints** | Medium | `POST /api/oceanIOWebhook` and `POST /webhook` (WhatsApp) accept requests without any authentication or signature verification. | Implement HMAC signature verification for all webhook endpoints. |
 | **File upload lacks content-type validation** | Medium | The file upload endpoint does not validate content types or file extensions, potentially allowing upload of executable files. | Add MIME type validation and file extension whitelisting. |
-| **APM captures full request bodies** | Low | Elastic APM configuration includes `captureBody: 'all'`, which sends full request and response bodies to the APM server, potentially including sensitive data. | Change to `captureBody: 'errors'` or `captureBody: 'off'` in production. |
+| ~~**APM captures full request bodies**~~ | ~~Low~~ | ~~✅ FIXED — Changed `captureBody` to `errors` in production; reduced `transactionSampleRate` to `0.1`.~~ | ~~Implemented.~~ |
 
 ---
 
@@ -558,16 +558,16 @@ schema.index({ email: 1 }, { unique: true });
 
 ### Performance Recommendations Summary
 
-| Priority | Recommendation | Expected Impact |
-|---|---|---|
-| P0 | Fix N+1 queries with `$in` operators | 5x faster auth responses |
-| P0 | Add database indexes for common queries | 10-100x faster queries at scale |
-| P1 | Enforce pagination limits | Prevent OOM on large collections |
-| P1 | Add response compression | 60-80% bandwidth reduction |
-| P1 | Reduce APM sample rate | 20-30% latency reduction |
-| P2 | Add Redis caching layer | 90% fewer DB reads for config data |
-| P2 | Reduce body parser limit | Prevent memory exhaustion attacks |
-| P3 | Optimize log verbosity | Reduce storage costs |
+| Priority | Recommendation | Expected Impact | Status |
+|---|---|---|---|
+| P0 | Fix N+1 queries with `$in` operators | 5x faster auth responses | ✅ FIXED |
+| P0 | Add database indexes for common queries | 10-100x faster queries at scale | ✅ FIXED |
+| P1 | Enforce pagination limits | Prevent OOM on large collections | |
+| P1 | Add response compression | 60-80% bandwidth reduction | ✅ FIXED |
+| P1 | Reduce APM sample rate | 20-30% latency reduction | ✅ FIXED |
+| P2 | Add Redis caching layer | 90% fewer DB reads for config data | |
+| P2 | Reduce body parser limit | Prevent memory exhaustion attacks | ✅ FIXED |
+| P3 | Optimize log verbosity | Reduce storage costs | |
 
 ---
 
@@ -846,18 +846,18 @@ There is no staging or pre-production environment. Changes go directly from deve
 
 ### Priority Matrix
 
-| Priority | Recommendation | Effort | Impact | Risk |
-|---|---|---|---|---|
-| **P0** | Add input validation middleware | Medium | High | Low |
-| **P0** | Add rate limiting | Low | High | Low |
-| **P0** | Add security headers (helmet) | Low | High | Low |
-| **P1** | Implement proper service layer separation | High | High | Medium |
-| **P1** | Add TypeScript to backend | High | High | Medium |
-| **P1** | Implement proper error codes/types | Medium | Medium | Low |
-| **P2** | Add database indexes for common queries | Medium | High | Low |
-| **P2** | Implement refresh token flow | Medium | Medium | Low |
-| **P2** | Add request/response schema validation | High | High | Low |
-| **P3** | Migrate to proper dependency injection pattern | High | Medium | Medium |
+| Priority | Recommendation | Effort | Impact | Risk | Status |
+|---|---|---|---|---|---|
+| **P0** | Add input validation middleware | Medium | High | Low | ✅ FIXED |
+| **P0** | Add rate limiting | Low | High | Low | ✅ FIXED |
+| **P0** | Add security headers (helmet) | Low | High | Low | ✅ FIXED |
+| **P1** | Implement proper service layer separation | High | High | Medium | |
+| **P1** | Add TypeScript to backend | High | High | Medium | |
+| **P1** | Implement proper error codes/types | Medium | Medium | Low | |
+| **P2** | Add database indexes for common queries | Medium | High | Low | ✅ FIXED |
+| **P2** | Implement refresh token flow | Medium | Medium | Low | |
+| **P2** | Add request/response schema validation | High | High | Low | |
+| **P3** | Migrate to proper dependency injection pattern | High | Medium | Medium | |
 
 ### Detailed Recommendations
 
@@ -989,32 +989,32 @@ Replace direct `require()` imports with a DI container (e.g., `awilix` or `tsyri
 - [x] Remove hardcoded encryption key fallback
 - [x] Move test credentials to environment variables
 - [x] Add global error handling middleware
-- [ ] Add helmet.js security headers
-- [ ] Add rate limiting (general + auth-specific)
+- [x] Add helmet.js security headers
+- [x] Add rate limiting (general + auth-specific)
 - [ ] Add CSRF protection
-- [ ] Add input validation middleware (express-validator/joi)
+- [x] Add input validation middleware (express-validator)
 - [ ] Implement refresh token flow with revocation
-- [ ] Add content security policy headers
+- [x] Add content security policy headers (via helmet)
 - [ ] Add webhook signature verification (OceanIO, WhatsApp)
 - [ ] Add file upload content-type validation
-- [ ] Implement NoSQL injection prevention
+- [x] Implement NoSQL injection prevention
 - [ ] Add API key authentication for service-to-service calls
 
 ### Performance
 
-- [ ] Add database indexes for common query patterns
-- [ ] Fix N+1 queries in auth controller (use `$in` operator)
-- [ ] Add response compression middleware
-- [ ] Reduce APM sample rate to 10% in production
+- [x] Add database indexes for common query patterns
+- [x] Fix N+1 queries in auth controller (use `$in` operator)
+- [x] Add response compression middleware
+- [x] Reduce APM sample rate to 10% in production
 - [ ] Add Redis caching layer for configuration and rates
 - [ ] Implement proper pagination with enforced limits
-- [ ] Reduce default request body limit to 1MB
+- [x] Reduce default request body limit to 1MB
 - [ ] Add connection pooling configuration for MongoDB
 - [ ] Optimize log verbosity (metadata only by default)
 
 ### Infrastructure
 
-- [ ] Add backend health check to Docker Compose
+- [x] Add backend health check to Docker Compose
 - [ ] Implement secrets management (Key Vault / Secrets Manager)
 - [ ] Add monitoring and alerting (APM alerts, CloudWatch)
 - [ ] Add log aggregation (ELK stack or managed service)
@@ -1024,6 +1024,17 @@ Replace direct `require()` imports with a DI container (e.g., `awilix` or `tsyri
 - [ ] Add SSL/TLS termination at load balancer
 - [ ] Configure container resource limits (CPU/memory)
 - [ ] Add Docker image vulnerability scanning in CI
+
+### SaaS Architecture
+
+- [x] Add tenant isolation middleware (orgId enforcement)
+- [x] Add subscription plan enforcement middleware
+- [x] Define plan tiers (free/pro/enterprise)
+- [ ] Integrate billing provider (Stripe/Razorpay)
+- [ ] Add usage metering per tenant
+- [ ] Add feature flag system
+- [ ] Add per-tenant rate limiting
+- [ ] Add self-service plan management UI
 
 ### Testing
 
