@@ -10,6 +10,7 @@ const { checkPlanAccess } = require('../middleware/planEnforcement')
 const { verifyWhatsAppSignature, verifyOceanIOSignature } = require('../middleware/webhookAuth')
 const { validateFileUpload } = require('../middleware/fileValidation')
 const { tenantRateLimit, usageMetering } = require('../middleware/usageTracking')
+const { apiKeyAuth } = require('../middleware/apiKeyAuth')
 
 const jasperController = require('../controller/jasperController');
 

@@ -197,4 +197,60 @@ http.listen(PORT, () => {
 
 const schedulers = require('./service/schedulers')
 
+// ── Graceful shutdown ───────────────────────────────────────────
+function gracefulShutdown(signal) {
+  console.log(JSON.stringify({
+    event: 'shutdown_initiated',
+    signal,
+    timestamp: new Date().toISOString(),
+  }));
+
+  // Stop accepting new connections
+  http.close(() => {
+    console.log(JSON.stringify({
+      event: 'http_server_closed',
+      timestamp: new Date().toISOString(),
+    }));
+
+    // Close MongoDB connection pool
+    mongo.disconnectFromDatabase().then(() => {
+      console.log(JSON.stringify({
+        event: 'database_disconnected',
+        timestamp: new Date().toISOString(),
+      }));
+      process.exit(0);
+    }).catch((err) => {
+      console.error(JSON.stringify({
+        event: 'database_disconnect_error',
+        error: err.message,
+        timestamp: new Date().toISOString(),
+      }));
+      process.exit(1);
+    });
+  });
+
+  // Force exit after 30 seconds if graceful shutdown hangs
+  setTimeout(() => {
+    console.error(JSON.stringify({
+      event: 'forced_shutdown',
+      reason: 'Graceful shutdown timed out after 30s',
+      timestamp: new Date().toISOString(),
+    }));
+    process.exit(1);
+  }, 30000).unref();
+}
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
+// Catch unhandled rejections to prevent silent failures
+process.on('unhandledRejection', (reason, promise) => {
+  console.error(JSON.stringify({
+    event: 'unhandled_rejection',
+    reason: reason?.message || String(reason),
+    stack: reason?.stack,
+    timestamp: new Date().toISOString(),
+  }));
+});
+
 module.exports = app
