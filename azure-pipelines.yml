@@ -280,10 +280,11 @@ stages:
             displayName: Export image tag
 
 # ══════════════════════════════════════════════════════════════════
-# Stage 3 — Deploy to AWS EC2
+# Stage 3 — Deploy to Staging
+# Runs after BuildPush; requires manual approval to proceed to prod.
 # ══════════════════════════════════════════════════════════════════
-  - stage: Deploy
-    displayName: Deploy to AWS EC2
+  - stage: DeployStaging
+    displayName: Deploy to Staging
     dependsOn:
       - DetectChanges
       - BuildPush
@@ -292,8 +293,49 @@ stages:
       backendTag:  $[stageDependencies.BuildPush.BuildBackend.outputs['exportTag.backendTag']]
       frontendTag: $[stageDependencies.BuildPush.BuildFrontend.outputs['exportTag.frontendTag']]
     jobs:
+      - deployment: DeployToStaging
+        displayName: SSH → Staging EC2
+        pool:
+          vmImage: ubuntu-latest
+        environment: staging
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: SSH@0
+                  displayName: Run deploy.sh on Staging
+                  inputs:
+                    sshEndpoint: aws-ec2-staging-ssh
+                    runOptions: commands
+                    commands: |
+                      export ACR_REGISTRY="$(ACR_NAME).azurecr.io"
+                      export BACKEND_IMAGE="$(ACR_NAME).azurecr.io/shipeasy-api"
+                      export FRONTEND_IMAGE="$(ACR_NAME).azurecr.io/shipeasy-frontend"
+                      export BACKEND_TAG="${backendTag:-latest}"
+                      export FRONTEND_TAG="${frontendTag:-latest}"
+                      export ACR_USERNAME="$(ACR_SP_CLIENT_ID)"
+                      export ACR_PASSWORD="$(ACR_SP_CLIENT_SECRET)"
+                      bash ~/shipeasy/deploy.sh
+                    readyTimeout: "30000"
+                    failOnStdErr: false
+
+# ══════════════════════════════════════════════════════════════════
+# Stage 4 — Deploy to Production
+# Requires staging to succeed. Add approval gate on 'production' environment.
+# ══════════════════════════════════════════════════════════════════
+  - stage: Deploy
+    displayName: Deploy to Production
+    dependsOn:
+      - DetectChanges
+      - BuildPush
+      - DeployStaging
+    condition: and(succeeded(), eq(variables['IS_MAIN_PUSH'], 'true'))
+    variables:
+      backendTag:  $[stageDependencies.BuildPush.BuildBackend.outputs['exportTag.backendTag']]
+      frontendTag: $[stageDependencies.BuildPush.BuildFrontend.outputs['exportTag.frontendTag']]
+    jobs:
       - deployment: DeployEC2
-        displayName: SSH → AWS EC2
+        displayName: SSH → Production EC2
         pool:
           vmImage: ubuntu-latest
         environment: production                # ADO Environment — add approval check here

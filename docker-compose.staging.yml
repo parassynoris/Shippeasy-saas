@@ -1,0 +1,30 @@
+version: "3.9"
+
+# ──────────────────────────────────────────────────────────
+# Staging overrides
+# Usage: docker compose -f docker-compose.yml -f docker-compose.staging.yml up -d
+#
+# Staging uses the same image architecture as production but with:
+#   - Separate database (shipeasy_staging)
+#   - Debug-friendly logging
+#   - Swagger UI enabled
+#   - No TLS (staging is internal-only behind VPN)
+# ──────────────────────────────────────────────────────────
+
+services:
+
+  mongo:
+    environment:
+      MONGO_INITDB_DATABASE: shipeasy_staging
+
+  backend:
+    environment:
+      NODE_ENV: staging
+      MONGO_URI: mongodb://mongo:27017/shipeasy_staging
+      ENVIRONMENT: staging
+      ENABLE_SWAGGER: "true"
+      LOG_LEVEL: debug
+
+  frontend:
+    environment:
+      BACKEND_URL: ${BACKEND_URL:-http://backend:3000}
