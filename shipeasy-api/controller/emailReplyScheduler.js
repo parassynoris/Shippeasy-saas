@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const Schema = require('../schema/schema');
 const uuid = require('uuid');
 const inAppNotificationService = require('../service/inAppNotification')
-const azureStorage = require('./azureStorageContoller');
+const azureStorage = require('./azureStorageController');
 const newSchemaWithObject = require('../schema/schema');
 
 let connection;
