@@ -1,11 +1,11 @@
 const simpleParser = require('mailparser').simpleParser;
 const { connect } = require('imap-simple');
 const mongoose = require('mongoose');
-const Schema = require('../schema/schema');
+const Schema = require('../schema');
 const uuid = require('uuid');
 const inAppNotificationService = require('../service/inAppNotification')
 const azureStorage = require('./azureStorageController');
-const newSchemaWithObject = require('../schema/schema');
+const newSchemaWithObject = require('../schema');
 
 let connection;
 

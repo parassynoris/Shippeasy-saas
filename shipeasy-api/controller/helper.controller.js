@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Schema = require('../schema/schema');
+const Schema = require('../schema');
 const invoiceSchema = require('../schema/invoiceSchema');
 const uuid = require('uuid');
 const jwt = require('jsonwebtoken');

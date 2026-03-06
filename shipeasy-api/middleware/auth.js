@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Schema = require('../schema/schema');
+const Schema = require('../schema');
 const jwt = require('jsonwebtoken');
 const { OAuth2Client } = require('google-auth-library');
 const logger = require('../utils/logger');

@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
-const objecdiff = require('objecdiff');
-const requestContext = require('../service/requestContext')
+const requestContext = require('../service/requestContext');
 
 const schemas = {
     "quotation": {
@@ -9038,77 +9037,4 @@ const schemas = {
         downloadableFileName: { type: String }
     }
 }
-let newSchemaWithObject = {};
-Object.keys(schemas).forEach((collectionName) => {
-    const schema = new mongoose.Schema(schemas[collectionName]);
-
-    if (!(["inappnotification", "logaudit"].includes(collectionName))) {
-        schema.post('findOneAndUpdate', async function (doc) {
-            const updatedData = this.getUpdate(); // New data after the update
-
-            await createAuditLog(collectionName, 'UPDATE', doc ? doc[`${collectionName}Id`] : '', updatedData);
-        });
-
-        schema.post('findOneAndDelete', async function (doc) {
-            const updatedData = this.getUpdate(); // New data after the update
-
-            await createAuditLog(collectionName, 'UPDATE', doc[`${collectionName}Id`], updatedData);
-        });
-
-        schema.post('findOneAndDelete', async function (doc) {
-            if (doc) {
-                await createAuditLog(collectionName, 'DELETE', doc[`${collectionName}Id`], doc);
-            }
-        });
-
-        schema.post('insertMany', async function (result) {
-            for (let i = 0; i < result?.length; i++)
-                await createAuditLog(collectionName, 'CREATE', result[i][`${collectionName}Id`], result[i]);
-        });
-
-        schema.post('updateMany', async function (result) {
-            for (let i = 0; i < result?.length; i++)
-                await createAuditLog(collectionName, 'UPDATE', result[i][`${collectionName}Id`], result[i]);
-        });
-
-        schema.post('save', async function (doc) {
-            const updatedData = doc.toObject(); // New data after the save
-
-            await createAuditLog(collectionName, 'CREATE', doc[`${collectionName}Id`], updatedData);
-        });
-    }
-
-    newSchemaWithObject[collectionName] = schema;
-});
-
-async function createAuditLog(collectionName, action, resourceId, updatedData) {
-    const traceId = requestContext.getTraceId()
-
-    const auditlogModel = mongoose.models[`auditlogModel`] ||
-        mongoose.model(`auditlogModel`, new mongoose.Schema({
-            action: String,
-            resource: String,
-            resourceId: String,
-            updatedData: Object,
-            updatedByUID: String,
-            updatedBy: String,
-            updatedOn: String,
-            recordedOn: Date,
-            traceId: String
-        }), `logaudits`);
-
-    await auditlogModel({
-        action: action,
-        resource: collectionName,
-        resourceId: resourceId,
-        updatedByUID: updatedData?.updatedByUID || updatedData?.$set?.updatedByUID,
-        updatedBy: updatedData?.updatedBy || updatedData?.$set?.updatedBy,
-        updatedOn: updatedData?.updatedOn || updatedData?.$set?.updatedOn,
-        updatedData: updatedData?.$set ? updatedData?.$set : updatedData,
-        traceId: traceId,
-        recordedOn: new Date().toISOString()
-    }).save();
-}
-
-
-module.exports = newSchemaWithObject;
+module.exports = schemas;

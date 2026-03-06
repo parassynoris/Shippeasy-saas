@@ -1,6 +1,6 @@
 const request = require("supertest");
 // const app = require("../index");
-const schemas = require("../schema/schema")
+const schemas = require("../schema")
 
 require("dotenv").config();
 const mongo = require('../service/mongooseConnection');
