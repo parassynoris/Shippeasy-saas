@@ -156,8 +156,8 @@ export const GET_NOTIFICATION = "profile/list?type=notification"
 //DmsFile upload
 export const SERVER_NAME = "DMS-SERVER"
 export const ROOM_NAME = "DIABOS DMS"
-export const USER_NAME = "diabosuser"
-export const PASSWORD = "Diabos@1234"
+export const USER_NAME = process.env['DMS_USERNAME'] || ''
+export const PASSWORD = process.env['DMS_PASSWORD'] || ''
 export const LOCAL_ADDRESS = "10.4.8.8"
 export const ENCRYPTION_LOGIC = "2"
 export const NODE_ID = "3"

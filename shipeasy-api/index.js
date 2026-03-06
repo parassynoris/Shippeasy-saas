@@ -4,7 +4,20 @@ const requestTracer = require('./middleware/requestTracer')
 const express = require('express');
 const app = express();
 const cors = require('cors');
-app.use(cors());
+const allowedOrigins = process.env.CORS_ORIGINS ? process.env.CORS_ORIGINS.split(',').map(o => o.trim()) : [];
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key', 'frontend-trace-id'],
+  credentials: true
+}));
 app.use(express.json({ limit: '50mb' }))
 app.use(express.urlencoded({ extended: false }));
 // app.use(express.text({ type: '*/*' })); 
@@ -80,12 +93,7 @@ mongo.connectToDatabase();
 const { verificationWebhookWhatsapp } = require('./controller/whatsapp.controller');
 const { webhookWhatsapp } = require('./controller/webhooks.controller');
 
-app.use((req, res, next) => {
-	res.header('Access-Control-Allow-Origin', '*'); // Replace '*' with the specific origin you want to allow
-	res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-	res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-	next();
-});
+// CORS is handled by the cors() middleware above
 
 
 app.get('/webhook', [ verificationWebhookWhatsapp])
@@ -136,6 +144,20 @@ app.use(
 	swaggerUi.serve,
 	swaggerUi.setup(specs, { explorer: true, cors: true })
 );
+
+// Global error handling middleware
+app.use((err, req, res, next) => {
+	console.error(JSON.stringify({
+		traceId: req?.traceId,
+		error: err.message,
+		stack: process.env.NODE_ENV === 'production' ? undefined : err.stack,
+		timestamp: new Date().toISOString()
+	}));
+	res.status(err.status || 500).json({
+		error: process.env.NODE_ENV === 'production' ? 'Internal server error' : err.message,
+		traceId: req?.traceId
+	});
+});
 
 console.log(`[${new Date().toISOString()}] Starting the server...`);
 

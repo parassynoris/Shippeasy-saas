@@ -77,8 +77,10 @@ router.post('/chatInitialization', [validateAuth, chatInitialization])
 
 
 router.post('/:fromPage/contactFormFilled', async (req, res, next) => {
-  const token = req.headers.authorization.split(" ")[1]
-  if (token === process.env.WORDPRESS_TOKEN)
+  const token = req.headers.authorization?.split(" ")[1] || '';
+  const expected = process.env.WORDPRESS_TOKEN || '';
+  // Use timing-safe comparison to prevent timing attacks
+  if (token.length === expected.length && require('crypto').timingSafeEqual(Buffer.from(token), Buffer.from(expected)))
     next()
   else
     res.status(401).send("Unauthorized")

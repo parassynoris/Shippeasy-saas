@@ -160,8 +160,8 @@ export class GlobalConstants {
   // DMS CONSTANTS BEGINS
   public static readonly SERVER_NAME = 'DMS SERVER';
   public static readonly ROOM_NAME = 'DIABOS DMS';
-  public static readonly USER_NAME = 'adminuser';
-  public static readonly PASSWORD = 'Content@151';
+  public static readonly USER_NAME = '';
+  public static readonly PASSWORD = '';
   public static readonly LOCAL_ADDRESS = '10.4.8.8';
   public static readonly ENCRYPTION_LOGIC = '2';
   public static readonly NODE_ID = '3';

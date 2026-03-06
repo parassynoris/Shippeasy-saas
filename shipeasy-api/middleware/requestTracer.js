@@ -10,7 +10,7 @@ const excludedEndpoints = [
     '/health'
 ];
 
-const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'BYUKXCRPHYRFOJINZHPSXZMQEULXFJOF'; // Must be 32 characters
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY; // Must be 32 characters — set via environment variable
 const IV_LENGTH = 16; // For AES, this is always 16
 
 function encrypt(text) {
@@ -45,6 +45,15 @@ const requestTracer = (req, res, next) => {
         const contentType = req.headers['content-type'];
 
         // Only decrypt if the content type is 'text/plain' or another encrypted data type
+        if ((process.env.ENCRYPTION === 'true') && !ENCRYPTION_KEY) {
+            console.error(JSON.stringify({
+                traceId: req?.traceId,
+                error: 'ENCRYPTION is enabled but ENCRYPTION_KEY is not set in environment variables',
+                timestamp: new Date().toISOString()
+            }));
+            return res.status(500).send({ error: 'Server encryption misconfiguration' });
+        }
+
         if ((process.env.ENCRYPTION === 'true') && contentType && contentType.includes('text/plain') && (!excludedEndpoints.includes(req.path))) {
             if (req.body && typeof req.body === 'string') {
                 try {
@@ -91,15 +100,25 @@ const requestTracer = (req, res, next) => {
 
         res.setHeader('X-Trace-Id', req.traceId);
         
-        // Log request
+        // Sanitize sensitive fields from logged body
+        const sensitiveFields = ['Password', 'password', 'newPassword', 'currentPassword', 'token', 'accessToken', 'authorization'];
+        function sanitizeBody(body) {
+            if (!body || typeof body !== 'object') return body;
+            const sanitized = { ...body };
+            for (const field of sensitiveFields) {
+                if (sanitized[field]) sanitized[field] = '[REDACTED]';
+            }
+            return sanitized;
+        }
+
+        // Log request (without sensitive data)
         console.log(JSON.stringify({
             userId : req.userId,
             traceId: req.traceId,
             method: req.method,
             url: req.url,
             timestamp: new Date().toISOString(),
-            headers: req.headers,
-            body: req.body
+            body: sanitizeBody(req.body)
         }));
 
         // Capture response using event listener

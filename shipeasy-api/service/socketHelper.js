@@ -10,9 +10,10 @@ const messageModel = mongoose.models[`messageModel`] || mongoose.model(`messageM
             
 function init(server) {
     try {
+        const allowedOrigins = process.env.CORS_ORIGINS ? process.env.CORS_ORIGINS.split(',').map(o => o.trim()) : [];
         io = socketIo(server, {
             cors: {
-                origin: '*', // Allow any origin
+                origin: allowedOrigins.length > 0 ? allowedOrigins : false,
                 methods: ['GET', 'POST']
             }
           });

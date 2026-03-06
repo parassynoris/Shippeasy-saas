@@ -36,8 +36,8 @@ beforeAll(async () => {
 describe(`POST /api/user/login`, () => {
   it(`getting token`, async () => {
     const res = await request(app).post(`/api/user/login`).send({
-      Username : "rutvikm",
-      Password : ":0W+{6#F"
+      Username : process.env.TEST_USERNAME || "testuser",
+      Password : process.env.TEST_PASSWORD || "testpassword"
       })
     expect(res.statusCode).toBe(200);
     authToken = res.body.accessToken;
