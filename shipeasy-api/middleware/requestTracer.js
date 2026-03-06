@@ -124,12 +124,22 @@ const requestTracer = (req, res, next) => {
         // Capture response using event listener
         const originalSend = res.send;
         res.send = function(body) {
+            // Sanitize response body for logging
+            let logBody = body;
+            try {
+                const parsed = typeof body === 'string' ? JSON.parse(body) : body;
+                logBody = sanitizeBody(parsed);
+            } catch (e) {
+                // body is not JSON, log as-is (truncated)
+                logBody = typeof body === 'string' && body.length > 500 ? body.substring(0, 500) + '...' : body;
+            }
+
             console.log(JSON.stringify({
                 userId : req.userId,
                 traceId: req.traceId,
                 responseTimestamp: new Date().toISOString(),
                 statusCode: res.statusCode,
-                responseBody: body
+                responseBody: logBody
             }));
 
             if (process.env.ENCRYPTION === 'true' && (!excludedEndpoints.includes(req.path))) {

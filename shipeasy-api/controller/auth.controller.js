@@ -16,7 +16,7 @@ exports.getToken = async (req, res, next) => {
             if (user) {
                 // Support both bcrypt hashed and legacy plaintext passwords
                 let passwordMatch = false;
-                if (user.password && user.password.startsWith('$2')) {
+                if (user.password && /^\$2[aby]\$/.test(user.password)) {
                     // Password is bcrypt hashed
                     passwordMatch = await bcrypt.compare(Password, user.password);
                 } else {
@@ -142,7 +142,7 @@ exports.changePassword = async (req, res, next) => {
 
         // Compare current password (supports both bcrypt and legacy plaintext)
         let passwordMatch = false;
-        if (user.password && user.password.startsWith('$2')) {
+        if (user.password && /^\$2[aby]\$/.test(user.password)) {
             passwordMatch = await bcrypt.compare(currentPassword, user.password);
         } else {
             passwordMatch = (user.password === currentPassword);
