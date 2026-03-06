@@ -98,7 +98,8 @@ export class VendorMasterComponent implements OnInit {
         if (this.canOpenBatchAccordion) {
           this.isBatchPanelOpen = !this.isBatchPanelOpen;
         }
-        case 'GST':
+        break;
+      case 'GST':
         if (this.canOpenBatchAccordion) {
           this.isGstPanelOpen = !this.isGstPanelOpen;
         }

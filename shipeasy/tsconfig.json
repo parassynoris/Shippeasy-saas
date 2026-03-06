@@ -18,10 +18,14 @@
     "lib": [
       "es2018",
       "dom"
-    ], 
-    "allowSyntheticDefaultImports": true
+    ],
+    "allowSyntheticDefaultImports": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true
   },
   "angularCompilerOptions": {
-    "enableIvy": true
+    "enableIvy": true,
+    "strictInjectionParameters": true,
+    "strictTemplates": false
   }
 }
