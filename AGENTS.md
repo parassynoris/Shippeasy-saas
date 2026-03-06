@@ -924,3 +924,237 @@ The `shared/` module provides reusable UI for charges, invoices, payments, enqui
 | Azure Active Directory | MSAL-based SSO authentication | `azureClientId`, `tenantId` (frontend env) |
 | Firebase Cloud Messaging | Push notifications (PWA) | Firebase config (frontend env) |
 | Exchange Rate API | Currency conversion rates | `CURRENCY_EXCHANGE_AUTHORIZATION` |
+
+---
+---
+
+# Engineering Improvements — Changelog
+
+*Implemented by the senior engineering team across security, code quality, performance, and SaaS readiness.*
+
+---
+
+## Security Improvements
+
+### 1. Helmet Security Headers (`middleware/security.js`)
+- Added `helmet` middleware as the first layer in the Express pipeline
+- Protects against XSS, clickjacking, MIME sniffing, and other common attacks
+- CSP and COEP disabled to avoid breaking the Angular SPA
+
+### 2. CORS Lockdown (`middleware/security.js`)
+- **Before**: `cors()` with no config + manual `Access-Control-Allow-Origin: *` header — any origin could call any API
+- **After**: CORS configured to read allowed origins from `CORS_ORIGINS` env var (comma-separated list)
+- Removed the duplicate manual CORS header middleware from `index.js`
+- Exposes only `X-Trace-Id` header, credentials enabled
+
+### 3. Rate Limiting (`middleware/security.js`)
+- **Global**: 1000 requests per 15-minute window per IP
+- **Auth endpoints**: 20 attempts per 15-minute window (login, password reset, password change)
+- **Upload endpoints**: 50 uploads per 15-minute window
+- Returns standard `RateLimit-*` headers per RFC draft
+
+### 4. NoSQL Injection Prevention (`middleware/security.js`)
+- `express-mongo-sanitize` strips `$` and `.` operators from request bodies, query strings, and params
+- Prevents attackers from injecting MongoDB operators like `$gt`, `$ne`, `$regex` into queries
+- Logs sanitization events for security monitoring
+
+### 5. HTTP Parameter Pollution Protection (`middleware/security.js`)
+- `hpp` middleware prevents duplicate query parameter attacks
+- Whitelists `sort`, `fields`, `page`, `limit` for legitimate multi-value use
+
+### 6. Input Validation (`middleware/validateRequest.js`)
+- Login: validates Username and Password presence, length limits
+- Password reset: validates email format and userLogin presence
+- CRUD endpoints: validates `indexName` is alphanumeric (2-50 chars), `id` is present and bounded
+- File downloads: validates `fileName` against path traversal (`..`, `/`, `\`)
+- All validation uses `express-validator` with structured error responses
+
+### 7. Centralized Error Handler (`middleware/errorHandler.js`)
+- **Before**: No catch-all error handler — errors could leak stack traces to clients
+- **After**: `AppError` class for operational errors, `globalErrorHandler` for all uncaught errors
+- Handles: `ValidationError`, `CastError`, duplicate key (`E11000`), `JsonWebTokenError`, `TokenExpiredError`
+- Stack traces hidden in production; only operational error messages exposed to clients
+- 404 handler for undefined routes
+
+### 8. Request Tracer Hardening (`middleware/requestTracer.js`)
+- **Fixed**: JWT parsing bug — `replace("Bearer").slice()` didn't handle the space correctly
+- **Fixed**: Hardcoded encryption key fallback removed — `ENCRYPTION_KEY` must be set via env
+- **Fixed**: Sensitive headers (Authorization, Cookie, x-api-key) no longer logged in full
+- **Fixed**: Response bodies no longer logged in production (prevented sensitive data exposure)
+- Structured, minimal request logging in non-production only
+
+### 9. Auth Middleware Refactor (`middleware/auth.js`)
+- **Before**: 114 lines with duplicate user validation logic (JWT path and Google OAuth path were copy-paste)
+- **After**: Extracted `resolveUserContext()` and `checkUserStatus()` shared helpers — DRY
+- Proper Bearer token extraction with space handling
+- Token length validation before attempting verification
+- Structured error logging via Winston instead of raw `console.error`
+
+### 10. Swagger UI Protection (`index.js`)
+- **Before**: Swagger UI exposed unconditionally at `/api-docs`
+- **After**: Disabled in production unless `ENABLE_SWAGGER=true` is set
+
+### 11. Safe External Client Initialization
+- **Fixed**: Azure Blob Storage client crash when `AZURE_CONNECTION_STRING` not set (both `azureStorageContoller.js` and `schedulers.js`)
+- **Fixed**: OpenAI client crash when `OPENAI_API` not set (`helper.controller.js`)
+- All external clients now initialize conditionally — app boots even without all credentials
+
+### 12. Graceful Shutdown (`index.js`)
+- Added `SIGTERM` / `SIGINT` handlers for clean shutdown
+- Closes HTTP server, then MongoDB connection, then exits
+- 30-second forced-shutdown timeout as safety net
+- `unhandledRejection` and `uncaughtException` handlers with proper logging
+
+### 13. Body Size Limit Reduction (`index.js`)
+- **Before**: `50mb` JSON body limit
+- **After**: `10mb` — still generous but prevents abuse; upload endpoints use multer separately
+
+---
+
+## Code Quality Improvements
+
+### 1. Middleware Architecture
+New middleware layer structure:
+
+```
+middleware/
+├── auth.js              # Refactored — DRY auth with JWT + Google OAuth
+├── checkIndex.js        # Existing — CRUD collection validation
+├── errorHandler.js      # NEW — AppError class + global error handler
+├── requestTracer.js     # Refactored — fixed bugs, removed sensitive logging
+├── security.js          # NEW — Helmet, CORS, rate limiting, sanitization
+├── tenantIsolation.js   # NEW — orgId enforcement + RBAC helpers
+└── validateRequest.js   # NEW — express-validator rules for all endpoint types
+```
+
+### 2. Eliminated Duplicate Code
+- Auth middleware reduced from 114 lines with copy-paste to 117 lines with clean shared functions
+- Contact form auth handler now safely handles missing Authorization header
+
+### 3. Structured Logging
+- Consolidated on Winston (`utils/logger.js`) as the standard logger
+- Request tracer no longer logs full request/response bodies in production
+- Security events (sanitization, auth failures, permission denials) logged with trace context
+
+### 4. Process Stability
+- Unhandled promise rejections and uncaught exceptions are now caught and logged
+- Server errors trigger `process.exit(1)` instead of hanging silently
+
+---
+
+## Performance Improvements
+
+### 1. Database Indexes (`schema/indexes.js`)
+Added 60+ indexes across 25 collections. Applied after MongoDB connection is established:
+
+| Collection | Indexes Added |
+|-----------|---------------|
+| `users` | `userLogin` (unique), `userEmail`, `orgId+userStatus`, `orgId+userType`, `tokenVersion` |
+| `agents` | `agentId` (unique), `isTrial+trialValidTill` |
+| `batchs` | `batchId` (unique), `orgId`, `orgId+statusOfBatch`, `orgId+createdOn` |
+| `enquirys` | `enquiryId` (unique), `orgId`, `orgId+createdOn` |
+| `quotations` | `quotationId` (unique), `orgId`, `orgId+quoteStatus`, `orgId+validTo` |
+| `invoices` | `invoiceId` (unique), `orgId`, `batchId`, `orgId+createdOn` |
+| `transactions` | `transactionId` (unique), `orgId`, `batchId`, `invoiceId` |
+| `containers` | `containerId` (unique), `batchId`, `containerNumber`, `orgId` |
+| `documents` | `documentId` (unique), `batchId`, `orgId` |
+| `bls` | `blId` (unique), `batchId`, `orgId+blType`, `blNumber` |
+| `events` | `eventId` (unique), `entityId`, `entityId+eventTag` |
+| `inappnotifications` | `userId+isRead`, `orgId`, `createdOn` |
+| `logaudits` | `resource+resourceId`, `recordedOn`, `traceId` |
+| ... | *and 12 more collections* |
+
+All indexes created with `background: true` to avoid blocking production queries.
+
+### 2. APM Sample Rate Optimization (`index.js`)
+- **Before**: `transactionSampleRate: 1.0` and `captureBody: 'all'` in all environments
+- **After**: Production uses `0.5` sample rate and `captureBody: 'errors'` only — reduces APM overhead by ~50%
+
+---
+
+## SaaS Architecture Improvements
+
+### 1. Tenant Isolation Middleware (`middleware/tenantIsolation.js`)
+- **Before**: `orgId` filtering was ad-hoc — each controller had to remember to add it to queries
+- **After**: Centralized `enforceTenantIsolation` middleware automatically injects `orgId` into:
+  - Search queries (`req.body.query.orgId = orgId`)
+  - Insert operations (`req.body.orgId = orgId`)
+- SuperAdmin users bypass tenant filtering
+- Global collections (`country`, `state`, `city`, `port`, `currency`, `commodity`, `airportmaster`) are exempt
+- Applied to all generic CRUD routes (`/:indexName`, `/search/:indexName`)
+
+### 2. Role-Based Access Control Helpers (`middleware/tenantIsolation.js`)
+- `requireRole(...roles)` — middleware that checks if the user has any of the specified roles
+- `requireFeature(slug)` — middleware that checks if the organization has a specific feature enabled
+- Both can be composed onto any route: `router.post('/admin/config', validateAuth, requireRole('admin'), handler)`
+
+### 3. Tenant Context Propagation
+- `req.tenantContext` object available to all downstream handlers with: `orgId`, `userId`, `userType`, `isSuperAdmin`
+- Enables future subscription/billing checks at the middleware level
+
+---
+
+## Updated Middleware Pipeline
+
+The Express middleware now executes in this order:
+
+```
+Request
+  │
+  ▼  Helmet (security headers)
+  ▼  CORS (origin validation)
+  ▼  Global Rate Limiter (1000 req/15min)
+  ▼  Body Parser (10mb limit)
+  ▼  Mongo Sanitize (NoSQL injection)
+  ▼  HPP (parameter pollution)
+  ▼  Request Tracer (trace ID, optional encryption)
+  │
+  ├─▶ /webhook (WhatsApp — no auth)
+  ├─▶ /health, /version (no auth)
+  │
+  ▼  APM Context
+  │
+  ▼  /api/* routes
+  │    ├─▶ Auth rate limiter (20/15min) → Login, Reset, Change Password
+  │    ├─▶ Upload rate limiter (50/15min) → File uploads
+  │    ├─▶ Input validation (express-validator)
+  │    ├─▶ Auth (JWT / Google OAuth)
+  │    ├─▶ Tenant Isolation (orgId injection)
+  │    └─▶ Controller
+  │
+  ▼  404 Handler
+  ▼  Global Error Handler
+```
+
+---
+
+## New Dependencies Added
+
+| Package | Version | Purpose |
+|---------|---------|---------|
+| `helmet` | latest | HTTP security headers |
+| `express-rate-limit` | latest | Rate limiting |
+| `express-mongo-sanitize` | latest | NoSQL injection prevention |
+| `hpp` | latest | HTTP parameter pollution protection |
+| `express-validator` | latest | Input validation and sanitization |
+
+---
+
+## Files Changed
+
+| File | Change Type | Description |
+|------|-------------|-------------|
+| `middleware/security.js` | **NEW** | Helmet, CORS, rate limiting, sanitization |
+| `middleware/errorHandler.js` | **NEW** | AppError class, 404 handler, global error handler |
+| `middleware/validateRequest.js` | **NEW** | Input validation rules for all endpoint types |
+| `middleware/tenantIsolation.js` | **NEW** | Tenant isolation + RBAC middleware |
+| `schema/indexes.js` | **NEW** | Database index definitions (60+ indexes) |
+| `index.js` | **REFACTORED** | Full security pipeline, graceful shutdown, APM optimization |
+| `middleware/auth.js` | **REFACTORED** | DRY auth logic, fixed token parsing |
+| `middleware/requestTracer.js` | **REFACTORED** | Fixed JWT bug, removed hardcoded key, safe logging |
+| `router/route.js` | **UPDATED** | Rate limiting, validation, tenant isolation on routes |
+| `controller/azureStorageContoller.js` | **FIXED** | Safe initialization when connection string missing |
+| `controller/helper.controller.js` | **FIXED** | Safe OpenAI client initialization |
+| `service/schedulers.js` | **FIXED** | Safe Azure Blob client initialization |
+| `.env.example` | **UPDATED** | Removed hardcoded encryption key, added ENABLE_SWAGGER |
+| `package.json` | **UPDATED** | Added 5 security dependencies |
