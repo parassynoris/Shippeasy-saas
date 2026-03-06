@@ -686,4 +686,48 @@ describe('Security Middleware Tests', () => {
             expect(content).toContain('process.env.TEST_PASSWORD');
         });
     });
+
+    // ─── USER INSERT PASSWORD HASHING (CRIT-03 gap) ─────────────
+
+    describe('User insert password hashing', () => {
+
+        it('insert.commonController.js should hash passwords with bcrypt on user creation', () => {
+            const fs = require('fs');
+            const path = require('path');
+            const content = fs.readFileSync(
+                path.resolve(__dirname, '../controller/insert.commonController.js'),
+                'utf-8'
+            );
+            expect(content).toContain("bcrypt.hash(plainPassword, 12)");
+            expect(content).toContain("data._plainPassword = plainPassword");
+            expect(content).not.toMatch(/data\.password\s*=\s*generateRandomPassword/);
+        });
+    });
+
+    // ─── DEPLOY SCRIPT (deploy.sh gaps) ──────────────────────────
+
+    describe('deploy.sh security', () => {
+
+        it('should not contain dead GHCR deployment block', () => {
+            const fs = require('fs');
+            const path = require('path');
+            const content = fs.readFileSync(
+                path.resolve(__dirname, '../../deploy.sh'),
+                'utf-8'
+            );
+            expect(content).not.toContain('GHCR_TOKEN');
+            expect(content).not.toContain('ghcr.io');
+        });
+
+        it('should use /health for health checks, not /api-docs', () => {
+            const fs = require('fs');
+            const path = require('path');
+            const content = fs.readFileSync(
+                path.resolve(__dirname, '../../deploy.sh'),
+                'utf-8'
+            );
+            expect(content).not.toContain('/api-docs');
+            expect(content).toContain('/health');
+        });
+    });
 });
