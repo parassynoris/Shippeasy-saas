@@ -3,7 +3,7 @@ const router = express.Router();
 
 const { validateAuth } = require('../middleware/auth');
 const { checkIndex } = require('../middleware/checkIndex');
-const { enforceTenantIsolation } = require('../middleware/tenantIsolation');
+const { enforceTenantIsolation, requireRole, requireFeature } = require('../middleware/tenantIsolation');
 const { authLimiter, uploadLimiter } = require('../middleware/security');
 const {
     validateLogin,
@@ -51,8 +51,8 @@ router.post('/containerTrack', [validateAuth, proxy(`${process.env.ULIP_SERVER_U
 
 router.get('/containerLocationTrack/:number', [validateAuth, containerLocationTrack])
 
-router.post('/scan-bl', upload.single('file'), [validateAuth, scanBl])
-router.post('/scan-p-invoice', upload.single('file'), [validateAuth, scanPurchaseInvoice])
+router.post('/scan-bl', upload.single('file'), [validateAuth, requireFeature('ai-scanning'), scanBl])
+router.post('/scan-p-invoice', upload.single('file'), [validateAuth, requireFeature('ai-scanning'), scanPurchaseInvoice])
 
 router.post('/downloadQr', [validateAuth, downloadQrCode])
 
@@ -62,9 +62,9 @@ router.post('/milestoneWiseJobs', [validateAuth, milestoneWiseJobCount])
 
 router.post('/locationWiseContainers', [validateAuth, locationWiseContainers])
 
-router.post('/load-plan', [ createLoadPlan])
+router.post('/load-plan', [validateAuth, createLoadPlan])
 
-router.post('/load-calculate', [ calculateLoad])
+router.post('/load-calculate', [validateAuth, calculateLoad])
 
 router.get('/send-booking-confirmation/:id', [validateAuth, sendBookingConfirmation])
 
@@ -72,16 +72,16 @@ router.get('/reset-event/:id', [validateAuth, resetEvent])
 
 router.post('/profileCompletion', [validateAuth, profileCompletion])
 
-router.post('/generateTALLYEntry', [validateAuth, generateTALLYEntry])
+router.post('/generateTALLYEntry', [validateAuth, requireRole('admin', 'finance'), generateTALLYEntry])
 
 router.post('/upload-public-file/:name', [validateAuth, uploadPublicFileForWhatsapp])
 
 router.post('/findRate', [validateAuth, findRateFreightos])
 
-router.post('/edi/:ediName/:documentId', [validateAuth, generateEDIFILE])
+router.post('/edi/:ediName/:documentId', [validateAuth, requireRole('admin', 'operations', 'finance'), generateEDIFILE])
 
-router.get('/sent-to-einvoicing/:invoiceId', [validateAuth, pushToZircon])
-router.get('/cancel-from-einvoicing/:invoiceId', [validateAuth, cancelFromZircon])
+router.get('/sent-to-einvoicing/:invoiceId', [validateAuth, requireRole('admin', 'finance'), requireFeature('einvoicing'), pushToZircon])
+router.get('/cancel-from-einvoicing/:invoiceId', [validateAuth, requireRole('admin', 'finance'), requireFeature('einvoicing'), cancelFromZircon])
  
 router.post('/chatInitialization', [validateAuth, chatInitialization])
 
@@ -99,11 +99,31 @@ router.post('/:fromPage/contactFormFilled', async (req, res, next) => {
   }
 }, [contactFormFilled])
 
-router.post('/dashboardReport', [validateAuth, dashboardReport])
+router.post('/dashboardReport', [validateAuth, requireRole('admin', 'manager', 'finance'), dashboardReport])
 
-router.post('/oceanIOWebhook', [oceanIOWebhook])
+router.post('/oceanIOWebhook', (req, res, next) => {
+    const signature = req.headers['x-webhook-signature'] || req.headers['x-signature'];
+    const secret = process.env.OCEANIO_WEBHOOK_SECRET;
+    if (!secret) {
+        return next();
+    }
+    if (!signature) {
+        return res.status(401).json({ error: 'Missing webhook signature' });
+    }
+    const crypto = require('crypto');
+    const rawBody = JSON.stringify(req.body);
+    const expected = crypto.createHmac('sha256', secret).update(rawBody).digest('hex');
+    try {
+        if (!crypto.timingSafeEqual(Buffer.from(signature, 'hex'), Buffer.from(expected, 'hex'))) {
+            return res.status(401).json({ error: 'Invalid webhook signature' });
+        }
+    } catch {
+        return res.status(401).json({ error: 'Invalid webhook signature' });
+    }
+    next();
+}, [oceanIOWebhook])
 
-router.post('/chartDataDashboard', [validateAuth, chartDataDashboard])
+router.post('/chartDataDashboard', [validateAuth, requireRole('admin', 'manager', 'finance', 'operations'), chartDataDashboard])
 
 router.post('/agentOnBoarding', [ agentOnBoarding])
 
@@ -128,7 +148,7 @@ router.post('/sendBookingMail', [validateAuth, sendBookingMail])
 
 router.post('/clearAllNotification', [validateAuth, clearAllNotification])
 
-router.post('/report/:reportName', [validateAuth, reports])
+router.post('/report/:reportName', [validateAuth, requireRole('admin', 'manager', 'finance', 'operations'), reports])
 
 router.post('/user/login', authLimiter, validateLogin, getToken);
 router.post('/user/reset', authLimiter, validatePasswordReset, resetUser);
@@ -136,11 +156,11 @@ router.post('/user/change-password', authLimiter, validateAuth, changePassword);
 
 router.get('/quotation/update/:id/:status', [quotationUpdates])
 
-router.post('/createOrderReport', [validateAuth, createOrderReport])
+router.post('/createOrderReport', [validateAuth, requireRole('admin', 'finance'), createOrderReport])
 
-router.post('/checkOrderReport', [validateAuth, checkOrderReport])
+router.post('/checkOrderReport', [validateAuth, requireRole('admin', 'finance'), checkOrderReport])
 
-router.post('/downloadOrderReport', [validateAuth, downloadOrderReport])
+router.post('/downloadOrderReport', [validateAuth, requireRole('admin', 'finance'), downloadOrderReport])
 
 router.post('/uploadfile', uploadLimiter, upload.single('file'), [validateAuth, uploadFile])
 router.post('/uploadpublicreport', uploadLimiter, upload.single('file'), [validateAuth, uploadPublicFile])
