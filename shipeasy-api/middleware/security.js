@@ -8,15 +8,27 @@ const helmetMiddleware = helmet({
     crossOriginEmbedderPolicy: false,
 });
 
-const corsConfig = () => {
-    const allowedOrigins = (process.env.CORS_ORIGINS || '')
+const parseCorsOrigins = () => {
+    return (process.env.CORS_ORIGINS || '')
         .split(',')
         .map(o => o.trim())
         .filter(Boolean);
+};
+
+const corsConfig = () => {
+    const allowedOrigins = parseCorsOrigins();
 
     return {
         origin: (origin, callback) => {
-            if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+            if (!origin) {
+                callback(null, true);
+                return;
+            }
+            if (allowedOrigins.length === 0) {
+                callback(new Error('CORS_ORIGINS environment variable is not configured'));
+                return;
+            }
+            if (allowedOrigins.includes(origin)) {
                 callback(null, true);
             } else {
                 callback(new Error('CORS: origin not allowed'));
@@ -77,6 +89,7 @@ const preventParamPollution = hpp({
 module.exports = {
     helmetMiddleware,
     corsConfig,
+    parseCorsOrigins,
     globalLimiter,
     authLimiter,
     uploadLimiter,
