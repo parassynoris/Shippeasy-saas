@@ -125,11 +125,11 @@ stages:
             displayName: Install dependencies
 
           - script: |
-              npm test -- --ci --forceExit \
+              npm test -- --ci --forceExit --coverage \
                 --reporters=default --reporters=jest-junit \
                 --testResultsProcessor=jest-junit
             workingDirectory: shipeasy-api
-            displayName: Run unit tests
+            displayName: Run unit tests with coverage
             env:
               NODE_ENV: test
               JEST_JUNIT_OUTPUT_DIR: $(System.DefaultWorkingDirectory)/shipeasy-api
@@ -142,6 +142,13 @@ stages:
               testResultsFormat: JUnit
               testResultsFiles: shipeasy-api/junit.xml
               testRunTitle: Backend Unit Tests
+
+          - task: PublishCodeCoverageResults@2
+            condition: always()
+            displayName: Publish code coverage
+            inputs:
+              summaryFileLocation: shipeasy-api/coverage/cobertura-coverage.xml
+              pathToSources: shipeasy-api
 
       # ── Frontend tests ─────────────────────────────────────────
       - job: TestFrontend
