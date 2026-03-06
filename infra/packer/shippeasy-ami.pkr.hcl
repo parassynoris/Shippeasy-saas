@@ -170,26 +170,7 @@ build {
   # 7. Create systemd service for auto-start on boot
   provisioner "shell" {
     inline = [
-      <<-EOF
-      sudo tee /etc/systemd/system/shipeasy.service > /dev/null <<'UNIT'
-      [Unit]
-      Description=Shippeasy SaaS Platform
-      After=docker.service
-      Requires=docker.service
-
-      [Service]
-      Type=oneshot
-      RemainAfterExit=yes
-      WorkingDirectory=/opt/shipeasy
-      ExecStart=/usr/bin/docker compose up -d
-      ExecStop=/usr/bin/docker compose down
-      TimeoutStartSec=120
-
-      [Install]
-      WantedBy=multi-user.target
-      UNIT
-      EOF
-      ,
+      "sudo tee /etc/systemd/system/shipeasy.service > /dev/null <<'UNIT'\n[Unit]\nDescription=Shippeasy SaaS Platform\nAfter=docker.service\nRequires=docker.service\n\n[Service]\nType=oneshot\nRemainAfterExit=yes\nWorkingDirectory=/opt/shipeasy\nExecStart=/usr/bin/docker compose up -d\nExecStop=/usr/bin/docker compose down\nTimeoutStartSec=120\n\n[Install]\nWantedBy=multi-user.target\nUNIT",
       "sudo systemctl daemon-reload",
       "sudo systemctl enable shipeasy.service",
     ]
