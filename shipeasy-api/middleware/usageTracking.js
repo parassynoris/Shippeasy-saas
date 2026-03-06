@@ -117,7 +117,7 @@ function usageMetering(req, res, next) {
             orgId: user.orgId,
             userId: user.userId,
             method: req.method,
-            path: req.route?.path || req.path,
+            path: req.route?.path || 'unknown',
             statusCode: res.statusCode,
             duration,
             contentLength: res.get('Content-Length') || 0,

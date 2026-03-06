@@ -10,6 +10,9 @@ const crypto = require('crypto');
  * Verify WhatsApp webhook signature (X-Hub-Signature-256 header).
  * WhatsApp uses HMAC-SHA256 with the app secret as the key.
  * 
+ * Requires raw body to be available as req.rawBody (set up in index.js via
+ * express.json verify callback).
+ * 
  * @see https://developers.facebook.com/docs/graph-api/webhooks/getting-started#verification-requests
  */
 function verifyWhatsAppSignature(req, res, next) {
@@ -35,8 +38,8 @@ function verifyWhatsAppSignature(req, res, next) {
         return res.status(401).json({ error: 'Missing webhook signature' });
     }
 
-    // The raw body is needed for signature verification
-    const rawBody = JSON.stringify(req.body);
+    // Use raw body bytes for accurate HMAC verification (not re-serialized JSON)
+    const rawBody = req.rawBody || JSON.stringify(req.body);
     const expectedSignature = 'sha256=' + crypto
         .createHmac('sha256', appSecret)
         .update(rawBody)
@@ -61,6 +64,9 @@ function verifyWhatsAppSignature(req, res, next) {
 /**
  * Verify OceanIO webhook signature.
  * Uses HMAC-SHA256 with a shared secret via X-Webhook-Signature header.
+ * 
+ * Requires raw body to be available as req.rawBody (set up in index.js via
+ * express.json verify callback).
  */
 function verifyOceanIOSignature(req, res, next) {
     const webhookSecret = process.env.OCEANIO_WEBHOOK_SECRET;
@@ -85,7 +91,8 @@ function verifyOceanIOSignature(req, res, next) {
         return res.status(401).json({ error: 'Missing webhook signature' });
     }
 
-    const rawBody = JSON.stringify(req.body);
+    // Use raw body bytes for accurate HMAC verification
+    const rawBody = req.rawBody || JSON.stringify(req.body);
     const expectedSignature = crypto
         .createHmac('sha256', webhookSecret)
         .update(rawBody)

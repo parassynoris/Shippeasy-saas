@@ -30,7 +30,13 @@ app.use(cors({
 }));
 
 // ── Body parsing with reduced default limit ─────────────────────
-app.use(express.json({ limit: '1mb' }))
+// Preserve raw body for webhook signature verification (HMAC)
+app.use(express.json({
+  limit: '1mb',
+  verify: (req, res, buf) => {
+    req.rawBody = buf.toString();
+  }
+}))
 app.use(express.urlencoded({ extended: false }));
 
 // ── NoSQL injection prevention ──────────────────────────────────

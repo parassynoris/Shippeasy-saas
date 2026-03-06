@@ -140,8 +140,8 @@ router.post('/checkOrderReport', [validateAuth, checkOrderReport])
 
 router.post('/downloadOrderReport', [validateAuth, downloadOrderReport])
 
-router.post('/uploadfile', largeBodyParser, upload.single('file'), validateFileUpload(), [validateAuth, uploadFile])
-router.post('/uploadpublicreport', largeBodyParser, upload.single('file'), validateFileUpload(), [validateAuth, uploadPublicFile])
+router.post('/uploadfile', largeBodyParser, upload.single('file'), [validateAuth, validateFileUpload(), uploadFile])
+router.post('/uploadpublicreport', largeBodyParser, upload.single('file'), [validateAuth, validateFileUpload(), uploadPublicFile])
 
 router.post('/downloadfile/:fileName', [validateAuth, downloadFile])
 router.post('/downloadmobilefile/:fileName', [validateAuth, downloadMobileFile])

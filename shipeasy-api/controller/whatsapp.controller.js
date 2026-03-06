@@ -314,10 +314,16 @@ exports.verificationWebhookWhatsapp = async (req, res, next) => {
     }
 
     const mode = req.query['hub.mode'];
-    const token = req.query['hub.verify_token'];
+    const token = req.query['hub.verify_token'] || '';
     const challenge = req.query['hub.challenge'];
 
-    if (mode === 'subscribe' && token === VERIFY_TOKEN) {
+    // Use timing-safe comparison to prevent timing attacks
+    const tokenBuffer = Buffer.from(token, 'utf8');
+    const expectedBuffer = Buffer.from(VERIFY_TOKEN, 'utf8');
+    const tokensMatch = tokenBuffer.length === expectedBuffer.length &&
+        crypto.timingSafeEqual(tokenBuffer, expectedBuffer);
+
+    if (mode === 'subscribe' && tokensMatch) {
         res.status(200).send(challenge);
     } else {
         res.sendStatus(403);
