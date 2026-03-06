@@ -798,8 +798,11 @@ cron.schedule('0 */2 * * *', () => {
 const whatsappshareddocumentModel = mongoose.models.whatsappshareddocumentModel || mongoose.model('whatsappshareddocumentModel', newSchemaWithObject["whatsappshareddocument"], 'whatsappshareddocuments');
 
 // Azure Blob Storage connection
-const AZURE_STORAGE_CONNECTION_STRING = process.env.AZURE_CONNECTION_STRING;
-const blobServiceClient = BlobServiceClient.fromConnectionString(AZURE_STORAGE_CONNECTION_STRING);
+const AZURE_STORAGE_CONNECTION_STRING = process.env.AZURE_CONNECTION_STRING || process.env.AZURE_STORAGE_CONNECTION_STRING;
+let blobServiceClient = null;
+if (AZURE_STORAGE_CONNECTION_STRING) {
+    blobServiceClient = BlobServiceClient.fromConnectionString(AZURE_STORAGE_CONNECTION_STRING);
+}
 
 async function deleteOldDocuments() {
 	try {
