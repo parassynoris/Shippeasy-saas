@@ -1,13 +1,13 @@
-version: "3.9"
-
-# All variables are read from the root .env file (copy .env.example → .env).
-# Nothing is hardcoded — safe to commit this file as-is.
+# ══════════════════════════════════════════════════════════════════
+# Shippeasy — Docker Compose (single-file full-stack setup)
 #
-# LOCAL DEV (build from source):
-#   docker compose up --build
+# Quick start:
+#   cp .env.example .env          # copy and optionally edit
+#   docker compose up --build     # build from source & start
 #
-# CI/CD DEPLOY (pull pre-built images, no rebuild):
+# CI/CD (pre-built images from ACR):
 #   BACKEND_TAG=abc1234 FRONTEND_TAG=abc1234 docker compose up -d --no-build
+# ══════════════════════════════════════════════════════════════════
 
 networks:
   shipeasy_net:
@@ -20,7 +20,7 @@ volumes:
 services:
 
   # ─────────────────────────────────────────────
-  # MongoDB
+  # MongoDB 6
   # ─────────────────────────────────────────────
   mongo:
     image: mongo:6
@@ -40,7 +40,7 @@ services:
       start_period: 20s
 
   # ─────────────────────────────────────────────
-  # Backend API
+  # Backend API (Node.js / Express)
   # ─────────────────────────────────────────────
   backend:
     # CI/CD sets BACKEND_IMAGE + BACKEND_TAG → pulls pre-built image.
@@ -58,12 +58,19 @@ services:
         condition: service_healthy
     ports:
       - "${BACKEND_PORT:-3000}:3000"
-    env_file:
-      - ./shipeasy-api/.env
     environment:
+      # ── Required ────────────────────────────────────────────────
       PORT: 3000
       NODE_ENV: ${NODE_ENV:-production}
-      MONGO_URI: mongodb://mongo:27017/${MONGO_DB_NAME:-shipeasy}
+      MONGO_CONNECTION: mongodb://mongo:27017/${MONGO_DB_NAME:-shipeasy}
+      MONGO_DB_NAME: ${MONGO_DB_NAME:-shipeasy}
+      SECRET_KEY_JWT: ${SECRET_KEY_JWT:-change-me-in-production}
+      # ── Optional overrides (safe defaults) ──────────────────────
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost,http://localhost:80}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost}
+      ENABLE_SWAGGER: ${ENABLE_SWAGGER:-false}
+      ENCRYPTION: ${ENCRYPTION:-false}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
     volumes:
       - logs_data:/app/logs
 
