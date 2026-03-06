@@ -7,6 +7,9 @@ const { authLimiter } = require('../middleware/security')
 const { loginValidation, resetValidation, changePasswordValidation, agentOnboardingValidation } = require('../middleware/validation')
 const { enforceTenantIsolation } = require('../middleware/tenant')
 const { checkPlanAccess } = require('../middleware/planEnforcement')
+const { verifyWhatsAppSignature, verifyOceanIOSignature } = require('../middleware/webhookAuth')
+const { validateFileUpload } = require('../middleware/fileValidation')
+const { tenantRateLimit, usageMetering } = require('../middleware/usageTracking')
 
 const jasperController = require('../controller/jasperController');
 
@@ -96,7 +99,7 @@ router.post('/:fromPage/contactFormFilled', async (req, res, next) => {
 
 router.post('/dashboardReport', [validateAuth, dashboardReport])
 
-router.post('/oceanIOWebhook', [oceanIOWebhook])
+router.post('/oceanIOWebhook', [verifyOceanIOSignature, oceanIOWebhook])
 
 router.post('/chartDataDashboard', [validateAuth, chartDataDashboard])
 
@@ -137,8 +140,8 @@ router.post('/checkOrderReport', [validateAuth, checkOrderReport])
 
 router.post('/downloadOrderReport', [validateAuth, downloadOrderReport])
 
-router.post('/uploadfile', largeBodyParser, upload.single('file'), [validateAuth, uploadFile])
-router.post('/uploadpublicreport', largeBodyParser, upload.single('file'), [validateAuth, uploadPublicFile])
+router.post('/uploadfile', largeBodyParser, upload.single('file'), validateFileUpload(), [validateAuth, uploadFile])
+router.post('/uploadpublicreport', largeBodyParser, upload.single('file'), validateFileUpload(), [validateAuth, uploadPublicFile])
 
 router.post('/downloadfile/:fileName', [validateAuth, downloadFile])
 router.post('/downloadmobilefile/:fileName', [validateAuth, downloadMobileFile])
@@ -148,14 +151,14 @@ router.post('/email/send', [validateAuth, emailApi])
 
 router.post('/auth', [validateAuth, authProfile])
 
-router.post('/search/:indexName/:id?', [validateAuth, get])
-router.post('/:indexName', [validateAuth, checkIndex, enforceTenantIsolation, checkPlanAccess, insert])
+router.post('/search/:indexName/:id?', [validateAuth, tenantRateLimit, usageMetering, get])
+router.post('/:indexName', [validateAuth, checkIndex, enforceTenantIsolation, tenantRateLimit, usageMetering, checkPlanAccess, insert])
 
-router.post('/:indexName/batchinsert', [validateAuth, checkIndex, enforceTenantIsolation, checkPlanAccess, insertBatch])
-router.put('/:indexName/batchupdate', [validateAuth, checkIndex, enforceTenantIsolation, checkPlanAccess, updateBatch])
+router.post('/:indexName/batchinsert', [validateAuth, checkIndex, enforceTenantIsolation, tenantRateLimit, usageMetering, checkPlanAccess, insertBatch])
+router.put('/:indexName/batchupdate', [validateAuth, checkIndex, enforceTenantIsolation, tenantRateLimit, usageMetering, checkPlanAccess, updateBatch])
 
-router.put('/:indexName/:id', [validateAuth, checkIndex, enforceTenantIsolation, checkPlanAccess, update])
-router.delete('/:indexName/:id', [validateAuth, checkIndex, enforceTenantIsolation, deleteCommon])
+router.put('/:indexName/:id', [validateAuth, checkIndex, enforceTenantIsolation, tenantRateLimit, usageMetering, checkPlanAccess, update])
+router.delete('/:indexName/:id', [validateAuth, checkIndex, enforceTenantIsolation, tenantRateLimit, usageMetering, deleteCommon])
 
 /**
  * @swagger

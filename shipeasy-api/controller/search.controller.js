@@ -186,7 +186,14 @@ exports.get = async (req, res, next) => {
             ]
         }
 
-        await Model.find(query, projection, { "sort": sort, "skip": req.body?.from || 0, "limit": req.body?.size || 100 }).then(async function (foundDocument) {
+        // Enforce pagination limits to prevent excessive data retrieval
+        const MAX_PAGE_SIZE = 500;
+        const DEFAULT_PAGE_SIZE = 20;
+        const requestedSize = parseInt(req.body?.size, 10) || DEFAULT_PAGE_SIZE;
+        const pageSize = Math.min(Math.max(1, requestedSize), MAX_PAGE_SIZE);
+        const skip = Math.max(0, parseInt(req.body?.from, 10) || 0);
+
+        await Model.find(query, projection, { "sort": sort, "skip": skip, "limit": pageSize }).then(async function (foundDocument) {
             const totalCount = await Model.countDocuments(query);
 
             // foundDocument = foundDocument?.map(

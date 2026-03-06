@@ -113,12 +113,13 @@ mongo.connectToDatabase();
 
 const { verificationWebhookWhatsapp } = require('./controller/whatsapp.controller');
 const { webhookWhatsapp } = require('./controller/webhooks.controller');
+const { verifyWhatsAppSignature } = require('./middleware/webhookAuth');
 
 // CORS is handled by the cors() middleware above
 
 
 app.get('/webhook', [ verificationWebhookWhatsapp])
-app.post('/webhook', [ webhookWhatsapp])
+app.post('/webhook', [ verifyWhatsAppSignature, webhookWhatsapp])
 
 // Health check endpoint
 app.get('/health', (req, res) => {

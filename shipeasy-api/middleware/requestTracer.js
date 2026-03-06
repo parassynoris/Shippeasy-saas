@@ -111,36 +111,43 @@ const requestTracer = (req, res, next) => {
             return sanitized;
         }
 
-        // Log request (without sensitive data)
-        console.log(JSON.stringify({
+        // Log request (without sensitive data; skip body in production for performance)
+        const isProduction = process.env.NODE_ENV === 'production';
+        const logEntry = {
             userId : req.userId,
             traceId: req.traceId,
             method: req.method,
             url: req.url,
             timestamp: new Date().toISOString(),
-            body: sanitizeBody(req.body)
-        }));
+        };
+        if (!isProduction) {
+            logEntry.body = sanitizeBody(req.body);
+        }
+        console.log(JSON.stringify(logEntry));
 
         // Capture response using event listener
         const originalSend = res.send;
         res.send = function(body) {
-            // Sanitize response body for logging
-            let logBody = body;
-            try {
-                const parsed = typeof body === 'string' ? JSON.parse(body) : body;
-                logBody = sanitizeBody(parsed);
-            } catch (e) {
-                // body is not JSON, log as-is (truncated)
-                logBody = typeof body === 'string' && body.length > 500 ? body.substring(0, 500) + '...' : body;
-            }
-
-            console.log(JSON.stringify({
+            // Log response metadata (skip body in production for performance)
+            const responseLog = {
                 userId : req.userId,
                 traceId: req.traceId,
                 responseTimestamp: new Date().toISOString(),
                 statusCode: res.statusCode,
-                responseBody: logBody
-            }));
+            };
+
+            if (!isProduction) {
+                let logBody = body;
+                try {
+                    const parsed = typeof body === 'string' ? JSON.parse(body) : body;
+                    logBody = sanitizeBody(parsed);
+                } catch (e) {
+                    logBody = typeof body === 'string' && body.length > 500 ? body.substring(0, 500) + '...' : body;
+                }
+                responseLog.responseBody = logBody;
+            }
+
+            console.log(JSON.stringify(responseLog));
 
             if (process.env.ENCRYPTION === 'true' && (!excludedEndpoints.includes(req.path))) {
                 // Check if body is a string, buffer, or an object
