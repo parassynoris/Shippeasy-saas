@@ -104,8 +104,8 @@ wait_healthy() {
   return 1
 }
 
-wait_healthy "backend"  "http://localhost:${BACKEND_PORT:-3000}/api-docs"
-wait_healthy "frontend" "http://localhost:${FRONTEND_PORT:-80}/"
+wait_healthy "backend"  "http://localhost:${BACKEND_PORT:-3000}/health"
+wait_healthy "frontend" "http://localhost:${FRONTEND_PORT:-80}/health"
 
 # ── 6. Logout from ACR (security best practice) ───────────────────
 docker logout "${ACR_REGISTRY}" || true
@@ -118,14 +118,6 @@ docker image prune -f
 log "══════════════════════════════════════"
 log "Deployment complete ✓"
 log "══════════════════════════════════════"
-
-set -euo pipefail
-
-DEPLOY_DIR="${DEPLOY_DIR:-$HOME/shipeasy}"
-COMPOSE_FILE="$DEPLOY_DIR/docker-compose.yml"
-LOG_FILE="$DEPLOY_DIR/deploy.log"
-
-log() { echo "[$(date -u '+%Y-%m-%dT%H:%M:%SZ')] $*" | tee -a "$LOG_FILE"; }
 
 log "──────────────────────────────────────"
 log "Starting deployment"
