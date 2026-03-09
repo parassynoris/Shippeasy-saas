@@ -153,15 +153,19 @@ az ad sp create-for-rbac \
 
 ## 5. AWS — Launch EC2 Instance
 
-### 5.1 Choose an AMI from AWS Marketplace
+### 5.1 Choose an AMI
 
 1. Go to [console.aws.amazon.com/ec2](https://console.aws.amazon.com/ec2)
 2. Click **Launch Instance**
-3. Under **Application and OS Images**, click **Browse more AMIs**
-4. Select **AWS Marketplace AMIs** tab
-5. Search: `Docker` → choose **"Docker CE on Ubuntu 22.04"** (Bitnami or canonical)
-   - This AMI ships with Docker pre-installed — no manual Docker setup needed
-6. Select the AMI and continue
+3. Under **Application and OS Images**, choose one of:
+
+| AMI | Default SSH User | Notes |
+|---|---|---|
+| **Amazon Linux 2023** (recommended) | `ec2-user` | Minimal, fast boot, long-term AWS support |
+| **Amazon Linux 2** | `ec2-user` | Stable, widely used |
+| **Ubuntu 22.04 LTS** | `ubuntu` | Alternative if preferred |
+
+> **Tip:** If you already have an Amazon Linux instance with Docker installed, skip to [Step 6](#6-aws-ec2--server-setup).
 
 ### 5.2 Instance configuration
 
@@ -199,27 +203,52 @@ SSH into the instance and run all commands below. Do this **once** before the fi
 ```bash
 # SSH in (replace with your .pem path and EC2 IP)
 chmod 400 ~/Downloads/shipeasy-key.pem
-ssh -i ~/Downloads/shipeasy-key.pem ubuntu@<EC2-PUBLIC-IP>
+
+# Amazon Linux:
+ssh -i ~/Downloads/shipeasy-key.pem ec2-user@<EC2-PUBLIC-IP>
+
+# Ubuntu (if using Ubuntu AMI instead):
+# ssh -i ~/Downloads/shipeasy-key.pem ubuntu@<EC2-PUBLIC-IP>
 ```
 
-### 6.1 Verify Docker is installed (Marketplace AMI)
+### 6.1 Install Docker (if not pre-installed)
+
+**Amazon Linux 2023:**
 
 ```bash
+sudo dnf install -y docker
+sudo systemctl enable docker
+sudo systemctl start docker
 docker --version
-# Docker version 24.x.x
+# Docker version 25.x.x
+```
 
+**Amazon Linux 2:**
+
+```bash
+sudo yum install -y docker
+sudo systemctl enable docker
+sudo systemctl start docker
+docker --version
+```
+
+### 6.2 Install Docker Compose v2 plugin
+
+Docker Compose v2 runs as a Docker CLI plugin (`docker compose` instead of `docker-compose`).
+
+```bash
+# Install the plugin
+sudo mkdir -p /usr/local/lib/docker/cli-plugins
+sudo curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-$(uname -m) \
+  -o /usr/local/lib/docker/cli-plugins/docker-compose
+sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+
+# Verify
 docker compose version
 # Docker Compose version v2.x.x
 ```
 
-If `docker compose` (v2 plugin) is not available:
-
-```bash
-sudo apt-get update
-sudo apt-get install -y docker-compose-plugin
-```
-
-### 6.2 Add your user to the docker group
+### 6.3 Add your user to the docker group
 
 ```bash
 sudo usermod -aG docker $USER
@@ -229,29 +258,57 @@ newgrp docker
 docker ps
 ```
 
-### 6.3 Create the deployment directory
+### 6.4 Automated setup (recommended)
+
+The quickest way to configure the server is to use the provided bootstrap script:
+
+```bash
+# Clone the repo (or copy files to the server)
+git clone https://github.com/parassynoris/Shippeasy-saas.git ~/setup-temp
+cd ~/setup-temp
+
+# Run the bootstrap script
+bash scripts/setup-ec2.sh
+```
+
+This script will:
+- Verify Docker and Docker Compose v2
+- Create `~/shipeasy` deployment directory
+- Copy `docker-compose.yml`, `deploy.sh`, and `.env`
+- Start MongoDB for the first time
+- Print next steps
+
+After the script completes, you can remove the temp clone:
+
+```bash
+rm -rf ~/setup-temp
+```
+
+> **Alternatively**, you can do the manual setup in steps 6.5–6.8 below.
+
+### 6.5 Create the deployment directory (manual)
 
 ```bash
 mkdir -p ~/shipeasy
 cd ~/shipeasy
 ```
 
-### 6.4 Copy project files to EC2
+### 6.6 Copy project files to EC2 (manual)
 
 From your **local machine**, copy the required files:
 
 ```bash
 # Replace with your .pem path and EC2 IP
-EC2="ubuntu@<EC2-PUBLIC-IP>"
+# Use ec2-user for Amazon Linux, ubuntu for Ubuntu
+EC2="ec2-user@<EC2-PUBLIC-IP>"
 KEY="~/Downloads/shipeasy-key.pem"
 
 scp -i $KEY docker-compose.yml     $EC2:~/shipeasy/
 scp -i $KEY deploy.sh              $EC2:~/shipeasy/
 scp -i $KEY .env.example           $EC2:~/shipeasy/
-scp -i $KEY shipeasy-api/.env      $EC2:~/shipeasy/shipeasy-api.env   # your backend secrets
 ```
 
-### 6.5 Create the server `.env` file
+### 6.7 Create the server `.env` file
 
 Back on the EC2 instance:
 
@@ -274,6 +331,13 @@ BACKEND_PORT=3000
 MONGO_DB_NAME=shipeasy
 BACKEND_URL=http://backend:3000
 
+# Generate with: openssl rand -base64 32
+SECRET_KEY_JWT=<your-secure-random-secret>
+
+# CORS — set to your domain or EC2 public IP
+CORS_ORIGINS=http://<EC2-PUBLIC-IP>,http://localhost
+FRONTEND_URL=http://<EC2-PUBLIC-IP>
+
 API_URL=/api
 API_URL_MASTER=/api/
 SOCKET_URL=
@@ -290,44 +354,17 @@ ACR_USERNAME=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ACR_PASSWORD=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
-Also create `shipeasy-api/.env` with your backend-specific secrets:
-
-```bash
-mkdir -p ~/shipeasy/shipeasy-api
-nano ~/shipeasy/shipeasy-api/.env
-```
-
-```dotenv
-# Backend application secrets
-JWT_SECRET=your_very_long_random_jwt_secret
-MONGO_URI=mongodb://mongo:27017/shipeasy
-
-AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=https;...
-AWS_REGION=ap-south-1
-COGNITO_USER_POOL_ID=ap-south-1_xxxxxxx
-COGNITO_CLIENT_ID=xxxxxxxxxxxxxxxxxx
-
-SMTP_HOST=smtp.your-provider.com
-SMTP_PORT=587
-SMTP_USER=noreply@yourdomain.com
-SMTP_PASS=your_smtp_password
-
-APM_SERVER=https://apm.yourdomain.com
-OPENAI_API_KEY=sk-...
-WHATSAPP_API_KEY=your_key
-```
-
-### 6.6 Make deploy script executable
+### 6.8 Make deploy script executable
 
 ```bash
 chmod +x ~/shipeasy/deploy.sh
 ```
 
-### 6.7 Confirm the setup
+### 6.9 Confirm the setup
 
 ```bash
 ls -la ~/shipeasy/
-# Should show: docker-compose.yml  deploy.sh  .env  shipeasy-api/
+# Should show: docker-compose.yml  deploy.sh  .env
 ```
 
 ---
@@ -392,11 +429,13 @@ Two service connections are required.
    |---|---|
    | Host name | Your EC2 public IP or DNS |
    | Port | `22` |
-   | Username | `ubuntu` |
+   | Username | `ec2-user` _(Amazon Linux)_ or `ubuntu` _(Ubuntu)_ |
    | Private key | Paste the full contents of your `.pem` file |
    | Service connection name | `aws-ec2-ssh` ← **must match exactly** |
 4. Check **Grant access permission to all pipelines**
 5. Click **Save** and **Verify connection**
+
+> **Important:** The SSH username depends on your AMI. Amazon Linux uses `ec2-user`, Ubuntu uses `ubuntu`. This is configured in the service connection — the pipeline YAML does not specify the user.
 
 ---
 
@@ -466,7 +505,12 @@ The pipeline deploys to an ADO **Environment** named `production`. This lets you
 Before the pipeline can deploy using pre-built images, you need to do **one manual bootstrap** to start the database and verify connectivity.
 
 ```bash
-ssh -i ~/Downloads/shipeasy-key.pem ubuntu@<EC2-PUBLIC-IP>
+# Amazon Linux:
+ssh -i ~/Downloads/shipeasy-key.pem ec2-user@<EC2-PUBLIC-IP>
+
+# Ubuntu:
+# ssh -i ~/Downloads/shipeasy-key.pem ubuntu@<EC2-PUBLIC-IP>
+
 cd ~/shipeasy
 
 # Pull a placeholder image for first boot
@@ -520,7 +564,11 @@ Deploy        → [waiting for approval if configured]
 ### 14.3 Verify deployment on EC2
 
 ```bash
-ssh -i ~/Downloads/shipeasy-key.pem ubuntu@<EC2-PUBLIC-IP>
+# Amazon Linux:
+ssh -i ~/Downloads/shipeasy-key.pem ec2-user@<EC2-PUBLIC-IP>
+
+# Ubuntu:
+# ssh -i ~/Downloads/shipeasy-key.pem ubuntu@<EC2-PUBLIC-IP>
 
 # Check running containers
 docker compose -f ~/shipeasy/docker-compose.yml ps
@@ -620,7 +668,7 @@ docker compose -f ~/shipeasy/docker-compose.yml restart frontend
 | EC2 SSH key `.pem` file is stored securely (not in repo) | Required |
 | Production environment approval gate is configured | Recommended — Step 12.2 |
 | ACR admin account is **disabled** (use service principal only) | Verify in ACR → Settings → Access keys → Admin user = OFF |
-| EC2 instance has automatic OS security updates enabled | `sudo apt-get install unattended-upgrades` |
+| EC2 instance has automatic OS security updates enabled | Amazon Linux: `sudo dnf install -y dnf-automatic && sudo systemctl enable --now dnf-automatic.timer` / Ubuntu: `sudo apt-get install unattended-upgrades` |
 | Containers run as non-root user (appuser) | ✅ — set in Dockerfiles |
 
 ---

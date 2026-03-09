@@ -357,12 +357,30 @@ Push to main
 
 ### Setup Requirements
 
-1. **Azure Container Registry (ACR)** — Docker image storage
-2. **Azure DevOps Variable Group** (`shipeasy-secrets`) — all secrets
-3. **ADO Service Connections** — `acr-connection` (Docker Registry), `aws-ec2-ssh` / `aws-ec2-staging-ssh` (SSH)
-4. **ADO Environments** — `staging` and `production` (with approval gates)
+1. **AWS EC2 instance** — Amazon Linux 2023 (recommended) or Ubuntu, with Docker installed
+2. **Azure Container Registry (ACR)** — Docker image storage
+3. **Azure DevOps Variable Group** (`shipeasy-secrets`) — all secrets
+4. **ADO Service Connections** — `acr-connection` (Docker Registry), `aws-ec2-ssh` / `aws-ec2-staging-ssh` (SSH)
+5. **ADO Environments** — `staging` and `production` (with approval gates)
 
-See [`docs/CICD_SETUP_GUIDE.md`](docs/CICD_SETUP_GUIDE.md) for detailed setup instructions.
+### Quick EC2 Setup
+
+If you have a fresh Amazon Linux EC2 instance with Docker installed:
+
+```bash
+# SSH into your EC2 instance
+ssh -i key.pem ec2-user@<EC2-PUBLIC-IP>
+
+# Clone the repo and run the setup script
+git clone https://github.com/parassynoris/Shippeasy-saas.git ~/setup-temp
+bash ~/setup-temp/scripts/setup-ec2.sh
+rm -rf ~/setup-temp
+
+# Edit production settings
+nano ~/shipeasy/.env
+```
+
+See [`docs/CICD_SETUP_GUIDE.md`](docs/CICD_SETUP_GUIDE.md) for the complete step-by-step guide.
 
 ---
 
