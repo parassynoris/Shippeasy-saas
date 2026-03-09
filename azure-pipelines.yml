@@ -11,6 +11,8 @@
 # ADO Service Connections required:
 #   acr-connection    →  Docker Registry service connection to ACR
 #   aws-ec2-ssh       →  SSH service connection to AWS EC2 instance
+#                        (Username: ec2-user for Amazon Linux, ubuntu for Ubuntu)
+#   aws-ec2-staging-ssh → SSH service connection to staging EC2 (optional)
 # ══════════════════════════════════════════════════════════════════
 
 trigger:

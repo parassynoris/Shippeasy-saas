@@ -19,6 +19,9 @@
 #   BACKEND_TAG=a1b2c3d FRONTEND_TAG=a1b2c3d \
 #   ACR_USERNAME=<sp-id> ACR_PASSWORD=<sp-secret> \
 #   bash ~/shipeasy/deploy.sh
+#
+# Supported OS: Amazon Linux 2/2023 (ec2-user), Ubuntu (ubuntu)
+# The script itself is OS-agnostic — only Docker + Docker Compose v2 required.
 # ══════════════════════════════════════════════════════════════════
 
 set -euo pipefail
