@@ -668,7 +668,7 @@ docker compose -f ~/shipeasy/docker-compose.yml restart frontend
 | EC2 SSH key `.pem` file is stored securely (not in repo) | Required |
 | Production environment approval gate is configured | Recommended — Step 12.2 |
 | ACR admin account is **disabled** (use service principal only) | Verify in ACR → Settings → Access keys → Admin user = OFF |
-| EC2 instance has automatic OS security updates enabled | Amazon Linux: `sudo dnf install -y dnf-automatic && sudo systemctl enable --now dnf-automatic.timer` / Ubuntu: `sudo apt-get install unattended-upgrades` |
+| EC2 instance has automatic OS security updates enabled | Amazon Linux: `sudo dnf install -y dnf-automatic && sudo systemctl enable --now dnf-automatic.timer` / Ubuntu: `sudo apt-get install -y unattended-upgrades && sudo dpkg-reconfigure -plow unattended-upgrades` |
 | Containers run as non-root user (appuser) | ✅ — set in Dockerfiles |
 
 ---

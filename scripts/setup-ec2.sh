@@ -105,12 +105,12 @@ else
     sudo curl -SL "${COMPOSE_URL}" -o "${COMPOSE_PLUGIN_DIR}/docker-compose"
     sudo chmod +x "${COMPOSE_PLUGIN_DIR}/docker-compose"
     
-    # Verify
+    # Verify the binary runs
     if docker compose version &> /dev/null; then
         COMPOSE_VERSION=$(docker compose version --short 2>/dev/null || echo "installed")
         log "Docker Compose v2 installed: ${COMPOSE_VERSION}"
     else
-        error "Docker Compose v2 installation failed"
+        error "Docker Compose v2 installation failed — verify the binary at ${COMPOSE_PLUGIN_DIR}/docker-compose"
         exit 1
     fi
 fi
@@ -191,11 +191,15 @@ fi
 echo ""
 echo "── Step 6: Checking .env configuration ──────────────────────"
 
-# Check for default JWT secret
+# Check for default JWT secret or missing key
 if grep -q 'change-me-in-production' "${DEPLOY_DIR}/.env" 2>/dev/null; then
     warn "SECRET_KEY_JWT is still the default value!"
     echo "  Generate a secure secret: openssl rand -base64 32"
     echo "  Then update it in ${DEPLOY_DIR}/.env"
+elif ! grep -q 'SECRET_KEY_JWT' "${DEPLOY_DIR}/.env" 2>/dev/null; then
+    warn "SECRET_KEY_JWT is not set in .env!"
+    echo "  Add this line to ${DEPLOY_DIR}/.env:"
+    echo "  SECRET_KEY_JWT=$(openssl rand -base64 32 2>/dev/null || echo '<generate-a-secure-secret>')"
 fi
 
 # Check ACR_NAME
@@ -211,11 +215,14 @@ if [ -f "${DEPLOY_DIR}/docker-compose.yml" ]; then
     cd "${DEPLOY_DIR}"
     
     # Check if MongoDB is already running
-    if docker compose ps 2>/dev/null | grep -q "shipeasy_mongo.*healthy"; then
+    if docker compose ps --format json 2>/dev/null | grep -q '"mongo"' && docker compose ps 2>/dev/null | grep -q "healthy"; then
         log "MongoDB is already running and healthy"
     else
         log "Starting MongoDB (first-time bootstrap)..."
-        docker compose up -d mongo 2>/dev/null || sudo docker compose up -d mongo
+        if ! docker compose up -d mongo 2>&1; then
+            warn "Retrying with sudo..."
+            sudo docker compose up -d mongo
+        fi
         
         echo "  Waiting for MongoDB to be healthy..."
         RETRIES=12
@@ -260,7 +267,7 @@ echo "     - Create variable group 'shipeasy-secrets'"
 echo "     - Create the pipeline from azure-pipelines.yml"
 echo ""
 echo "  3. Configure the SSH service connection in Azure DevOps:"
-echo "     - Host: $(curl -sf http://169.254.169.254/latest/meta-data/public-ipv4 2>/dev/null || echo '<your-ec2-public-ip>')"
+echo "     - Host: $(TOKEN=$(curl -sf -X PUT -H 'X-aws-ec2-metadata-token-ttl-seconds: 60' http://169.254.169.254/latest/api/token 2>/dev/null) && curl -sf -H "X-aws-ec2-metadata-token: ${TOKEN}" http://169.254.169.254/latest/meta-data/public-ipv4 2>/dev/null || echo '<your-ec2-public-ip>')"
 echo "     - Username: $(whoami)"
 echo "     - Private key: contents of your .pem file"
 echo "     - Service connection name: aws-ec2-ssh"
