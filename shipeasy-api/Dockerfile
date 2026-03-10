@@ -5,6 +5,9 @@ FROM node:22-alpine AS deps
 
 WORKDIR /app
 
+# Install build tools needed for native modules (e.g. bcrypt)
+RUN apk add --no-cache python3 make g++
+
 COPY package*.json ./
 RUN npm ci --omit=dev
 
