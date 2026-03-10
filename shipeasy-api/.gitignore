@@ -4,4 +4,4 @@
 .demo.env
 .prod.env
 dump
-.env
+.envlogs/
