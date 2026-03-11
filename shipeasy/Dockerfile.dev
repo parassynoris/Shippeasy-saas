@@ -1,4 +1,4 @@
-# Development Dockerfile — Angular dev server
+# Development Dockerfile — Angular dev server (memory-optimized)
 FROM node:20-alpine
 
 WORKDIR /app
@@ -6,11 +6,13 @@ WORKDIR /app
 # Install yarn globally
 RUN npm install -g yarn
 
-COPY package.json ./
-RUN yarn install
+# Copy lock file alongside package.json for reproducible installs
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 
 COPY . .
 
 EXPOSE 4200
 
-CMD ["yarn", "start", "--host", "0.0.0.0", "--disable-host-check"]
+# Use Docker-optimized start script: 2GB heap, no source maps, polling for volume mounts
+CMD ["yarn", "start:docker", "--host", "0.0.0.0", "--disable-host-check"]
