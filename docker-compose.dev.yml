@@ -42,4 +42,6 @@ services:
     volumes:
       - ./shipeasy:/app
       - /app/node_modules        # preserve container node_modules
-    command: ["yarn", "start", "--host", "0.0.0.0", "--disable-host-check"]
+    mem_limit: 4g
+    # Docker-optimized: 2GB heap, no source maps, file-system polling for volume mounts
+    command: ["yarn", "start:docker", "--host", "0.0.0.0", "--disable-host-check"]

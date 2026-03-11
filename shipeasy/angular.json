@@ -41,11 +41,23 @@
             "vendorChunk": true,
             "extractLicenses": false,
             "buildOptimizer": false,
-            "sourceMap": true,
+            "sourceMap": {
+              "scripts": true,
+              "styles": false,
+              "vendor": false
+            },
             "optimization": false,
             "namedChunks": true
           },
           "configurations": {
+            "docker": {
+              "sourceMap": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "buildOptimizer": false,
+              "optimization": false,
+              "namedChunks": false
+            },
             "indianproduction": {
               "fileReplacements": [
                 {
@@ -55,7 +67,7 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
+              "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -113,7 +125,7 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
+              "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -140,7 +152,7 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
+              "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -170,6 +182,9 @@
           "configurations": {
             "production": {
               "browserTarget": "baxi:build:production"
+            },
+            "docker": {
+              "browserTarget": "baxi:build:docker"
             }
           }
         },
