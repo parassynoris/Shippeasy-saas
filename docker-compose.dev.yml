@@ -39,7 +39,6 @@ services:
       - "4200:4200"
     environment:
       NODE_ENV: development
-      NODE_OPTIONS: "--max_old_space_size=2048"
     volumes:
       - ./shipeasy:/app
       - /app/node_modules        # preserve container node_modules
