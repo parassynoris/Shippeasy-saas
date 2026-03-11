@@ -4,7 +4,7 @@ const axios = require('axios');
 const emailReplyScheduler = require('../controller/emailReplyScheduler');
 const { connect } = require('imap-simple');
 const { mongoose, getTransporter, uuid, triggerPointExecute, getSenderName, getTOCCEmailsForScheduler } = require('../controller/helper.controller');
-const newSchemaWithObject = require('../schema/schema');
+const newSchemaWithObject = require('../schema');
 const { scanEmailToCreateJob } = require('../controller/automations/jobautomation.controller');
 const { sendSchedulMail } = require("../controller/insert.commonController");
 const { ImapFlow } = require('imapflow');
@@ -801,7 +801,11 @@ const whatsappshareddocumentModel = mongoose.models.whatsappshareddocumentModel 
 const AZURE_STORAGE_CONNECTION_STRING = process.env.AZURE_CONNECTION_STRING || process.env.AZURE_STORAGE_CONNECTION_STRING;
 let blobServiceClient = null;
 if (AZURE_STORAGE_CONNECTION_STRING) {
-    blobServiceClient = BlobServiceClient.fromConnectionString(AZURE_STORAGE_CONNECTION_STRING);
+    try {
+        blobServiceClient = BlobServiceClient.fromConnectionString(AZURE_STORAGE_CONNECTION_STRING);
+    } catch (err) {
+        console.error('Azure Blob Storage client initialization failed in schedulers — check AZURE_STORAGE_CONNECTION_STRING:', err.message);
+    }
 }
 
 async function deleteOldDocuments() {

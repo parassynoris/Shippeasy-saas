@@ -4,7 +4,11 @@ const connectionString = process.env.AZURE_CONNECTION_STRING || process.env.AZUR
 
 let blobServiceClient = null;
 if (connectionString) {
-    blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
+    try {
+        blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
+    } catch (err) {
+        console.error('Azure Blob Storage client initialization failed — check AZURE_STORAGE_CONNECTION_STRING:', err.message);
+    }
 }
 
 const containerName = process.env.AZURE_CONTAINER_NAME || "ship-docs";

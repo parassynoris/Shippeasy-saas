@@ -1,0 +1,28 @@
+version: "3.9"
+
+# ──────────────────────────────────────────────────────────
+# TLS overrides for production with Certbot certificates
+# Usage: docker compose -f docker-compose.yml -f docker-compose.tls.yml up -d
+#
+# Prerequisites:
+#   1. Obtain certificates with Certbot:
+#      certbot certonly --standalone -d app.shippeasy.com
+#   2. Set SERVER_NAME in .env:
+#      SERVER_NAME=app.shippeasy.com
+#   3. Certificate renewal (add to crontab):
+#      0 3 * * * certbot renew --quiet && docker compose restart frontend
+# ──────────────────────────────────────────────────────────
+
+services:
+
+  frontend:
+    ports:
+      - "${FRONTEND_PORT:-80}:80"
+      - "443:443"
+    environment:
+      BACKEND_URL: ${BACKEND_URL:-http://backend:3000}
+      SERVER_NAME: ${SERVER_NAME:-localhost}
+    volumes:
+      - /etc/letsencrypt/live/${SERVER_NAME:-localhost}/fullchain.pem:/etc/nginx/ssl/fullchain.pem:ro
+      - /etc/letsencrypt/live/${SERVER_NAME:-localhost}/privkey.pem:/etc/nginx/ssl/privkey.pem:ro
+      - ./shipeasy/nginx-tls.conf.template:/etc/nginx/templates/default.conf.template:ro

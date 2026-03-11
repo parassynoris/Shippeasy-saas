@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 import { CommonService } from 'src/app/services/common/common.service';
 import { addDays } from 'date-fns';
 import { ApiSharedService } from 'src/app/shared/components/api-service/api-shared.service';

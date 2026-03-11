@@ -3,16 +3,33 @@ const socketIo = require('socket.io');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const uuid = require('uuid');
-const newSchemaWithObject = require('../schema/schema');
+const newSchemaWithObject = require('../schema');
+const { parseCorsOrigins } = require('../middleware/security');
 
 const userModel = mongoose.models[`userModel`] || mongoose.model(`userModel`, newSchemaWithObject['user'], `users`);
 const messageModel = mongoose.models[`messageModel`] || mongoose.model(`messageModel`, newSchemaWithObject["message"], `messages`);
             
 function init(server) {
     try {
+        const allowedOrigins = parseCorsOrigins();
+
         io = socketIo(server, {
             cors: {
-                origin: '*', // Allow any origin
+                origin: (origin, callback) => {
+                    if (!origin) {
+                        callback(null, true);
+                        return;
+                    }
+                    if (allowedOrigins.length === 0) {
+                        callback(new Error('CORS_ORIGINS not configured'));
+                        return;
+                    }
+                    if (allowedOrigins.includes(origin)) {
+                        callback(null, true);
+                    } else {
+                        callback(new Error('CORS: origin not allowed'));
+                    }
+                },
                 methods: ['GET', 'POST']
             }
           });

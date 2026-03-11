@@ -59,11 +59,14 @@ services:
     ports:
       - "${BACKEND_PORT:-3000}:3000"
     env_file:
-      - ./shipeasy-api/.env
+      - path: ./shipeasy-api/.env
+        required: false
+      - path: ./shipeasy-api/.env.example
+        required: false
     environment:
       PORT: 3000
       NODE_ENV: ${NODE_ENV:-production}
-      MONGO_URI: mongodb://mongo:27017/${MONGO_DB_NAME:-shipeasy}
+      MONGO_CONNECTION: mongodb://mongo:27017/${MONGO_DB_NAME:-shipeasy}
     volumes:
       - logs_data:/app/logs
 

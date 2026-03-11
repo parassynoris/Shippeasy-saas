@@ -1,5 +1,6 @@
 const { mongoose, Schema, invoiceSchema, uuid, jwt, crypto, axios, azureStorage, inAppNotificationService, querystring, nodemailer, pdfScanner, ediController, OpenAI, objecdiff, sendMessage, getTextMessageInput, fs, _, simpleParser, connect, imapConfig, transporter, getChangedFields, removeIdField, recordLogAudit, encryptObject, decryptObject, isSubset, createInAppNotification, replacePlaceholders, generateRandomPassword, triggerPointExecute, insertIntoTally, getTransporter, getChildCompany, getSenderName} = require('./helper.controller');
 const { generateReport } = require('./reports.controller');
+const bcrypt = require('bcrypt');
 
 const ExcelJS = require('exceljs');
 
@@ -138,7 +139,9 @@ exports.insert = async (req, res, next) => {
     data.referenceId = uuid.v1();
 
     if (indexName === "user") {
-        data.password = generateRandomPassword(8)
+        const plainPassword = generateRandomPassword(8);
+        data.password = await bcrypt.hash(plainPassword, 12);
+        data._plainPassword = plainPassword;
     }
 
     if(indexName === "schedulereport")
@@ -674,11 +677,12 @@ exports.insert = async (req, res, next) => {
                 triggerPointExecute(req, savedDocument, indexName)
 
                 if (indexName === "user") {
+                    const emailPassword = data._plainPassword || savedDocument.password;
                     const mailOptions = {
                         from: getSenderName(agent),
                         to: savedDocument.userEmail,
                         subject: "Your credentials for ship-easy web login",
-                        html: `Hello ${savedDocument.name} ${savedDocument.userLastname},<br> <br>Welcome To ShipEasy <br><br>&ensp;To Login Please use below Credentials.<br>&ensp;Username : ${savedDocument.userLogin}<br>&ensp;Password : ${savedDocument.password}<br>&ensp;<p style="text-decoration:underline;"><a href=${process.env.WEB_URL}>Click here to login</a></p><br> Best Regards, <br> Team SHIPEASY<br>`
+                        html: `Hello ${savedDocument.name} ${savedDocument.userLastname},<br> <br>Welcome To ShipEasy <br><br>&ensp;To Login Please use below Credentials.<br>&ensp;Username : ${savedDocument.userLogin}<br>&ensp;Password : ${emailPassword}<br>&ensp;<p style="text-decoration:underline;"><a href=${process.env.WEB_URL}>Click here to login</a></p><br> Best Regards, <br> Team SHIPEASY<br>`
                     };
         
                     transporterAgent?.sendMail(mailOptions, (error, info) => {

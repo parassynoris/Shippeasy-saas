@@ -1,0 +1,16 @@
+# Copy this file to terraform.tfvars and fill in your values.
+# terraform.tfvars is gitignored — never commit secrets.
+
+aws_region    = "ap-south-1"
+project_name  = "shipeasy"
+environment   = "production"
+
+ec2_instance_type = "t3.medium"
+ec2_key_name      = "shipeasy-ec2-key"
+domain_name       = "app.shippeasy.com"
+acr_name          = "shipeasy"
+
+allowed_ssh_cidrs = ["YOUR_IP/32"]
+
+# Leave empty to use Docker MongoDB; set to Atlas URI to use managed DB
+# mongo_atlas_uri = "mongodb+srv://user:pass@cluster.mongodb.net/shipeasy?retryWrites=true"

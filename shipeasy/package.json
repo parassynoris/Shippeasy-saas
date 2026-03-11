@@ -3,12 +3,13 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "node --max_old_space_size=6096 ./node_modules/@angular/cli/bin/ng serve",
+    "start": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng serve",
     "build": "ng build",
     "test": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "stat-build": "node --max_old_space_size=6096 ./node_modules/@angular/cli/bin/ng build --aot --named-chunks --build-optimizer"
+    "start:docker": "node --max_old_space_size=2048 ./node_modules/@angular/cli/bin/ng serve --configuration=docker --poll=2000",
+    "stat-build": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build --aot --named-chunks --build-optimizer"
   },
   "private": true,
   "dependencies": {

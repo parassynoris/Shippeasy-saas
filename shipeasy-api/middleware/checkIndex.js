@@ -1,5 +1,5 @@
 
-const Schema = require('../schema/schema');
+const Schema = require('../schema');
 
 exports.checkIndex = async (req, res, next) => {
     const indexName = req.params.indexName;
